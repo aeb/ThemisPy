@@ -1,0 +1,2 @@
+include versioneer.py
+include themispy/_version.py
