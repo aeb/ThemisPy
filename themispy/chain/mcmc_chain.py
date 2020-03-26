@@ -72,6 +72,7 @@ def read_elklhd(filename, stride=1, burn_fraction=0, skip=None):
     Reads in a Themis likelihood file from an ensemble sampler.  Optionally, a 
     stride, burn-in fraction, or number of *ensemble samples* to skip may be set.
     Returns an IndexError if fewer ensemble samples exist in the chain file than skip.
+
     Args:
       filename (str): Filename in which likelihood data will be found (e.g., `Lklhd.dat`)
       stride (int): Integer factor by which to step through samples *coherently* among walkers.  Default: 1.
@@ -79,7 +80,7 @@ def read_elklhd(filename, stride=1, burn_fraction=0, skip=None):
       skip (int): Number of initial *ensemble samples* to skip.  Overrides burn_fraction unless set to None. Default: None.
 
     Returns:
-      (ndarray, int): Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride; Number of samples skipped.
+      (numpy.ndarray, int): Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride; Number of samples skipped.
     """
 
     # Find the number of independent samples
@@ -144,7 +145,7 @@ def read_echain(filename, walkers, stride=1, burn_fraction=0, skip=None, paramet
       parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
  
     Returns:
-      (ndarray): Chain data arranged as 3D array indexed by [sample, walker, parameter] *after* excluding the skipped lines and applying the specified stride.
+      (numpy.ndarray): Chain data arranged as 3D array indexed by [sample, walker, parameter] *after* excluding the skipped lines and applying the specified stride.
     """
 
 
@@ -212,7 +213,7 @@ def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=No
       parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
 
     Returns:
-      (ndarray, ndarray): Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride; Chain data arranged as 3D array indexed by [sample, walker, parameter] *after* excluding the skipped lines and applying the specified stride.
+      (numpy.ndarray, numpy.ndarray): Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride; Chain data arranged as 3D array indexed by [sample, walker, parameter] *after* excluding the skipped lines and applying the specified stride.
     """
 
     # Find the lengths of the chain and likelihood files
@@ -251,7 +252,7 @@ def sample_erun(chain_filename, lklhd_filename, samples, burn_fraction=0, skip=N
       parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
 
     Returns:
-      (ndarray, ndarray): Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride; Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride.
+      (numpy.ndarray, numpy.ndarray): Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride; Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride.
     """
 
     # Find the lengths of the chain and likelihood files
@@ -321,7 +322,7 @@ def most_likely_erun(chain_filename, lklhd_filename, samples=1, burn_fraction=0,
       parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
 
     Returns:
-      (ndarray, ndarray): Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride; Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride.
+      (numpy.ndarray, numpy.ndarray): Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride; Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride.
     """
 
     # Find the lengths of the chain and likelihood files
