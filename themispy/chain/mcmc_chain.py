@@ -30,9 +30,7 @@ def file_length(filename, header_string=None, comment_string=None) :
       comment_string (str): Single chararacter string that denotes header lines.  Default: None.
 
     Returns:
-      (int): Number of non-header and non-commented lines.
-      (int): Number of header lines (only if header_string is not None).
-      (int): Number of commented lines (only if comment_string is not None).
+      (int[, int[, int]]): Number of non-header and non-commented lines; Number of header lines (only if header_string is not None); Number of commented lines (only if comment_string is not None).
     """
     
     length = 0
@@ -81,8 +79,7 @@ def read_elklhd(filename, stride=1, burn_fraction=0, skip=None):
       skip (int): Number of initial *ensemble samples* to skip.  Overrides burn_fraction unless set to None. Default: None.
 
     Returns:
-      (ndarray): Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride.
-      (int): Number of samples skipped.
+      (ndarray, int): Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride; Number of samples skipped.
     """
 
     # Find the number of independent samples
@@ -215,8 +212,7 @@ def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=No
       parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
 
     Returns:
-      (ndarray): Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride.
-      (ndarray): Chain data arranged as 3D array indexed by [sample, walker, parameter] *after* excluding the skipped lines and applying the specified stride.
+      (ndarray, ndarray): Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride; Chain data arranged as 3D array indexed by [sample, walker, parameter] *after* excluding the skipped lines and applying the specified stride.
     """
 
     # Find the lengths of the chain and likelihood files
@@ -255,8 +251,7 @@ def sample_erun(chain_filename, lklhd_filename, samples, burn_fraction=0, skip=N
       parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
 
     Returns:
-      (ndarray): Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride.
-      (ndarray): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride.
+      (ndarray, ndarray): Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride; Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride.
     """
 
     # Find the lengths of the chain and likelihood files
@@ -326,8 +321,7 @@ def most_likely_erun(chain_filename, lklhd_filename, samples=1, burn_fraction=0,
       parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
 
     Returns:
-      (ndarray): Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride.
-      (ndarray): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride.
+      (ndarray, ndarray): Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride; Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride.
     """
 
     # Find the lengths of the chain and likelihood files

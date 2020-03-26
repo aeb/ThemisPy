@@ -63,7 +63,7 @@ version = versioneer.get_version()
 release = version
 show_authors = True
 
-master_doc = 'docs/frontmatter/index'
+master_doc = 'docs/src/index'
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -94,4 +94,9 @@ html_static_path = ['docs/_static']
 
 
 # Example configuration for intersphinx: refer to the Python standard library.
-intersphinx_mapping = {'https://docs.python.org/': None}
+#intersphinx_mapping = {'https://docs.python.org/': None}
+intersphinx_mapping = {'python': ('http://docs.python.org/2', None),
+                       'numpy': ('http://docs.scipy.org/doc/numpy/', None),
+                       'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
+                       'matplotlib': ('http://matplotlib.sourceforge.net/', None)}
+
