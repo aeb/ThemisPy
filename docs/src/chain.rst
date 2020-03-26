@@ -6,4 +6,4 @@ Chain
 ================
 
 .. automodule:: chain.mcmc_chain
-    :members:
+   :members:
