@@ -1,4 +1,4 @@
-Installation
+Installation Guide
 ==============================
 
 Getting ThemisPy

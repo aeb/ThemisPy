@@ -18,12 +18,14 @@ Contents
 ====================================
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 1
+
 
    ./installation
-   ./chain
+   ./userguide
+   ./devel
 
+	     
 Indices and tables
 ==================
 
