@@ -71,7 +71,8 @@ parser.add_argument("-p","--parameters",
                     action='append',
                     help=("Selects a subset of parameters to output.  Parameter ranges may be"
                           " specified either via individual numbers (e.g., 0 1 4), comma separated"
-                          " lists (e.g., 0, 2, 5), ranges (e.g., 0-3), or combinations thereof."))
+                          " lists (e.g., 0, 2, 5), ranges (e.g., 0-3), or combinations thereof."
+                          " By default, all parameters are outputted."))
 
 
 # Get command line options
