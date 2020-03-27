@@ -6,12 +6,47 @@
 
 import numpy as np
 import warnings
+from matplotlib.cbook import flatten
 
 
 """
 Collection of untilities for reading and manipulating MCMC chain data
 produced by Themis analyses.
 """
+
+def parse_parameter_arglist(arg_list) :
+    """
+    Parses a list of lists of strings containing individual numbers (e.g., 0 1 4), 
+    comma separated lists (e.g., 0, 2, 5), ranges (e.g., 0-3), or combinations thereof,
+    and reduces them to a unique, ordered list of integers.  Such a list of parameter
+    values arises naturally from ArgumentParser append, e.g., from
+    ``parser.add_argument("-p", type=str, nargs='+', action='append')``.
+
+    Args:
+      arg_list (list): List of lists with strings denoting indexes or ranges of indexes.
+    
+    Returns:
+      (list): Sorted, unique list of integers.
+    """
+
+    plist = []
+    for arg in flatten(arg_list) :
+        tokens = arg.split(',')
+        for token in tokens :
+            if ('-' in token) : # range
+                toks=token.split('-')
+                plist.extend(list(range(int(toks[0]),int(toks[1])+1)))
+            elif (token.isspace() or token is '') : # whitespace or empty
+                continue
+            else : # a number
+                plist.extend([int(token)])
+    plist = np.unique(np.sort(np.array(plist)))
+
+    return list(plist)
+
+    
+    
+
 
 
 def file_length(filename, header_string=None, comment_string=None) :
