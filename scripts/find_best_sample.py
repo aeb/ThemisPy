@@ -3,8 +3,6 @@ import themispy as ty
 import argparse as ap
 import warnings
 import sys
-from matplotlib.cbook import flatten
-
 
 """
 Example ThemisPy script that makes use of the themispy.chain package.
