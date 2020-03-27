@@ -75,9 +75,15 @@ html_theme_path_default = []
 
 
 try:
+    
     import rtcat_sphinx_theme
     html_theme = "rtcat_sphinx_theme"
     html_theme_path = [rtcat_sphinx_theme.get_html_theme_path()]
+
+    #html_theme = 'solar_theme'
+    #import solar_theme
+    #html_theme_path = [solar_theme.theme_path]
+    
 except ModuleNotFoundError :
     html_theme = html_theme_default
     html_theme_path = []

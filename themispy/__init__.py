@@ -17,18 +17,19 @@ chain
    Tools for navigating and modifying chains
 """
 
-__version__="0.1"
 __author__="Themis Development Team"
 __bibtex__ = r"""@Article{Themis:2020,
   %%% Fill in from ADS!
 }"""
 
+import warnings
+def warning_on_one_line(message, category, filename, lineno, file=None, line=None):
+    return 'WARNING: %s:%s: %s: %s\n' % (filename, lineno, category.__name__, message)
+warnings.formatwarning = warning_on_one_line
+
+
 __all__=['chain'] #'diag', 'chain', 'data', 'modvis']
 from . import *
-
-
-
-       
 
 
 

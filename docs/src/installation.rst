@@ -9,7 +9,7 @@ Installing with pip
 ------------------------------
 To install ThemisPy, in the ThemisPy directory,
 
-  $ pip install ThemisPy [--user]
+  $ pip install . [--user]
 
 See pip help for more information.
 
