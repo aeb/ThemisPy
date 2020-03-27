@@ -248,7 +248,7 @@ def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=No
       parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
 
     Returns:
-      (numpy.ndarray, numpy.ndarray): Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride; Chain data arranged as 3D array indexed by [sample, walker, parameter] *after* excluding the skipped lines and applying the specified stride.
+      (numpy.ndarray, numpy.ndarray): Chain data arranged as 3D array indexed by [sample, walker, parameter] *after* excluding the skipped lines and applying the specified stride; Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride.
     """
 
     # Find the lengths of the chain and likelihood files
@@ -287,7 +287,7 @@ def sample_erun(chain_filename, lklhd_filename, samples, burn_fraction=0, skip=N
       parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
 
     Returns:
-      (numpy.ndarray, numpy.ndarray): Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride; Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride.
+      (numpy.ndarray, numpy.ndarray): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride; Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride.
     """
 
     # Find the lengths of the chain and likelihood files
@@ -339,6 +339,66 @@ def sample_erun(chain_filename, lklhd_filename, samples, burn_fraction=0, skip=N
     return echain,elklhd
 
 
+def sample_chain(chain_filename, samples, burn_fraction=0, skip=None, parameter_list=None):
+    """
+    Loads and generates samples from a Themis chain a discrete sampler.  Optionally, a 
+    burn-in fraction, number of *samples*  to skip, or a set of parameters may be provided.  
+    Is faster and more memory efficient than load_erun and subsequently subsampling for 
+    large chains.
+
+    Args:
+      chain_filename (str): Filename in which chain data will be found (e.g., `Chain.dat`)
+      samples (int): Number of samples to draw.
+      burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.
+      skip (int): Number of initial *ensemble samples* to skip. Default: 0.
+      parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
+
+    Returns:
+      (numpy.ndarray): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride
+    """
+
+    # Find the lengths of the chain and likelihood files
+    nsamp,nhead = file_length(chain_filename,header_string='#')
+
+    # Determine the number of walkers, and set the burn-in relative to the shorter
+    if (skip is None) :
+        nskip = burn_fraction*nsamp
+    else :
+        nskip = skip
+    
+    # If there are too few lines in the chain file, raise IndexError
+    if (nskip>nsamp) :
+        raise IndexError
+
+    # Add in the header
+    nskip += nhead
+
+    # Generate sample list
+    sample_list = np.sort(np.random.randint(nskip,high=nsamp,size=samples))
+    
+    # Loop over the lines from the file
+    j=0
+    for k,l in enumerate(open(chain_filename,'r')) :
+        # Skip the burn-in period
+        if (k<nskip) :
+            continue
+                
+        while (j<samples and k==sample_list[j]) :
+            if (j==0) :
+                if (parameter_list is None) :
+                    parameter_list = list(range(len(l.split())))
+                chain = np.zeros((samples,len(parameter_list)))
+
+            tokens = l.split()
+            chain[j,:] = np.array([float(tokens[p]) for p in parameter_list])
+            j += 1
+
+        if (j==len(sample_list)) :
+            break
+        
+    return chain
+
+
 
 def most_likely_erun(chain_filename, lklhd_filename, samples=1, burn_fraction=0, skip=None, parameter_list=None):
     """
@@ -357,7 +417,7 @@ def most_likely_erun(chain_filename, lklhd_filename, samples=1, burn_fraction=0,
       parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
 
     Returns:
-      (numpy.ndarray, numpy.ndarray): Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride; Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride.
+      (numpy.ndarray, numpy.ndarray): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride; Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride.
     """
 
     # Find the lengths of the chain and likelihood files
