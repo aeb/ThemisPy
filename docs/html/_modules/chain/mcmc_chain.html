@@ -1,0 +1,688 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>chain.mcmc_chain &mdash; ThemisPy 0+untagged.25.ga7a9aee.dirty documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.25.ga7a9aee.dirty documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../docs/src/index.html" class="icon icon-home"> ThemisPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0+untagged.25.ga7a9aee.dirty
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/src/installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/src/userguide.html">User’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/src/devel.html">Developer’s Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../docs/src/index.html">ThemisPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../docs/src/index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>chain.mcmc_chain</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for chain.mcmc_chain</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Provides utility functions for reading and manipulating MCMC chain</span>
+<span class="c1"># data produced by Themis analyses.</span>
+<span class="c1">#</span>
+<span class="c1"># </span>
+<span class="c1">#</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">matplotlib.cbook</span> <span class="kn">import</span> <span class="n">flatten</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Collection of untilities for reading and manipulating MCMC chain data</span>
+<span class="sd">produced by Themis analyses.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="parse_parameter_arglist"><a class="viewcode-back" href="../../docs/src/chain.html#chain.mcmc_chain.parse_parameter_arglist">[docs]</a><span class="k">def</span> <span class="nf">parse_parameter_arglist</span><span class="p">(</span><span class="n">arg_list</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parses a list of lists of strings containing individual numbers (e.g., 0 1 4), </span>
+<span class="sd">    comma separated lists (e.g., 0, 2, 5), ranges (e.g., 0-3), or combinations thereof,</span>
+<span class="sd">    and reduces them to a unique, ordered list of integers.  Such a list of parameter</span>
+<span class="sd">    values arises naturally from ArgumentParser append, e.g., from</span>
+<span class="sd">    ``parser.add_argument(&quot;-p&quot;, type=str, nargs=&#39;+&#39;, action=&#39;append&#39;)``.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      arg_list (list): List of lists with strings denoting indexes or ranges of indexes.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">      (list): Sorted, unique list of integers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">plist</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">flatten</span><span class="p">(</span><span class="n">arg_list</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">arg</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;-&#39;</span> <span class="ow">in</span> <span class="n">token</span><span class="p">)</span> <span class="p">:</span> <span class="c1"># range</span>
+                <span class="n">toks</span><span class="o">=</span><span class="n">token</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)</span>
+                <span class="n">plist</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">+</span><span class="mi">1</span><span class="p">)))</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">isspace</span><span class="p">()</span> <span class="ow">or</span> <span class="n">token</span> <span class="ow">is</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="c1"># whitespace or empty</span>
+                <span class="k">continue</span>
+            <span class="k">else</span> <span class="p">:</span> <span class="c1"># a number</span>
+                <span class="n">plist</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">token</span><span class="p">)])</span>
+    <span class="n">plist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">plist</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">plist</span><span class="p">)</span></div>
+
+    
+    
+
+
+
+<div class="viewcode-block" id="file_length"><a class="viewcode-back" href="../../docs/src/chain.html#chain.mcmc_chain.file_length">[docs]</a><span class="k">def</span> <span class="nf">file_length</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">header_string</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comment_string</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Counts the number of lines in a file.  Optionally will remove header lines, </span>
+<span class="sd">    marked by a prepended character, and comment lines, marked by a possibly </span>
+<span class="sd">    different prepended character.  These are differentiated by the presumed</span>
+<span class="sd">    location within the file: Headers are at the beginning, ending at the first</span>
+<span class="sd">    line to not be prepended with the header_string.  Comments can appear</span>
+<span class="sd">    throughout the file.  In the absence of distributed comments, searching only</span>
+<span class="sd">    for the header is significantly faster.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      filename (str): Filename</span>
+<span class="sd">      header_string (str): Single chararacter string that denotes header lines.  Default: None.</span>
+<span class="sd">      comment_string (str): Single chararacter string that denotes header lines.  Default: None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (int[, int[, int]]): Number of non-header and non-commented lines; Number of header lines (only if header_string is not None); Number of commented lines (only if comment_string is not None).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">length</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">nhead</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">ncomm</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">comment_string</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">header_string</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">length</span><span class="o">=</span><span class="nb">sum</span><span class="p">((</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">length</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">comment_string</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">length</span><span class="o">=</span><span class="nb">sum</span><span class="p">((</span><span class="mi">1</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)))</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">header_string</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">length</span> <span class="o">-=</span> <span class="mi">1</span>
+                <span class="n">nhead</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">break</span>
+        <span class="k">return</span> <span class="n">length</span><span class="p">,</span> <span class="n">nhead</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">header_string</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">comment_string</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">ncomm</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+            <span class="n">length</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">length</span><span class="p">,</span> <span class="n">ncomm</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">header_string</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">nhead</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="n">comment_string</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">ncomm</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+            <span class="n">length</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">length</span><span class="p">,</span> <span class="n">nhead</span><span class="p">,</span> <span class="n">ncomm</span></div>
+
+
+<div class="viewcode-block" id="read_elklhd"><a class="viewcode-back" href="../../docs/src/chain.html#chain.mcmc_chain.read_elklhd">[docs]</a><span class="k">def</span> <span class="nf">read_elklhd</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">burn_fraction</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads in a Themis likelihood file from an ensemble sampler.  Optionally, a </span>
+<span class="sd">    stride, burn-in fraction, or number of *ensemble samples* to skip may be set.</span>
+<span class="sd">    Returns an IndexError if fewer ensemble samples exist in the chain file than skip.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      filename (str): Filename in which likelihood data will be found (e.g., `Lklhd.dat`)</span>
+<span class="sd">      stride (int): Integer factor by which to step through samples *coherently* among walkers.  Default: 1.</span>
+<span class="sd">      burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.</span>
+<span class="sd">      skip (int): Number of initial *ensemble samples* to skip.  Overrides burn_fraction unless set to None. Default: None.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (numpy.ndarray, int): Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride; Number of samples skipped.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Find the number of independent samples</span>
+    <span class="n">nsamp</span><span class="p">,</span><span class="n">nhead</span> <span class="o">=</span> <span class="n">file_length</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="n">header_string</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Set the number of lines to skip</span>
+    <span class="n">nskip</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">skip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">nskip</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nsamp</span><span class="o">*</span><span class="n">burn_fraction</span><span class="p">)</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">nskip</span> <span class="o">=</span> <span class="n">skip</span>
+
+    <span class="c1"># If there are too few lines in the likelihood file, raise IndexError</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nskip</span><span class="o">&gt;</span><span class="n">nsamp</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span>
+
+    <span class="c1"># Number of samples to store</span>
+    <span class="n">nstor</span> <span class="o">=</span> <span class="p">(</span><span class="n">nsamp</span><span class="o">-</span><span class="n">nskip</span><span class="p">)</span><span class="o">//</span><span class="n">stride</span>
+
+    <span class="c1"># Add in the header</span>
+    <span class="n">nskip</span> <span class="o">+=</span> <span class="n">nhead</span>
+    
+    <span class="c1"># Loop over the lines from the file</span>
+    <span class="n">j</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">))</span> <span class="p">:</span>
+    
+        <span class="c1"># Skip the burn-in period</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">k</span><span class="o">&lt;</span><span class="n">nskip</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">continue</span>
+        
+        <span class="c1"># If this is inconsistent with the thin stride skip</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">k</span><span class="o">-</span><span class="n">nskip</span><span class="p">)</span><span class="o">%</span><span class="n">stride</span><span class="o">!=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># If this is the first step, allocate space for the likelihood</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">nwalk</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+            <span class="n">lklhd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nstor</span><span class="p">,</span><span class="n">nwalk</span><span class="p">))</span>
+
+        <span class="c1"># If this is consistent with the thin strid keep</span>
+        <span class="c1">#lklhd[j,:] = np.array(l.split()).astype(float)</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">lklhd</span><span class="p">[</span><span class="n">j</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">tok</span><span class="p">)</span> <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">])</span> <span class="c1">#l.split()).astype(float)</span>
+        <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">lklhd</span><span class="p">,</span><span class="n">nskip</span></div>
+            
+
+<div class="viewcode-block" id="read_echain"><a class="viewcode-back" href="../../docs/src/chain.html#chain.mcmc_chain.read_echain">[docs]</a><span class="k">def</span> <span class="nf">read_echain</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">walkers</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">burn_fraction</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads in a Themis chain file from an ensemble sampler.  The number of walkers </span>
+<span class="sd">    must be supplied.  Optionally, a stride, burn-in fraction, number of *ensemble</span>
+<span class="sd">    samples* to skip, or a set of parameters may be provided.  Returns an IndexError </span>
+<span class="sd">    if fewer ensemble samples exist in the chain file than skip.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">      filename (str): Filename in which chain data will be found (e.g., `Chain.dat`)</span>
+<span class="sd">      walkers (int): Number of independent walkers in the ensemble.</span>
+<span class="sd">      stride (int): Integer factor by which to step through samples *coherently* among walkers.  Default: 1.</span>
+<span class="sd">      burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.</span>
+<span class="sd">      skip (int): Number of initial *ensemble samples* to skip. Default: 0.</span>
+<span class="sd">      parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.</span>
+<span class="sd"> </span>
+<span class="sd">    Returns:</span>
+<span class="sd">      (numpy.ndarray): Chain data arranged as 3D array indexed by [sample, walker, parameter] *after* excluding the skipped lines and applying the specified stride.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="c1"># Determine if a full step has been output and remove partial outputs</span>
+    <span class="n">nsamp</span><span class="p">,</span><span class="n">nhead</span> <span class="o">=</span> <span class="n">file_length</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="n">header_string</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">)</span>
+    <span class="n">nsamp</span> <span class="o">-=</span> <span class="n">nsamp</span><span class="o">%</span><span class="n">walkers</span>
+
+    <span class="c1"># Set the number of lines to skip</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">skip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">nskip</span> <span class="o">=</span> <span class="n">nsamp</span><span class="o">*</span><span class="n">burn_fraction</span><span class="o">*</span><span class="n">walkers</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">nskip</span> <span class="o">=</span> <span class="n">skip</span><span class="o">*</span><span class="n">walkers</span>
+    
+    <span class="c1"># If there are too few lines in the chain file, raise IndexError</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nskip</span><span class="o">&gt;</span><span class="n">nsamp</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span>
+
+    <span class="c1"># Read in, parse and save</span>
+    <span class="n">nstor</span> <span class="o">=</span> <span class="p">(</span><span class="n">nsamp</span><span class="o">-</span><span class="n">nskip</span><span class="p">)</span><span class="o">//</span><span class="p">(</span><span class="n">walkers</span><span class="o">*</span><span class="n">stride</span><span class="p">)</span>
+
+    <span class="c1"># Add in the header</span>
+    <span class="n">nskip</span> <span class="o">+=</span> <span class="n">nhead</span>
+        
+    <span class="c1"># Loop over the lines from the file</span>
+    <span class="n">j</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">))</span> <span class="p">:</span>
+        <span class="c1"># Skip the burn-in period</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">k</span><span class="o">&lt;</span><span class="n">nskip</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># If this is inconsistent with the thin stride skip</span>
+        <span class="k">if</span> <span class="p">(((</span><span class="n">k</span><span class="o">-</span><span class="n">nskip</span><span class="p">)</span><span class="o">//</span><span class="n">walkers</span><span class="p">)</span><span class="o">%</span><span class="n">stride</span><span class="o">!=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># If past the end, stop</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">&gt;=</span><span class="n">nsamp</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="c1"># If this is the first step, allocate space for the likelihood</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">parameter_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">parameter_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">())))</span>
+            <span class="n">chain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nstor</span><span class="o">*</span><span class="n">walkers</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)))</span>
+        
+        <span class="n">tokens</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">chain</span><span class="p">[</span><span class="n">j</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">p</span><span class="p">])</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameter_list</span><span class="p">])</span>
+        <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+    <span class="k">return</span> <span class="n">chain</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">nstor</span><span class="p">,</span><span class="n">walkers</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="load_erun"><a class="viewcode-back" href="../../docs/src/chain.html#chain.mcmc_chain.load_erun">[docs]</a><span class="k">def</span> <span class="nf">load_erun</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span> <span class="n">lklhd_filename</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">burn_fraction</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Coherently loads a Themis chain and likelihood pair from an ensemble sampler.</span>
+<span class="sd">    Optionally, a stride, burn-in fraction, number of *ensemble samples* to skip, </span>
+<span class="sd">    or a set of parameters may be provided.  If set, the burn-in fraction is </span>
+<span class="sd">    computed for the *shorter* of the two files.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      chain_filename (str): Filename in which chain data will be found (e.g., `Chain.dat`)</span>
+<span class="sd">      lklhd_filename (str): Filename in which likelihood data will be found (e.g., `Lklhd.dat`)</span>
+<span class="sd">      stride (int): Integer factor by which to step through samples *coherently* among walkers.  Default: 1.</span>
+<span class="sd">      burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.</span>
+<span class="sd">      skip (int): Number of initial *ensemble samples* to skip. Default: 0.</span>
+<span class="sd">      parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (numpy.ndarray, numpy.ndarray): Chain data arranged as 3D array indexed by [sample, walker, parameter] *after* excluding the skipped lines and applying the specified stride; Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Find the lengths of the chain and likelihood files</span>
+    <span class="n">chain_nsamp</span><span class="p">,</span><span class="n">nhead</span> <span class="o">=</span> <span class="n">file_length</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span><span class="n">header_string</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">)</span>
+    <span class="n">elklhd</span><span class="p">,</span><span class="n">nhead</span> <span class="o">=</span> <span class="n">read_elklhd</span><span class="p">(</span><span class="n">lklhd_filename</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
+
+    <span class="c1"># Determine the number of walkers, and set the burn-in relative to the shorter</span>
+    <span class="n">walkers</span> <span class="o">=</span> <span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">nsamp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">chain_nsamp</span><span class="o">//</span><span class="n">walkers</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">skip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">skip</span> <span class="o">=</span> <span class="n">burn_fraction</span><span class="o">*</span><span class="n">nsamp</span>
+
+    <span class="c1"># Restrict the likelihoods</span>
+    <span class="n">elklhd</span> <span class="o">=</span> <span class="n">elklhd</span><span class="p">[</span><span class="n">skip</span><span class="p">:</span><span class="n">nsamp</span><span class="p">,:]</span>
+
+    <span class="c1"># Read and restrict the chain</span>
+    <span class="n">echain</span> <span class="o">=</span> <span class="n">read_echain</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span> <span class="n">walkers</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="n">parameter_list</span><span class="p">)[</span><span class="n">skip</span><span class="p">:</span><span class="n">nsamp</span><span class="p">,:,:]</span>
+    
+    <span class="k">return</span> <span class="n">echain</span><span class="p">,</span><span class="n">elklhd</span></div>
+    
+
+<div class="viewcode-block" id="sample_erun"><a class="viewcode-back" href="../../docs/src/chain.html#chain.mcmc_chain.sample_erun">[docs]</a><span class="k">def</span> <span class="nf">sample_erun</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span> <span class="n">lklhd_filename</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">burn_fraction</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Coherently loads and generates samples from a Themis chain and likelihood pair from</span>
+<span class="sd">    an ensemble sampler.  Optionally, a burn-in fraction, number of *ensemble samples* </span>
+<span class="sd">    to skip, or a set of parameters may be provided.  If set, the burn-in fraction is </span>
+<span class="sd">    computed for the *shorter* of the two files.  Is faster and more memory efficient </span>
+<span class="sd">    than load_erun and subsequently subsampling for large chains</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      chain_filename (str): Filename in which chain data will be found (e.g., `Chain.dat`)</span>
+<span class="sd">      lklhd_filename (str): Filename in which likelihood data will be found (e.g., `Lklhd.dat`)</span>
+<span class="sd">      samples (int): Number of samples to draw.</span>
+<span class="sd">      burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.</span>
+<span class="sd">      skip (int): Number of initial *ensemble samples* to skip. Default: 0.</span>
+<span class="sd">      parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (numpy.ndarray, numpy.ndarray): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride; Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Find the lengths of the chain and likelihood files</span>
+    <span class="n">chain_nsamp</span><span class="p">,</span><span class="n">nhead</span> <span class="o">=</span> <span class="n">file_length</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span><span class="n">header_string</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">)</span>
+    <span class="n">elklhd</span><span class="p">,</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">read_elklhd</span><span class="p">(</span><span class="n">lklhd_filename</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
+
+
+    <span class="c1"># Determine the number of walkers, and set the burn-in relative to the shorter</span>
+    <span class="n">walkers</span> <span class="o">=</span> <span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">nsamp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">chain_nsamp</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">skip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">nskip</span> <span class="o">=</span> <span class="n">burn_fraction</span><span class="o">*</span><span class="n">nsamp</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">nskip</span> <span class="o">=</span> <span class="n">skip</span><span class="o">*</span><span class="n">walkers</span>
+    
+    <span class="c1"># If there are too few lines in the chain file, raise IndexError</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nskip</span><span class="o">&gt;</span><span class="n">nsamp</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span>
+
+    <span class="c1"># Add in the header</span>
+    <span class="n">nskip</span> <span class="o">+=</span> <span class="n">nhead</span>
+
+    <span class="c1"># Generate sample list</span>
+    <span class="n">sample_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">nskip</span><span class="p">,</span><span class="n">high</span><span class="o">=</span><span class="n">nsamp</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="n">samples</span><span class="p">))</span>
+    
+    <span class="c1"># Loop over the lines from the file</span>
+    <span class="n">j</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">))</span> <span class="p">:</span>
+        <span class="c1"># Skip the burn-in period</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">k</span><span class="o">&lt;</span><span class="n">nskip</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">continue</span>
+                
+        <span class="k">while</span> <span class="p">(</span><span class="n">j</span><span class="o">&lt;</span><span class="n">samples</span> <span class="ow">and</span> <span class="n">k</span><span class="o">==</span><span class="n">sample_list</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">parameter_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+                    <span class="n">parameter_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">())))</span>
+                <span class="n">echain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">samples</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)))</span>
+
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">echain</span><span class="p">[</span><span class="n">j</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">p</span><span class="p">])</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameter_list</span><span class="p">])</span>
+            <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_list</span><span class="p">))</span> <span class="p">:</span>
+            <span class="k">break</span>
+        
+    <span class="c1"># Grab the subsamples from the likelihood</span>
+    <span class="n">elklhd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">])[</span><span class="n">sample_list</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">echain</span><span class="p">,</span><span class="n">elklhd</span></div>
+
+
+<div class="viewcode-block" id="sample_chain"><a class="viewcode-back" href="../../docs/src/chain.html#chain.mcmc_chain.sample_chain">[docs]</a><span class="k">def</span> <span class="nf">sample_chain</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">burn_fraction</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Loads and generates samples from a Themis chain a discrete sampler.  Optionally, a </span>
+<span class="sd">    burn-in fraction, number of *samples*  to skip, or a set of parameters may be provided.  </span>
+<span class="sd">    Is faster and more memory efficient than load_erun and subsequently subsampling for </span>
+<span class="sd">    large chains.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      chain_filename (str): Filename in which chain data will be found (e.g., `Chain.dat`)</span>
+<span class="sd">      samples (int): Number of samples to draw.</span>
+<span class="sd">      burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.</span>
+<span class="sd">      skip (int): Number of initial *ensemble samples* to skip. Default: 0.</span>
+<span class="sd">      parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (numpy.ndarray): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Find the lengths of the chain and likelihood files</span>
+    <span class="n">nsamp</span><span class="p">,</span><span class="n">nhead</span> <span class="o">=</span> <span class="n">file_length</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span><span class="n">header_string</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Determine the number of walkers, and set the burn-in relative to the shorter</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">skip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">nskip</span> <span class="o">=</span> <span class="n">burn_fraction</span><span class="o">*</span><span class="n">nsamp</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">nskip</span> <span class="o">=</span> <span class="n">skip</span>
+    
+    <span class="c1"># If there are too few lines in the chain file, raise IndexError</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nskip</span><span class="o">&gt;</span><span class="n">nsamp</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span>
+
+    <span class="c1"># Add in the header</span>
+    <span class="n">nskip</span> <span class="o">+=</span> <span class="n">nhead</span>
+
+    <span class="c1"># Generate sample list</span>
+    <span class="n">sample_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">nskip</span><span class="p">,</span><span class="n">high</span><span class="o">=</span><span class="n">nsamp</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="n">samples</span><span class="p">))</span>
+    
+    <span class="c1"># Loop over the lines from the file</span>
+    <span class="n">j</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">))</span> <span class="p">:</span>
+        <span class="c1"># Skip the burn-in period</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">k</span><span class="o">&lt;</span><span class="n">nskip</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">continue</span>
+                
+        <span class="k">while</span> <span class="p">(</span><span class="n">j</span><span class="o">&lt;</span><span class="n">samples</span> <span class="ow">and</span> <span class="n">k</span><span class="o">==</span><span class="n">sample_list</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">parameter_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+                    <span class="n">parameter_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">())))</span>
+                <span class="n">chain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">samples</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)))</span>
+
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">chain</span><span class="p">[</span><span class="n">j</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">p</span><span class="p">])</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameter_list</span><span class="p">])</span>
+            <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_list</span><span class="p">))</span> <span class="p">:</span>
+            <span class="k">break</span>
+        
+    <span class="k">return</span> <span class="n">chain</span></div>
+
+
+
+<div class="viewcode-block" id="most_likely_erun"><a class="viewcode-back" href="../../docs/src/chain.html#chain.mcmc_chain.most_likely_erun">[docs]</a><span class="k">def</span> <span class="nf">most_likely_erun</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span> <span class="n">lklhd_filename</span><span class="p">,</span> <span class="n">samples</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">burn_fraction</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Coherently loads and returns optimal samples from a Themis chain and likelihood pair </span>
+<span class="sd">    from an ensemble sampler.  Optionally, a burn-in fraction, number of *ensemble samples* </span>
+<span class="sd">    to skip, or a set of parameters may be provided.  If set, the burn-in fraction is </span>
+<span class="sd">    computed for the *shorter* of the two files.  Is faster and more memory efficient </span>
+<span class="sd">    than load_erun and subsequently subsampling for large chains</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      chain_filename (str): Filename in which chain data will be found (e.g., `Chain.dat`)</span>
+<span class="sd">      lklhd_filename (str): Filename in which likelihood data will be found (e.g., `Lklhd.dat`)</span>
+<span class="sd">      samples (int): Number of samples to draw. Default: 1.</span>
+<span class="sd">      burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.</span>
+<span class="sd">      skip (int): Number of initial *ensemble samples* to skip. Default: 0.</span>
+<span class="sd">      parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (numpy.ndarray, numpy.ndarray): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride; Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Find the lengths of the chain and likelihood files</span>
+    <span class="n">chain_nsamp</span><span class="p">,</span><span class="n">nhead</span> <span class="o">=</span> <span class="n">file_length</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span><span class="n">header_string</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">)</span>
+    <span class="n">elklhd</span><span class="p">,</span><span class="n">tmp</span> <span class="o">=</span> <span class="n">read_elklhd</span><span class="p">(</span><span class="n">lklhd_filename</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
+
+
+    <span class="c1"># Determine the number of walkers, and set the burn-in relative to the shorter</span>
+    <span class="n">walkers</span> <span class="o">=</span> <span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">nsamp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">chain_nsamp</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">skip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">nskip</span> <span class="o">=</span> <span class="n">burn_fraction</span><span class="o">*</span><span class="n">nsamp</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">nskip</span> <span class="o">=</span> <span class="n">skip</span><span class="o">*</span><span class="n">walkers</span>
+    
+    <span class="c1"># If there are too few lines in the chain file, raise IndexError</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nskip</span><span class="o">&gt;</span><span class="n">nsamp</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">IndexError</span>
+
+    <span class="c1"># Add in the header</span>
+    <span class="n">nskip</span> <span class="o">+=</span> <span class="n">nhead</span>
+
+    <span class="c1"># Flatten likelihoods and shorten to the number of samples in the chain</span>
+    <span class="n">elklhd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">])[:</span><span class="n">nsamp</span><span class="p">])</span>
+    
+    <span class="c1"># Generate sample list</span>
+    <span class="n">sample_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">elklhd</span><span class="p">)[:</span><span class="n">samples</span><span class="p">])</span>
+    
+    <span class="c1"># Loop over the lines from the file</span>
+    <span class="n">j</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">))</span> <span class="p">:</span>
+        <span class="c1"># Skip the burn-in period</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">k</span><span class="o">&lt;</span><span class="n">nskip</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">continue</span>
+                
+        <span class="k">while</span> <span class="p">(</span><span class="n">j</span><span class="o">&lt;</span><span class="n">samples</span> <span class="ow">and</span> <span class="n">k</span><span class="o">==</span><span class="n">sample_list</span><span class="p">[</span><span class="n">j</span><span class="p">])</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">parameter_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+                    <span class="n">parameter_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">())))</span>
+                <span class="n">echain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">samples</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)))</span>
+
+            <span class="n">tokens</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+            <span class="n">echain</span><span class="p">[</span><span class="n">j</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">p</span><span class="p">])</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameter_list</span><span class="p">])</span>
+            <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="n">sample_list</span><span class="p">))</span> <span class="p">:</span>
+            <span class="k">break</span>
+        
+    <span class="c1"># Grab the subsamples from the likelihood</span>
+    <span class="n">elklhd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">])[</span><span class="n">sample_list</span><span class="p">])</span>
+
+    <span class="c1"># Re-order in likelihood</span>
+    <span class="n">isrt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">elklhd</span><span class="p">)</span>
+    <span class="n">elklhd</span> <span class="o">=</span> <span class="n">elklhd</span><span class="p">[</span><span class="n">isrt</span><span class="p">]</span>
+    <span class="n">echain</span> <span class="o">=</span> <span class="n">echain</span><span class="p">[</span><span class="n">isrt</span><span class="p">,:]</span>
+
+    <span class="k">return</span> <span class="n">echain</span><span class="p">,</span><span class="n">elklhd</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Themis Development Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0+untagged.25.ga7a9aee.dirty',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE: 'true'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
