@@ -1,0 +1,441 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Chain &mdash; ThemisPy 0+untagged.28.gacd89e2.dirty documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.28.gacd89e2.dirty documentation" href="../../index.html"/>
+        <link rel="up" title="User’s Guide" href="userguide.html"/>
+        <link rel="next" title="Developer’s Guide" href="devel.html"/>
+        <link rel="prev" title="User’s Guide" href="userguide.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> ThemisPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0+untagged.28.gacd89e2.dirty
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="userguide.html">User’s Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="userguide.html#structure-and-philosphy">Structure and philosphy</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="userguide.html#packages">Packages</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Chain</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="devel.html">Developer’s Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ThemisPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="userguide.html">User’s Guide</a> &raquo;</li>
+        
+      <li>Chain</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/docs/src/chain.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-chain"></span><div class="section" id="chain">
+<span id="id1"></span><h1>Chain<a class="headerlink" href="#chain" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-chain.mcmc_chain"></span><dl class="function">
+<dt id="chain.mcmc_chain.file_length">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">file_length</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">header_string=None</em>, <em class="sig-param">comment_string=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#file_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.file_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>Counts the number of lines in a file.  Optionally will remove header lines,
+marked by a prepended character, and comment lines, marked by a possibly
+different prepended character.  These are differentiated by the presumed
+location within the file: Headers are at the beginning, ending at the first
+line to not be prepended with the header_string.  Comments can appear
+throughout the file.  In the absence of distributed comments, searching only
+for the header is significantly faster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename</p></li>
+<li><p><strong>header_string</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Single chararacter string that denotes header lines.  Default: None.</p></li>
+<li><p><strong>comment_string</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Single chararacter string that denotes header lines.  Default: None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Number of non-header and non-commented lines; Number of header lines (only if header_string is not None); Number of commented lines (only if comment_string is not None).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>[, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>[, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>]])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chain.mcmc_chain.load_erun">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">load_erun</code><span class="sig-paren">(</span><em class="sig-param">chain_filename</em>, <em class="sig-param">lklhd_filename</em>, <em class="sig-param">stride=1</em>, <em class="sig-param">burn_fraction=0</em>, <em class="sig-param">skip=None</em>, <em class="sig-param">parameter_list=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#load_erun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.load_erun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coherently loads a Themis chain and likelihood pair from an ensemble sampler.
+Optionally, a stride, burn-in fraction, number of <em>ensemble samples</em> to skip,
+or a set of parameters may be provided.  If set, the burn-in fraction is
+computed for the <em>shorter</em> of the two files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chain_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which chain data will be found (e.g., <cite>Chain.dat</cite>)</p></li>
+<li><p><strong>lklhd_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which likelihood data will be found (e.g., <cite>Lklhd.dat</cite>)</p></li>
+<li><p><strong>stride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Integer factor by which to step through samples <em>coherently</em> among walkers.  Default: 1.</p></li>
+<li><p><strong>burn_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of the total number of lines to exclude from the beginning.  Default: 0.</p></li>
+<li><p><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of initial <em>ensemble samples</em> to skip. Default: 0.</p></li>
+<li><p><strong>parameter_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Chain data arranged as 3D array indexed by [sample, walker, parameter] <em>after</em> excluding the skipped lines and applying the specified stride; Likelihood data arranged as 2D array indexed by [sample, walker] <em>after</em> excluding the burn in period specified and applied the specified stride.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>, <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chain.mcmc_chain.most_likely_erun">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">most_likely_erun</code><span class="sig-paren">(</span><em class="sig-param">chain_filename</em>, <em class="sig-param">lklhd_filename</em>, <em class="sig-param">samples=1</em>, <em class="sig-param">burn_fraction=0</em>, <em class="sig-param">skip=None</em>, <em class="sig-param">parameter_list=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#most_likely_erun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.most_likely_erun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coherently loads and returns optimal samples from a Themis chain and likelihood pair
+from an ensemble sampler.  Optionally, a burn-in fraction, number of <em>ensemble samples</em>
+to skip, or a set of parameters may be provided.  If set, the burn-in fraction is
+computed for the <em>shorter</em> of the two files.  Is faster and more memory efficient
+than load_erun and subsequently subsampling for large chains</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chain_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which chain data will be found (e.g., <cite>Chain.dat</cite>)</p></li>
+<li><p><strong>lklhd_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which likelihood data will be found (e.g., <cite>Lklhd.dat</cite>)</p></li>
+<li><p><strong>samples</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of samples to draw. Default: 1.</p></li>
+<li><p><strong>burn_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of the total number of lines to exclude from the beginning.  Default: 0.</p></li>
+<li><p><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of initial <em>ensemble samples</em> to skip. Default: 0.</p></li>
+<li><p><strong>parameter_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Chain data arranged as 2D array indexed by [sample, parameter] <em>after</em> excluding the skipped lines and applying the specified stride; Likelihood data arranged as 1D array indexed by [sample] <em>after</em> excluding the burn in period specified and applied the specified stride.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>, <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chain.mcmc_chain.parse_parameter_arglist">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">parse_parameter_arglist</code><span class="sig-paren">(</span><em class="sig-param">arg_list</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#parse_parameter_arglist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.parse_parameter_arglist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a list of lists of strings containing individual numbers (e.g., 0 1 4),
+comma separated lists (e.g., 0, 2, 5), ranges (e.g., 0-3), or combinations thereof,
+and reduces them to a unique, ordered list of integers.  Such a list of parameter
+values arises naturally from ArgumentParser append, e.g., from
+<code class="docutils literal notranslate"><span class="pre">parser.add_argument(&quot;-p&quot;,</span> <span class="pre">type=str,</span> <span class="pre">nargs='+',</span> <span class="pre">action='append')</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>arg_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of lists with strings denoting indexes or ranges of indexes.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Sorted, unique list of integers.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chain.mcmc_chain.read_echain">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_echain</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">walkers</em>, <em class="sig-param">stride=1</em>, <em class="sig-param">burn_fraction=0</em>, <em class="sig-param">skip=None</em>, <em class="sig-param">parameter_list=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_echain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_echain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in a Themis chain file from an ensemble sampler.  The number of walkers
+must be supplied.  Optionally, a stride, burn-in fraction, number of <em>ensemble
+samples</em> to skip, or a set of parameters may be provided.  Returns an IndexError
+if fewer ensemble samples exist in the chain file than skip.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which chain data will be found (e.g., <cite>Chain.dat</cite>)</p></li>
+<li><p><strong>walkers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of independent walkers in the ensemble.</p></li>
+<li><p><strong>stride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Integer factor by which to step through samples <em>coherently</em> among walkers.  Default: 1.</p></li>
+<li><p><strong>burn_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of the total number of lines to exclude from the beginning.  Default: 0.</p></li>
+<li><p><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of initial <em>ensemble samples</em> to skip. Default: 0.</p></li>
+<li><p><strong>parameter_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Chain data arranged as 3D array indexed by [sample, walker, parameter] <em>after</em> excluding the skipped lines and applying the specified stride.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chain.mcmc_chain.read_elklhd">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_elklhd</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">stride=1</em>, <em class="sig-param">burn_fraction=0</em>, <em class="sig-param">skip=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_elklhd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_elklhd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in a Themis likelihood file from an ensemble sampler.  Optionally, a
+stride, burn-in fraction, or number of <em>ensemble samples</em> to skip may be set.
+Returns an IndexError if fewer ensemble samples exist in the chain file than skip.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which likelihood data will be found (e.g., <cite>Lklhd.dat</cite>)</p></li>
+<li><p><strong>stride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Integer factor by which to step through samples <em>coherently</em> among walkers.  Default: 1.</p></li>
+<li><p><strong>burn_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of the total number of lines to exclude from the beginning.  Default: 0.</p></li>
+<li><p><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of initial <em>ensemble samples</em> to skip.  Overrides burn_fraction unless set to None. Default: None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Likelihood data arranged as 2D array indexed by [sample, walker] <em>after</em> excluding the burn in period specified and applied the specified stride; Number of samples skipped.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chain.mcmc_chain.sample_chain">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">sample_chain</code><span class="sig-paren">(</span><em class="sig-param">chain_filename</em>, <em class="sig-param">samples</em>, <em class="sig-param">burn_fraction=0</em>, <em class="sig-param">skip=None</em>, <em class="sig-param">parameter_list=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#sample_chain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.sample_chain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Loads and generates samples from a Themis chain a discrete sampler.  Optionally, a
+burn-in fraction, number of <em>samples</em>  to skip, or a set of parameters may be provided.
+Is faster and more memory efficient than load_erun and subsequently subsampling for
+large chains.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chain_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which chain data will be found (e.g., <cite>Chain.dat</cite>)</p></li>
+<li><p><strong>samples</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of samples to draw.</p></li>
+<li><p><strong>burn_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of the total number of lines to exclude from the beginning.  Default: 0.</p></li>
+<li><p><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of initial <em>ensemble samples</em> to skip. Default: 0.</p></li>
+<li><p><strong>parameter_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Chain data arranged as 2D array indexed by [sample, parameter] <em>after</em> excluding the skipped lines and applying the specified stride</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chain.mcmc_chain.sample_erun">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">sample_erun</code><span class="sig-paren">(</span><em class="sig-param">chain_filename</em>, <em class="sig-param">lklhd_filename</em>, <em class="sig-param">samples</em>, <em class="sig-param">burn_fraction=0</em>, <em class="sig-param">skip=None</em>, <em class="sig-param">parameter_list=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#sample_erun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.sample_erun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coherently loads and generates samples from a Themis chain and likelihood pair from
+an ensemble sampler.  Optionally, a burn-in fraction, number of <em>ensemble samples</em>
+to skip, or a set of parameters may be provided.  If set, the burn-in fraction is
+computed for the <em>shorter</em> of the two files.  Is faster and more memory efficient
+than load_erun and subsequently subsampling for large chains</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chain_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which chain data will be found (e.g., <cite>Chain.dat</cite>)</p></li>
+<li><p><strong>lklhd_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which likelihood data will be found (e.g., <cite>Lklhd.dat</cite>)</p></li>
+<li><p><strong>samples</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of samples to draw.</p></li>
+<li><p><strong>burn_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of the total number of lines to exclude from the beginning.  Default: 0.</p></li>
+<li><p><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of initial <em>ensemble samples</em> to skip. Default: 0.</p></li>
+<li><p><strong>parameter_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Chain data arranged as 2D array indexed by [sample, parameter] <em>after</em> excluding the skipped lines and applying the specified stride; Likelihood data arranged as 1D array indexed by [sample] <em>after</em> excluding the burn in period specified and applied the specified stride.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>, <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="devel.html" class="btn btn-neutral float-right" title="Developer’s Guide" accesskey="n">Next →</a>
+      
+      
+        <a href="userguide.html" class="btn btn-neutral" title="User’s Guide" accesskey="p">← Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Themis Development Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0+untagged.28.gacd89e2.dirty',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE: 'true'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/language_data.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
