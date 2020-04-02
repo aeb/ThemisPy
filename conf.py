@@ -14,7 +14,6 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('./themispy/'))
-#sys.path.insert(0, os.path.abspath('./themispy/chain'))
 print("Documentation generation searching",sys.path)
 
 # -- Project information -----------------------------------------------------
@@ -89,6 +88,11 @@ except ModuleNotFoundError :
     html_theme_path = []
     print("WARNING: Could not import rtcat_sphix_theme.  Will used default.")
 
+
+#html_theme = html_theme_default
+#html_theme_path = []
+#print("WARNING: Could not import rtcat_sphix_theme.  Will used default.")
+    
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
