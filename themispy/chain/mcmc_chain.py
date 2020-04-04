@@ -154,6 +154,10 @@ def read_elklhd(filename, stride=1, burn_fraction=0, skip=None):
         if ((k-nskip)%stride!=0) :
             continue
 
+        # If past the end, stop
+        if (j>=nstor) :
+            break
+
         # If this is the first step, allocate space for the likelihood
         if (j==0) :
             nwalk = len(l.split())
@@ -220,7 +224,7 @@ def read_echain(filename, walkers, stride=1, burn_fraction=0, skip=None, paramet
             continue
 
         # If past the end, stop
-        if (j>=nsamp) :
+        if (j>=nstor*walkers) :
             break
 
         # If this is the first step, allocate space for the likelihood
@@ -230,7 +234,7 @@ def read_echain(filename, walkers, stride=1, burn_fraction=0, skip=None, paramet
             chain = np.zeros((nstor*walkers,len(parameter_list)))
         
         tokens = l.split()
-        chain[j//stride,:] = np.array([float(tokens[p]) for p in parameter_list])
+        chain[j,:] = np.array([float(tokens[p]) for p in parameter_list])
         j += 1
 
     return chain.reshape([nstor,walkers,-1])
