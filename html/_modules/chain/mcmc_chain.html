@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>chain.mcmc_chain &mdash; ThemisPy 0+untagged.52.g6f590ee.dirty documentation</title>
+  <title>chain.mcmc_chain &mdash; ThemisPy 0+untagged.61.g0aa2c04 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.52.g6f590ee.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.61.g0aa2c04 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.52.g6f590ee.dirty
+                0+untagged.61.g0aa2c04
               </div>
             
           
@@ -147,11 +147,15 @@
            <div itemprop="articleBody">
             
   <h1>Source code for chain.mcmc_chain</h1><div class="highlight"><pre>
-<span></span><span class="c1"># Provides utility functions for reading and manipulating MCMC chain</span>
-<span class="c1"># data produced by Themis analyses.</span>
+<span></span><span class="c1">###########################</span>
 <span class="c1">#</span>
-<span class="c1"># </span>
+<span class="c1"># Package:</span>
+<span class="c1">#   mcmc_chain</span>
 <span class="c1">#</span>
+<span class="c1"># Provides:</span>
+<span class="c1">#   Provides utility functions for reading and manipulating MCMC chains produced by Themis.</span>
+<span class="c1">#</span>
+
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
@@ -352,7 +356,7 @@
 
     <span class="c1"># Add in the header</span>
     <span class="n">nskip</span> <span class="o">+=</span> <span class="n">nhead</span>
-        
+
     <span class="c1"># Loop over the lines from the file</span>
     <span class="n">j</span><span class="o">=</span><span class="mi">0</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">))</span> <span class="p">:</span>
@@ -377,7 +381,7 @@
         <span class="n">tokens</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
         <span class="n">chain</span><span class="p">[</span><span class="n">j</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="n">p</span><span class="p">])</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameter_list</span><span class="p">])</span>
         <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
-        
+
     <span class="k">return</span> <span class="n">chain</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="n">nstor</span><span class="p">,</span><span class="n">walkers</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div>
 
 
@@ -408,13 +412,16 @@
     <span class="n">walkers</span> <span class="o">=</span> <span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">nsamp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">chain_nsamp</span><span class="o">//</span><span class="n">walkers</span><span class="p">)</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">skip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
-        <span class="n">skip</span> <span class="o">=</span> <span class="n">burn_fraction</span><span class="o">*</span><span class="n">nsamp</span>
-
+        <span class="n">skip</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">burn_fraction</span><span class="o">*</span><span class="n">nsamp</span><span class="p">)</span>
+        
     <span class="c1"># Restrict the likelihoods</span>
     <span class="n">elklhd</span> <span class="o">=</span> <span class="n">elklhd</span><span class="p">[</span><span class="n">skip</span><span class="p">:</span><span class="n">nsamp</span><span class="p">,:]</span>
 
     <span class="c1"># Read and restrict the chain</span>
-    <span class="n">echain</span> <span class="o">=</span> <span class="n">read_echain</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span> <span class="n">walkers</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="n">parameter_list</span><span class="p">)[</span><span class="n">skip</span><span class="p">:</span><span class="n">nsamp</span><span class="p">,:,:]</span>
+    <span class="n">echain</span> <span class="o">=</span> <span class="n">read_echain</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span> <span class="n">walkers</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="n">parameter_list</span><span class="p">)[:</span><span class="n">nsamp</span><span class="p">,:,:]</span>
+
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;baz&quot;</span><span class="p">,</span><span class="n">nsamp</span><span class="p">,</span><span class="n">skip</span><span class="p">,</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
     
     <span class="k">return</span> <span class="n">echain</span><span class="p">,</span><span class="n">elklhd</span></div>
     
@@ -624,6 +631,33 @@
     <span class="n">echain</span> <span class="o">=</span> <span class="n">echain</span><span class="p">[</span><span class="n">isrt</span><span class="p">,:]</span>
 
     <span class="k">return</span> <span class="n">echain</span><span class="p">,</span><span class="n">elklhd</span></div>
+
+
+<div class="viewcode-block" id="join_echains"><a class="viewcode-back" href="../../docs/src/chain.html#chain.mcmc_chain.join_echains">[docs]</a><span class="k">def</span> <span class="nf">join_echains</span><span class="p">(</span><span class="n">echains</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Join a list of ensemble chains from separate runs. If chains have a different</span>
+<span class="sd">    number of steps then the largest even common size is used to join them.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">      echains (list): List of ensemble chains to join.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (numpy.ndarray): Combined ensemble chain.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lengths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">echains</span><span class="p">)):</span>
+        <span class="n">lengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">echains</span><span class="p">[</span><span class="n">i</span><span class="p">][:,</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="c1">#print(lengths)</span>
+    <span class="n">max_length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">lengths</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">max_length</span><span class="o">%</span><span class="mi">2</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">max_length</span> <span class="o">-=</span><span class="mi">1</span>
+    <span class="c1">#print(len(echains), echains[0].shape, np.array(echains).shape)</span>
+    <span class="n">jechains</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">echains</span><span class="p">),</span><span class="n">max_length</span><span class="p">,</span><span class="n">echains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">echains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">echains</span><span class="p">)):</span>
+        <span class="n">jechains</span><span class="p">[</span><span class="n">i</span><span class="p">,:,:,:]</span> <span class="o">=</span> <span class="n">echains</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="o">-</span><span class="n">max_length</span><span class="p">:,:,:]</span>
+    <span class="k">return</span> <span class="n">jechains</span></div>
+    
+    
 </pre></div>
 
            </div>
@@ -657,7 +691,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.52.g6f590ee.dirty',
+            VERSION:'0+untagged.61.g0aa2c04',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'
@@ -667,6 +701,7 @@
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
       <script type="text/javascript" src="../../_static/language_data.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 

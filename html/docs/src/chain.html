@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Chain &mdash; ThemisPy 0+untagged.52.g6f590ee.dirty documentation</title>
+  <title>Chain &mdash; ThemisPy 0+untagged.61.g0aa2c04 documentation</title>
   
 
   
@@ -33,9 +33,9 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.52.g6f590ee.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.61.g0aa2c04 documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
-        <link rel="next" title="Developer’s Guide" href="devel.html"/>
+        <link rel="next" title="Diag" href="diag.html"/>
         <link rel="prev" title="User’s Guide" href="userguide.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.52.g6f590ee.dirty
+                0+untagged.61.g0aa2c04
               </div>
             
           
@@ -92,6 +92,7 @@
 <li class="toctree-l2"><a class="reference internal" href="userguide.html#structure-and-philosphy">Structure and philosphy</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="userguide.html#packages">Packages</a><ul class="current">
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diag.html">Diag</a></li>
 </ul>
 </li>
 </ul>
@@ -182,6 +183,24 @@ for the header is significantly faster.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>[, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>[, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>]])</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chain.mcmc_chain.join_echains">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">join_echains</code><span class="sig-paren">(</span><em class="sig-param">echains</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#join_echains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.join_echains" title="Permalink to this definition">¶</a></dt>
+<dd><p>Join a list of ensemble chains from separate runs. If chains have a different
+number of steps then the largest even common size is used to join them.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>echains</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of ensemble chains to join.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Combined ensemble chain.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -376,7 +395,7 @@ than load_erun and subsequently subsampling for large chains</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="devel.html" class="btn btn-neutral float-right" title="Developer’s Guide" accesskey="n">Next →</a>
+        <a href="diag.html" class="btn btn-neutral float-right" title="Diag" accesskey="n">Next →</a>
       
       
         <a href="userguide.html" class="btn btn-neutral" title="User’s Guide" accesskey="p">← Previous</a>
@@ -410,7 +429,7 @@ than load_erun and subsequently subsampling for large chains</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.52.g6f590ee.dirty',
+            VERSION:'0+untagged.61.g0aa2c04',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'
@@ -420,6 +439,7 @@ than load_erun and subsequently subsampling for large chains</p>
       <script type="text/javascript" src="../../_static/underscore.js"></script>
       <script type="text/javascript" src="../../_static/doctools.js"></script>
       <script type="text/javascript" src="../../_static/language_data.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
 
   
 
