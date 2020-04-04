@@ -47,7 +47,7 @@ parser.add_argument("-bf","--burn-fraction",
                     type=float,
                     action='store',
                     default=0,
-                    help=("Fraction of chain to skip.  Is overridden by -b,--burn."))
+                    help=("Fraction of chain to skip."))
 parser.add_argument("--postfix",
                     type=str,
                     action='store',
