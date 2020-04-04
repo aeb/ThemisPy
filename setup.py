@@ -11,6 +11,6 @@ setup(name='ThemisPy',
       author_email='Themis@perimeterinstitute.ca',
       url='https://github.com/aeb/ThemisPy',
       packages=find_packages(),
-      install_requires=['numpy','matplotlib']
+      install_requires=['numpy','scipy','matplotlib']
      )
 
