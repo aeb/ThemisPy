@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Diag &mdash; ThemisPy 0+untagged.65.g4592de2 documentation</title>
+  <title>Diag &mdash; ThemisPy 0+untagged.68.g3aa0939 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.65.g4592de2 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.68.g3aa0939 documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Developer’s Guide" href="devel.html"/>
         <link rel="prev" title="Chain" href="chain.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.65.g4592de2
+                0+untagged.68.g3aa0939
               </div>
             
           
@@ -335,30 +335,6 @@ the number of walkers * mean_ess since the chains are correlated.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="diag.convergence_tools.plot_rank_hist">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">plot_rank_hist</code><span class="sig-paren">(</span><em class="sig-param">chains</em>, <em class="sig-param">bins=30</em>, <em class="sig-param">names=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#plot_rank_hist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.plot_rank_hist" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the rank plots, where the rank is taken over all the runs.
-The histograms should be roughly uniform. Any structure in them signals
-that the chains aren’t converged or mixing well, i.e. your Monte Carlo estimates
-will be biased.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>chains</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Single parameter chains, stored as 2D arrays indexed by [run,sample].</p></li>
-<li><p><strong>bins</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of bins in which to segment data for plot.</p></li>
-<li><p><strong>names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameter names (str).  Default: None.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Handles to the figure and array of axes objects in the plot.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/3.2.1/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)">matplotlib.figure.Figure</a>, <a class="reference external" href="https://matplotlib.org/3.2.1/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)">matplotlib.axes.Axes</a>)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
 <dt id="diag.convergence_tools.ranknormalized_chains">
 <code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">ranknormalized_chains</code><span class="sig-paren">(</span><em class="sig-param">chains</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#ranknormalized_chains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.ranknormalized_chains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the rank-normalized chains, where the rank is taken over all the chains.
@@ -488,7 +464,7 @@ particle chain of the variance between chains.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.65.g4592de2',
+            VERSION:'0+untagged.68.g3aa0939',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'
