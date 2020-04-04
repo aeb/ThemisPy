@@ -81,9 +81,6 @@ chains = []
 lklhds = []
 for i in range(len(chainsname)):
     c, l = tc.load_erun(chainsname[i],lklhdname[i], stride=nthin, parameter_list=plist, burn_fraction=warmup_frac)
-
-    print("foo",c.shape,l.shape)
-           
     if (c.shape[0] != l.shape[0]):
         print("Error reading in the file! Number of steps in chain and likelihood are different")
     chains.append(c)

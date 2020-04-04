@@ -270,9 +270,6 @@ def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=No
 
     # Read and restrict the chain
     echain = read_echain(chain_filename, walkers, stride=stride, skip=skip, parameter_list=parameter_list)[:nsamp,:,:]
-
-
-    print("baz",nsamp,skip,elklhd.shape,echain.shape)
     
     return echain,elklhd
     
