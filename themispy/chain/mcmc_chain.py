@@ -1,8 +1,12 @@
-# Provides utility functions for reading and manipulating MCMC chain
-# data produced by Themis analyses.
+###########################
 #
-# 
+# Package:
+#   mcmc_chain
 #
+# Provides:
+#   Provides utility functions for reading and manipulating MCMC chains produced by Themis.
+#
+
 
 import numpy as np
 import warnings
@@ -203,7 +207,7 @@ def read_echain(filename, walkers, stride=1, burn_fraction=0, skip=None, paramet
 
     # Add in the header
     nskip += nhead
-        
+
     # Loop over the lines from the file
     j=0
     for k,l in enumerate(open(filename,'r')) :
@@ -228,7 +232,7 @@ def read_echain(filename, walkers, stride=1, burn_fraction=0, skip=None, paramet
         tokens = l.split()
         chain[j,:] = np.array([float(tokens[p]) for p in parameter_list])
         j += 1
-        
+
     return chain.reshape([nstor,walkers,-1])
 
 
@@ -259,13 +263,16 @@ def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=No
     walkers = elklhd.shape[1]
     nsamp = min(elklhd.shape[0],chain_nsamp//walkers)
     if (skip is None) :
-        skip = burn_fraction*nsamp
-
+        skip = int(burn_fraction*nsamp)
+        
     # Restrict the likelihoods
     elklhd = elklhd[skip:nsamp,:]
 
     # Read and restrict the chain
-    echain = read_echain(chain_filename, walkers, stride=stride, skip=skip, parameter_list=parameter_list)[skip:nsamp,:,:]
+    echain = read_echain(chain_filename, walkers, stride=stride, skip=skip, parameter_list=parameter_list)[:nsamp,:,:]
+
+
+    print("baz",nsamp,skip,elklhd.shape,echain.shape)
     
     return echain,elklhd
     
@@ -475,3 +482,30 @@ def most_likely_erun(chain_filename, lklhd_filename, samples=1, burn_fraction=0,
     echain = echain[isrt,:]
 
     return echain,elklhd
+
+
+def join_echains(echains):
+    """
+    Join a list of ensemble chains from separate runs. If chains have a different
+    number of steps then the largest even common size is used to join them.
+    
+    Args:
+      echains (list): List of ensemble chains to join.
+
+    Returns:
+      (numpy.ndarray): Combined ensemble chain.
+    """
+    lengths = []
+    for i in range(len(echains)):
+        lengths.append(len(echains[i][:,0]))
+    #print(lengths)
+    max_length = np.amin(lengths)
+    if max_length%2!=0:
+        max_length -=1
+    #print(len(echains), echains[0].shape, np.array(echains).shape)
+    jechains = np.zeros((len(echains),max_length,echains[0].shape[1], echains[0].shape[2]))
+    for i in range(len(echains)):
+        jechains[i,:,:,:] = echains[i][-max_length:,:,:]
+    return jechains
+    
+    
