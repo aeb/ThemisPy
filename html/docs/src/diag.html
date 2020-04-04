@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Diag &mdash; ThemisPy 0+untagged.68.g3aa0939 documentation</title>
+  <title>Diag &mdash; ThemisPy 0+untagged.68.g3aa0939.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.68.g3aa0939 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.68.g3aa0939.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Developer’s Guide" href="devel.html"/>
         <link rel="prev" title="Chain" href="chain.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.68.g3aa0939
+                0+untagged.68.g3aa0939.dirty
               </div>
             
           
@@ -92,7 +92,11 @@
 <li class="toctree-l2"><a class="reference internal" href="userguide.html#structure-and-philosphy">Structure and philosphy</a></li>
 <li class="toctree-l2 current"><a class="reference internal" href="userguide.html#packages">Packages</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="chain.html">Chain</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">Diag</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Diag</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-diag.convergence_tools">Convergence Tools</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-diag.diagnostic_plots">Plotting Tools</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -160,7 +164,9 @@
             
   <span class="target" id="module-diag"></span><div class="section" id="diag">
 <span id="id1"></span><h1>Diag<a class="headerlink" href="#diag" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-diag.convergence_tools"></span><dl class="function">
+<div class="section" id="module-diag.convergence_tools">
+<span id="convergence-tools"></span><h2>Convergence Tools<a class="headerlink" href="#module-diag.convergence_tools" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
 <dt id="diag.convergence_tools.auto_window">
 <code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">auto_window</code><span class="sig-paren">(</span><em class="sig-param">taus</em>, <em class="sig-param">c</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#auto_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.auto_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Automatic windowing procedure following <a class="reference external" href="https://emcee.readthedocs.io/en/stable/tutorials/autocorr">emcee</a>, which follows <a class="reference external" href="https://pdfs.semanticscholar.org/0bfe/9e3db30605fe2d4d26e1a288a5e2997e7225.pdf">Sokal (1989)</a>.</p>
@@ -422,6 +428,34 @@ particle chain of the variance between chains.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-diag.diagnostic_plots">
+<span id="plotting-tools"></span><h2>Plotting Tools<a class="headerlink" href="#module-diag.diagnostic_plots" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="diag.diagnostic_plots.plot_rank_hist">
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_rank_hist</code><span class="sig-paren">(</span><em class="sig-param">chains</em>, <em class="sig-param">bins=30</em>, <em class="sig-param">names=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_rank_hist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_rank_hist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the rank plots, where the rank is taken over all the runs.
+The histograms should be roughly uniform. Any structure in them signals
+that the chains aren’t converged or mixing well, i.e. your Monte Carlo estimates
+will be biased.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chains</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Single parameter chains, stored as 2D arrays indexed by [run,sample].</p></li>
+<li><p><strong>bins</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of bins in which to segment data for plot.</p></li>
+<li><p><strong>names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameter names (str).  Default: None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Handles to the figure and array of axes objects in the plot.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/3.2.1/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)">matplotlib.figure.Figure</a>, <a class="reference external" href="https://matplotlib.org/3.2.1/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)">matplotlib.axes.Axes</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
 
 
            </div>
@@ -464,7 +498,7 @@ particle chain of the variance between chains.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.68.g3aa0939',
+            VERSION:'0+untagged.68.g3aa0939.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'
