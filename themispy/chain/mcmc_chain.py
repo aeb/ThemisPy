@@ -230,7 +230,7 @@ def read_echain(filename, walkers, stride=1, burn_fraction=0, skip=None, paramet
             chain = np.zeros((nstor*walkers,len(parameter_list)))
         
         tokens = l.split()
-        chain[j,:] = np.array([float(tokens[p]) for p in parameter_list])
+        chain[j//stride,:] = np.array([float(tokens[p]) for p in parameter_list])
         j += 1
 
     return chain.reshape([nstor,walkers,-1])
