@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>diag.diagnostic_plots &mdash; ThemisPy 0+untagged.68.g3aa0939.dirty documentation</title>
+  <title>diag.diagnostic_plots &mdash; ThemisPy 0+untagged.72.g07b699c documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.68.g3aa0939.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.72.g07b699c documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.68.g3aa0939.dirty
+                0+untagged.72.g07b699c
               </div>
             
           
@@ -160,6 +160,7 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
 <span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">stats</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 
@@ -228,6 +229,395 @@
 
     <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">rect</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span><span class="mf">0.9</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">fig</span><span class="p">,</span><span class="n">axes</span></div>
+
+
+
+
+<div class="viewcode-block" id="plot_parameter_trace"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_parameter_trace">[docs]</a><span class="k">def</span> <span class="nf">plot_parameter_trace</span><span class="p">(</span><span class="n">echain</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameter_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">one_column</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">step_norm</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">means</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mean_color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a set of trace plots for a Themis-style ensemble chain object.  </span>
+<span class="sd">    Optionally overplots the means and standard deviations for each parameter.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      echain (numpy.ndarray): Ensemble MCMC chain, generated, e.g., from :func:`chain.mcmc_chain.read_echain`.</span>
+<span class="sd">      parameter_list (list): List of parameter columns (zero-offset) to read in. Default: None, which reads all parameters.</span>
+<span class="sd">      parameter_names (list): List of strings of parameter names.  Must be the same length as parameter_list. Default: None.</span>
+<span class="sd">      sample_color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`</span>
+<span class="sd">      one_column (bool): Sets the plots to be arranged as a single column. Default: False which generates as square a grid as possible.</span>
+<span class="sd">      step_norm (float): Normalization of the steps to show on horizontal axis. Default: 1000.</span>
+<span class="sd">      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.</span>
+<span class="sd">      means (bool): Flag that determines whether or not to overplot means and standard devation ranges for each parameter. Default: False.</span>
+<span class="sd">      mean_color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`. Default: &#39;r&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># If no parameter list is passed, plot everything</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">parameter_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">parameter_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">parameter_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)</span>
+
+    <span class="c1"># If no parameter name list is passed, create generic name list</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">parameter_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">parameter_names</span><span class="o">=</span><span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameter_list</span> <span class="p">:</span>
+            <span class="n">parameter_names</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;p</span><span class="si">%i</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">p</span><span class="p">])</span>
+            
+    <span class="c1"># Select relevant part of echain</span>
+    <span class="n">echain</span> <span class="o">=</span> <span class="n">echain</span><span class="p">[:,:,</span><span class="n">parameter_list</span><span class="p">]</span>
+    
+    <span class="c1"># Make plot details</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">one_column</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">Nwy</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)</span>
+        <span class="n">Nwx</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">Nwx</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">))))</span>
+        <span class="n">Nwy</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)</span><span class="o">//</span><span class="n">Nwx</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Nwy</span><span class="o">*</span><span class="n">Nwx</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">Nwy</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">fig</span><span class="p">,</span><span class="n">ax_list</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">Nwy</span><span class="p">,</span><span class="n">Nwx</span><span class="p">,</span><span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">Nwx</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">Nwy</span><span class="p">))</span>
+
+    <span class="n">chain_step</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">step_norm</span><span class="o">*</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">echain</span> <span class="o">=</span> <span class="n">echain</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+
+    <span class="c1"># Get mean values if they are to be plotted</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">meanvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">echain</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">stdvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">echain</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">))</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">ax_list</span><span class="p">[</span><span class="n">ip</span><span class="o">//</span><span class="n">Nwx</span><span class="p">,</span><span class="n">ip</span><span class="o">%</span><span class="n">Nwx</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain_step</span><span class="p">,</span><span class="n">echain</span><span class="p">[:,</span><span class="n">ip</span><span class="p">],</span><span class="s1">&#39;,&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">sample_color</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">parameter_names</span><span class="p">[</span><span class="n">ip</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">meanvals</span><span class="p">[</span><span class="n">ip</span><span class="p">],</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">mean_color</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axhspan</span><span class="p">(</span><span class="n">meanvals</span><span class="p">[</span><span class="n">ip</span><span class="p">]</span><span class="o">-</span><span class="n">stdvals</span><span class="p">[</span><span class="n">ip</span><span class="p">],</span><span class="n">meanvals</span><span class="p">[</span><span class="n">ip</span><span class="p">]</span><span class="o">+</span><span class="n">stdvals</span><span class="p">[</span><span class="n">ip</span><span class="p">],</span><span class="n">linestyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">mean_color</span><span class="p">)</span>
+            
+    <span class="k">for</span> <span class="n">iwx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nwx</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">ax_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">iwx</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Sample number / </span><span class="si">%g</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">step_norm</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span><span class="n">ax_list</span></div>
+        
+
+
+
+<div class="viewcode-block" id="plot_parameter_trace_list"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_parameter_trace_list">[docs]</a><span class="k">def</span> <span class="nf">plot_parameter_trace_list</span><span class="p">(</span><span class="n">echain_list</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameter_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">one_column</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">step_norm</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">means</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mean_color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots to the current Axes object traces of a subset of parameters for a list of </span>
+<span class="sd">    Themis-style ensemble chains that are presumably temporally related in some fashion.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      echain_list (list): List of ensemble MCMC chain, generated, e.g., from :func:`chain.mcmc_chain.read_echain`.</span>
+<span class="sd">      parameter_list (list): List of parameter columns (zero-offset) to read in. Default: None, which reads all parameters.</span>
+<span class="sd">      parameter_names (list): List of strings of parameter names.  Must be the same length as parameter_list. Default: None.</span>
+<span class="sd">      sample_color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`</span>
+<span class="sd">      one_column (bool): Sets the plots to be arranged as a single column. Default: False which generates as square a grid as possible.</span>
+<span class="sd">      step_norm (float): Normalization of the steps to show on horizontal axis. Default: 1000.</span>
+<span class="sd">      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.</span>
+<span class="sd">      means (bool): Flag that determines whether or not to overplot means and standard devation ranges for each parameter. Default: False.</span>
+<span class="sd">      mean_color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`. Default: &#39;r&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># If no parameter list is passed, plot everything</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">parameter_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">parameter_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">echain_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">parameter_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)</span>
+
+    <span class="c1"># If no parameter name list is passed, create generic name list</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">parameter_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">parameter_names</span><span class="o">=</span><span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameter_list</span> <span class="p">:</span>
+            <span class="n">parameter_names</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;p</span><span class="si">%i</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">p</span><span class="p">])</span>
+            
+    <span class="c1"># Select relevant part of echain</span>
+    <span class="k">for</span> <span class="n">echain</span> <span class="ow">in</span> <span class="n">echain_list</span> <span class="p">:</span>
+        <span class="n">echain</span> <span class="o">=</span> <span class="n">echain</span><span class="p">[:,:,</span><span class="n">parameter_list</span><span class="p">]</span>
+
+    <span class="c1"># Make plot details</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">one_column</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">Nwy</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)</span>
+        <span class="n">Nwx</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">Nwx</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">))))</span>
+        <span class="n">Nwy</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)</span><span class="o">//</span><span class="n">Nwx</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Nwy</span><span class="o">*</span><span class="n">Nwx</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">Nwy</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">fig</span><span class="p">,</span><span class="n">ax_list</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">Nwy</span><span class="p">,</span><span class="n">Nwx</span><span class="p">,</span><span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">Nwx</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">Nwy</span><span class="p">))</span>
+
+    <span class="n">step_offset</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">echain</span> <span class="ow">in</span> <span class="n">echain_list</span> <span class="p">:</span>
+    
+        <span class="n">chain_step</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">step_norm</span><span class="o">*</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">step_offset</span>
+        <span class="n">echain</span> <span class="o">=</span> <span class="n">echain</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+
+        <span class="c1"># Get mean values if they are to be plotted</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">meanvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">echain</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">stdvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">echain</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+        <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">ax_list</span><span class="p">[</span><span class="n">ip</span><span class="o">//</span><span class="n">Nwx</span><span class="p">,</span><span class="n">ip</span><span class="o">%</span><span class="n">Nwx</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain_step</span><span class="p">,</span><span class="n">echain</span><span class="p">[:,</span><span class="n">ip</span><span class="p">],</span><span class="s1">&#39;,&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">sample_color</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">xtmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">chain_step</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">chain_step</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+                <span class="n">ytmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">meanvals</span><span class="p">[</span><span class="n">ip</span><span class="p">],</span> <span class="n">meanvals</span><span class="p">[</span><span class="n">ip</span><span class="p">]])</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xtmp</span><span class="p">,</span><span class="n">ytmp</span><span class="p">,</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">mean_color</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xtmp</span><span class="p">,</span><span class="n">ytmp</span><span class="o">+</span><span class="n">stdvals</span><span class="p">[</span><span class="n">ip</span><span class="p">],</span><span class="n">ytmp</span><span class="o">-</span><span class="n">stdvals</span><span class="p">[</span><span class="n">ip</span><span class="p">],</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">mean_color</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">step_offset</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+
+        <span class="n">step_offset</span> <span class="o">=</span> <span class="n">chain_step</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+                
+    <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">))</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">ax_list</span><span class="p">[</span><span class="n">ip</span><span class="o">//</span><span class="n">Nwx</span><span class="p">,</span><span class="n">ip</span><span class="o">%</span><span class="n">Nwx</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">parameter_names</span><span class="p">[</span><span class="n">ip</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">iwx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nwx</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">ax_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">iwx</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Sample number / </span><span class="si">%g</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">step_norm</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span><span class="n">ax_list</span></div>
+        
+
+<div class="viewcode-block" id="plot_annotated_parameter_trace"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_annotated_parameter_trace">[docs]</a><span class="k">def</span> <span class="nf">plot_annotated_parameter_trace</span><span class="p">(</span><span class="n">echain</span><span class="p">,</span> <span class="n">elklhd</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameter_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">likelihood_values</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="n">one_column</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">step_norm</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">means</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mean_color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots to the current Axes object traces of a subset of parameters for a Themis-style </span>
+<span class="sd">    ensemble chain object. Points are color-coded by likelihood, which provides a better</span>
+<span class="sd">    visualizations of where the high-probability regions are.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      echain (numpy.ndarray): Ensemble MCMC chain, generated, e.g., from :func:`chain.mcmc_chain.load_erun`.</span>
+<span class="sd">      elklhd (numpy.ndarray): Ensemble MCMC chain likelihood, generated, e.g., from :func:`chain.mcmc_chain.load_erun`.</span>
+<span class="sd">      parameter_list (list): List of parameter columns (zero-offset) to read in. Default: None, which reads all parameters.</span>
+<span class="sd">      parameter_names (list): List of strings of parameter names.  Must be the same length as parameter_list. Default: None.</span>
+<span class="sd">      likelihood_values (int,list): Likelihoods at which to generate likelihood steps. If an int is passed, this is set to the 5*j for j in [0,n-1). Default: 4.</span>
+<span class="sd">      colormap (str): A colormap name as specified in :mod:`matplotlib.cm`. Default: plasma.</span>
+<span class="sd">      one_column (bool): Sets the plots to be arranged as a single column. Default: False which generates as square a grid as possible.</span>
+<span class="sd">      step_norm (float): Normalization of the steps to show on horizontal axis. Default: 1000.</span>
+<span class="sd">      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.</span>
+<span class="sd">      means (bool): Flag that determines whether or not to overplot means and standard devation ranges for each parameter. Default: False.</span>
+<span class="sd">      mean_color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`. Default: &#39;k&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># If no parameter list is passed, plot everything</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">parameter_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">parameter_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">parameter_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)</span>
+
+    <span class="c1"># If no parameter name list is passed, create generic name list</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">parameter_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">parameter_names</span><span class="o">=</span><span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameter_list</span> <span class="p">:</span>
+            <span class="n">parameter_names</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;p</span><span class="si">%i</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">p</span><span class="p">])</span>
+            
+    <span class="c1"># Select relevant part of echain</span>
+    <span class="n">echain</span> <span class="o">=</span> <span class="n">echain</span><span class="p">[:,:,</span><span class="n">parameter_list</span><span class="p">]</span>
+
+    <span class="c1"># Set the likelihood levels    </span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">likelihood_values</span><span class="p">,</span><span class="nb">int</span><span class="p">))</span> <span class="p">:</span>
+        <span class="n">likelihood_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">elklhd</span><span class="p">)</span> <span class="o">-</span> <span class="mi">5</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">likelihood_values</span><span class="p">))</span>
+    <span class="c1"># Order from min to max so that high likelihood values over-plot low values</span>
+    <span class="n">iLorder</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">likelihood_values</span><span class="p">)</span>
+    <span class="n">likelihood_values</span> <span class="o">=</span> <span class="n">likelihood_values</span><span class="p">[</span><span class="n">iLorder</span><span class="p">]</span>
+    <span class="c1"># Set colors</span>
+    <span class="n">cmap</span>  <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span>
+    <span class="n">likelihood_colors</span> <span class="o">=</span> <span class="p">[</span> <span class="n">cmap</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">likelihood_values</span><span class="p">))</span> <span class="p">]</span>
+
+    <span class="c1"># Make plot details</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">one_column</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">Nwy</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)</span>
+        <span class="n">Nwx</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">Nwx</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">))))</span>
+        <span class="n">Nwy</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)</span><span class="o">//</span><span class="n">Nwx</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Nwy</span><span class="o">*</span><span class="n">Nwx</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">Nwy</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">fig</span><span class="p">,</span><span class="n">ax_list</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">Nwy</span><span class="p">,</span><span class="n">Nwx</span><span class="p">,</span><span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">Nwx</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">Nwy</span><span class="p">))</span>
+
+    <span class="n">chain_step</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">step_norm</span><span class="o">*</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">echain</span> <span class="o">=</span> <span class="n">echain</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+    <span class="n">elklhd</span> <span class="o">=</span> <span class="n">elklhd</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="c1"># Get mean values if they are to be plotted</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">meanvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">echain</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">stdvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">echain</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">))</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">ax_list</span><span class="p">[</span><span class="n">ip</span><span class="o">//</span><span class="n">Nwx</span><span class="p">,</span><span class="n">ip</span><span class="o">%</span><span class="n">Nwx</span><span class="p">])</span>
+
+        <span class="c1"># Below bottom</span>
+        <span class="n">use</span> <span class="o">=</span> <span class="p">(</span><span class="n">elklhd</span><span class="o">&lt;</span><span class="n">likelihood_values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain_step</span><span class="p">[</span><span class="n">use</span><span class="p">],</span><span class="n">echain</span><span class="p">[</span><span class="n">use</span><span class="p">,</span><span class="n">ip</span><span class="p">],</span><span class="s1">&#39;,&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.7</span><span class="p">,</span><span class="mf">0.7</span><span class="p">,</span><span class="mf">0.7</span><span class="p">])</span>
+
+        <span class="c1"># Middle values</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">likelihood_values</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">use</span> <span class="o">=</span> <span class="p">(</span><span class="n">elklhd</span><span class="o">&gt;=</span><span class="n">likelihood_values</span><span class="p">[</span><span class="n">k</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">elklhd</span><span class="o">&lt;</span><span class="n">likelihood_values</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain_step</span><span class="p">[</span><span class="n">use</span><span class="p">],</span><span class="n">echain</span><span class="p">[</span><span class="n">use</span><span class="p">,</span><span class="n">ip</span><span class="p">],</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">likelihood_colors</span><span class="p">[</span><span class="n">k</span><span class="p">],</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+        <span class="c1"># Top value</span>
+        <span class="n">use</span> <span class="o">=</span> <span class="p">(</span><span class="n">elklhd</span><span class="o">&gt;=</span><span class="n">likelihood_values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain_step</span><span class="p">[</span><span class="n">use</span><span class="p">],</span><span class="n">echain</span><span class="p">[</span><span class="n">use</span><span class="p">,</span><span class="n">ip</span><span class="p">],</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">likelihood_colors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">parameter_names</span><span class="p">[</span><span class="n">ip</span><span class="p">])</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">meanvals</span><span class="p">[</span><span class="n">ip</span><span class="p">],</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">mean_color</span><span class="p">,</span><span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axhspan</span><span class="p">(</span><span class="n">meanvals</span><span class="p">[</span><span class="n">ip</span><span class="p">]</span><span class="o">-</span><span class="n">stdvals</span><span class="p">[</span><span class="n">ip</span><span class="p">],</span><span class="n">meanvals</span><span class="p">[</span><span class="n">ip</span><span class="p">]</span><span class="o">+</span><span class="n">stdvals</span><span class="p">[</span><span class="n">ip</span><span class="p">],</span><span class="n">linestyle</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">mean_color</span><span class="p">,</span><span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            
+    <span class="k">for</span> <span class="n">iwx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nwx</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">ax_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">iwx</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Sample number / </span><span class="si">%g</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">step_norm</span><span class="p">))</span>
+
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span><span class="n">ax_list</span></div>
+
+
+<div class="viewcode-block" id="plot_annotated_parameter_trace_list"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_annotated_parameter_trace_list">[docs]</a><span class="k">def</span> <span class="nf">plot_annotated_parameter_trace_list</span><span class="p">(</span><span class="n">echain_list</span><span class="p">,</span> <span class="n">elklhd_list</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameter_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">likelihood_values</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="n">one_column</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">step_norm</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">means</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mean_color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">use_global_likelihoods</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots to the current Axes object traces of a subset of parameters for a list of </span>
+<span class="sd">    Themis-style ensemble chains that are presumably temporally related in some fashion.</span>
+<span class="sd">    Points are color-coded by likelihood, which provides a better visualizations of </span>
+<span class="sd">    where the high-probability regions are.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      echain_list (list): List of ensemble MCMC chain, generated, e.g., from :func:`chain.mcmc_chain.load_erun`.</span>
+<span class="sd">      elklhd_list (list): List of ensemble MCMC chain likelihoods, generated, e.g., from :func:`chain.mcmc_chain.load_erun`.</span>
+<span class="sd">      parameter_list (list): List of parameter columns (zero-offset) to read in. Default: None, which reads all parameters.</span>
+<span class="sd">      parameter_names (list): List of strings of parameter names.  Must be the same length as parameter_list. Default: None.</span>
+<span class="sd">      likelihood_values (int,list): Likelihoods at which to generate likelihood steps. If an int is passed, this is set to the 5*j for j in [0,n-1). Default: 4.</span>
+<span class="sd">      colormap (str): A colormap name as specified in :mod:`matplotlib.cm`. Default: plasma.</span>
+<span class="sd">      one_column (bool): Sets the plots to be arranged as a single column. Default: False which generates as square a grid as possible.</span>
+<span class="sd">      step_norm (float): Normalization of the steps to show on horizontal axis. Default: 1000.</span>
+<span class="sd">      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.</span>
+<span class="sd">      means (bool): Flag that determines whether or not to overplot means and standard devation ranges for each parameter. Default: False.</span>
+<span class="sd">      mean_color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`. Default: &#39;k&#39;.</span>
+<span class="sd">      use_global_likelihoods (bool): Flag to determine if the color coding will be done for each element in the list individually or across all chaings in the list.  Default: False.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># If no parameter list is passed, plot everything</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">parameter_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">parameter_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">echain_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">parameter_list</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)</span>
+
+    <span class="c1"># If no parameter name list is passed, create generic name list</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">parameter_names</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">parameter_names</span><span class="o">=</span><span class="p">[]</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">parameter_list</span> <span class="p">:</span>
+            <span class="n">parameter_names</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="s1">&#39;p</span><span class="si">%i</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">p</span><span class="p">])</span>
+            
+    <span class="c1"># Select relevant part of echain</span>
+    <span class="k">for</span> <span class="n">echain</span> <span class="ow">in</span> <span class="n">echain_list</span> <span class="p">:</span>
+        <span class="n">echain</span> <span class="o">=</span> <span class="n">echain</span><span class="p">[:,:,</span><span class="n">parameter_list</span><span class="p">]</span>
+
+    <span class="c1"># Save the likelihood values that were passed</span>
+    <span class="n">likelihood_values_passed</span> <span class="o">=</span> <span class="n">likelihood_values</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">use_global_likelihoods</span><span class="p">)</span> <span class="p">:</span>
+        <span class="c1"># Get the max over-all likelihood</span>
+        <span class="n">lmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">elklhd_list</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">elklhd</span> <span class="ow">in</span> <span class="n">elklhd_list</span> <span class="p">:</span>
+            <span class="n">lmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">lmax</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">elklhd</span><span class="p">))</span>
+        <span class="c1"># Set the likelihood levels</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">likelihood_values_passed</span><span class="p">,</span><span class="nb">int</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">likelihood_values_passed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">lmax</span> <span class="o">-</span> <span class="mi">5</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">likelihood_values_passed</span><span class="p">)))</span>
+            
+    <span class="c1"># Make plot details</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">one_column</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">Nwy</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)</span>
+        <span class="n">Nwx</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">Nwx</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">))))</span>
+        <span class="n">Nwy</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">)</span><span class="o">//</span><span class="n">Nwx</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Nwy</span><span class="o">*</span><span class="n">Nwx</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">Nwy</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">fig</span><span class="p">,</span><span class="n">ax_list</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">Nwy</span><span class="p">,</span><span class="n">Nwx</span><span class="p">,</span><span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">Nwx</span><span class="p">,</span><span class="mi">2</span><span class="o">*</span><span class="n">Nwy</span><span class="p">))</span>
+
+    <span class="n">step_offset</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">ic</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">echain_list</span><span class="p">))</span> <span class="p">:</span>
+
+        <span class="n">echain</span> <span class="o">=</span> <span class="n">echain_list</span><span class="p">[</span><span class="n">ic</span><span class="p">]</span>
+        <span class="n">elklhd</span> <span class="o">=</span> <span class="n">elklhd_list</span><span class="p">[</span><span class="n">ic</span><span class="p">]</span>
+        
+        <span class="c1"># Set the likelihood levels</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">likelihood_values_passed</span><span class="p">,</span><span class="nb">int</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">likelihood_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">elklhd</span><span class="p">)</span> <span class="o">-</span> <span class="mi">5</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">likelihood_values_passed</span><span class="p">))</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">likelihood_values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">likelihood_values_passed</span><span class="p">)</span>
+        <span class="c1"># Order from min to max so that high likelihood values over-plot low values</span>
+        <span class="n">iLorder</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">likelihood_values</span><span class="p">)</span>
+        <span class="n">likelihood_values</span> <span class="o">=</span> <span class="n">likelihood_values</span><span class="p">[</span><span class="n">iLorder</span><span class="p">]</span>
+        <span class="c1"># Set colors</span>
+        <span class="n">cmap</span>  <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span>
+        <span class="n">likelihood_colors</span> <span class="o">=</span> <span class="p">[</span> <span class="n">cmap</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">likelihood_values</span><span class="p">))</span> <span class="p">]</span>
+
+        <span class="n">chain_step</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">step_norm</span><span class="o">*</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">step_offset</span>
+        <span class="n">echain</span> <span class="o">=</span> <span class="n">echain</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">echain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+        <span class="n">elklhd</span> <span class="o">=</span> <span class="n">elklhd</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    
+        <span class="c1"># Get mean values if they are to be plotted</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">meanvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">echain</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="n">stdvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">echain</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    
+        <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">ax_list</span><span class="p">[</span><span class="n">ip</span><span class="o">//</span><span class="n">Nwx</span><span class="p">,</span><span class="n">ip</span><span class="o">%</span><span class="n">Nwx</span><span class="p">])</span>
+
+            <span class="c1"># Below bottom</span>
+            <span class="n">use</span> <span class="o">=</span> <span class="p">(</span><span class="n">elklhd</span><span class="o">&lt;</span><span class="n">likelihood_values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain_step</span><span class="p">[</span><span class="n">use</span><span class="p">],</span><span class="n">echain</span><span class="p">[</span><span class="n">use</span><span class="p">,</span><span class="n">ip</span><span class="p">],</span><span class="s1">&#39;,&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.7</span><span class="p">,</span><span class="mf">0.7</span><span class="p">,</span><span class="mf">0.7</span><span class="p">])</span>
+
+            <span class="c1"># Middle values</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">likelihood_values</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">use</span> <span class="o">=</span> <span class="p">(</span><span class="n">elklhd</span><span class="o">&gt;=</span><span class="n">likelihood_values</span><span class="p">[</span><span class="n">k</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">elklhd</span><span class="o">&lt;</span><span class="n">likelihood_values</span><span class="p">[</span><span class="n">k</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain_step</span><span class="p">[</span><span class="n">use</span><span class="p">],</span><span class="n">echain</span><span class="p">[</span><span class="n">use</span><span class="p">,</span><span class="n">ip</span><span class="p">],</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">likelihood_colors</span><span class="p">[</span><span class="n">k</span><span class="p">],</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+            <span class="c1"># Top value</span>
+            <span class="n">use</span> <span class="o">=</span> <span class="p">(</span><span class="n">elklhd</span><span class="o">&gt;=</span><span class="n">likelihood_values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain_step</span><span class="p">[</span><span class="n">use</span><span class="p">],</span><span class="n">echain</span><span class="p">[</span><span class="n">use</span><span class="p">,</span><span class="n">ip</span><span class="p">],</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">ms</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">likelihood_colors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            
+            <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">xtmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">chain_step</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">chain_step</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+                <span class="n">ytmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">meanvals</span><span class="p">[</span><span class="n">ip</span><span class="p">],</span> <span class="n">meanvals</span><span class="p">[</span><span class="n">ip</span><span class="p">]])</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xtmp</span><span class="p">,</span><span class="n">ytmp</span><span class="p">,</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">mean_color</span><span class="p">)</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xtmp</span><span class="p">,</span><span class="n">ytmp</span><span class="o">+</span><span class="n">stdvals</span><span class="p">[</span><span class="n">ip</span><span class="p">],</span><span class="n">ytmp</span><span class="o">-</span><span class="n">stdvals</span><span class="p">[</span><span class="n">ip</span><span class="p">],</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">mean_color</span><span class="p">,</span><span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">step_offset</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+
+            <span class="n">step_offset</span> <span class="o">=</span> <span class="n">chain_step</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+
+        <span class="k">for</span> <span class="n">ip</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">parameter_list</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">ax_list</span><span class="p">[</span><span class="n">ip</span><span class="o">//</span><span class="n">Nwx</span><span class="p">,</span><span class="n">ip</span><span class="o">%</span><span class="n">Nwx</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="n">parameter_names</span><span class="p">[</span><span class="n">ip</span><span class="p">])</span>
+            
+        <span class="k">for</span> <span class="n">iwx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Nwx</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">ax_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">iwx</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Sample number / </span><span class="si">%g</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">step_norm</span><span class="p">))</span>
+
+        <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+
+
+        
+    <span class="k">return</span> <span class="n">fig</span><span class="p">,</span><span class="n">ax_list</span></div>
+
 </pre></div>
 
            </div>
@@ -261,7 +651,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.68.g3aa0939.dirty',
+            VERSION:'0+untagged.72.g07b699c',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'

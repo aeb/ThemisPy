@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Diag &mdash; ThemisPy 0+untagged.68.g3aa0939.dirty documentation</title>
+  <title>Diag &mdash; ThemisPy 0+untagged.72.g07b699c documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.68.g3aa0939.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.72.g07b699c documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Developer’s Guide" href="devel.html"/>
         <link rel="prev" title="Chain" href="chain.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.68.g3aa0939.dirty
+                0+untagged.72.g07b699c
               </div>
             
           
@@ -431,6 +431,126 @@ particle chain of the variance between chains.</p>
 <div class="section" id="module-diag.diagnostic_plots">
 <span id="plotting-tools"></span><h2>Plotting Tools<a class="headerlink" href="#module-diag.diagnostic_plots" title="Permalink to this headline">¶</a></h2>
 <dl class="function">
+<dt id="diag.diagnostic_plots.plot_annotated_parameter_trace">
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_annotated_parameter_trace</code><span class="sig-paren">(</span><em class="sig-param">echain</em>, <em class="sig-param">elklhd</em>, <em class="sig-param">parameter_list=None</em>, <em class="sig-param">parameter_names=None</em>, <em class="sig-param">likelihood_values=4</em>, <em class="sig-param">colormap='plasma'</em>, <em class="sig-param">one_column=False</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='k'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_annotated_parameter_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_annotated_parameter_trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots to the current Axes object traces of a subset of parameters for a Themis-style
+ensemble chain object. Points are color-coded by likelihood, which provides a better
+visualizations of where the high-probability regions are.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>echain</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Ensemble MCMC chain, generated, e.g., from <a class="reference internal" href="chain.html#chain.mcmc_chain.load_erun" title="chain.mcmc_chain.load_erun"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain.mcmc_chain.load_erun()</span></code></a>.</p></li>
+<li><p><strong>elklhd</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Ensemble MCMC chain likelihood, generated, e.g., from <a class="reference internal" href="chain.html#chain.mcmc_chain.load_erun" title="chain.mcmc_chain.load_erun"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain.mcmc_chain.load_erun()</span></code></a>.</p></li>
+<li><p><strong>parameter_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameter columns (zero-offset) to read in. Default: None, which reads all parameters.</p></li>
+<li><p><strong>parameter_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of strings of parameter names.  Must be the same length as parameter_list. Default: None.</p></li>
+<li><p><strong>likelihood_values</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Likelihoods at which to generate likelihood steps. If an int is passed, this is set to the 5*j for j in [0,n-1). Default: 4.</p></li>
+<li><p><strong>colormap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/3.2.1/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. Default: plasma.</p></li>
+<li><p><strong>one_column</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Sets the plots to be arranged as a single column. Default: False which generates as square a grid as possible.</p></li>
+<li><p><strong>step_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Normalization of the steps to show on horizontal axis. Default: 1000.</p></li>
+<li><p><strong>grid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag that determines whether or not to plot a background grid. Default: True.</p></li>
+<li><p><strong>means</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag that determines whether or not to overplot means and standard devation ranges for each parameter. Default: False.</p></li>
+<li><p><strong>mean_color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/3.2.1/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>. Default: ‘k’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Handles to the figure and array of axes objects in the plot.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/3.2.1/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)">matplotlib.figure.Figure</a>, <a class="reference external" href="https://matplotlib.org/3.2.1/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)">matplotlib.axes.Axes</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="diag.diagnostic_plots.plot_annotated_parameter_trace_list">
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_annotated_parameter_trace_list</code><span class="sig-paren">(</span><em class="sig-param">echain_list</em>, <em class="sig-param">elklhd_list</em>, <em class="sig-param">parameter_list=None</em>, <em class="sig-param">parameter_names=None</em>, <em class="sig-param">likelihood_values=4</em>, <em class="sig-param">colormap='plasma'</em>, <em class="sig-param">one_column=False</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='k'</em>, <em class="sig-param">use_global_likelihoods=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_annotated_parameter_trace_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_annotated_parameter_trace_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots to the current Axes object traces of a subset of parameters for a list of
+Themis-style ensemble chains that are presumably temporally related in some fashion.
+Points are color-coded by likelihood, which provides a better visualizations of
+where the high-probability regions are.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>echain_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of ensemble MCMC chain, generated, e.g., from <a class="reference internal" href="chain.html#chain.mcmc_chain.load_erun" title="chain.mcmc_chain.load_erun"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain.mcmc_chain.load_erun()</span></code></a>.</p></li>
+<li><p><strong>elklhd_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of ensemble MCMC chain likelihoods, generated, e.g., from <a class="reference internal" href="chain.html#chain.mcmc_chain.load_erun" title="chain.mcmc_chain.load_erun"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain.mcmc_chain.load_erun()</span></code></a>.</p></li>
+<li><p><strong>parameter_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameter columns (zero-offset) to read in. Default: None, which reads all parameters.</p></li>
+<li><p><strong>parameter_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of strings of parameter names.  Must be the same length as parameter_list. Default: None.</p></li>
+<li><p><strong>likelihood_values</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Likelihoods at which to generate likelihood steps. If an int is passed, this is set to the 5*j for j in [0,n-1). Default: 4.</p></li>
+<li><p><strong>colormap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/3.2.1/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. Default: plasma.</p></li>
+<li><p><strong>one_column</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Sets the plots to be arranged as a single column. Default: False which generates as square a grid as possible.</p></li>
+<li><p><strong>step_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Normalization of the steps to show on horizontal axis. Default: 1000.</p></li>
+<li><p><strong>grid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag that determines whether or not to plot a background grid. Default: True.</p></li>
+<li><p><strong>means</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag that determines whether or not to overplot means and standard devation ranges for each parameter. Default: False.</p></li>
+<li><p><strong>mean_color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/3.2.1/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>. Default: ‘k’.</p></li>
+<li><p><strong>use_global_likelihoods</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag to determine if the color coding will be done for each element in the list individually or across all chaings in the list.  Default: False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Handles to the figure and array of axes objects in the plot.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/3.2.1/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)">matplotlib.figure.Figure</a>, <a class="reference external" href="https://matplotlib.org/3.2.1/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)">matplotlib.axes.Axes</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="diag.diagnostic_plots.plot_parameter_trace">
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_parameter_trace</code><span class="sig-paren">(</span><em class="sig-param">echain</em>, <em class="sig-param">parameter_list=None</em>, <em class="sig-param">parameter_names=None</em>, <em class="sig-param">sample_color='b'</em>, <em class="sig-param">one_column=False</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='r'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_parameter_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_parameter_trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a set of trace plots for a Themis-style ensemble chain object.
+Optionally overplots the means and standard deviations for each parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>echain</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Ensemble MCMC chain, generated, e.g., from <a class="reference internal" href="chain.html#chain.mcmc_chain.read_echain" title="chain.mcmc_chain.read_echain"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain.mcmc_chain.read_echain()</span></code></a>.</p></li>
+<li><p><strong>parameter_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameter columns (zero-offset) to read in. Default: None, which reads all parameters.</p></li>
+<li><p><strong>parameter_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of strings of parameter names.  Must be the same length as parameter_list. Default: None.</p></li>
+<li><p><strong>sample_color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/3.2.1/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a></p></li>
+<li><p><strong>one_column</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Sets the plots to be arranged as a single column. Default: False which generates as square a grid as possible.</p></li>
+<li><p><strong>step_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Normalization of the steps to show on horizontal axis. Default: 1000.</p></li>
+<li><p><strong>grid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag that determines whether or not to plot a background grid. Default: True.</p></li>
+<li><p><strong>means</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag that determines whether or not to overplot means and standard devation ranges for each parameter. Default: False.</p></li>
+<li><p><strong>mean_color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/3.2.1/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>. Default: ‘r’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Handles to the figure and array of axes objects in the plot.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/3.2.1/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)">matplotlib.figure.Figure</a>, <a class="reference external" href="https://matplotlib.org/3.2.1/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)">matplotlib.axes.Axes</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="diag.diagnostic_plots.plot_parameter_trace_list">
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_parameter_trace_list</code><span class="sig-paren">(</span><em class="sig-param">echain_list</em>, <em class="sig-param">parameter_list=None</em>, <em class="sig-param">parameter_names=None</em>, <em class="sig-param">sample_color='b'</em>, <em class="sig-param">one_column=False</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='r'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_parameter_trace_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_parameter_trace_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots to the current Axes object traces of a subset of parameters for a list of
+Themis-style ensemble chains that are presumably temporally related in some fashion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>echain_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of ensemble MCMC chain, generated, e.g., from <a class="reference internal" href="chain.html#chain.mcmc_chain.read_echain" title="chain.mcmc_chain.read_echain"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain.mcmc_chain.read_echain()</span></code></a>.</p></li>
+<li><p><strong>parameter_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameter columns (zero-offset) to read in. Default: None, which reads all parameters.</p></li>
+<li><p><strong>parameter_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of strings of parameter names.  Must be the same length as parameter_list. Default: None.</p></li>
+<li><p><strong>sample_color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/3.2.1/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a></p></li>
+<li><p><strong>one_column</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Sets the plots to be arranged as a single column. Default: False which generates as square a grid as possible.</p></li>
+<li><p><strong>step_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Normalization of the steps to show on horizontal axis. Default: 1000.</p></li>
+<li><p><strong>grid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag that determines whether or not to plot a background grid. Default: True.</p></li>
+<li><p><strong>means</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag that determines whether or not to overplot means and standard devation ranges for each parameter. Default: False.</p></li>
+<li><p><strong>mean_color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/3.2.1/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>. Default: ‘r’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Handles to the figure and array of axes objects in the plot.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/3.2.1/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)">matplotlib.figure.Figure</a>, <a class="reference external" href="https://matplotlib.org/3.2.1/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)">matplotlib.axes.Axes</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="diag.diagnostic_plots.plot_rank_hist">
 <code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_rank_hist</code><span class="sig-paren">(</span><em class="sig-param">chains</em>, <em class="sig-param">bins=30</em>, <em class="sig-param">names=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_rank_hist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_rank_hist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the rank plots, where the rank is taken over all the runs.
@@ -498,7 +618,7 @@ will be biased.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.68.g3aa0939.dirty',
+            VERSION:'0+untagged.72.g07b699c',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'

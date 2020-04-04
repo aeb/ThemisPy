@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>chain.mcmc_chain &mdash; ThemisPy 0+untagged.68.g3aa0939.dirty documentation</title>
+  <title>chain.mcmc_chain &mdash; ThemisPy 0+untagged.72.g07b699c documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.68.g3aa0939.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.72.g07b699c documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.68.g3aa0939.dirty
+                0+untagged.72.g07b699c
               </div>
             
           
@@ -303,6 +303,10 @@
         <span class="k">if</span> <span class="p">((</span><span class="n">k</span><span class="o">-</span><span class="n">nskip</span><span class="p">)</span><span class="o">%</span><span class="n">stride</span><span class="o">!=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
             <span class="k">continue</span>
 
+        <span class="c1"># If past the end, stop</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">&gt;=</span><span class="n">nstor</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">break</span>
+
         <span class="c1"># If this is the first step, allocate space for the likelihood</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">nwalk</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
@@ -369,7 +373,7 @@
             <span class="k">continue</span>
 
         <span class="c1"># If past the end, stop</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">&gt;=</span><span class="n">nsamp</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">&gt;=</span><span class="n">nstor</span><span class="o">*</span><span class="n">walkers</span><span class="p">)</span> <span class="p">:</span>
             <span class="k">break</span>
 
         <span class="c1"># If this is the first step, allocate space for the likelihood</span>
@@ -688,7 +692,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.68.g3aa0939.dirty',
+            VERSION:'0+untagged.72.g07b699c',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'
