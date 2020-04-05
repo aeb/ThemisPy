@@ -127,7 +127,7 @@ def plot_parameter_trace(echain, parameter_list=None, parameter_names=None, samp
         Nwy=len(parameter_list)//Nwx
         if (Nwy*Nwx<len(parameter_list)) :
             Nwy += 1
-    fig,ax_list=plt.subplots(Nwy,Nwx,sharex=True,figsize=(4*Nwx,2*Nwy))
+    fig,ax_list=plt.subplots(Nwy,Nwx,sharex=True,figsize=(4*Nwx,2*Nwy),squeeze=False)
 
     chain_step = np.arange(echain.shape[0]*echain.shape[1])/float(step_norm*echain.shape[1])
     echain = echain.reshape([-1,echain.shape[2]])
@@ -143,8 +143,8 @@ def plot_parameter_trace(echain, parameter_list=None, parameter_names=None, samp
         plt.grid(grid)
         plt.gca().set_ylabel(parameter_names[ip])
         if (means) :
-            plt.axhline(meanvals[ip],linestyle='-',alpha=0.5,color=mean_color)
-            plt.axhspan(meanvals[ip]-stdvals[ip],meanvals[ip]+stdvals[ip],linestyle=None,alpha=0.1,color=mean_color)
+            plt.axhline(meanvals[ip],linestyle='-',alpha=0.5,color=mean_color,zorder=11)
+            plt.axhspan(meanvals[ip]-stdvals[ip],meanvals[ip]+stdvals[ip],linestyle=None,alpha=0.1,color=mean_color,zorder=10)
             
     for iwx in range(Nwx) :
         ax_list[-1,iwx].set_xlabel('Sample number / %g'%(step_norm))
@@ -200,7 +200,7 @@ def plot_parameter_trace_list(echain_list, parameter_list=None, parameter_names=
         Nwy=len(parameter_list)//Nwx
         if (Nwy*Nwx<len(parameter_list)) :
             Nwy += 1
-    fig,ax_list=plt.subplots(Nwy,Nwx,sharex=True,figsize=(4*Nwx,2*Nwy))
+    fig,ax_list=plt.subplots(Nwy,Nwx,sharex=True,figsize=(4*Nwx,2*Nwy),squeeze=False)
 
     step_offset = 0
 
@@ -221,8 +221,8 @@ def plot_parameter_trace_list(echain_list, parameter_list=None, parameter_names=
             if (means) :
                 xtmp = np.array([chain_step[0], chain_step[-1]])
                 ytmp = np.array([meanvals[ip], meanvals[ip]])
-                plt.plot(xtmp,ytmp,linestyle='-',alpha=0.75,color=mean_color)
-                plt.fill_between(xtmp,ytmp+stdvals[ip],ytmp-stdvals[ip],alpha=0.25,color=mean_color)
+                plt.plot(xtmp,ytmp,linestyle='-',alpha=0.75,color=mean_color,zorder=11)
+                plt.fill_between(xtmp,ytmp+stdvals[ip],ytmp-stdvals[ip],alpha=0.25,color=mean_color,zorder=10)
             plt.axvline(step_offset,color='k')
 
         step_offset = chain_step[-1]
@@ -296,7 +296,7 @@ def plot_annotated_parameter_trace(echain, elklhd, parameter_list=None, paramete
         Nwy=len(parameter_list)//Nwx
         if (Nwy*Nwx<len(parameter_list)) :
             Nwy += 1
-    fig,ax_list=plt.subplots(Nwy,Nwx,sharex=True,figsize=(4*Nwx,2*Nwy))
+    fig,ax_list=plt.subplots(Nwy,Nwx,sharex=True,figsize=(4*Nwx,2*Nwy),squeeze=False)
 
     chain_step = np.arange(echain.shape[0]*echain.shape[1])/float(step_norm*echain.shape[1])
     echain = echain.reshape([-1,echain.shape[2]])
@@ -327,7 +327,7 @@ def plot_annotated_parameter_trace(echain, elklhd, parameter_list=None, paramete
         plt.gca().set_ylabel(parameter_names[ip])
 
         if (means) :
-            plt.axhline(meanvals[ip],linestyle='-',alpha=0.5,color=mean_color,zorder=10)
+            plt.axhline(meanvals[ip],linestyle='-',alpha=0.5,color=mean_color,zorder=11)
             plt.axhspan(meanvals[ip]-stdvals[ip],meanvals[ip]+stdvals[ip],linestyle=None,alpha=0.25,color=mean_color,zorder=10)
             
     for iwx in range(Nwx) :
@@ -398,7 +398,7 @@ def plot_annotated_parameter_trace_list(echain_list, elklhd_list, parameter_list
         Nwy=len(parameter_list)//Nwx
         if (Nwy*Nwx<len(parameter_list)) :
             Nwy += 1
-    fig,ax_list=plt.subplots(Nwy,Nwx,sharex=True,figsize=(4*Nwx,2*Nwy))
+    fig,ax_list=plt.subplots(Nwy,Nwx,sharex=True,figsize=(4*Nwx,2*Nwy),squeeze=False)
 
     step_offset = 0
 
@@ -448,7 +448,7 @@ def plot_annotated_parameter_trace_list(echain_list, elklhd_list, parameter_list
             if (means) :
                 xtmp = np.array([chain_step[0], chain_step[-1]])
                 ytmp = np.array([meanvals[ip], meanvals[ip]])
-                plt.plot(xtmp,ytmp,linestyle='-',alpha=0.75,color=mean_color)
+                plt.plot(xtmp,ytmp,linestyle='-',alpha=0.75,color=mean_color,zorder=11)
                 plt.fill_between(xtmp,ytmp+stdvals[ip],ytmp-stdvals[ip],alpha=0.25,color=mean_color,zorder=10)
             plt.axvline(step_offset,color='k')
 

@@ -13,7 +13,7 @@ Reads a Themis chain file and resamples it.
 
 For more information, run:
 
-$ python3 sample_erun.py -h
+$ python3 resample_erun.py -h
 
 """
 

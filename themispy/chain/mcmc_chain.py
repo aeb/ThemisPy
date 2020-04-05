@@ -198,7 +198,7 @@ def read_echain(filename, walkers, stride=1, burn_fraction=0, skip=None, paramet
 
     # Set the number of lines to skip
     if (skip is None) :
-        nskip = nsamp*burn_fraction*walkers
+        nskip = int(nsamp*burn_fraction)
     else :
         nskip = skip*walkers
     
@@ -215,6 +215,7 @@ def read_echain(filename, walkers, stride=1, burn_fraction=0, skip=None, paramet
     # Loop over the lines from the file
     j=0
     for k,l in enumerate(open(filename,'r')) :
+
         # Skip the burn-in period
         if (k<nskip) :
             continue
@@ -227,6 +228,7 @@ def read_echain(filename, walkers, stride=1, burn_fraction=0, skip=None, paramet
         if (j>=nstor*walkers) :
             break
 
+        
         # If this is the first step, allocate space for the likelihood
         if (j==0) :
             if (parameter_list is None) :
