@@ -107,5 +107,6 @@ html_static_path = ['docs/_static']
 intersphinx_mapping = {'python': ('http://docs.python.org', None),
                        'numpy': ('http://docs.scipy.org/doc/numpy/', None),
                        'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
-                       'matplotlib': ('http://matplotlib.sourceforge.net/', None)}
-
+                       'matplotlib': ('http://matplotlib.sourceforge.net/', None),
+                       'ehtim': ('https://achael.github.io/eht-imaging/',None)
+}
