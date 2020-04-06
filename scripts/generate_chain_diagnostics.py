@@ -1,8 +1,27 @@
-from themispy import diag as td
-from themispy import chain as tc
+from matplotlib import use,rc
+use('Agg')
+
 import numpy as np
 from matplotlib.cbook import flatten
 import argparse
+
+from themispy import diag as td
+from themispy import chain as tc
+
+
+#rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
+#rc('text', usetex=True)
+
+
+"""
+Reads in chain and likelihood files from Themis analyses and computes and plots various diagnostics.
+
+For more information, run:
+
+$ python3 generate_chain_diagnostics.py -h
+
+"""
+
 
 parser = argparse.ArgumentParser(description=("Computes various chain diagnostics for Themis ensemble MCMC chain data."
                                               " Diagnostics generated include split-rhat, , for Themis style arguments."))
