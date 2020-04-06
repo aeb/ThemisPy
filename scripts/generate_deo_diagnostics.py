@@ -22,18 +22,21 @@ $ python3 generate_deo_diagnostics.py -h
 """
 
 
-parser = argparse.ArgumentParser(description=("Computes various diagnostics for DEO tempered Themis ensemble MCMC chain"
-                                              " and associated plots."))
+parser = argparse.ArgumentParser(description=("Computes various diagnostics for DEO tempered Themis ensemble MCMC chain and\n"
+                                              "associated plots."),
+                                 formatter_class=argparse.RawTextHelpFormatter)
 
 parser.add_argument("-ad","--annealing-data-file",
                     type=str,
                     action='store',
                     default='Annealing.dat',
-                    help=("Annealing data file to be read in. Default: Annealing.dat"))
+                    help=("Annealing data file to be read in.\n"
+                          "Default: Annealing.dat"))
 parser.add_argument("-as","--annealing-summary-file",
                     type=str,
                     action='store',
-                    help=("Annealing summary file to be read in. Default: <annealing_data_file>+.summary"))
+                    help=("Annealing summary file to be read in.\n"
+                          "Default: <annealing_data_file>+.summary"))
 parser.add_argument("-o","--out",
                     type=str,
                     action="store",
@@ -42,24 +45,27 @@ parser.add_argument("-o","--out",
 parser.add_argument("--density",
                     action="store_true",
                     default=False,
-                    help=("Sets the tempering level evolution plot to show the density of tempering levels"
-                          " via the colormap. Default: False."))
+                    help=("Sets the tempering level evolution plot to show the\n"
+                          "density of tempering levels via the colormap.\n"
+                          "Default: False."))
 parser.add_argument("--stream",
                     action="store_true",
                     default=False,
-                    help=("Sets the colormap of the tempering level evolution plot to use a streamline"
-                          " colormap. Default: False."))
+                    help=("Sets the colormap of the tempering level evolution\n"
+                          "plot to use a streamline colormap. Default: False."))
 parser.add_argument("-d","--diagnostics",
                     type=str,
                     nargs='+',
                     action='append',
-                    help=("Sets the list of diagnostic plots to generate.  Takes a combination of the"
-                          " letters t, r, l, which may be specified in any order and in any number of"
-                          " option calls.  The appropriate plots will be made in the order trl.\n"
-                          "   t ... tempering level evolution.\n"
-                          "   r ... rejection rate evolution.\n"
-                          "   l ... lambda vs beta.\n"
-                          " Default: trl."))
+                    help=("Sets the list of diagnostic plots to generate.  Takes a\n"
+                          "combination of the letters t, r, l, which may be\n"
+                          "specified in any order and in any number of option\n"
+                          "calls. The appropriate plots will be made in the order\n"
+                          "trl. Diagnostic options are:\n"
+                          "  t ... tempering level evolution.\n"
+                          "  r ... rejection rate evolution.\n"
+                          "  l ... lambda vs. beta.\n"
+                          "Default: trl."))
 
 
 
