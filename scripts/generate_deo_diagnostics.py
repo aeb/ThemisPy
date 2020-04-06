@@ -66,6 +66,16 @@ parser.add_argument("-d","--diagnostics",
                           "  r ... rejection rate evolution.\n"
                           "  l ... lambda vs. beta.\n"
                           "Default: trl."))
+parser.add_argument("-mr","--minimum-round",
+                    type=int,
+                    action='store',
+                    default=None,
+                    help=("Minimum round to show. Default: 0"))
+parser.add_argument("-Mr","--maximum-round",
+                    type=int,
+                    action='store',
+                    default=None,
+                    help=("Maximum round to show. Default: all rounds."))
 
 
 
@@ -102,6 +112,18 @@ print(axs.shape)
 # Read in data files
 summary_data,beta,R = tc.load_deo_summary(args.annealing_data_file,args.annealing_summary_file)
 
+
+if (not args.minimum_round is None) :
+    round_min = args.minimum_round
+else :
+    round_min = 0
+
+if (not args.maximum_round is None) :
+    round_max = args.maximum_round
+else :
+    round_max = summary_data.shape[0]-1
+
+    
 ###
 # Start making plots
 
@@ -124,6 +146,15 @@ if ('t' in diagnostic_list) :
     print("  Generating tempering level evolution plot.")
     plt.sca(axs[0,ia])
     td.plot_deo_tempering_level_evolution(beta,colormodel=colormodel,colormap=cmap)
+
+    ymin = np.log(np.min(beta[round_min:round_max,:-1]))
+    ymax = np.log(np.max(beta[round_min:round_max,:-1]))
+    dy = 0.1*(ymax-ymin)
+    ymin = np.exp(ymin - dy)
+    ymax = np.exp(ymax + dy)
+    plt.xlim((round_min-0.25,round_max+0.25))
+    plt.ylim((ymin,ymax))
+
     diagnostic_list = diagnostic_list.replace('t','')
     ia += 1
 
@@ -133,6 +164,9 @@ if ('r' in diagnostic_list) :
     print("  Generating rejection rate evolution plot.")
     plt.sca(axs[0,ia])
     td.plot_deo_rejection_rate(summary_data,color='k')
+
+    plt.xlim((round_min-0.25,round_max+0.25))
+
     diagnostic_list = diagnostic_list.replace('r','')
     ia += 1
     
