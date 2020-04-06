@@ -2,7 +2,6 @@ from matplotlib import use,rc
 use('Agg')
 
 import numpy as np
-import themispy as ty
 import argparse as ap
 import warnings
 import sys
@@ -10,6 +9,8 @@ from matplotlib.cbook import flatten
 import matplotlib.pyplot as plt
 rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
 rc('text', usetex=True)
+
+import themispy as ty
 
 
 """
