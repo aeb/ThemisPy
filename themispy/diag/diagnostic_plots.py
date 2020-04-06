@@ -343,7 +343,21 @@ def plot_parameter_trace_list(echain_list, parameter_list=None, parameter_names=
     return fig,ax_list
         
 
-def plot_annotated_parameter_trace(echain, elklhd, parameter_list=None, parameter_names=None, likelihood_values=4, colormap='plasma', one_column=False, step_norm=1000, grid=True, means=False, mean_color='k'):
+def _expand_bool_array(bv) :
+    """
+    Expands by one element the truth elements in a boolean array.  That is, if the input is [False,False,True,True,False] return [False,True,True,True,True].
+    """
+    
+    # If the successive elment is true, make this element true
+    bv[:-1] = bv[:-1]+bv[1:]
+
+    # If the prior element is true, make this element true
+    bv[1:] = bv[1:] + bv[:-1]
+
+    return bv
+
+
+def plot_annotated_parameter_trace(echain, elklhd, parameter_list=None, parameter_names=None, likelihood_values=4, colormap='plasma', one_column=False, step_norm=1000, grid=True, means=False, mean_color='k', add_likelihood_trace=False):
     """
     Plots traces of a subset of parameters for a Themis-style ensemble chain object. 
     Points are color-coded by likelihood, which provides a better visualizations of 
@@ -361,6 +375,7 @@ def plot_annotated_parameter_trace(echain, elklhd, parameter_list=None, paramete
       grid (bool): Flag that determines whether or not to plot a background grid. Default: True.
       means (bool): Flag that determines whether or not to overplot means and standard devation ranges for each parameter. Default: False.
       mean_color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`. Default: 'k'.
+      add_likelihood_trace (bool): Flag to determine if to add a trace plot of the likelihood. Default: False.
 
     Returns:
       (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.
@@ -388,21 +403,26 @@ def plot_annotated_parameter_trace(echain, elklhd, parameter_list=None, paramete
     likelihood_values = likelihood_values[iLorder]
     # Set colors
     cmap  = cm.get_cmap(colormap)
-    likelihood_colors = [ cmap(x) for x in np.linspace(0,1.0,len(likelihood_values)) ]
+    likelihood_color_indexes = np.linspace(0,1.0,len(likelihood_values))
+    likelihood_colors = [ cmap(x) for x in likelihood_color_indexes ]
 
     # Make plot details
+    number_of_windows = len(parameter_list)
+    if (add_likelihood_trace) :
+        number_of_windows += 1
     if (one_column) :
-        Nwy=len(parameter_list)
+        Nwy=number_of_windows
         Nwx=1
     else :
-        Nwx=int(np.sqrt(float(len(parameter_list))))
-        Nwy=len(parameter_list)//Nwx
-        if (Nwy*Nwx<len(parameter_list)) :
+        Nwx=int(np.sqrt(float(number_of_windows)))
+        Nwy=number_of_windows//Nwx
+        if (Nwy*Nwx<number_of_windows) :
             Nwy += 1
     fig,ax_list=plt.subplots(Nwy,Nwx,sharex=True,figsize=(4*Nwx,2*Nwy),squeeze=False)
 
     chain_step = np.arange(echain.shape[0]*echain.shape[1])/float(step_norm*echain.shape[1])
     echain = echain.reshape([-1,echain.shape[2]])
+    elklhd_by_walker = np.copy(elklhd)
     elklhd = elklhd.reshape([-1])
     
     # Get mean values if they are to be plotted
@@ -432,6 +452,43 @@ def plot_annotated_parameter_trace(echain, elklhd, parameter_list=None, paramete
         if (means) :
             plt.axhline(meanvals[ip],linestyle='-',alpha=0.5,color=mean_color,zorder=11)
             plt.axhspan(meanvals[ip]-stdvals[ip],meanvals[ip]+stdvals[ip],linestyle=None,alpha=0.25,color=mean_color,zorder=10)
+
+
+    if (add_likelihood_trace) :
+
+        plt.sca(ax_list[(number_of_windows-1)//Nwx,(number_of_windows-1)%Nwx])
+
+        chain_step_by_walker = np.arange(elklhd_by_walker.shape[0])/float(step_norm)
+
+        
+        for w in range(elklhd_by_walker.shape[1]) :
+
+            color_fluctuation_fraction = 1.0 - 0.5*np.random.rand()
+
+            x = np.linspace(chain_step_by_walker[0],chain_step_by_walker[-1],16*chain_step_by_walker.size)
+            y = np.interp(x,chain_step_by_walker,elklhd_by_walker[:,w])
+
+            color_list = np.zeros((len(x),4))
+            color_list[(y<likelihood_values[0]),:] = np.array([0.7,0.7,0.7,1])*color_fluctuation_fraction
+            for k in range(len(likelihood_values)-1) :
+                color_list[(y>=likelihood_values[k])*(y<likelihood_values[k+1])] = np.array(likelihood_colors[k])*color_fluctuation_fraction
+            color_list[(y>=likelihood_values[-1])] = np.array(likelihood_colors[-1])*color_fluctuation_fraction
+
+            points = np.array([x, y]).T.reshape(-1,1,2)
+            segments = np.concatenate([points[:-1],points[1:]],axis=1)
+            lc = LineCollection(segments,colors=color_list)
+            lc.set_linewidth(1)
+            lc.set_alpha(0.5)
+            line = plt.gca().add_collection(lc)
+
+            #plt.gca().set_xscale(auto=True)
+            ymin = np.min(elklhd)
+            ymax = np.max(elklhd)
+            dy = 0.1*(ymax-ymin)
+            plt.gca().set_ylim((ymin-dy,ymax+dy))
+
+            plt.grid(grid)
+            plt.gca().set_ylabel(r'$\\log_{10}(L)$')
             
     for iwx in range(Nwx) :
         ax_list[-1,iwx].set_xlabel('Sample number / %g'%(step_norm))
@@ -439,9 +496,9 @@ def plot_annotated_parameter_trace(echain, elklhd, parameter_list=None, paramete
     fig.tight_layout()
 
     return fig,ax_list
+    
 
-
-def plot_annotated_parameter_trace_list(echain_list, elklhd_list, parameter_list=None, parameter_names=None, likelihood_values=4, colormap='plasma', one_column=False, step_norm=1000, grid=True, means=False, mean_color='k', use_global_likelihoods=False):
+def plot_annotated_parameter_trace_list(echain_list, elklhd_list, parameter_list=None, parameter_names=None, likelihood_values=4, colormap='plasma', one_column=False, step_norm=1000, grid=True, means=False, mean_color='k', use_global_likelihoods=False, add_likelihood_trace=False):
     """
     Plots traces of a subset of parameters for a list of Themis-style ensemble chains 
     that are presumably temporally related in some fashion. Points are color-coded by 
@@ -461,6 +518,7 @@ def plot_annotated_parameter_trace_list(echain_list, elklhd_list, parameter_list
       means (bool): Flag that determines whether or not to overplot means and standard devation ranges for each parameter. Default: False.
       mean_color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`. Default: 'k'.
       use_global_likelihoods (bool): Flag to determine if the color coding will be done for each element in the list individually or across all chaings in the list.  Default: False.
+      add_likelihood_trace (bool): Flag to determine if to add a trace plot of the likelihood. Default: False.
 
     Returns:
       (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.
@@ -493,13 +551,16 @@ def plot_annotated_parameter_trace_list(echain_list, elklhd_list, parameter_list
             likelihood_values_passed = np.array(lmax - 5*(1+np.arange(likelihood_values_passed)))
             
     # Make plot details
+    number_of_windows = len(parameter_list)
+    if (add_likelihood_trace) :
+        number_of_windows += 1
     if (one_column) :
-        Nwy=len(parameter_list)
+        Nwy=number_of_windows
         Nwx=1
     else :
-        Nwx=int(np.sqrt(float(len(parameter_list))))
-        Nwy=len(parameter_list)//Nwx
-        if (Nwy*Nwx<len(parameter_list)) :
+        Nwx=int(np.sqrt(float(number_of_windows)))
+        Nwy=number_of_windows//Nwx
+        if (Nwy*Nwx<number_of_windows) :
             Nwy += 1
     fig,ax_list=plt.subplots(Nwy,Nwx,sharex=True,figsize=(4*Nwx,2*Nwy),squeeze=False)
 
@@ -524,6 +585,7 @@ def plot_annotated_parameter_trace_list(echain_list, elklhd_list, parameter_list
 
         chain_step = np.arange(echain.shape[0]*echain.shape[1])/float(step_norm*echain.shape[1]) + step_offset
         echain = echain.reshape([-1,echain.shape[2]])
+        elklhd_by_walker = np.copy(elklhd)
         elklhd = elklhd.reshape([-1])
     
         # Get mean values if they are to be plotted
@@ -555,20 +617,56 @@ def plot_annotated_parameter_trace_list(echain_list, elklhd_list, parameter_list
                 plt.fill_between(xtmp,ytmp+stdvals[ip],ytmp-stdvals[ip],alpha=0.25,color=mean_color,zorder=10)
             plt.axvline(step_offset,color='k')
 
-            step_offset = chain_step[-1]
-
-
-        for ip in range(len(parameter_list)) :
-            plt.sca(ax_list[ip//Nwx,ip%Nwx])
-            plt.gca().set_ylabel(parameter_names[ip])
             
-        for iwx in range(Nwx) :
-            ax_list[-1,iwx].set_xlabel('Sample number / %g'%(step_norm))
+        if (add_likelihood_trace) :
+            
+            plt.sca(ax_list[(number_of_windows-1)//Nwx,(number_of_windows-1)%Nwx])
 
-        fig.tight_layout()
+            chain_step_by_walker = np.arange(elklhd_by_walker.shape[0])/float(step_norm) + step_offset
 
+        
+            for w in range(elklhd_by_walker.shape[1]) :
 
+                color_fluctuation_fraction = 1.0 - 0.5*np.random.rand()
+                
+                x = np.linspace(chain_step_by_walker[0],chain_step_by_walker[-1],16*chain_step_by_walker.size)
+                y = np.interp(x,chain_step_by_walker,elklhd_by_walker[:,w])
 
+                color_list = np.zeros((len(x),4))
+                color_list[(y<likelihood_values[0]),:] = np.array([0.7,0.7,0.7,1])*color_fluctuation_fraction
+                for k in range(len(likelihood_values)-1) :
+                    color_list[(y>=likelihood_values[k])*(y<likelihood_values[k+1])] = np.array(likelihood_colors[k])*color_fluctuation_fraction
+                color_list[(y>=likelihood_values[-1])] = np.array(likelihood_colors[-1])*color_fluctuation_fraction
+
+                points = np.array([x, y]).T.reshape(-1,1,2)
+                segments = np.concatenate([points[:-1],points[1:]],axis=1)
+                lc = LineCollection(segments,colors=color_list)
+                lc.set_linewidth(1)
+                lc.set_alpha(0.5)
+                line = plt.gca().add_collection(lc)
+                    
+                plt.grid(grid)
+
+                plt.axvline(step_offset,color='k')
+
+        step_offset = chain_step[-1]
+
+    for ip in range(len(parameter_list)) :
+        plt.sca(ax_list[ip//Nwx,ip%Nwx])
+        plt.gca().set_ylabel(parameter_names[ip])
+
+    if (add_likelihood_trace) :
+        plt.sca(ax_list[(number_of_windows-1)//Nwx,(number_of_windows-1)%Nwx])
+        ymin = np.min(elklhd)
+        ymax = np.max(elklhd)
+        dy = 0.1*(ymax-ymin)
+        plt.gca().set_ylim((ymin-dy,ymax+dy))
+        plt.gca().set_ylabel(r'$\\log_{10}(L)$')
+        
+    for iwx in range(Nwx) :
+        ax_list[-1,iwx].set_xlabel('Sample number / %g'%(step_norm))
+
+    fig.tight_layout()
         
     return fig,ax_list
 
@@ -578,7 +676,7 @@ def plot_annotated_parameter_trace_list(echain_list, elklhd_list, parameter_list
 def generate_streamline_colormap(colormap='plasma', number_of_streams=None, oversample_factor=4, fluctuation_factor=0.2) :
     """
     Generates a new colormap that is generated by randomly subsampling a given colormap.
-    Useful for making plots that indicate flow, e.g., :func:`plot_deo_tempering_lieve_evolution`.
+    Useful for making plots that indicate flow, e.g., :func:`plot_deo_tempering_level_evolution`.
     
     Args:
       colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: 'plasma'.
@@ -647,7 +745,7 @@ def plot_deo_tempering_level_evolution(beta, colormap='plasma', colormodel='temp
         else :
             plt.sca(plt.gca()) # Make sure an axis exists and grab a handle to it.
             x = np.linspace(round_indx[0],round_indx[-1],256)
-            y = np.exp(np.interp(x,round_indx,np.log(beta[:,i],)))
+            y = np.exp(np.interp(x,round_indx,np.log(beta[:,i])))
             norm = np.exp(np.interp(x,round_indx,np.log(beta_density[:,i])))
             points = np.array([x, y]).T.reshape(-1, 1, 2)
             segments = np.concatenate([points[:-1], points[1:]], axis=1)
@@ -656,7 +754,8 @@ def plot_deo_tempering_level_evolution(beta, colormap='plasma', colormodel='temp
             lc.set_linewidth(1)
             lc.set_alpha(alpha)
             line = plt.gca().add_collection(lc)
-
+            
+            
     plt.gca().set_xlim((round_indx[0]-0.25,round_indx[-1]+0.25))
     betamin = np.log10(np.min(beta[:,:-1]))
     betamax = np.log10(np.max(beta[:,:-1]))
