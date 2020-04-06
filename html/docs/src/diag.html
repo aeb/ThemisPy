@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Diag &mdash; ThemisPy 0+untagged.85.g5d7fbd5 documentation</title>
+  <title>Diag &mdash; ThemisPy 0+untagged.86.g2b400da documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.85.g5d7fbd5 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.86.g2b400da documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Developer’s Guide" href="devel.html"/>
         <link rel="prev" title="Chain" href="chain.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.85.g5d7fbd5
+                0+untagged.86.g2b400da
               </div>
             
           
@@ -577,6 +577,58 @@ where the high-probability regions are.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="diag.diagnostic_plots.plot_likelihood_trace">
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_likelihood_trace</code><span class="sig-paren">(</span><em class="sig-param">elklhd</em>, <em class="sig-param">colormap='plasma'</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='k'</em>, <em class="sig-param">alpha=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_likelihood_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_likelihood_trace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a set of trace plots for a Themis-style ensemble likelihood object.
+Optionally overplots the cross-walker means and standard deviations for each parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>elklhd</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Ensemble MCMC chain likelihood, generated, e.g., from <a class="reference internal" href="chain.html#chain.mcmc_chain.read_elklhd" title="chain.mcmc_chain.read_elklhd"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain.mcmc_chain.read_elklhd()</span></code></a>.</p></li>
+<li><p><strong>colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.2.1)"><em>matplotlib.colors.Colormap</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. Default: ‘plasma’.</p></li>
+<li><p><strong>step_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Normalization of the steps to show on horizontal axis. Default: 1000.</p></li>
+<li><p><strong>grid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag that determines whether or not to plot a background grid. Default: True.</p></li>
+<li><p><strong>means</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag that determines whether or not to overplot means and standard devation ranges for the likelihood. Default: False.</p></li>
+<li><p><strong>mean_color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>. Default: ‘r’.</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Value of alpha for the individual likelihood traces.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Handles to the figure and array of axes objects in the plot.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)">matplotlib.figure.Figure</a>, <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)">matplotlib.axes.Axes</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="diag.diagnostic_plots.plot_likelihood_trace_list">
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_likelihood_trace_list</code><span class="sig-paren">(</span><em class="sig-param">elklhd_list</em>, <em class="sig-param">colormap='plasma'</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='k'</em>, <em class="sig-param">alpha=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_likelihood_trace_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_likelihood_trace_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a set of trace plots for a Themis-style ensemble likelihood object.
+Optionally overplots the cross-walker means and standard deviations for each parameter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>elklhd_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of ensemble MCMC chain likelihoods, generated, e.g., from <a class="reference internal" href="chain.html#chain.mcmc_chain.read_elklhd" title="chain.mcmc_chain.read_elklhd"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain.mcmc_chain.read_elklhd()</span></code></a>.</p></li>
+<li><p><strong>colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.2.1)"><em>matplotlib.colors.Colormap</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. Default: ‘plasma’.</p></li>
+<li><p><strong>step_norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Normalization of the steps to show on horizontal axis. Default: 1000.</p></li>
+<li><p><strong>grid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag that determines whether or not to plot a background grid. Default: True.</p></li>
+<li><p><strong>means</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag that determines whether or not to overplot means and standard devation ranges for each parameter. Default: False.</p></li>
+<li><p><strong>mean_color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>. Default: ‘r’.</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Value of alpha for the individual likelihood traces.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Handles to the figure and array of axes objects in the plot.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)">matplotlib.figure.Figure</a>, <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)">matplotlib.axes.Axes</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
 <dt id="diag.diagnostic_plots.plot_parameter_trace">
 <code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_parameter_trace</code><span class="sig-paren">(</span><em class="sig-param">echain</em>, <em class="sig-param">parameter_list=None</em>, <em class="sig-param">parameter_names=None</em>, <em class="sig-param">sample_color='b'</em>, <em class="sig-param">one_column=False</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='r'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_parameter_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_parameter_trace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a set of trace plots for a Themis-style ensemble chain object.
@@ -700,7 +752,7 @@ will be biased.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.85.g5d7fbd5',
+            VERSION:'0+untagged.86.g2b400da',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'

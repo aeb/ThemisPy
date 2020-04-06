@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>diag.diagnostic_plots &mdash; ThemisPy 0+untagged.85.g5d7fbd5 documentation</title>
+  <title>diag.diagnostic_plots &mdash; ThemisPy 0+untagged.86.g2b400da documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.85.g5d7fbd5 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.86.g2b400da documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.85.g5d7fbd5
+                0+untagged.86.g2b400da
               </div>
             
           
@@ -236,6 +236,103 @@
     <span class="k">return</span> <span class="n">fig</span><span class="p">,</span><span class="n">axes</span></div>
 
 
+
+<div class="viewcode-block" id="plot_likelihood_trace"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_likelihood_trace">[docs]</a><span class="k">def</span> <span class="nf">plot_likelihood_trace</span><span class="p">(</span><span class="n">elklhd</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="n">step_norm</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">means</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mean_color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a set of trace plots for a Themis-style ensemble likelihood object.  </span>
+<span class="sd">    Optionally overplots the cross-walker means and standard deviations for each parameter.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      elklhd (numpy.ndarray): Ensemble MCMC chain likelihood, generated, e.g., from :func:`chain.mcmc_chain.read_elklhd`.</span>
+<span class="sd">      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: &#39;plasma&#39;.</span>
+<span class="sd">      step_norm (float): Normalization of the steps to show on horizontal axis. Default: 1000.</span>
+<span class="sd">      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.</span>
+<span class="sd">      means (bool): Flag that determines whether or not to overplot means and standard devation ranges for the likelihood. Default: False.</span>
+<span class="sd">      mean_color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`. Default: &#39;r&#39;.</span>
+<span class="sd">      alpha (float): Value of alpha for the individual likelihood traces.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">chain_step</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">step_norm</span><span class="p">)</span>
+
+    <span class="c1"># Get mean values if they are to be plotted</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">meanvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">elklhd</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">stdvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">elklhd</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span>
+        
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain_step</span><span class="p">,</span><span class="n">elklhd</span><span class="p">[:,</span><span class="n">w</span><span class="p">],</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">cmap</span><span class="p">(</span><span class="n">w</span><span class="o">/</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)),</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">xtmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">chain_step</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">chain_step</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+        <span class="n">ytmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">meanvals</span><span class="p">,</span> <span class="n">meanvals</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xtmp</span><span class="p">,</span><span class="n">ytmp</span><span class="p">,</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">mean_color</span><span class="p">,</span><span class="n">zorder</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xtmp</span><span class="p">,</span><span class="n">ytmp</span><span class="o">+</span><span class="n">stdvals</span><span class="p">,</span><span class="n">ytmp</span><span class="o">-</span><span class="n">stdvals</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">mean_color</span><span class="p">,</span><span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Sample number / </span><span class="si">%g</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">step_norm</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Log likelihood&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span></div>
+        
+
+<div class="viewcode-block" id="plot_likelihood_trace_list"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_likelihood_trace_list">[docs]</a><span class="k">def</span> <span class="nf">plot_likelihood_trace_list</span><span class="p">(</span><span class="n">elklhd_list</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="n">step_norm</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">means</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mean_color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a set of trace plots for a Themis-style ensemble likelihood object.  </span>
+<span class="sd">    Optionally overplots the cross-walker means and standard deviations for each parameter.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      elklhd_list (list): List of ensemble MCMC chain likelihoods, generated, e.g., from :func:`chain.mcmc_chain.read_elklhd`.</span>
+<span class="sd">      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: &#39;plasma&#39;.</span>
+<span class="sd">      step_norm (float): Normalization of the steps to show on horizontal axis. Default: 1000.</span>
+<span class="sd">      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.</span>
+<span class="sd">      means (bool): Flag that determines whether or not to overplot means and standard devation ranges for each parameter. Default: False.</span>
+<span class="sd">      mean_color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`. Default: &#39;r&#39;.</span>
+<span class="sd">      alpha (float): Value of alpha for the individual likelihood traces.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">step_offset</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="k">for</span> <span class="n">elklhd</span> <span class="ow">in</span> <span class="n">elklhd_list</span> <span class="p">:</span>
+        
+        <span class="n">chain_step</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">step_norm</span><span class="p">)</span> <span class="o">+</span> <span class="n">step_offset</span>
+
+        <span class="c1"># Get mean values if they are to be plotted</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">meanvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">elklhd</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+            <span class="n">stdvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">elklhd</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain_step</span><span class="p">,</span><span class="n">elklhd</span><span class="p">[:,</span><span class="n">w</span><span class="p">],</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">cmap</span><span class="p">(</span><span class="n">w</span><span class="o">/</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)),</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">xtmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">chain_step</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">chain_step</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+            <span class="n">ytmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">meanvals</span><span class="p">,</span> <span class="n">meanvals</span><span class="p">])</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xtmp</span><span class="p">,</span><span class="n">ytmp</span><span class="p">,</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">mean_color</span><span class="p">,</span><span class="n">zorder</span><span class="o">=</span><span class="mi">11</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">xtmp</span><span class="p">,</span><span class="n">ytmp</span><span class="o">+</span><span class="n">stdvals</span><span class="p">,</span><span class="n">ytmp</span><span class="o">-</span><span class="n">stdvals</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">mean_color</span><span class="p">,</span><span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+
+
+            
+        <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">step_offset</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+
+        <span class="n">step_offset</span> <span class="o">=</span> <span class="n">chain_step</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            
+            
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Sample number / </span><span class="si">%g</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">step_norm</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Log likelihood&#39;</span><span class="p">)</span>
+            
+    <span class="k">return</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="plot_parameter_trace"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_parameter_trace">[docs]</a><span class="k">def</span> <span class="nf">plot_parameter_trace</span><span class="p">(</span><span class="n">echain</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameter_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">sample_color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">one_column</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">step_norm</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">means</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mean_color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">):</span>
@@ -828,7 +925,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.85.g5d7fbd5',
+            VERSION:'0+untagged.86.g2b400da',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'
