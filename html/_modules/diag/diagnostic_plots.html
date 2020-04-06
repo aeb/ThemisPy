@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>diag.diagnostic_plots &mdash; ThemisPy 0+untagged.86.g2b400da documentation</title>
+  <title>diag.diagnostic_plots &mdash; ThemisPy 0+untagged.86.g2b400da.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.86.g2b400da documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.86.g2b400da.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.86.g2b400da
+                0+untagged.86.g2b400da.dirty
               </div>
             
           
@@ -239,8 +239,8 @@
 
 <div class="viewcode-block" id="plot_likelihood_trace"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_likelihood_trace">[docs]</a><span class="k">def</span> <span class="nf">plot_likelihood_trace</span><span class="p">(</span><span class="n">elklhd</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="n">step_norm</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">means</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mean_color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generates a set of trace plots for a Themis-style ensemble likelihood object.  </span>
-<span class="sd">    Optionally overplots the cross-walker means and standard deviations for each parameter.</span>
+<span class="sd">    Plots to the current Axes object traces for a Themis-style ensemble likelihood </span>
+<span class="sd">    objects. Optionally overplots the means and standard deviations of the likelihood.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      elklhd (numpy.ndarray): Ensemble MCMC chain likelihood, generated, e.g., from :func:`chain.mcmc_chain.read_elklhd`.</span>
@@ -282,8 +282,9 @@
 
 <div class="viewcode-block" id="plot_likelihood_trace_list"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_likelihood_trace_list">[docs]</a><span class="k">def</span> <span class="nf">plot_likelihood_trace_list</span><span class="p">(</span><span class="n">elklhd_list</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="n">step_norm</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">means</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mean_color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generates a set of trace plots for a Themis-style ensemble likelihood object.  </span>
-<span class="sd">    Optionally overplots the cross-walker means and standard deviations for each parameter.</span>
+<span class="sd">    Plots to the current Axes object traces for a list of Themis-style ensemble </span>
+<span class="sd">    likelihood objects. Optionally overplots the means and standard deviations </span>
+<span class="sd">    of the likelihood.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      elklhd_list (list): List of ensemble MCMC chain likelihoods, generated, e.g., from :func:`chain.mcmc_chain.read_elklhd`.</span>
@@ -493,9 +494,9 @@
 
 <div class="viewcode-block" id="plot_annotated_parameter_trace"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_annotated_parameter_trace">[docs]</a><span class="k">def</span> <span class="nf">plot_annotated_parameter_trace</span><span class="p">(</span><span class="n">echain</span><span class="p">,</span> <span class="n">elklhd</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameter_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">likelihood_values</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="n">one_column</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">step_norm</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">means</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mean_color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plots to the current Axes object traces of a subset of parameters for a Themis-style </span>
-<span class="sd">    ensemble chain object. Points are color-coded by likelihood, which provides a better</span>
-<span class="sd">    visualizations of where the high-probability regions are.</span>
+<span class="sd">    Plots traces of a subset of parameters for a Themis-style ensemble chain object. </span>
+<span class="sd">    Points are color-coded by likelihood, which provides a better visualizations of </span>
+<span class="sd">    where the high-probability regions are.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      echain (numpy.ndarray): Ensemble MCMC chain, generated, e.g., from :func:`chain.mcmc_chain.load_erun`.</span>
@@ -591,10 +592,10 @@
 
 <div class="viewcode-block" id="plot_annotated_parameter_trace_list"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_annotated_parameter_trace_list">[docs]</a><span class="k">def</span> <span class="nf">plot_annotated_parameter_trace_list</span><span class="p">(</span><span class="n">echain_list</span><span class="p">,</span> <span class="n">elklhd_list</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parameter_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">likelihood_values</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="n">one_column</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">step_norm</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">means</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mean_color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">use_global_likelihoods</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Plots to the current Axes object traces of a subset of parameters for a list of </span>
-<span class="sd">    Themis-style ensemble chains that are presumably temporally related in some fashion.</span>
-<span class="sd">    Points are color-coded by likelihood, which provides a better visualizations of </span>
-<span class="sd">    where the high-probability regions are.</span>
+<span class="sd">    Plots traces of a subset of parameters for a list of Themis-style ensemble chains </span>
+<span class="sd">    that are presumably temporally related in some fashion. Points are color-coded by </span>
+<span class="sd">    likelihood, which provides a better visualizations of where the high-probability </span>
+<span class="sd">    regions are.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      echain_list (list): List of ensemble MCMC chain, generated, e.g., from :func:`chain.mcmc_chain.load_erun`.</span>
@@ -925,7 +926,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.86.g2b400da',
+            VERSION:'0+untagged.86.g2b400da.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'

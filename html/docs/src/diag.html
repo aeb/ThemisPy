@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Diag &mdash; ThemisPy 0+untagged.86.g2b400da documentation</title>
+  <title>Diag &mdash; ThemisPy 0+untagged.86.g2b400da.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.86.g2b400da documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.86.g2b400da.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Developer’s Guide" href="devel.html"/>
         <link rel="prev" title="Chain" href="chain.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.86.g2b400da
+                0+untagged.86.g2b400da.dirty
               </div>
             
           
@@ -451,9 +451,9 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
 <dl class="function">
 <dt id="diag.diagnostic_plots.plot_annotated_parameter_trace">
 <code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_annotated_parameter_trace</code><span class="sig-paren">(</span><em class="sig-param">echain</em>, <em class="sig-param">elklhd</em>, <em class="sig-param">parameter_list=None</em>, <em class="sig-param">parameter_names=None</em>, <em class="sig-param">likelihood_values=4</em>, <em class="sig-param">colormap='plasma'</em>, <em class="sig-param">one_column=False</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='k'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_annotated_parameter_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_annotated_parameter_trace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots to the current Axes object traces of a subset of parameters for a Themis-style
-ensemble chain object. Points are color-coded by likelihood, which provides a better
-visualizations of where the high-probability regions are.</p>
+<dd><p>Plots traces of a subset of parameters for a Themis-style ensemble chain object.
+Points are color-coded by likelihood, which provides a better visualizations of
+where the high-probability regions are.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -482,10 +482,10 @@ visualizations of where the high-probability regions are.</p>
 <dl class="function">
 <dt id="diag.diagnostic_plots.plot_annotated_parameter_trace_list">
 <code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_annotated_parameter_trace_list</code><span class="sig-paren">(</span><em class="sig-param">echain_list</em>, <em class="sig-param">elklhd_list</em>, <em class="sig-param">parameter_list=None</em>, <em class="sig-param">parameter_names=None</em>, <em class="sig-param">likelihood_values=4</em>, <em class="sig-param">colormap='plasma'</em>, <em class="sig-param">one_column=False</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='k'</em>, <em class="sig-param">use_global_likelihoods=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_annotated_parameter_trace_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_annotated_parameter_trace_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Plots to the current Axes object traces of a subset of parameters for a list of
-Themis-style ensemble chains that are presumably temporally related in some fashion.
-Points are color-coded by likelihood, which provides a better visualizations of
-where the high-probability regions are.</p>
+<dd><p>Plots traces of a subset of parameters for a list of Themis-style ensemble chains
+that are presumably temporally related in some fashion. Points are color-coded by
+likelihood, which provides a better visualizations of where the high-probability
+regions are.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -579,8 +579,8 @@ where the high-probability regions are.</p>
 <dl class="function">
 <dt id="diag.diagnostic_plots.plot_likelihood_trace">
 <code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_likelihood_trace</code><span class="sig-paren">(</span><em class="sig-param">elklhd</em>, <em class="sig-param">colormap='plasma'</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='k'</em>, <em class="sig-param">alpha=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_likelihood_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_likelihood_trace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a set of trace plots for a Themis-style ensemble likelihood object.
-Optionally overplots the cross-walker means and standard deviations for each parameter.</p>
+<dd><p>Plots to the current Axes object traces for a Themis-style ensemble likelihood
+objects. Optionally overplots the means and standard deviations of the likelihood.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -605,8 +605,9 @@ Optionally overplots the cross-walker means and standard deviations for each par
 <dl class="function">
 <dt id="diag.diagnostic_plots.plot_likelihood_trace_list">
 <code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_likelihood_trace_list</code><span class="sig-paren">(</span><em class="sig-param">elklhd_list</em>, <em class="sig-param">colormap='plasma'</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='k'</em>, <em class="sig-param">alpha=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_likelihood_trace_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_likelihood_trace_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a set of trace plots for a Themis-style ensemble likelihood object.
-Optionally overplots the cross-walker means and standard deviations for each parameter.</p>
+<dd><p>Plots to the current Axes object traces for a list of Themis-style ensemble
+likelihood objects. Optionally overplots the means and standard deviations
+of the likelihood.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -752,7 +753,7 @@ will be biased.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.86.g2b400da',
+            VERSION:'0+untagged.86.g2b400da.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'
