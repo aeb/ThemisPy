@@ -491,7 +491,7 @@ def plot_annotated_parameter_trace(echain, elklhd, parameter_list=None, paramete
 
             plt.grid(grid)
             if (mpl.rcParams['text.usetex']) :
-                plt.gca().set_ylabel(r'$\\log_{10}(L)$')
+                plt.gca().set_ylabel(r'$\log_{10}(L)$')
             else :
                 plt.gca().set_ylabel('log10(L)')
             
@@ -667,7 +667,7 @@ def plot_annotated_parameter_trace_list(echain_list, elklhd_list, parameter_list
         dy = 0.1*(ymax-ymin)
         plt.gca().set_ylim((ymin-dy,ymax+dy))
         if (mpl.rcParams['text.usetex']) :
-            plt.gca().set_ylabel(r'$\\log_{10}(L)$')
+            plt.gca().set_ylabel(r'$\log_{10}(L)$')
         else :
             plt.gca().set_ylabel('log10(L)')
 
