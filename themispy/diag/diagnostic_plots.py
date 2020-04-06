@@ -90,8 +90,8 @@ def plot_rank_hist(chains, bins=30, names=None):
 
 def plot_likelihood_trace(elklhd, colormap='plasma', step_norm=1000, grid=True, means=False, mean_color='k', alpha=0.5):
     """
-    Generates a set of trace plots for a Themis-style ensemble likelihood object.  
-    Optionally overplots the cross-walker means and standard deviations for each parameter.
+    Plots to the current Axes object traces for a Themis-style ensemble likelihood 
+    objects. Optionally overplots the means and standard deviations of the likelihood.
 
     Args:
       elklhd (numpy.ndarray): Ensemble MCMC chain likelihood, generated, e.g., from :func:`chain.mcmc_chain.read_elklhd`.
@@ -133,8 +133,9 @@ def plot_likelihood_trace(elklhd, colormap='plasma', step_norm=1000, grid=True, 
 
 def plot_likelihood_trace_list(elklhd_list, colormap='plasma', step_norm=1000, grid=True, means=False, mean_color='k', alpha=0.5):
     """
-    Generates a set of trace plots for a Themis-style ensemble likelihood object.  
-    Optionally overplots the cross-walker means and standard deviations for each parameter.
+    Plots to the current Axes object traces for a list of Themis-style ensemble 
+    likelihood objects. Optionally overplots the means and standard deviations 
+    of the likelihood.
 
     Args:
       elklhd_list (list): List of ensemble MCMC chain likelihoods, generated, e.g., from :func:`chain.mcmc_chain.read_elklhd`.
@@ -344,9 +345,9 @@ def plot_parameter_trace_list(echain_list, parameter_list=None, parameter_names=
 
 def plot_annotated_parameter_trace(echain, elklhd, parameter_list=None, parameter_names=None, likelihood_values=4, colormap='plasma', one_column=False, step_norm=1000, grid=True, means=False, mean_color='k'):
     """
-    Plots to the current Axes object traces of a subset of parameters for a Themis-style 
-    ensemble chain object. Points are color-coded by likelihood, which provides a better
-    visualizations of where the high-probability regions are.
+    Plots traces of a subset of parameters for a Themis-style ensemble chain object. 
+    Points are color-coded by likelihood, which provides a better visualizations of 
+    where the high-probability regions are.
 
     Args:
       echain (numpy.ndarray): Ensemble MCMC chain, generated, e.g., from :func:`chain.mcmc_chain.load_erun`.
@@ -442,10 +443,10 @@ def plot_annotated_parameter_trace(echain, elklhd, parameter_list=None, paramete
 
 def plot_annotated_parameter_trace_list(echain_list, elklhd_list, parameter_list=None, parameter_names=None, likelihood_values=4, colormap='plasma', one_column=False, step_norm=1000, grid=True, means=False, mean_color='k', use_global_likelihoods=False):
     """
-    Plots to the current Axes object traces of a subset of parameters for a list of 
-    Themis-style ensemble chains that are presumably temporally related in some fashion.
-    Points are color-coded by likelihood, which provides a better visualizations of 
-    where the high-probability regions are.
+    Plots traces of a subset of parameters for a list of Themis-style ensemble chains 
+    that are presumably temporally related in some fashion. Points are color-coded by 
+    likelihood, which provides a better visualizations of where the high-probability 
+    regions are.
 
     Args:
       echain_list (list): List of ensemble MCMC chain, generated, e.g., from :func:`chain.mcmc_chain.load_erun`.
