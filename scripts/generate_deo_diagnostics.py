@@ -12,6 +12,15 @@ from themispy import chain as tc
 rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
 rc('text', usetex=True)
 
+"""
+Reads in tempering summary output from DEO samplers in Themis and generates diagnostic plots.
+
+For more information, run:
+
+$ python3 generate_deo_diagnostics.py -h
+
+"""
+
 
 parser = argparse.ArgumentParser(description=("Computes various diagnostics for DEO tempered Themis ensemble MCMC chain"
                                               " and associated plots."))
