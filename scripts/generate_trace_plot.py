@@ -73,7 +73,7 @@ parser.add_argument("-lo","--likelihood-out",
                     type=str,
                     action="store",
                     default="likelihood_trace_plot.png",
-                    help="Output file name. Default: parameter_trace_plot.png")
+                    help="Output file name. Default: likelihood_trace_plot.png")
 parser.add_argument("--no-grids",
                     action='store_false',
                     default=True,
