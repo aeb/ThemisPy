@@ -6,9 +6,9 @@ Structure and philosphy
 ThemisPy is a library of utility functions for postprocessing Themis_ analyses.
 These have been organized into four packages:
 
-* diag -- Diagnostics.
 * chain -- Objects and methods for manipulating MCMC chains.
 * data -- Objects and methods for processing observational data.
+* diag -- Diagnostics.
 * vis -- Visualizations of Themis_ analyses.
 
 In addition there two additional top-level directories:
@@ -25,6 +25,7 @@ Individual package documentation organized by area.
    :maxdepth: 3
 
    ./chain
+   ./data
    ./diag
 
 
