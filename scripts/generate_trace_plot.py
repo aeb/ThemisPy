@@ -7,8 +7,6 @@ import warnings
 import sys
 from matplotlib.cbook import flatten
 import matplotlib.pyplot as plt
-rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
-rc('text', usetex=True)
 
 import themispy as ty
 
@@ -91,12 +89,26 @@ parser.add_argument("-1","--one-column",
                     action='store_true',
                     default=False,
                     help=("Organizes trace plots into a single column. Default: False."))
-
-
+parser.add_argument("-P","--parameters-only",
+                    action='store_false',
+                    default=True,
+                    help=("Disable likelihood plot on the parameter trace plot.  When likelihoods"
+                          " are passed, a likelihood trace is added to the traces of the parameters."
+                          " Default: likelihood trace is added."))
+parser.add_argument("--usetex",
+                    action='store_true',
+                    default=False,
+                    help=("Turns on using LaTex in the rendering.  Note that this takes MUCH longer,"
+                          " but the result is MUCH better looking."))
 
 # Get command line options
 args = parser.parse_args()
 
+
+# Use LaTex or not
+if (args.usetex) :
+    rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
+    rc('text', usetex=True)
 
 # Flatten the list of filenames
 chain_file_list = list(flatten(args.chain))
@@ -128,11 +140,11 @@ if (len(lklhd_file_list)>0) :
         lklhd_data_list.append(elklhd)
 
     if (len(chain_data_list)>1) :
-        fpt,apt = ty.diag.plot_annotated_parameter_trace_list(chain_data_list,lklhd_data_list,means=args.means,colormap='plasma',use_global_likelihoods=args.Global,grid=args.no_grids,one_column=args.one_column)
+        fpt,apt = ty.diag.plot_annotated_parameter_trace_list(chain_data_list,lklhd_data_list,means=args.means,colormap='plasma',use_global_likelihoods=args.Global,grid=args.no_grids,one_column=args.one_column,add_likelihood_trace=args.parameters_only)
         plt.figure()
         flt,alt = ty.diag.plot_likelihood_trace_list(lklhd_data_list,colormap='plasma',grid=args.no_grids,means=args.means)
     else :
-        fpt,apt = ty.diag.plot_annotated_parameter_trace(chain_data_list[0],lklhd_data_list[0],means=args.means,colormap='plasma',grid=args.no_grids,one_column=args.one_column)
+        fpt,apt = ty.diag.plot_annotated_parameter_trace(chain_data_list[0],lklhd_data_list[0],means=args.means,colormap='plasma',grid=args.no_grids,one_column=args.one_column,add_likelihood_trace=args.parameters_only)
         plt.figure()
         flt,alt = ty.diag.plot_likelihood_trace(lklhd_data_list[0],colormap='plasma',grid=args.no_grids,means=args.means)
 
