@@ -20,6 +20,8 @@ from matplotlib.colors import ListedColormap
 from scipy import interpolate as scint
 from scipy.interpolate import PchipInterpolator as mcubic
 
+import matplotlib as mpl
+
 from themispy import chain
 from themispy import diag
 
@@ -488,7 +490,10 @@ def plot_annotated_parameter_trace(echain, elklhd, parameter_list=None, paramete
             plt.gca().set_ylim((ymin-dy,ymax+dy))
 
             plt.grid(grid)
-            plt.gca().set_ylabel(r'$\\log_{10}(L)$')
+            if (mpl.rcParams['text.usetex']) :
+                plt.gca().set_ylabel(r'$\\log_{10}(L)$')
+            else :
+                plt.gca().set_ylabel('log10(L)')
             
     for iwx in range(Nwx) :
         ax_list[-1,iwx].set_xlabel('Sample number / %g'%(step_norm))
@@ -661,8 +666,11 @@ def plot_annotated_parameter_trace_list(echain_list, elklhd_list, parameter_list
         ymax = np.max(elklhd)
         dy = 0.1*(ymax-ymin)
         plt.gca().set_ylim((ymin-dy,ymax+dy))
-        plt.gca().set_ylabel(r'$\\log_{10}(L)$')
-        
+        if (mpl.rcParams['text.usetex']) :
+            plt.gca().set_ylabel(r'$\\log_{10}(L)$')
+        else :
+            plt.gca().set_ylabel('log10(L)')
+
     for iwx in range(Nwx) :
         ax_list[-1,iwx].set_xlabel('Sample number / %g'%(step_norm))
 
