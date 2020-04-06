@@ -88,6 +88,103 @@ def plot_rank_hist(chains, bins=30, names=None):
 
 
 
+def plot_likelihood_trace(elklhd, colormap='plasma', step_norm=1000, grid=True, means=False, mean_color='k', alpha=0.5):
+    """
+    Generates a set of trace plots for a Themis-style ensemble likelihood object.  
+    Optionally overplots the cross-walker means and standard deviations for each parameter.
+
+    Args:
+      elklhd (numpy.ndarray): Ensemble MCMC chain likelihood, generated, e.g., from :func:`chain.mcmc_chain.read_elklhd`.
+      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: 'plasma'.
+      step_norm (float): Normalization of the steps to show on horizontal axis. Default: 1000.
+      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.
+      means (bool): Flag that determines whether or not to overplot means and standard devation ranges for the likelihood. Default: False.
+      mean_color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`. Default: 'r'.
+      alpha (float): Value of alpha for the individual likelihood traces.
+
+    Returns:
+      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.
+    """
+
+    chain_step = np.arange(elklhd.shape[0])/float(step_norm)
+
+    # Get mean values if they are to be plotted
+    if (means) :
+        meanvals = np.mean(elklhd,axis=None)
+        stdvals = np.std(elklhd,axis=None)
+        
+    cmap = cm.get_cmap(colormap)
+        
+    for w in range(elklhd.shape[1]) :
+        plt.plot(chain_step,elklhd[:,w],'-',color=cmap(w/(elklhd.shape[1]-1.0)),alpha=alpha)
+
+    if (means) :
+        xtmp = np.array([chain_step[0], chain_step[-1]])
+        ytmp = np.array([meanvals, meanvals])
+        plt.plot(xtmp,ytmp,linestyle='-',alpha=0.75,color=mean_color,zorder=11)
+        plt.fill_between(xtmp,ytmp+stdvals,ytmp-stdvals,alpha=0.25,color=mean_color,zorder=10)
+
+    plt.grid(grid)
+    plt.gca().set_xlabel('Sample number / %g'%(step_norm))
+    plt.gca().set_ylabel('Log likelihood')
+
+    return plt.gcf(),plt.gca()
+        
+
+def plot_likelihood_trace_list(elklhd_list, colormap='plasma', step_norm=1000, grid=True, means=False, mean_color='k', alpha=0.5):
+    """
+    Generates a set of trace plots for a Themis-style ensemble likelihood object.  
+    Optionally overplots the cross-walker means and standard deviations for each parameter.
+
+    Args:
+      elklhd_list (list): List of ensemble MCMC chain likelihoods, generated, e.g., from :func:`chain.mcmc_chain.read_elklhd`.
+      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: 'plasma'.
+      step_norm (float): Normalization of the steps to show on horizontal axis. Default: 1000.
+      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.
+      means (bool): Flag that determines whether or not to overplot means and standard devation ranges for each parameter. Default: False.
+      mean_color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`. Default: 'r'.
+      alpha (float): Value of alpha for the individual likelihood traces.
+
+    Returns:
+      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.
+    """
+
+
+    step_offset = 0
+    
+    for elklhd in elklhd_list :
+        
+        chain_step = np.arange(elklhd.shape[0])/float(step_norm) + step_offset
+
+        # Get mean values if they are to be plotted
+        if (means) :
+            meanvals = np.mean(elklhd,axis=None)
+            stdvals = np.std(elklhd,axis=None)
+        
+        cmap = cm.get_cmap(colormap)
+        
+        for w in range(elklhd.shape[1]) :
+            plt.plot(chain_step,elklhd[:,w],'-',color=cmap(w/(elklhd.shape[1]-1.0)),alpha=alpha)
+
+        if (means) :
+            xtmp = np.array([chain_step[0], chain_step[-1]])
+            ytmp = np.array([meanvals, meanvals])
+            plt.plot(xtmp,ytmp,linestyle='-',alpha=0.75,color=mean_color,zorder=11)
+            plt.fill_between(xtmp,ytmp+stdvals,ytmp-stdvals,alpha=0.25,color=mean_color,zorder=10)
+
+
+            
+        plt.axvline(step_offset,color='k')
+
+        step_offset = chain_step[-1]
+            
+            
+    plt.grid(grid)
+    plt.gca().set_xlabel('Sample number / %g'%(step_norm))
+    plt.gca().set_ylabel('Log likelihood')
+            
+    return plt.gcf(),plt.gca()
+
 
 def plot_parameter_trace(echain, parameter_list=None, parameter_names=None, sample_color='b', one_column=False, step_norm=1000, grid=True, means=False, mean_color='r'):
     """

@@ -67,8 +67,13 @@ parser.add_argument("-w","--walkers",
 parser.add_argument("-o","--out",
                     type=str,
                     action="store",
-                    default="trace_plot.png",
-                    help="Output file name. Default: trace_plot.png")
+                    default="parameter_trace_plot.png",
+                    help="Output file name. Default: parameter_trace_plot.png")
+parser.add_argument("-lo","--likelihood-out",
+                    type=str,
+                    action="store",
+                    default="likelihood_trace_plot.png",
+                    help="Output file name. Default: parameter_trace_plot.png")
 parser.add_argument("--no-grids",
                     action='store_false',
                     default=True,
@@ -123,10 +128,15 @@ if (len(lklhd_file_list)>0) :
         lklhd_data_list.append(elklhd)
 
     if (len(chain_data_list)>1) :
-        ty.diag.plot_annotated_parameter_trace_list(chain_data_list,lklhd_data_list,means=args.means,colormap='plasma',use_global_likelihoods=args.Global,grid=args.no_grids,one_column=args.one_column)
+        fpt,apt = ty.diag.plot_annotated_parameter_trace_list(chain_data_list,lklhd_data_list,means=args.means,colormap='plasma',use_global_likelihoods=args.Global,grid=args.no_grids,one_column=args.one_column)
+        plt.figure()
+        flt,alt = ty.diag.plot_likelihood_trace_list(lklhd_data_list,colormap='plasma',grid=args.no_grids,means=args.means)
     else :
-        ty.diag.plot_annotated_parameter_trace(chain_data_list[0],lklhd_data_list[0],means=args.means,colormap='plasma',grid=args.no_grids,one_column=args.one_column)
-        
+        fpt,apt = ty.diag.plot_annotated_parameter_trace(chain_data_list[0],lklhd_data_list[0],means=args.means,colormap='plasma',grid=args.no_grids,one_column=args.one_column)
+        plt.figure()
+        flt,alt = ty.diag.plot_likelihood_trace(lklhd_data_list[0],colormap='plasma',grid=args.no_grids,means=args.means)
+
+    flt.savefig(args.likelihood_out,dpi=200)
 # Otherwise plot just a normal trace
 else :
 
@@ -137,12 +147,12 @@ else :
         chain_data_list.append(echain)
 
     if (len(chain_data_list)>1) :
-        ty.diag.plot_parameter_trace_list(chain_data_list,means=args.means,grid=args.no_grids,one_column=args.one_column)
+        fpt,apt = ty.diag.plot_parameter_trace_list(chain_data_list,means=args.means,grid=args.no_grids,one_column=args.one_column)
     else :
-        ty.diag.plot_parameter_trace(chain_data_list[0],means=args.means,grid=args.no_grids,one_column=args.one_column)
+        fpt,apt = ty.diag.plot_parameter_trace(chain_data_list[0],means=args.means,grid=args.no_grids,one_column=args.one_column)
     
 
-plt.savefig(args.out,dpi=200)
+fpt.savefig(args.out,dpi=200)
         
         
 
