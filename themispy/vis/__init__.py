@@ -11,3 +11,4 @@ from . import *
 
 # Import module components
 from .calibration import *
+from .typlot import *

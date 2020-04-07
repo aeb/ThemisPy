@@ -809,7 +809,7 @@ def plot_deo_lambda(annealing_summary_data,annealing_data,colormap='b') :
     Args:
       annealing_summary_data (numpy.ndarray): Array of annealing run summary data as read by :func:`chain.mcmc_chain.load_deo_summary`.
       annealing_data (dict): Dictionary containing :math:`\\beta` and :math:`R` values indexed by [round,tempering level] and accessed by keys 'Beta' and 'R', respectively, as read by :func:`chain.mcmc_chain.load_deo_summary`.
-      color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`
+      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm` or acceptable color type as specified in :mod:`matplotlib.colors`. Default: 'b'.
     
     Returns:
       (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.
