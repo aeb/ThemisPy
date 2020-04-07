@@ -1,0 +1,453 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Vis &mdash; ThemisPy 0+untagged.104.g852d5bd.dirty documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.104.g852d5bd.dirty documentation" href="../../index.html"/>
+        <link rel="up" title="User’s Guide" href="userguide.html"/>
+        <link rel="next" title="Developer’s Guide" href="devel.html"/>
+        <link rel="prev" title="Diag" href="diag.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> ThemisPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0+untagged.104.g852d5bd.dirty
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="userguide.html">User’s Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="userguide.html#structure-and-philosphy">Structure and philosphy</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="userguide.html#packages">Packages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="chain.html">Chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diag.html">Diag</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Vis</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-vis.calibration">Calibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-vis.typlot">Plotting Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="devel.html">Developer’s Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ThemisPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="userguide.html">User’s Guide</a> &raquo;</li>
+        
+      <li>Vis</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/docs/src/vis.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-vis"></span><div class="section" id="vis">
+<span id="id1"></span><h1>Vis<a class="headerlink" href="#vis" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-vis.calibration">
+<span id="calibration"></span><h2>Calibration<a class="headerlink" href="#module-vis.calibration" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="vis.calibration.annotate_gain_data">
+<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">annotate_gain_data</code><span class="sig-paren">(</span><em class="sig-param">gain_data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#annotate_gain_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.annotate_gain_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds elements to the gain_data dict that indicate the uniqueness of the gain solution.
+This is indicated by an integer code under the key “&lt;station&gt;.status” which translates to:</p>
+<ul class="simple">
+<li><p>0 … Solved for and uniquely determined.</p></li>
+<li><p>1 … Solved for but degenerate with another value.</p></li>
+<li><p>2 … Not being solved for.</p></li>
+</ul>
+<p>These are determined via “tells” in the gain solution (too close to unity, phase to close to
+zero), and are therefore susceptable to rare instances of confusion.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gain_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Gain data as produced by <a class="reference internal" href="#vis.calibration.read_gain_file" title="vis.calibration.read_gain_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_gain_file()</span></code></a>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Gain data with additional entries.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="vis.calibration.axes_adjust">
+<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">axes_adjust</code><span class="sig-paren">(</span><em class="sig-param">fig=None</em>, <em class="sig-param">axes=None</em>, <em class="sig-param">shift_x0=0</em>, <em class="sig-param">shift_y0=0</em>, <em class="sig-param">shift_width=0</em>, <em class="sig-param">shift_height=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#axes_adjust"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.axes_adjust" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjusts the axes by some shifts provided in the specified units.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fig</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)"><em>matplotlib.figure.Figure</em></a>) – Handle of figure to modify. If None, use the current figure object. Default: None.</p></li>
+<li><p><strong>axes</strong> (<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)"><em>matplotlib.axes.Axes</em></a>) – Handle of axes to modify. If None, use the current axes object. Default: None.</p></li>
+<li><p><strong>shift_x0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Number of inches to shift the axes to the right. Default: 0.</p></li>
+<li><p><strong>shift_y0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Number of inches to shift the axes up. Default: 0.</p></li>
+<li><p><strong>shift_width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Number of inches to increase the axes width. Default: 0.</p></li>
+<li><p><strong>shift_height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Number of inches to increase the axes height. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="vis.calibration.plot_station_gain_amplitudes">
+<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">plot_station_gain_amplitudes</code><span class="sig-paren">(</span><em class="sig-param">gain_data</em>, <em class="sig-param">invert=False</em>, <em class="sig-param">add_station_labels=True</em>, <em class="sig-param">add_quant_labels=False</em>, <em class="sig-param">absolute_time=True</em>, <em class="sig-param">colormap='jet'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#plot_station_gain_amplitudes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.plot_station_gain_amplitudes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots station gain amplitudes relative to the expected values of 1.  Optionally adds quantitative labels.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gain_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Gain data as produced by <a class="reference internal" href="#vis.calibration.read_gain_file" title="vis.calibration.read_gain_file"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_gain_file()</span></code></a>.</p></li>
+<li><p><strong>invert</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True inverts the gains to be applied to the data (heresy!) instead of the model. Default: False.</p></li>
+<li><p><strong>add_station_labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Adds station names as labels to the right side of the plot. Default: True.</p></li>
+<li><p><strong>add_quant_labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Adds quantitative labels to the right margin, shifts axes positions accordingly. Default: False.</p></li>
+<li><p><strong>absolute_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True, plots against the hour in UTC.  If False, plots against the time after the first gain reconstruction epoch begins. Default: True.</p></li>
+<li><p><strong>colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.2.1)"><em>matplotlib.colors.Colormap</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a> or acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>. Default: ‘b’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Handles to the figure and array of axes objects in the plot.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)">matplotlib.figure.Figure</a>, <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)">matplotlib.axes.Axes</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="vis.calibration.read_gain_amplitude_correction_file">
+<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">read_gain_amplitude_correction_file</code><span class="sig-paren">(</span><em class="sig-param">gainfile</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#read_gain_amplitude_correction_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.read_gain_amplitude_correction_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in a gain amplitude correction file and returns an appropriately formatted dictionary.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If astropy is unavailable, toffset will return the number of seconds since 12am, Jan 1, 2000 instead of an astropy.Time object.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gainfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the file containing the gain correction amplitude data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys [‘tstart’,’tend’,’stations’,’toffset’,’nindependent’,&lt;station codes&gt;]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="vis.calibration.read_gain_file">
+<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">read_gain_file</code><span class="sig-paren">(</span><em class="sig-param">gainfile</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#read_gain_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.read_gain_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in a complex gain file and returns an appropriately formatted dictionary.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If astropy is unavailable, toffset will return the number of seconds since 12am, Jan 1, 2000 instead of an astropy.Time object.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>gainfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the file containing the gain correction amplitude data.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys [‘tstart’,’tend’,’stations’,’toffset’,’nindependent’,&lt;station codes&gt;]</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-vis.typlot">
+<span id="plotting-functions"></span><h2>Plotting Functions<a class="headerlink" href="#module-vis.typlot" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="vis.typlot.kde_plot_1d">
+<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">kde_plot_1d</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">limits=None</em>, <em class="sig-param">color='b'</em>, <em class="sig-param">alpha=1.0</em>, <em class="sig-param">linewidth=1</em>, <em class="sig-param">linestyle='-'</em>, <em class="sig-param">nbin=128</em>, <em class="sig-param">bw='scott'</em>, <em class="sig-param">scott_factor=0</em>, <em class="sig-param">filled=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#kde_plot_1d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.kde_plot_1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a 1d joint posterior plot using <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.gaussian_kde()</span></code> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>numpy.array</em>) – List of data positions.</p></li>
+<li><p><strong>limits</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Limits in the form [xmin,xmax].  If set to None, will use the minimum and maximum values of x, expanded by 10% on each side.  Default: None.</p></li>
+<li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>.</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Value of alpha for the individual likelihood traces. Default: 1.0.</p></li>
+<li><p><strong>linewidth</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Linewidth to be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot()</span></code></a>. Default: 1.</p></li>
+<li><p><strong>linestype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Linestyle to be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot()</span></code></a>. Default: ‘-‘.</p></li>
+<li><p><strong>nbin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of bins on which to construct KDE result. Default: 128.</p></li>
+<li><p><strong>bw</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Bandwidth method for <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.gaussian_kde()</span></code>. Overidden by nonzero scott_factor. Default: ‘scott’.</p></li>
+<li><p><strong>scott_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Factor by which to expand the standard <cite>scott</cite> bandwidth factor.  Overrides bw if nonzero.  Default: 0.</p></li>
+<li><p><strong>filled</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, the histogram is plotted filled. Default: False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list of Line2D objects representing the plotted data, i.e., the handles returned by <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot()</span></code></a>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.lines.Line2D.html#matplotlib.lines.Line2D" title="(in Matplotlib v3.2.1)">matplotlib.lines.Line2D</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="vis.typlot.kde_plot_2d">
+<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">kde_plot_2d</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">plevels=None</em>, <em class="sig-param">limits=None</em>, <em class="sig-param">colormap='Purples'</em>, <em class="sig-param">alpha=1.0</em>, <em class="sig-param">nbin=128</em>, <em class="sig-param">bw='scott'</em>, <em class="sig-param">scott_factor=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#kde_plot_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.kde_plot_2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a 2d joint posterior plot using <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.gaussian_kde()</span></code> function and <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.contourf.html#matplotlib.pyplot.contourf" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.contourf()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>numpy.array</em>) – List of data positions in the 1st axis (horizontal).</p></li>
+<li><p><strong>y</strong> (<em>numpy.array</em>) – List of data positions in the 2nd axis (vertical).</p></li>
+<li><p><strong>plevels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of cummulative probability levels at which to draw contours. If set to None, will set to <span class="math notranslate nohighlight">\(1\sigma, 2\sigma, 3\sigma\)</span>. Default: None.</p></li>
+<li><p><strong>limits</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Limits in the form [[xmin,xmax],[ymin,ymax]].  If set to None, will use the minimum and maximum values of, expanded by 10% on each side.  Default: None.</p></li>
+<li><p><strong>colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.2.1)"><em>matplotlib.colors.Colormap</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. Default: ‘Purples’.</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Value of alpha for the individual likelihood traces. Default: 1.0.</p></li>
+<li><p><strong>nbin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of bins on which to construct KDE result in each dimension. Default: 128.</p></li>
+<li><p><strong>bw</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Bandwidth method for <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.gaussian_kde()</span></code>. Overidden by nonzero scott_factor. Default: ‘scott’.</p></li>
+<li><p><strong>scott_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Factor by which to expand the standard <cite>scott</cite> bandwidth factor.  Overrides bw if nonzero.  Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The handles returned by <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.contourf.html#matplotlib.pyplot.contourf" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.contourf()</span></code></a>.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/api/contour_api.html#matplotlib.contour.QuadContourSet" title="(in Matplotlib v3.2.1)">matplotlib.contour.QuadContourSet</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="vis.typlot.kde_triangle_plot">
+<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">kde_triangle_plot</code><span class="sig-paren">(</span><em class="sig-param">lower_data_array, upper_data_array=None, labels=None, upper_labels=None, truths=None, colormap='Blues', upper_colormap=None, color='blue', upper_color=None, truths_color='red', axis_location=None, alpha=1.0, quantiles=[0.99, 0.9, 0.5], nbin=128, linewidth=1, linestyle='-', truths_alpha=1.0, truths_linewidth=1, truths_linestype='-', scott_factor=1.41421, filled=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#kde_triangle_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.kde_triangle_plot" title="Permalink to this definition">¶</a></dt>
+<dd><p>Produces a triangle plot with contours set by CDF.  Data may be plotted in both lower (required) and upper (optional) triangles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>lower_data_array</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of multidimensional data from which to generate triangle plot.</p></li>
+<li><p><strong>upper_data_array</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Optional array of multidimensional data from which to generate triangle plot. If provided, must match the dimensions of the lower_data_array.  Default: None.</p></li>
+<li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Optional list of str labels for the passed values to place on lower-triangle-plot axes. If provided, must match the dimensions of the lower_data_array. Default: None.</p></li>
+<li><p><strong>upper_labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Optional list of str labels for the passed values to place on upper-triangle-plot axes. If provided, must match the dimensions of the lower_data_array. Default: None.</p></li>
+<li><p><strong>truths</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Optional list of truth values. If provided, must match the dimensions of the lower_data_array. Default: None.</p></li>
+<li><p><strong>colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.2.1)"><em>matplotlib.colors.Colormap</em></a>) – Colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. Default: ‘Blues’.</p></li>
+<li><p><strong>upper_colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.2.1)"><em>matplotlib.colors.Colormap</em></a>) – Colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. If set to None, uses the same colormap as the lower triangle. Default: None.</p></li>
+<li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a> to be used in the 1d histograms along the diagonal for the lower data. Default: ‘blue’.</p></li>
+<li><p><strong>upper_color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a> to be used in the 1d histograms along the diagonal for the upper data. If set to None, uses the same color as the lower triangle Default: None.</p></li>
+<li><p><strong>truths_color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a> to be used in the 1d histograms along the diagonal for the upper data. If set to None, uses the same color as the lower triangle Default: ‘red’.</p></li>
+<li><p><strong>axis_location</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of axis location in which to place bounding box of the entire plot. If set to None, a default size will be set. Default: None.</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Value of alpha for the individual likelihood traces. Default: 1.0.</p></li>
+<li><p><strong>quantiles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of quantiles at which to draw contours. Default: 0.99, 0.9, 0.5. Note that the defaults will change if set!</p></li>
+<li><p><strong>nbin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of bins on which to construct KDE result in each dimension. Default: 128.</p></li>
+<li><p><strong>linewidth</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Linewidth to be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot()</span></code></a> for diagonal 1d histograms. Default: 1.</p></li>
+<li><p><strong>linestype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Linestyle to be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot()</span></code></a> for diagonal 1d histograms. Default: ‘-‘.</p></li>
+<li><p><strong>truths_alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Value of alpha for the individual likelihood traces. Default: 1.0.</p></li>
+<li><p><strong>truths_linewidth</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Linewidth to be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot()</span></code></a> for diagonal 1d histograms of lower data. Default: 1.</p></li>
+<li><p><strong>truths_linestype</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Linestyle to be passed to <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot()</span></code></a> for diagonal 1d histograms of lower data. Default: ‘-‘.</p></li>
+<li><p><strong>scott_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Factor by which to expand the standard <cite>scott</cite> bandwidth factor.  Overrides bw if nonzero.  Default: 1.41421.</p></li>
+<li><p><strong>filled</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, the 1d histograms along the diagonal are plotted filled. Default: False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Handles to the array of axes objects in the plot, list of handels to the 2d kde plot objects in the lower triangle, 2d kde plot objects in the upper triangle, and 1d plot objects in along the diagonal (see <a class="reference internal" href="#vis.typlot.kde_plot_2d" title="vis.typlot.kde_plot_2d"><code class="xref py py-func docutils literal notranslate"><span class="pre">kde_plot_2d()</span></code></a> and <a class="reference internal" href="#vis.typlot.kde_plot_1d" title="vis.typlot.kde_plot_1d"><code class="xref py py-func docutils literal notranslate"><span class="pre">kde_plot_1d()</span></code></a> for more information).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)">matplotlib.axes.Axes</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="devel.html" class="btn btn-neutral float-right" title="Developer’s Guide" accesskey="n">Next →</a>
+      
+      
+        <a href="diag.html" class="btn btn-neutral" title="Diag" accesskey="p">← Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Themis Development Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0+untagged.104.g852d5bd.dirty',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE: 'true'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/language_data.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>diag.diagnostic_plots &mdash; ThemisPy 0+untagged.97.g30acb18 documentation</title>
+  <title>diag.diagnostic_plots &mdash; ThemisPy 0+untagged.104.g852d5bd.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.97.g30acb18 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.104.g852d5bd.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.97.g30acb18
+                0+untagged.104.g852d5bd.dirty
               </div>
             
           
@@ -860,12 +860,12 @@
 
 
 
-<div class="viewcode-block" id="plot_deo_tempering_level_evolution"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_deo_tempering_level_evolution">[docs]</a><span class="k">def</span> <span class="nf">plot_deo_tempering_level_evolution</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="n">colormodel</span><span class="o">=</span><span class="s1">&#39;tempering_level&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="plot_deo_tempering_level_evolution"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_deo_tempering_level_evolution">[docs]</a><span class="k">def</span> <span class="nf">plot_deo_tempering_level_evolution</span><span class="p">(</span><span class="n">annealing_data</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="n">colormodel</span><span class="o">=</span><span class="s1">&#39;tempering_level&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots the tempering level with evolution with round for DEO tempered samplers in Themis.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">      beta (numpy.ndarray): :math:`\\beta` values indexed by [round,tempering level].</span>
+<span class="sd">      annealing_data (dict): Dictionary containing :math:`\\beta` values indexed by [round,tempering level] and accessed by key &#39;Beta&#39;.</span>
 <span class="sd">      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: &#39;plasma&#39;.</span>
 <span class="sd">      colormodel (str): Determined how lines are colored.  Options are color type, &#39;tempering_level&#39;, &#39;density&#39;.  Default: &#39;tempering_level&#39;.</span>
 <span class="sd">      alpha (float): Value of alpha for the individual tempering line curves.</span>
@@ -874,6 +874,9 @@
 <span class="sd">      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="c1"># Rename components of the annealing data</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">annealing_data</span><span class="p">[</span><span class="s1">&#39;Beta&#39;</span><span class="p">]</span>
+    
     <span class="k">if</span> <span class="p">(</span><span class="n">colormodel</span> <span class="ow">is</span> <span class="s1">&#39;density&#39;</span><span class="p">)</span> <span class="p">:</span>
         <span class="n">beta_density</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">beta</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="n">dbdl</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">beta</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span><span class="o">-</span><span class="n">beta</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
@@ -948,21 +951,23 @@
     <span class="k">return</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="plot_deo_lambda"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_deo_lambda">[docs]</a><span class="k">def</span> <span class="nf">plot_deo_lambda</span><span class="p">(</span><span class="n">annealing_summary_data</span><span class="p">,</span><span class="n">beta</span><span class="p">,</span><span class="n">R</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="plot_deo_lambda"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_deo_lambda">[docs]</a><span class="k">def</span> <span class="nf">plot_deo_lambda</span><span class="p">(</span><span class="n">annealing_summary_data</span><span class="p">,</span><span class="n">annealing_data</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots the rejection rate evolution with round for DEO tempered samplers in Themis.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      annealing_summary_data (numpy.ndarray): Array of annealing run summary data as read by :func:`chain.mcmc_chain.load_deo_summary`.</span>
-<span class="sd">      beta (numpy.ndarray): :math:`\\beta` values indexed by [round,tempering level], as read by :func:`chain.mcmc_chain.load_deo_summary`.</span>
-<span class="sd">      R (nump.ndarray): :math:`R` values indexed by [round,tempering level], as read by :func:`chain.mcmc_chain.load_deo_summary`.</span>
-<span class="sd">      color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`</span>
+<span class="sd">      annealing_data (dict): Dictionary containing :math:`\\beta` and :math:`R` values indexed by [round,tempering level] and accessed by keys &#39;Beta&#39; and &#39;R&#39;, respectively, as read by :func:`chain.mcmc_chain.load_deo_summary`.</span>
+<span class="sd">      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm` or acceptable color type as specified in :mod:`matplotlib.colors`. Default: &#39;b&#39;.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns:</span>
 <span class="sd">      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-
+    <span class="c1"># Rename components of the annealing data</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">annealing_data</span><span class="p">[</span><span class="s1">&#39;Beta&#39;</span><span class="p">]</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">annealing_data</span><span class="p">[</span><span class="s1">&#39;R&#39;</span><span class="p">]</span>
+    
     <span class="k">if</span> <span class="p">(</span> <span class="ow">not</span> <span class="n">is_color_like</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
         <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span>
 
@@ -1033,7 +1038,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.97.g30acb18',
+            VERSION:'0+untagged.104.g852d5bd.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'

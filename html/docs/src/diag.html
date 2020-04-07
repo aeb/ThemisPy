@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Diag &mdash; ThemisPy 0+untagged.97.g30acb18 documentation</title>
+  <title>Diag &mdash; ThemisPy 0+untagged.104.g852d5bd.dirty documentation</title>
   
 
   
@@ -33,9 +33,9 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.97.g30acb18 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.104.g852d5bd.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
-        <link rel="next" title="Developer’s Guide" href="devel.html"/>
+        <link rel="next" title="Vis" href="vis.html"/>
         <link rel="prev" title="Data" href="data.html"/> 
 
   
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.97.g30acb18
+                0+untagged.104.g852d5bd.dirty
               </div>
             
           
@@ -98,6 +98,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#module-diag.diagnostic_plots">Plotting Tools</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="vis.html">Vis</a></li>
 </ul>
 </li>
 </ul>
@@ -517,15 +518,14 @@ regions are.</p>
 
 <dl class="function">
 <dt id="diag.diagnostic_plots.plot_deo_lambda">
-<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_deo_lambda</code><span class="sig-paren">(</span><em class="sig-param">annealing_summary_data</em>, <em class="sig-param">beta</em>, <em class="sig-param">R</em>, <em class="sig-param">colormap='b'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_deo_lambda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_deo_lambda" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_deo_lambda</code><span class="sig-paren">(</span><em class="sig-param">annealing_summary_data</em>, <em class="sig-param">annealing_data</em>, <em class="sig-param">colormap='b'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_deo_lambda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_deo_lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the rejection rate evolution with round for DEO tempered samplers in Themis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>annealing_summary_data</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of annealing run summary data as read by <a class="reference internal" href="chain.html#chain.mcmc_chain.load_deo_summary" title="chain.mcmc_chain.load_deo_summary"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain.mcmc_chain.load_deo_summary()</span></code></a>.</p></li>
-<li><p><strong>beta</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – <span class="math notranslate nohighlight">\(\beta\)</span> values indexed by [round,tempering level], as read by <a class="reference internal" href="chain.html#chain.mcmc_chain.load_deo_summary" title="chain.mcmc_chain.load_deo_summary"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain.mcmc_chain.load_deo_summary()</span></code></a>.</p></li>
-<li><p><strong>R</strong> (<em>nump.ndarray</em>) – <span class="math notranslate nohighlight">\(R\)</span> values indexed by [round,tempering level], as read by <a class="reference internal" href="chain.html#chain.mcmc_chain.load_deo_summary" title="chain.mcmc_chain.load_deo_summary"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain.mcmc_chain.load_deo_summary()</span></code></a>.</p></li>
-<li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a></p></li>
+<li><p><strong>annealing_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Dictionary containing <span class="math notranslate nohighlight">\(\beta\)</span> and <span class="math notranslate nohighlight">\(R\)</span> values indexed by [round,tempering level] and accessed by keys ‘Beta’ and ‘R’, respectively, as read by <a class="reference internal" href="chain.html#chain.mcmc_chain.load_deo_summary" title="chain.mcmc_chain.load_deo_summary"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain.mcmc_chain.load_deo_summary()</span></code></a>.</p></li>
+<li><p><strong>colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.2.1)"><em>matplotlib.colors.Colormap</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a> or acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>. Default: ‘b’.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -559,12 +559,12 @@ regions are.</p>
 
 <dl class="function">
 <dt id="diag.diagnostic_plots.plot_deo_tempering_level_evolution">
-<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_deo_tempering_level_evolution</code><span class="sig-paren">(</span><em class="sig-param">beta</em>, <em class="sig-param">colormap='plasma'</em>, <em class="sig-param">colormodel='tempering_level'</em>, <em class="sig-param">alpha=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_deo_tempering_level_evolution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_deo_tempering_level_evolution" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_deo_tempering_level_evolution</code><span class="sig-paren">(</span><em class="sig-param">annealing_data</em>, <em class="sig-param">colormap='plasma'</em>, <em class="sig-param">colormodel='tempering_level'</em>, <em class="sig-param">alpha=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_deo_tempering_level_evolution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_deo_tempering_level_evolution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the tempering level with evolution with round for DEO tempered samplers in Themis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>beta</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – <span class="math notranslate nohighlight">\(\beta\)</span> values indexed by [round,tempering level].</p></li>
+<li><p><strong>annealing_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Dictionary containing <span class="math notranslate nohighlight">\(\beta\)</span> values indexed by [round,tempering level] and accessed by key ‘Beta’.</p></li>
 <li><p><strong>colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.2.1)"><em>matplotlib.colors.Colormap</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. Default: ‘plasma’.</p></li>
 <li><p><strong>colormodel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Determined how lines are colored.  Options are color type, ‘tempering_level’, ‘density’.  Default: ‘tempering_level’.</p></li>
 <li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Value of alpha for the individual tempering line curves.</p></li>
@@ -722,7 +722,7 @@ will be biased.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="devel.html" class="btn btn-neutral float-right" title="Developer’s Guide" accesskey="n">Next →</a>
+        <a href="vis.html" class="btn btn-neutral float-right" title="Vis" accesskey="n">Next →</a>
       
       
         <a href="data.html" class="btn btn-neutral" title="Data" accesskey="p">← Previous</a>
@@ -756,7 +756,7 @@ will be biased.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.97.g30acb18',
+            VERSION:'0+untagged.104.g852d5bd.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'
