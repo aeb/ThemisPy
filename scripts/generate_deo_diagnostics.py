@@ -110,7 +110,7 @@ print(axs.shape)
 
 
 # Read in data files
-summary_data,beta,R = tc.load_deo_summary(args.annealing_data_file,args.annealing_summary_file)
+summary_data,annealing_data = tc.load_deo_summary(args.annealing_data_file,args.annealing_summary_file)
 
 
 if (not args.minimum_round is None) :
@@ -145,8 +145,9 @@ if ('t' in diagnostic_list) :
 
     print("  Generating tempering level evolution plot.")
     plt.sca(axs[0,ia])
-    td.plot_deo_tempering_level_evolution(beta,colormodel=colormodel,colormap=cmap)
+    td.plot_deo_tempering_level_evolution(annealing_data,colormodel=colormodel,colormap=cmap)
 
+    beta = annealing_data['Beta']
     ymin = np.log(np.min(beta[round_min:round_max,:-1]))
     ymax = np.log(np.max(beta[round_min:round_max,:-1]))
     dy = 0.1*(ymax-ymin)
@@ -175,7 +176,7 @@ if ('r' in diagnostic_list) :
 if ('l' in diagnostic_list) :
     print("  Generating lambda vs beta plot.")
     plt.sca(axs[0,ia])
-    td.plot_deo_lambda(summary_data,beta,R,colormap='plasma')
+    td.plot_deo_lambda(summary_data,annealing_data,colormap='plasma')
     diagnostic_list = diagnostic_list.replace('l','')
     ia += 1
     
