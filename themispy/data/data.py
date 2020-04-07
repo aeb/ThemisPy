@@ -629,68 +629,43 @@ def write_polarization_fractions(obs,outname) :
     raise NotImplementedError
 
 
-def write_uvfits(obs, outname, gains=None, dterms=None) :
+def write_uvfits(obs, outname, gains_data=None, dterm_data=None, verbosity=0) :
     """
     Writes uvfits file given an :class:`ehtim.obsdata.Obsdata` object.  Potentially applies gains and/or dterms from a Themis analysis 
 
     Warning: 
       * This makes extensive use of ehtim and will not be available if ehtim is not installed.  Raises a NotImplementedError if ehtim is unavailable.
+      * D term calibration not yet implemented.
 
     Args:
       obs (ehtim.obsdata.Obsdata): An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).
       outname (str): Name of the output file to which to write data.
       gains (dictionary): Station gains organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
       dterms (dictionary): Station D terms organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
+      verbosity (int): Degree of verbosity.  0 only prints warnings and errors. 1 provides more granular output. 2 generates calibrated data plots. 3 generates cal table gain plots.  
 
     Returns:
       None.
     """
 
+    # Flip gains from corrections to the model to adjust data, i.e., G -> 1/G
+    gain_station_names = gain_data.keys()[2:] # First two are tstart
+    for sn in gain_station_names :
+        gain_data[sn] = 1.0/gain_data[sn]
 
-    #################
-    # Read in gains
-    #  Read header information
-    infile = open(gain_file_name,'r')
-    t0=float(infile.readline().split()[5])
-    n_ind_gains=int(infile.readline().split()[5])
-    station_names=infile.readline().split()[6:]
-    infile.close()
-    if (verbosity>0) :
-        print("Start time (s from J2000):",t0)
-        print("Number of independent gains:",n_ind_gains)
-        print("List of gains:",station_names)
-
-    # Read correction information
-    d = np.loadtxt(gain_file_name,skiprows=3)
-    ts=d[:,0]/3600. # Epoch start time, converted to hours
-    te=d[:,1]/3600. # Epoch end time, converted to hours
-    gains=d[:,2:] # Gain corrections
-
-    # flip gains to get ehtim-friendly definition
-    gains = 1.0/(1.0+gains)
-
-
-    ################
-    # Read in uvfits object
-    obs = eh.obsdata.load_uvfits(uvfits_file_name)
-
-    if (scan_average==True) : # scan average the data  
-        obs.add_scans()
-        obs = obs.avg_coherent(0.0, scan_avg=True)
-    
+    # Get the unique times
     od_time = np.unique(obs.unpack('time'))
-
     od_time_list = []
     for tmp in od_time :
         od_time_list.append(tmp[0])
 
+    # Check for consistency, if they are not consistent warn
     if (len(od_time_list)!=len(ts)) :
-        print("Gain list and data list are not the same size!")
-        quit()
+        warnings.warn("gain_data and observation data are not the same size! Will try to apply gains nonetheless ...",Warning)
+        if ( (od_time_list[-1]-od_time_list[0]) > (gain_data['tend'][-1]-gain_data['tstart'][0]) ) :
+            raise RuntimeError("gain_data does not cover the observation times.  Cowardly refusing to continue.")
 
-
-    ############
-    ## Generate Caltable object
+    # Generate Caltable object
     if (verbosity>0) :
         print("Sites:",station_names)
         print("Times:",od_time_list)
@@ -700,31 +675,24 @@ def write_uvfits(obs, outname, gains=None, dterms=None) :
         for j in range(len(od_time_list)):
             datatable.append(np.array((od_time_list[j], gains[j,k], gains[j,k]), dtype=eh.DTCAL))
         datatables[station_names[k]] = np.array(datatable)
-
     cal=eh.caltable.Caltable(obs.ra, obs.dec, obs.rf, obs.bw, datatables, obs.tarr, source=obs.source, mjd=obs.mjd, timetype=obs.timetype)
 
-
-    ############
-    ## Calibrate the observation data (Yikes!!)
+    # Calibrate the observation data (Yikes!!)
     obs_cal = cal.applycal(obs)
 
-    ############
-    ## Write out new uvfits file
+    # Write out new uvfits file
     obs_cal.save_uvfits(cal_uvfits_file_name)
 
-    
+    # Make calibrated data plots if desired
     if (verbosity>2) :
-        cal.plot_gains([])
-
-
-    if (verbosity>1) :
         eh.plotting.comp_plots.plotall_obs_compare([obs,obs_cal],'uvdist','amp')
+        
+    # Make gain plots if desired
+    if (verbosity>3) :
+        cal.plot_gains([])
+    
+    # Show the plots if relevant
+    if (verbosity>2) :
         plt.show()
-
-
-    
-    
-    
-    
 
     
