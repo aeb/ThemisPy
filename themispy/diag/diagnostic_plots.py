@@ -711,12 +711,12 @@ def generate_streamline_colormap(colormap='plasma', number_of_streams=None, over
 
 
 
-def plot_deo_tempering_level_evolution(beta, colormap='plasma', colormodel='tempering_level', alpha=0.5) :
+def plot_deo_tempering_level_evolution(annealing_data, colormap='plasma', colormodel='tempering_level', alpha=0.5) :
     """
     Plots the tempering level with evolution with round for DEO tempered samplers in Themis.
 
     Args:
-      beta (numpy.ndarray): :math:`\\beta` values indexed by [round,tempering level].
+      annealing_data (dict): Dictionary containing :math:`\\beta` values indexed by [round,tempering level] and accessed by key 'Beta'.
       colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: 'plasma'.
       colormodel (str): Determined how lines are colored.  Options are color type, 'tempering_level', 'density'.  Default: 'tempering_level'.
       alpha (float): Value of alpha for the individual tempering line curves.
@@ -725,6 +725,9 @@ def plot_deo_tempering_level_evolution(beta, colormap='plasma', colormodel='temp
       (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.
     """
 
+    # Rename components of the annealing data
+    beta = annealing_data['Beta']
+    
     if (colormodel is 'density') :
         beta_density = np.zeros(beta.shape)
         dbdl = -(beta[:,1:]-beta[:,:-1])
@@ -799,21 +802,23 @@ def plot_deo_rejection_rate(annealing_summary_data,color='b') :
     return plt.gcf(), plt.gca()
 
 
-def plot_deo_lambda(annealing_summary_data,beta,R,colormap='b') :
+def plot_deo_lambda(annealing_summary_data,annealing_data,colormap='b') :
     """
     Plots the rejection rate evolution with round for DEO tempered samplers in Themis.
 
     Args:
       annealing_summary_data (numpy.ndarray): Array of annealing run summary data as read by :func:`chain.mcmc_chain.load_deo_summary`.
-      beta (numpy.ndarray): :math:`\\beta` values indexed by [round,tempering level], as read by :func:`chain.mcmc_chain.load_deo_summary`.
-      R (nump.ndarray): :math:`R` values indexed by [round,tempering level], as read by :func:`chain.mcmc_chain.load_deo_summary`.
+      annealing_data (dict): Dictionary containing :math:`\\beta` and :math:`R` values indexed by [round,tempering level] and accessed by keys 'Beta' and 'R', respectively, as read by :func:`chain.mcmc_chain.load_deo_summary`.
       color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`
     
     Returns:
       (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.
     """
 
-
+    # Rename components of the annealing data
+    beta = annealing_data['Beta']
+    R = annealing_data['R']
+    
     if ( not is_color_like(colormap) ) :
         cmap = cm.get_cmap(colormap)
 
