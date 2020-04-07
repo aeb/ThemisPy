@@ -1,16 +1,28 @@
 ###########################
 #
 # Package:
-#   diagnostic_plots
+#   data
 #
 # Provides:
-#   Functions for diagonostic plots from MCMC chains produced by Themis.
+#   Functions for preprocessing uvfits files to produce Themis-formatted data files
+#   and to generate uvfits files from Themis results.
 #
 
-
+## REMOVE WHEN DONE TESTING
+import warnings
+def warning_on_one_line(message, category, filename, lineno, file=None, line=None):
+    return 'WARNING: %s:%s: %s: %s\n' % (filename, lineno, category.__name__, message)
+warnings.formatwarning = warning_on_one_line
 
 import numpy as np
-from astropy.time import Time
+
+# Read in astropy, if possible
+try:
+    from astropy.time import Time
+    astropy_found = True
+except:
+    warnings.warn("Package astropy not found.  Some functionality will not be available.  If this is necessary, please ensure astropy is installed.", Warning)
+    astropy_found = False
 
 # Read in ehtim, if possible
 try:
@@ -21,10 +33,7 @@ except:
     ehtim_found = False
 
 
-
-
-    
-def closure_phase_covariance_ordering(obs, snrcut=0) :
+def closure_phase_covariance_ordering(obs, snrcut=0, verbosity=0) :
     """
     Generates and returns a set of closure phases with the smallest off-diagonal 
     covariances possible.  For EHT data this is possible due to the presence of
@@ -37,6 +46,7 @@ def closure_phase_covariance_ordering(obs, snrcut=0) :
     Args:
       obs (ehtim.obsdata.Obsdata): An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).
       snrcut (float): A possible signal-to-noise ratio below which to reject points. Default: 0.
+      verbosity (int): Verbosity level. 0 prints only warnings and errors.  1 prints information about each observation period.
 
     Returns:
       (numpy.recarray): An ehtim closure phase array.
@@ -139,16 +149,17 @@ def closure_phase_covariance_ordering(obs, snrcut=0) :
         N_assumed = len(obs2.cphase['cphase'][obs2.cphase['time'] == timestamps_cp[i]])
     
         # print some info
-        print('For timestamp '+str(timestamps_cp[i])+':')
+        if (verbosity>0) :
+            print('For timestamp '+str(timestamps_cp[i])+':')
     
         # get the current stations
         stations_here = np.unique(np.concatenate((cp_ant1_vec,cp_ant2_vec,cp_ant3_vec)))
-        print('Observing stations are '+str([str(station) for station in stations_here]))
-    
-        print('Size of maximal set of closure phases = '+str(ind_here_cp.sum())+'.')
-        print('Size of minimal set of closure phases = '+str(N_min)+'.')
-        print('Size of minimal set of closure phases currently calculated by ehtim = '+str(N_assumed)+'.')
-        print('...')
+        if (verbosity>0) :
+            print('Observing stations are '+str([str(station) for station in stations_here]))
+            print('Size of maximal set of closure phases = '+str(ind_here_cp.sum())+'.')
+            print('Size of minimal set of closure phases = '+str(N_min)+'.')
+            print('Size of minimal set of closure phases currently calculated by ehtim = '+str(N_assumed)+'.')
+            print('...')
     
         ##########################################################
         # start of loop to recover minimal set
@@ -243,14 +254,477 @@ def closure_phase_covariance_ordering(obs, snrcut=0) :
     
         # print out the size of the recovered set for double-checking
         obs_cphase = obs_cphase_orig[keep]
-        if len(obs_cphase) != N_min:
-            print('*****************WARNING: minimal set not found*****************')
+        if len(obs_cphase) != N_min :
+            warnings.warn("Minimal set of closure phases not found.", Warning)
+            if (verbosity>0) :
+                print('*****************WARNING: minimal set not found*****************')
         else:
-            print('Size of recovered minimal set = '+str(len(obs_cphase))+'.')
-        print('========================================================================')
+            if (verbosity>0) :
+                print('Size of recovered minimal set = '+str(len(obs_cphase))+'.')
+        if (verbosity>0) :
+            print('========================================================================')
     
         obs_cphase_arr.append(obs_cphase)
     
     # save an output cphase file
     obs_cphase_arr = np.concatenate(obs_cphase_arr)
     return obs_cphase_arr
+
+
+def reconstruct_field_rotation_angles(obs, isER5=False) :
+    """
+    Reconstructs the field rotation angle for polarization data from sub-quantities.  Also 
+    implements, upon request, corrections that are appropriate for ER5 data.  Should be
+    deprecated for data generated following ER5 (e.g., upon the release of ER6 and for 
+    subsequent intervening releases).
+
+    Warning: 
+      This makes extensive use of ehtim and will not be available if ehtim is not installed.  Raises a NotImplementedError if ehtim is unavailable.
+
+    Args:
+      obs (ehtim.obsdata.Obsdata): An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).
+      isER5 (bool): Flag to indicate that this is an ER5 file with polconvert errors that modify the field rotation angles. Default: False.
+
+    Returns:
+      (numpy.ndarray,numpy.ndarray): Field rotation angles for station1 and station2 for the full data set in obs.
+    """
+
+    if (ehtim_found is False) :
+        raise NotImplementedError
+    
+    
+    # An error in polconvert imparted phase errors in the ER5 R and L products that
+    # propagated into RR,LL,RL,LL.  This must be fixed ONLY for ER5 data products.
+    # WARNING: This should NOT be applied to any other data product!  For example,
+    # simulated data or subsequent data releases (ER6).
+    if (isER5) :
+        warnings.warn("Correcting the absolute EVPA calibration in ER5 data.  Should not be done for any other data (simulated, later releases, etc.).", Warning)
+        datadict = {t['site']:np.array([(0.0, 0.0 + 1j*1.0, 1.0 + 1j*0.0)], dtype=eh.DTCAL) for t in obs.tarr}
+        caltab = eh.caltable.Caltable(obs.ra,obs.dec,obs.rf,obs.bw,datadict,obs.tarr,obs.source,obs.mjd)
+        obs = caltab.applycal(obs, interp='nearest',extrapolate=True)
+
+    ####
+    ## Construct field rotation correction vectors
+
+    # Get vector of station names
+    ant1 = np.copy(obs.data['t1'])
+    ant2 = np.copy(obs.data['t2'])
+    
+    # Get vector of elevations
+    el1 = obs.unpack(['el1'],ang_unit='rad')['el1']
+    el2 = obs.unpack(['el2'],ang_unit='rad')['el2']
+    
+    # Get vector of parallactic angles
+    par1 = obs.unpack(['par_ang1'],ang_unit='rad')['par_ang1']
+    par2 = obs.unpack(['par_ang2'],ang_unit='rad')['par_ang2']
+
+    # Apparently simple linear relationship between the el,par,telescope-specific offset, and the 
+    # field rotation angle. All of these single constants that depend on mount type, etc., and are -1,0,1.
+    # Station 1:
+    f_el1 = np.zeros_like(el1)
+    f_par1 = np.zeros_like(par1)
+    f_off1 = np.zeros_like(el1)
+    for ia, a1 in enumerate(ant1):
+        ind1 = (obs.tarr['site'] == a1)
+        f_el1[ia] = obs.tarr[ind1]['fr_elev']
+        f_par1[ia] = obs.tarr[ind1]['fr_par']
+        f_off1[ia] = obs.tarr[ind1]['fr_off']*eh.DEGREE
+    # Station 2:
+    f_el2 = np.zeros_like(el2)
+    f_par2 = np.zeros_like(par2)
+    f_off2 = np.zeros_like(el2)
+    for ia, a2 in enumerate(ant2):
+        ind2 = (obs.tarr['site'] == a2)
+        f_el2[ia] = obs.tarr[ind2]['fr_elev']
+        f_par2[ia] = obs.tarr[ind2]['fr_par']
+        f_off2[ia] = obs.tarr[ind2]['fr_off']*eh.DEGREE
+
+    # Compute the field rotation angles, phi, for each station
+    FR1 = (f_el1*el1) + (f_par1*par1) + f_off1
+    FR2 = (f_el2*el2) + (f_par2*par2) + f_off2
+
+    # Convert to radians
+    FR1 = FR1*np.pi/180.
+    FR2 = FR2*np.pi/180.
+
+    obs.switch_polrep('stokes')
+
+    return FR1,FR2
+
+
+def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_partial_hands=True) :
+    """
+    Writes complex crosshand RR,LL,RL,LR visibilities in Themis format given an :class:`ehtim.obsdata.Obsdata` object.
+
+    Warning: 
+      * The :class:`ehtim.obsdata.Obsdata` must be read in with a polrep='circ'.  If this is not the case, raises a ValueError.  DO NOT SWITCH THE POLREP AS THIS INFLATES THE ERRORS.
+      * This makes extensive use of ehtim and astropy and will not be available if either is not installed.  Raises a NotImplementedError if they are is unavailable.
+
+    Args:
+      obs (ehtim.obsdata.Obsdata): An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).
+      outname (str): Name of the output file to which to write data.
+      isER5 (bool): Flag to indicate that this is an ER5 file with polconvert errors that modify the field rotation angles. Default: False.
+      snrcut (float): A possible signal-to-noise ratio below which to reject points. Default: 0.
+      keep_partial_hands (bool): Flag to deterime how to treat data with incomplete polarization information.  If true, the single-hand visibilities are kept, and large errors are assigned to correlation products that include other hands. Default: True.
+
+    Returns:
+      None.
+    """
+
+    if (ehtim_found is False) :
+        raise NotImplementedError
+
+    if (astropy_found is False) :
+        raise NotImplementedError
+
+    # Check polrep
+    if (not obs.polrep is 'circ') :
+        warnings.warn("Must supply an obs object with polrep='circ'", Warning)
+        raise ValueError
+
+    # Get some dataset particulars
+    src = obs.source
+    mjd = obs.mjd
+    t=Time(mjd,format='mjd')
+    [year,day]=map(int,t.yday.split(':')[:2])
+    
+    # Get the field rotation angles
+    fr1,fr2=reconstruct_field_rotation_angles(obs_orig,isER5=isER5)
+
+    # Write header
+    out=open(outname,'w')
+    outfile_x.write('#%24s %4s %4s %15s %6s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s\n'%('source','year',' day','time (hr)','base','u (Ml)','v (Ml)','fr1 (rad)', 'fr2 (rad)','RR.r (Jy)','RRerr.r (Jy)','RR.i (Jy)','RRerr.i (Jy)','LL.r (Jy)','LLerr.r (Jy)','LL.i (Jy)','LLerr.i (Jy)','RL.r (Jy)','RLerr.r (Jy)','RL.i (Jy)','RLerr.i (Jy)','LR.r (Jy)','LRerr.r (Jy)','LR.i (Jy)','LRerr.i (Jy)'))
+
+    # Loop over data and output
+    for d in obs.data :
+
+        time = d['time']
+        bl = d['t1']+d['t2']
+        u = d['u']/1e6
+        v = d['v']/1e6
+        RR = d['rrvis']
+        RRerr = d['rrsigma']
+        LL = d['llvis']
+        LLerr = d['llsigma']
+        RL = d['rlvis']
+        RLerr = d['rlsigma']
+        LR = d['lrvis']
+        LRerr = d['lrsigma']
+
+        SNR = (np.abs(RR)+np.abs(LL))/(RRerr+LLerr)
+        
+        # If we want to still use only partial-hand visibilities, 
+        if (keep_partial_hands) :
+            if (np.isnan(RR)) :
+                RR = 0.0+1j*0.0
+                RRerr = 100.0
+                SNR = np.abs(LL)/LLerr
+            if (np.isnan(LL)) :
+                LL = 0.0+1j*0.0
+                LLerr = 100.0
+                SNR = np.abs(RR)/RRerr
+            if (np.isnan(RL)) :
+                RL = 0.0+1j*0.0
+                RLerr = 100.0
+            if (np.isnan(LR)) :
+                LR = 0.0+1j*0.0
+                LRerr = 100.0
+
+
+        # Only output data that does not include nans
+        if (np.isnan([RR,LL,RL,LR]).any()==False) :
+            if (SNR>snrcut) :
+                out.write('%25s %4i %4i %15.8f %4s %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,time,bl,u,v,fr1[i],fr2[i],RR.real,RRerr,RR.imag,RRerr,LL.real,LLerr,LL.imag,LLerr,RL.real,RLerr,RL.imag,RLerr,LR.real,LRerr,LR.imag,LRerr))
+        else :
+            warnings.warn("NaN crosshand visibilities found on %4s baseline, perhaps one hand is missing?"%(bl), Warning)
+
+    out.close()
+
+
+
+
+def write_visibilities(obs, outname, snrcut=0) :
+    """
+    Writes complex visibilities (Stokes I) in Themis format given an :class:`ehtim.obsdata.Obsdata` object.
+
+    Warning: 
+      * The :class:`ehtim.obsdata.Obsdata` must be read in with a polrep='stokes'.  If this is not the case, raises a ValueError.  DO NOT SWITCH THE POLREP AS THIS INFLATES THE ERRORS.
+      * This makes extensive use of ehtim and astropy and will not be available if either is not installed.  Raises a NotImplementedError if they are is unavailable.
+
+    Args:
+      obs (ehtim.obsdata.Obsdata): An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).
+      outname (str): Name of the output file to which to write data.
+      snrcut (float): A possible signal-to-noise ratio below which to reject points. Default: 0.
+
+    Returns:
+      None.
+    """
+
+    if (ehtim_found is False) :
+        raise NotImplementedError
+
+    if (astropy_found is False) :
+        raise NotImplementedError
+
+    # Check polrep
+    if (not obs.polrep is 'stokes') :
+        warnings.warn("Must supply an obs object with polrep='stokes'", Warning)
+        raise ValueError
+    
+    # Get some dataset particulars
+    src = obs.source
+    mjd = obs.mjd
+    t=Time(mjd,format='mjd')
+    [year,day]=map(int,t.yday.split(':')[:2])
+    
+    # Write header
+    out=open(outname,'w')
+    out.write('#%24s %4s %4s %15s %6s %15s %15s %15s %15s %15s %15s\n'%('source','year',' day','time (hr)','base','u (Ml)','v (Ml)','V.r (Jy)','err.r (Jy)','V.i (Jy)','err.i (Jy)'))
+
+    # Write data file
+    for d in obs.data :
+        time = d['time']
+        bl = d['t1']+d['t2']
+        u = d['u']/1e6
+        v = d['v']/1e6
+        cv = d['vis']
+        err = d['sigma']
+        if ( np.abs(cv)/err >= snrcut ) :
+            out.write('%25s %4i %4i %15.8f %4s %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,time,bl,u,v,cv.real,err,cv.imag,err))
+    out.close()
+    
+
+def write_amplitudes(obs, outname, debias_amplitudes=True, snrcut=0) :
+    """
+    Writes visibility amplitudes in Themis format given an :class:`ehtim.obsdata.Obsdata` object.
+
+    Warning: 
+      * The :class:`ehtim.obsdata.Obsdata` must be read in with a polrep='stokes'.  If this is not the case, raises a ValueError.  DO NOT SWITCH THE POLREP AS THIS INFLATES THE ERRORS.
+      * This makes extensive use of ehtim and astropy and will not be available if either is not installed.  Raises a NotImplementedError if they are is unavailable.
+
+    Args:
+      obs (ehtim.obsdata.Obsdata): An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).
+      outname (str): Name of the output file to which to write data.
+      debias_amplitudes (bool): Flag that sets amplitudes should be debiased in the normal way: :math:`V_{db}=\sqrt{V^2-\sigma^2}`. Default: True.
+      snrcut (float): A possible signal-to-noise ratio below which to reject points. Default: 0.
+
+    Returns:
+      None.
+    """
+
+    if (ehtim_found is False) :
+        raise NotImplementedError
+    
+    if (astropy_found is False) :
+        raise NotImplementedError
+
+    # Check polrep
+    if (not obs.polrep is 'stokes') :
+        warnings.warn("Must supply an obs object with polrep='stokes'", Warning)
+        raise ValueError
+
+    # Get some dataset particulars
+    src = obs.source
+    mjd = obs.mjd
+    t=Time(mjd,format='mjd')
+    [year,day]=map(int,t.yday.split(':')[:2])
+
+    # Make sure amplitudes are defined
+    obs.add_amp(debias=debias_amplitudes, snrcut=snrcut)
+
+    # Write header
+    out=open(outname,'w')
+    out.write('#%24s %4s %4s %15s %6s %15s %15s %15s %15s\n'%('source','year',' day','time (hr)','base','u (Ml)','v (Ml)','VA (Jy)','err (Jy)'))
+
+    # Write data file
+    for d in obs.amp :
+        time = d['time']
+        bl = d['t1']+d['t2']
+        u = d['u']/1e6
+        v = d['v']/1e6
+        vm = d['amp']
+        err = d['sigma']
+        out.write('%25s %4i %4i %15.8f %4s %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,time,bl,u,v,vm,err))
+    out.close()
+
+
+def write_closure_phases(obs, outname, snrcut=0, keep_trivial_triangles=False, choose_optimal_covariance_set=True) :
+    """
+    Writes closure phases in Themis format given an :class:`ehtim.obsdata.Obsdata` object.
+
+    Warning: 
+      * The :class:`ehtim.obsdata.Obsdata` must be read in with a polrep='stokes'.  If this is not the case, raises a ValueError.  DO NOT SWITCH THE POLREP AS THIS INFLATES THE ERRORS.
+      * This makes extensive use of ehtim and astropy and will not be available if either is not installed.  Raises a NotImplementedError if they are is unavailable.
+
+    Args:
+      obs (ehtim.obsdata.Obsdata): An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).
+      outname (str): Name of the output file to which to write data.
+      snrcut (float): A possible signal-to-noise ratio below which to reject points. Default: 0.
+      keep_trivial_triangles (bool): If True, closure phases on trivial triangles will be included. Trivial triangles are defined to be the those with a baselines shorter than 100 Mlambda.  Default: False.  
+      choose_optimal_covariance_set (bool): If True, returns the maximally independent set closure phases.  Default: True.
+
+    Returns:
+      None.
+    """
+
+    if (ehtim_found is False) :
+        raise NotImplementedError
+    
+    if (astropy_found is False) :
+        raise NotImplementedError
+
+    # Check polrep
+    if (not obs.polrep is 'stokes') :
+        warnings.warn("Must supply an obs object with polrep='stokes'", Warning)
+        raise ValueError
+    
+    # Get some dataset particulars
+    src = obs.source
+    mjd = obs.mjd
+    t=Time(mjd,format='mjd')
+    [year,day]=map(int,t.yday.split(':')[:2])
+
+
+    # Remove trivial triangles if not keeping them.
+    if (not keep_trivial_triangles) :
+        obs.flag_uvdist(0.1e9) #Kill trivial triangles
+
+    # Get the set of closure phase observations
+    if (choose_optimal_covariance_set) :
+        obs_cphase_arr = closure_phase_covariance_ordering(obs,snrcut)
+    else :
+        obs.add_cphase(count='max', snrcut=snrcut)
+        obs_cphase_arr = obs.cphase
+
+    # Write header
+    out=open(outname,'w')
+    out.write('#%24s %4s %4s %15s %6s %15s %15s %15s %15s %15s %15s\n'%('source','year',' day','time (hr)','base','u1 (Ml)','v1 (Ml)','u2 (Ml)','v2 (Ml)','CP (deg)','err (deg)'))
+    
+    #Now output the data
+    for ii in range(len(obs_cphase_arr)):
+        time = obs_cphase_arr['time'][ii]
+        triangle_list = obs_cphase_arr['t1'][ii]+obs_cphase_arr['t2'][ii]+obs_cphase_arr['t3'][ii]
+        u1 = obs_cphase_arr['u1'][ii]/1e6
+        v1 = obs_cphase_arr['v1'][ii]/1e6
+        u2 = obs_cphase_arr['u2'][ii]/1e6
+        v2 = obs_cphase_arr['v2'][ii]/1e6
+        u3 = obs_cphase_arr['u3'][ii]/1e6
+        v3 = obs_cphase_arr['v3'][ii]/1e6
+        CP = obs_cphase_arr['cphase'][ii]
+        sCP = obs_cphase_arr['sigmacp'][ii]
+
+        if (np.sqrt((u1+u2+u3)**2+(v1+v2+v3)**2)>1) :
+            warnings.warn("Large triangle displacement detected: (du,dv)=(%g,%g).  This may happen for scan averaged data sets."%(u1+u2+u3,v1+v2+v3), Warning)
+
+        out.write('%25s %4i %4i %15.8f %6s %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,time,triangle_list,u1,v1,u2,v2,CP,sCP))
+        
+    out.close() 
+
+
+def write_closure_amplitudes(obs,outname) :
+    raise NotImplementedError
+
+
+def write_polarization_fractions(obs,outname) :
+    raise NotImplementedError
+
+
+def write_uvfits(obs, outname, gains=None, dterms=None) :
+    """
+    Writes uvfits file given an :class:`ehtim.obsdata.Obsdata` object.  Potentially applies gains and/or dterms from a Themis analysis 
+
+    Warning: 
+      * This makes extensive use of ehtim and will not be available if ehtim is not installed.  Raises a NotImplementedError if ehtim is unavailable.
+
+    Args:
+      obs (ehtim.obsdata.Obsdata): An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).
+      outname (str): Name of the output file to which to write data.
+      gains (dictionary): Station gains organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
+      dterms (dictionary): Station D terms organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
+
+    Returns:
+      None.
+    """
+
+
+    #################
+    # Read in gains
+    #  Read header information
+    infile = open(gain_file_name,'r')
+    t0=float(infile.readline().split()[5])
+    n_ind_gains=int(infile.readline().split()[5])
+    station_names=infile.readline().split()[6:]
+    infile.close()
+    if (verbosity>0) :
+        print("Start time (s from J2000):",t0)
+        print("Number of independent gains:",n_ind_gains)
+        print("List of gains:",station_names)
+
+    # Read correction information
+    d = np.loadtxt(gain_file_name,skiprows=3)
+    ts=d[:,0]/3600. # Epoch start time, converted to hours
+    te=d[:,1]/3600. # Epoch end time, converted to hours
+    gains=d[:,2:] # Gain corrections
+
+    # flip gains to get ehtim-friendly definition
+    gains = 1.0/(1.0+gains)
+
+
+    ################
+    # Read in uvfits object
+    obs = eh.obsdata.load_uvfits(uvfits_file_name)
+
+    if (scan_average==True) : # scan average the data  
+        obs.add_scans()
+        obs = obs.avg_coherent(0.0, scan_avg=True)
+    
+    od_time = np.unique(obs.unpack('time'))
+
+    od_time_list = []
+    for tmp in od_time :
+        od_time_list.append(tmp[0])
+
+    if (len(od_time_list)!=len(ts)) :
+        print("Gain list and data list are not the same size!")
+        quit()
+
+
+    ############
+    ## Generate Caltable object
+    if (verbosity>0) :
+        print("Sites:",station_names)
+        print("Times:",od_time_list)
+    datatables = {}
+    for k in range(len(station_names)):
+        datatable = []
+        for j in range(len(od_time_list)):
+            datatable.append(np.array((od_time_list[j], gains[j,k], gains[j,k]), dtype=eh.DTCAL))
+        datatables[station_names[k]] = np.array(datatable)
+
+    cal=eh.caltable.Caltable(obs.ra, obs.dec, obs.rf, obs.bw, datatables, obs.tarr, source=obs.source, mjd=obs.mjd, timetype=obs.timetype)
+
+
+    ############
+    ## Calibrate the observation data (Yikes!!)
+    obs_cal = cal.applycal(obs)
+
+    ############
+    ## Write out new uvfits file
+    obs_cal.save_uvfits(cal_uvfits_file_name)
+
+    
+    if (verbosity>2) :
+        cal.plot_gains([])
+
+
+    if (verbosity>1) :
+        eh.plotting.comp_plots.plotall_obs_compare([obs,obs_cal],'uvdist','amp')
+        plt.show()
+
+
+    
+    
+    
+    
+
+    
