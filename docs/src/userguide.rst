@@ -27,7 +27,7 @@ Individual package documentation organized by area.
    ./chain
    ./data
    ./diag
-
+   ./vis
 
 
 .. _Themis: https://github.com/PerimeterInstitute/Themis
