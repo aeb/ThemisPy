@@ -1,0 +1,173 @@
+from matplotlib import use,rc
+use('Agg')
+
+import numpy as np
+import argparse as ap
+import warnings
+import sys
+from matplotlib.cbook import flatten
+import matplotlib.pyplot as plt
+
+import themispy as ty
+
+
+"""
+Reads in multple Themis chain files and generates trace plots of various types.
+
+For more information, run:
+
+$ python3 generate_trace_plot.py -h
+
+"""
+
+# Create a parser object to manage command line options
+parser = ap.ArgumentParser(description=("Reads a Themis ensemble chain file, and optionally a likelihood file,"
+                                        " and generates trace plots after a specified burn-in period."
+                                        " If likelihood files are provided, the output will be annotated trace"
+                                        " plots."))
+parser.add_argument("-c","--chain",
+                    type=str,
+                    nargs="+",
+                    action='append',
+                    required=True,
+                    help=("<Required> Name of chain file(s) to read.  If multiple files are listed, the"
+                          " burn-in will be independently be applied."))
+parser.add_argument("-l","--lklhd",
+                    type=str,
+                    nargs="+",
+                    action='append',
+                    default=[],
+                    help=("Name of likelihoood file to read.  If present, a matching likelihood file must"
+                          " be provided for every chain file."))
+parser.add_argument("-s","--stride",
+                    type=int,
+                    action='store',
+                    default=1,
+                    help=("Stride over which to sample the chain."))
+parser.add_argument("-bf","--burn-fraction",
+                    type=float,
+                    action='store',
+                    default=0,
+                    help=("Fraction of chain to skip."))
+parser.add_argument("-p","--parameters",
+                    type=str,
+                    nargs='+',
+                    action='append',
+                    help=("Selects a subset of parameters to output.  Parameter ranges may be"
+                          " specified either via individual numbers (e.g., 0 1 4), comma separated"
+                          " lists (e.g., 0, 2, 5), ranges (e.g., 0-3), or combinations thereof."
+                          " By default, all parameters are sampled."))
+parser.add_argument("-w","--walkers",
+                    type=int,
+                    action='store',
+                    default=400,
+                    help=("Number of walkers.  Only necessary if likelihood files are not provided."))
+parser.add_argument("-o","--out",
+                    type=str,
+                    action="store",
+                    default="parameter_trace_plot.png",
+                    help="Output file name. Default: parameter_trace_plot.png")
+parser.add_argument("-lo","--likelihood-out",
+                    type=str,
+                    action="store",
+                    default="likelihood_trace_plot.png",
+                    help="Output file name. Default: likelihood_trace_plot.png")
+parser.add_argument("--no-grids",
+                    action='store_false',
+                    default=True,
+                    help=("Turn off grid lines. Default: True."))
+parser.add_argument("-m","--means",
+                    action='store_true',
+                    default=False,
+                    help=("Turn on the plotting of means. Default: False."))
+parser.add_argument("-G","--Global",
+                    action='store_true',
+                    default=False,
+                    help=("Sets the likelihood colormap to use the global limits on the likelihood."
+                          " Only meaningful if likelihood files are passed. Default: False."))
+parser.add_argument("-1","--one-column",
+                    action='store_true',
+                    default=False,
+                    help=("Organizes trace plots into a single column. Default: False."))
+parser.add_argument("-P","--parameters-only",
+                    action='store_false',
+                    default=True,
+                    help=("Disable likelihood plot on the parameter trace plot.  When likelihoods"
+                          " are passed, a likelihood trace is added to the traces of the parameters."
+                          " Default: likelihood trace is added."))
+parser.add_argument("--usetex",
+                    action='store_true',
+                    default=False,
+                    help=("Turns on using LaTex in the rendering.  Note that this takes MUCH longer,"
+                          " but the result is MUCH better looking."))
+
+# Get command line options
+args = parser.parse_args()
+
+
+# Use LaTex or not
+if (args.usetex) :
+    rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
+    rc('text', usetex=True)
+
+# Flatten the list of filenames
+chain_file_list = list(flatten(args.chain))
+lklhd_file_list = list(flatten(args.lklhd))
+
+# Sort out which parameter columns to keep
+if (args.parameters is None) :
+    plist = None
+else :
+    plist = ty.chain.parse_parameter_arglist(args.parameters[:])
+
+
+# If likelihood files are provived, plot an annotated trace
+if (len(lklhd_file_list)>0) :
+
+    # Check if the chain and likelihood file lists are the same length
+    if (len(chain_file_list) is not len(lklhd_file_list)):
+        print("ERROR: If likelihood files are provided, a matching likelihood file must be provided for each chain file.")
+        quit()
+        
+
+    
+    # Read in the data
+    chain_data_list = []
+    lklhd_data_list = []
+    for k in range(len(chain_file_list)) :
+        echain,elklhd = ty.chain.load_erun(chain_file_list[k],lklhd_file_list[k],stride=args.stride,burn_fraction=args.burn_fraction,parameter_list=plist)
+        chain_data_list.append(echain)
+        lklhd_data_list.append(elklhd)
+
+    if (len(chain_data_list)>1) :
+        fpt,apt = ty.diag.plot_annotated_parameter_trace_list(chain_data_list,lklhd_data_list,means=args.means,colormap='plasma',use_global_likelihoods=args.Global,grid=args.no_grids,one_column=args.one_column,add_likelihood_trace=args.parameters_only)
+        plt.figure()
+        flt,alt = ty.diag.plot_likelihood_trace_list(lklhd_data_list,colormap='plasma',grid=args.no_grids,means=args.means)
+    else :
+        fpt,apt = ty.diag.plot_annotated_parameter_trace(chain_data_list[0],lklhd_data_list[0],means=args.means,colormap='plasma',grid=args.no_grids,one_column=args.one_column,add_likelihood_trace=args.parameters_only)
+        plt.figure()
+        flt,alt = ty.diag.plot_likelihood_trace(lklhd_data_list[0],colormap='plasma',grid=args.no_grids,means=args.means)
+
+    flt.savefig(args.likelihood_out,dpi=200)
+# Otherwise plot just a normal trace
+else :
+
+    # Read in the data
+    chain_data_list = []
+    for k in range(len(chain_file_list)) :
+        echain = ty.chain.read_echain(chain_file_list[k],args.walkers,stride=args.stride,burn_fraction=args.burn_fraction,parameter_list=plist)
+        chain_data_list.append(echain)
+
+    if (len(chain_data_list)>1) :
+        fpt,apt = ty.diag.plot_parameter_trace_list(chain_data_list,means=args.means,grid=args.no_grids,one_column=args.one_column)
+    else :
+        fpt,apt = ty.diag.plot_parameter_trace(chain_data_list[0],means=args.means,grid=args.no_grids,one_column=args.one_column)
+    
+
+fpt.savefig(args.out,dpi=200)
+        
+        
+
+
+
+
