@@ -389,14 +389,14 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
     [year,day]=map(int,t.yday.split(':')[:2])
     
     # Get the field rotation angles
-    fr1,fr2=reconstruct_field_rotation_angles(obs_orig,isER5=isER5)
+    fr1,fr2=reconstruct_field_rotation_angles(obs,isER5=isER5)
 
     # Write header
     out=open(outname,'w')
-    outfile_x.write('#%24s %4s %4s %15s %6s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s\n'%('source','year',' day','time (hr)','base','u (Ml)','v (Ml)','fr1 (rad)', 'fr2 (rad)','RR.r (Jy)','RRerr.r (Jy)','RR.i (Jy)','RRerr.i (Jy)','LL.r (Jy)','LLerr.r (Jy)','LL.i (Jy)','LLerr.i (Jy)','RL.r (Jy)','RLerr.r (Jy)','RL.i (Jy)','RLerr.i (Jy)','LR.r (Jy)','LRerr.r (Jy)','LR.i (Jy)','LRerr.i (Jy)'))
+    out.write('#%24s %4s %4s %15s %6s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s\n'%('source','year',' day','time (hr)','base','u (Ml)','v (Ml)','fr1 (rad)', 'fr2 (rad)','RR.r (Jy)','RRerr.r (Jy)','RR.i (Jy)','RRerr.i (Jy)','LL.r (Jy)','LLerr.r (Jy)','LL.i (Jy)','LLerr.i (Jy)','RL.r (Jy)','RLerr.r (Jy)','RL.i (Jy)','RLerr.i (Jy)','LR.r (Jy)','LRerr.r (Jy)','LR.i (Jy)','LRerr.i (Jy)'))
 
     # Loop over data and output
-    for d in obs.data :
+    for ii,d in enumerate(obs.data) :
 
         time = d['time']
         bl = d['t1']+d['t2']
@@ -434,7 +434,7 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
         # Only output data that does not include nans
         if (np.isnan([RR,LL,RL,LR]).any()==False) :
             if (SNR>snrcut) :
-                out.write('%25s %4i %4i %15.8f %4s %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,time,bl,u,v,fr1[i],fr2[i],RR.real,RRerr,RR.imag,RRerr,LL.real,LLerr,LL.imag,LLerr,RL.real,RLerr,RL.imag,RLerr,LR.real,LRerr,LR.imag,LRerr))
+                out.write('%25s %4i %4i %15.8f %4s %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,time,bl,u,v,fr1[ii],fr2[ii],RR.real,RRerr,RR.imag,RRerr,LL.real,LLerr,LL.imag,LLerr,RL.real,RLerr,RL.imag,RLerr,LR.real,LRerr,LR.imag,LRerr))
         else :
             warnings.warn("NaN crosshand visibilities found on %4s baseline, perhaps one hand is missing?"%(bl), Warning)
 

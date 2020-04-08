@@ -4,7 +4,6 @@ use('Agg')
 import numpy as np
 import argparse as ap
 import warnings
-import sys
 from matplotlib.cbook import flatten
 import matplotlib.pyplot as plt
 
