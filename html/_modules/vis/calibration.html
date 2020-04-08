@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.calibration &mdash; ThemisPy 0+untagged.104.g852d5bd.dirty documentation</title>
+  <title>vis.calibration &mdash; ThemisPy 0+untagged.110.g71085a1 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.104.g852d5bd.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.110.g71085a1 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.104.g852d5bd.dirty
+                0+untagged.110.g71085a1
               </div>
             
           
@@ -228,7 +228,7 @@
     <span class="k">return</span> <span class="n">gain_data</span></div>
 
 
-<div class="viewcode-block" id="read_gain_file"><a class="viewcode-back" href="../../docs/src/vis.html#vis.calibration.read_gain_file">[docs]</a><span class="k">def</span> <span class="nf">read_gain_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="read_complex_gain_file"><a class="viewcode-back" href="../../docs/src/vis.html#vis.calibration.read_complex_gain_file">[docs]</a><span class="k">def</span> <span class="nf">read_complex_gain_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads in a complex gain file and returns an appropriately formatted dictionary.</span>
 
@@ -236,7 +236,7 @@
 <span class="sd">      If astropy is unavailable, toffset will return the number of seconds since 12am, Jan 1, 2000 instead of an astropy.Time object.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">      gainfile (str): Name of the file containing the gain correction amplitude data.</span>
+<span class="sd">      gainfile (str): Name of the file containing the complex gain data.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">      (numpy.ndarray): Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys [&#39;tstart&#39;,&#39;tend&#39;,&#39;stations&#39;,&#39;toffset&#39;,&#39;nindependent&#39;,&lt;station codes&gt;]</span>
@@ -276,6 +276,43 @@
     <span class="k">return</span> <span class="n">gain_data</span></div>
 
 
+<div class="viewcode-block" id="read_gain_file"><a class="viewcode-back" href="../../docs/src/vis.html#vis.calibration.read_gain_file">[docs]</a><span class="k">def</span> <span class="nf">read_gain_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads in a gain file and returns an appropriately formatted dictionary. </span>
+<span class="sd">    The file type is determined automatically from the headers.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      gainfile (str): Name of the file containing the gain data.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (numpy.ndarray): Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys [&#39;tstart&#39;,&#39;tend&#39;,&#39;stations&#39;,&#39;toffset&#39;,&#39;nindependent&#39;,&lt;station codes&gt;]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Read header information</span>
+    <span class="n">infile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">gainfile</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">t0</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">infile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">5</span><span class="p">])</span>
+    <span class="n">n_ind_gains</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">infile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">5</span><span class="p">])</span>
+    <span class="n">station_names</span><span class="o">=</span><span class="n">infile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">6</span><span class="p">:]</span>
+    <span class="n">infile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Look to see if headers are in the .real/.imag format or not</span>
+    <span class="n">nreal</span><span class="o">=</span><span class="mi">0</span>
+    <span class="n">nimag</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">for</span> <span class="n">sn</span> <span class="ow">in</span> <span class="n">station_names</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;.real&#39;</span> <span class="ow">in</span> <span class="n">sn</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">nreal</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;.imag&#39;</span> <span class="ow">in</span> <span class="n">sn</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">nimag</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+    <span class="c1"># Read in the data with the appropriate function</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">nreal</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="n">station_names</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">nimag</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="n">station_names</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">gain_data</span> <span class="o">=</span> <span class="n">read_complex_gain_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">)</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">gain_data</span> <span class="o">=</span> <span class="n">read_gain_amplitude_correction_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">gain_data</span></div>
+
+
 <div class="viewcode-block" id="annotate_gain_data"><a class="viewcode-back" href="../../docs/src/vis.html#vis.calibration.annotate_gain_data">[docs]</a><span class="k">def</span> <span class="nf">annotate_gain_data</span><span class="p">(</span><span class="n">gain_data</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Adds elements to the gain_data dict that indicate the uniqueness of the gain solution.  </span>
@@ -311,7 +348,7 @@
     <span class="c1"># Identify if gains were set</span>
     <span class="n">is_gain_set</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">station_names</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;tstart&#39;</span><span class="p">])))</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">sn</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">station_names</span><span class="p">)</span> <span class="p">:</span>
-        <span class="n">is_gain_set</span><span class="p">[</span><span class="n">k</span><span class="p">,:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">gain_data</span><span class="p">[</span><span class="n">sn</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="o">&gt;</span><span class="mf">1e-10</span><span class="p">)</span>
+        <span class="n">is_gain_set</span><span class="p">[</span><span class="n">k</span><span class="p">,:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">gain_data</span><span class="p">[</span><span class="n">sn</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="o">&gt;</span><span class="mf">1e-10</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">gain_data</span><span class="p">[</span><span class="n">sn</span><span class="p">]))</span><span class="o">&gt;</span><span class="mf">1e-10</span><span class="p">)</span>
     <span class="n">is_gain_degenerate</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">is_gain_set</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">&lt;=</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="c1"># Add annotation</span>
@@ -347,7 +384,7 @@
     <span class="n">axes</span><span class="o">.</span><span class="n">set_position</span><span class="p">([</span> <span class="n">current_location</span><span class="o">.</span><span class="n">x0</span><span class="o">+</span><span class="n">shift_x0</span><span class="o">/</span><span class="n">figsize</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">current_location</span><span class="o">.</span><span class="n">y0</span><span class="o">+</span><span class="n">shift_y0</span><span class="o">/</span><span class="n">figsize</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">current_location</span><span class="o">.</span><span class="n">width</span><span class="o">+</span><span class="n">shift_width</span><span class="o">/</span><span class="n">figsize</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">current_location</span><span class="o">.</span><span class="n">height</span><span class="o">+</span><span class="n">shift_height</span><span class="o">/</span><span class="n">figsize</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">])</span></div>
     
 
-<div class="viewcode-block" id="plot_station_gain_amplitudes"><a class="viewcode-back" href="../../docs/src/vis.html#vis.calibration.plot_station_gain_amplitudes">[docs]</a><span class="k">def</span> <span class="nf">plot_station_gain_amplitudes</span><span class="p">(</span><span class="n">gain_data</span><span class="p">,</span> <span class="n">invert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_station_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="n">add_quant_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">absolute_time</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="plot_station_gain_amplitudes"><a class="viewcode-back" href="../../docs/src/vis.html#vis.calibration.plot_station_gain_amplitudes">[docs]</a><span class="k">def</span> <span class="nf">plot_station_gain_amplitudes</span><span class="p">(</span><span class="n">gain_data</span><span class="p">,</span> <span class="n">invert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_station_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="n">add_quant_labels</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">absolute_time</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots station gain amplitudes relative to the expected values of 1.  Optionally adds quantitative labels.</span>
 
@@ -358,7 +395,8 @@
 <span class="sd">      add_quant_labels (bool): Adds quantitative labels to the right margin, shifts axes positions accordingly. Default: False.</span>
 <span class="sd">      absolute_time (bool): If True, plots against the hour in UTC.  If False, plots against the time after the first gain reconstruction epoch begins. Default: True.</span>
 <span class="sd">      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm` or acceptable color type as specified in :mod:`matplotlib.colors`. Default: &#39;b&#39;.</span>
-<span class="sd">    </span>
+<span class="sd">      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.    </span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -448,7 +486,100 @@
     <span class="k">else</span> <span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\Delta t~({\rm hr})$&#39;</span><span class="p">)</span>
         
-    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$|G|-1$&#39;</span><span class="p">)</span></div>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$|G|-1$&#39;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="plot_station_gain_phases"><a class="viewcode-back" href="../../docs/src/vis.html#vis.calibration.plot_station_gain_phases">[docs]</a><span class="k">def</span> <span class="nf">plot_station_gain_phases</span><span class="p">(</span><span class="n">gain_data</span><span class="p">,</span> <span class="n">invert</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">add_station_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>  <span class="n">absolute_time</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots station gain phases.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      gain_data (dict): Gain data as produced by :func:`read_gain_file`.</span>
+<span class="sd">      invert (bool): If True inverts the gains to be applied to the data (heresy!) instead of the model. Default: False.</span>
+<span class="sd">      add_station_labels (bool): Adds station names as labels to the right side of the plot. Default: True.</span>
+<span class="sd">      absolute_time (bool): If True, plots against the hour in UTC.  If False, plots against the time after the first gain reconstruction epoch begins. Default: True.</span>
+<span class="sd">      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm` or acceptable color type as specified in :mod:`matplotlib.colors`. Default: &#39;b&#39;.</span>
+<span class="sd">      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Get information about which gains are set and degenerate</span>
+    <span class="n">annotated_gain_data</span> <span class="o">=</span> <span class="n">annotate_gain_data</span><span class="p">(</span><span class="n">gain_data</span><span class="p">)</span>
+
+    <span class="c1"># If absolute_time is set but astropy is not found, unset it and warn</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="n">absolute_time</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">astropy_found</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
+        <span class="n">warn</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Because astropy is not found, absolute_time is unavailable&#39;</span><span class="p">,</span><span class="ne">Warning</span><span class="p">)</span>
+        <span class="n">absolute_time</span><span class="o">=</span><span class="kc">False</span>
+
+    <span class="c1"># Get the times at which to plot points</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">absolute_time</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">time_offset</span> <span class="o">=</span> <span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;toffset&#39;</span><span class="p">]</span>
+        <span class="n">hour_offset</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time_offset</span><span class="o">.</span><span class="n">yday</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">time_offset</span><span class="o">.</span><span class="n">yday</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">])</span><span class="o">/</span><span class="mf">60.0</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">time_offset</span><span class="o">.</span><span class="n">yday</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">4</span><span class="p">])</span><span class="o">/</span><span class="mf">3600.0</span> <span class="c1"># In hrs</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">hour_offset</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">tc</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;tend&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;tstart&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">hour_offset</span> <span class="c1"># In hrs</span>
+    <span class="n">tw</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;tend&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;tstart&#39;</span><span class="p">])</span> <span class="c1"># In hrs</span>
+
+    <span class="c1"># Get colors</span>
+    <span class="n">number_of_stations</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;stations&#39;</span><span class="p">])</span>
+
+    <span class="c1"># Ensure an axes is set</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">())</span>
+
+    <span class="c1"># Get colors</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="ow">not</span> <span class="n">is_color_like</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
+        <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span>
+
+    <span class="c1"># Shift the axes if station labels are desired (always -0.0&quot;)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">add_station_labels</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">axes_adjust</span><span class="p">(</span><span class="n">shift_width</span><span class="o">=-</span><span class="mf">0.0</span><span class="p">)</span>
+
+    <span class="c1"># Loop over the stations and plot</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">sn</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;stations&#39;</span><span class="p">])</span> <span class="p">:</span>
+
+        <span class="k">if</span> <span class="p">(</span> <span class="ow">not</span> <span class="n">is_color_like</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">(</span><span class="n">k</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">number_of_stations</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="n">colormap</span>
+
+        <span class="c1"># Get the relevant gains (and flip if desired)</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">annotated_gain_data</span><span class="p">[</span><span class="n">sn</span><span class="p">]</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="n">invert</span> <span class="p">):</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">g</span>
+
+        <span class="c1"># Plot zero-line</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">tc</span><span class="p">,</span><span class="mi">0</span><span class="o">*</span><span class="n">tc</span><span class="o">+</span><span class="n">k</span><span class="p">,</span><span class="s1">&#39;:&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="c1"># Plot non-degenerate, defined gains</span>
+        <span class="n">use</span> <span class="o">=</span> <span class="p">(</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="n">sn</span><span class="o">+</span><span class="s1">&#39;.status&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="n">use</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="n">use</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">+</span><span class="n">k</span><span class="p">,</span><span class="n">xerr</span><span class="o">=</span><span class="n">tw</span><span class="p">[</span><span class="n">use</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">capthick</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Plot degenerate, defined gains</span>
+        <span class="n">use</span> <span class="o">=</span> <span class="p">(</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="n">sn</span><span class="o">+</span><span class="s1">&#39;.status&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="n">use</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="n">use</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">+</span><span class="n">k</span><span class="p">,</span><span class="n">xerr</span><span class="o">=</span><span class="n">tw</span><span class="p">[</span><span class="n">use</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">capthick</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Add station name</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">add_station_labels</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">tw</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mf">0.25</span> <span class="o">+</span> <span class="mf">0.02</span><span class="o">*</span><span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">tc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mf">0.5</span><span class="p">),</span><span class="n">k</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">sn</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span><span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
+
+
+    <span class="n">ylims</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span>
+    <span class="n">ymin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">ylims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ymax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ylims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">number_of_stations</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">((</span><span class="n">ymin</span><span class="p">,</span><span class="n">ymax</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">((</span><span class="n">tc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">tw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="mf">0.25</span><span class="p">,</span><span class="n">tc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">tw</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mf">0.25</span><span class="p">))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">absolute_time</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$t~({\rm UTC})$&#39;</span><span class="p">)</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\Delta t~({\rm hr})$&#39;</span><span class="p">)</span>
+        
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;${\rm arg}(G)/(2\pi)$&#39;</span><span class="p">)</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span></div>
 
 
         
@@ -490,7 +621,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.104.g852d5bd.dirty',
+            VERSION:'0+untagged.110.g71085a1',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'
