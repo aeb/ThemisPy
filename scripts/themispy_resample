@@ -13,6 +13,7 @@ import numpy as np
 import themispy as ty
 import argparse as ap
 import warnings
+import os
 import sys
 from matplotlib.cbook import flatten
 
@@ -64,15 +65,6 @@ def set_parser() :
     return parser
 
 
-def strip_filename(filename) :
-    tokens = filename.split('.')
-    if (len(tokens)>1) :
-        ext = tokens[-1]
-    else :
-        ext = ''
-    stripped_filename = filename[:-(len(ext)+1)]
-    return stripped_filename, ext
-
 
 if __name__ == "__main__" :
     # Get command line options
@@ -98,9 +90,8 @@ if __name__ == "__main__" :
     for j,chain_file in enumerate(chain_file_list) :
 
         # Get new chain file name
-        new_chain_file,ext = strip_filename(chain_file)
-        new_chain_file = new_chain_file+args.postfix+'.'+ext
-
+        new_chain_file,ext = os.path.splitext(chain_file)
+        new_chain_file = new_chain_file+args.postfix+ext
 
 
         # If we have an accompanying likelihood file, coherently load the erun, otherwise sample the chain alone
@@ -108,8 +99,8 @@ if __name__ == "__main__" :
             lklhd_file = lklhd_file_list[j]
 
             # Get new likelihood file name
-            new_lklhd_file,ext = strip_filename(lklhd_file)
-            new_lklhd_file = new_lklhd_file+args.postfix+'.'+ext
+            new_lklhd_file,ext = os.path.splitext(lklhd_file)
+            new_lklhd_file = new_lklhd_file+args.postfix+ext
             #print("Reading chain file %s and likelihood file %s"%(chain_file,lklhd_file))
             #print("Writing chain file %s and likelihood file %s"%(new_chain_file,new_lklhd_file))
 

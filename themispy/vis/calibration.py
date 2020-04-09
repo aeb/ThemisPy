@@ -14,6 +14,7 @@ from matplotlib import cm
 from matplotlib.colors import is_color_like, ListedColormap, to_rgba
 import matplotlib.pyplot as plt
 
+from themispy import vis as typlt
 
 # Read in astropy, if possible
 try:
@@ -209,32 +210,6 @@ def annotate_gain_data(gain_data) :
     return gain_data
 
 
-def axes_adjust(fig=None, axes=None, shift_x0=0, shift_y0=0, shift_width=0, shift_height=0) :
-    """
-    Adjusts the axes by some shifts provided in the specified units.
-
-    Args:
-      fig (matplotlib.figure.Figure): Handle of figure to modify. If None, use the current figure object. Default: None.
-      axes (matplotlib.axes.Axes): Handle of axes to modify. If None, use the current axes object. Default: None.
-      shift_x0 (float): Number of inches to shift the axes to the right. Default: 0.
-      shift_y0 (float): Number of inches to shift the axes up. Default: 0.
-      shift_width (float): Number of inches to increase the axes width. Default: 0.
-      shift_height (float): Number of inches to increase the axes height. Default: 0.
-
-    Returns:
-      None
-    """
-
-    if (fig is None) :
-        fig = plt.gcf()
-    if (axes is None) :
-        axes = plt.gca()
-
-    figsize = fig.get_size_inches()
-    current_location = plt.gca().get_position()
-    axes.set_position([ current_location.x0+shift_x0/figsize[0], current_location.y0+shift_y0/figsize[1], current_location.width+shift_width/figsize[0], current_location.height+shift_height/figsize[1] ])
-    
-
 def plot_station_gain_amplitudes(gain_data, invert=False, add_station_labels=True,  add_quant_labels=False, absolute_time=True, colormap='jet', grid=True) :
     """
     Plots station gain amplitudes relative to the expected values of 1.  Optionally adds quantitative labels.
@@ -281,11 +256,11 @@ def plot_station_gain_amplitudes(gain_data, invert=False, add_station_labels=Tru
 
     # Shift the axes if station labels are desired (always -0.0")
     if (add_station_labels) :
-        axes_adjust(shift_width=-0.0)
+        typlt.axes_adjust(shift_width=-0.0)
 
     # Shift the axes if station labels are desired (always -0.75")
     if (add_quant_labels==True) :
-        axes_adjust(shift_width=-0.75)
+        typlt.axes_adjust(shift_width=-0.75)
     
     # Loop over the stations and plot
     for k,sn in enumerate(annotated_gain_data['stations']) :
@@ -387,7 +362,7 @@ def plot_station_gain_phases(gain_data, invert=False, add_station_labels=True,  
 
     # Shift the axes if station labels are desired (always -0.0")
     if (add_station_labels) :
-        axes_adjust(shift_width=-0.0)
+        typlt.axes_adjust(shift_width=-0.0)
 
     # Loop over the stations and plot
     for k,sn in enumerate(annotated_gain_data['stations']) :

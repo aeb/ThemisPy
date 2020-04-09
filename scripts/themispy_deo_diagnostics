@@ -16,11 +16,7 @@ from matplotlib.cbook import flatten
 import argparse
 import matplotlib.pyplot as plt
 
-from themispy import diag as td
-from themispy import chain as tc
-
-rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
-rc('text', usetex=True)
+import themispy as ty
 
 
 def set_parser() :
@@ -77,6 +73,11 @@ def set_parser() :
                         action='store',
                         default=None,
                         help=("Maximum round to show. Default: all rounds."))
+    parser.add_argument("--usetex",
+                        action='store_true',
+                        default=False,
+                        help=("Turns on using LaTex in the rendering.  Note that this takes longer,"
+                              " but the result is MUCH better looking."))
 
     return parser
 
@@ -86,6 +87,11 @@ if __name__ == "__main__" :
 
     # Get arguments
     args = set_parser().parse_args()
+
+    # Use LaTex or not
+    if (args.usetex) :
+        rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
+        rc('text', usetex=True)
 
     # Get a single diag string
     if (args.diagnostics is None) :
@@ -108,7 +114,7 @@ if __name__ == "__main__" :
     fig,axs = plt.subplots(1,len(diagnostic_list),figsize=(figsizex,figsizey),squeeze=False)
 
     # Read in data files
-    summary_data,annealing_data = tc.load_deo_summary(args.annealing_data_file,args.annealing_summary_file)
+    summary_data,annealing_data = ty.chain.load_deo_summary(args.annealing_data_file,args.annealing_summary_file)
 
 
     if (not args.minimum_round is None) :
@@ -137,13 +143,13 @@ if __name__ == "__main__" :
             colormodel = 'tempering_level'
 
         if (args.stream) :
-            cmap = td.generate_streamline_colormap('plasma')
+            cmap = ty.vis.generate_streamline_colormap('plasma')
         else :
             cmap = 'plasma'
 
         print("  Generating tempering level evolution plot.")
         plt.sca(axs[0,ia])
-        td.plot_deo_tempering_level_evolution(annealing_data,colormodel=colormodel,colormap=cmap)
+        ty.diag.plot_deo_tempering_level_evolution(annealing_data,colormodel=colormodel,colormap=cmap)
 
         beta = annealing_data['Beta']
         ymin = np.log(np.min(beta[round_min:round_max,:-1]))
@@ -162,7 +168,7 @@ if __name__ == "__main__" :
     if ('r' in diagnostic_list) :
         print("  Generating rejection rate evolution plot.")
         plt.sca(axs[0,ia])
-        td.plot_deo_rejection_rate(summary_data,color='k')
+        ty.diag.plot_deo_rejection_rate(summary_data,color='k')
 
         plt.xlim((round_min-0.25,round_max+0.25))
 
@@ -174,7 +180,7 @@ if __name__ == "__main__" :
     if ('l' in diagnostic_list) :
         print("  Generating lambda vs beta plot.")
         plt.sca(axs[0,ia])
-        td.plot_deo_lambda(summary_data,annealing_data,colormap='plasma')
+        ty.diag.plot_deo_lambda(summary_data,annealing_data,colormap='plasma')
         diagnostic_list = diagnostic_list.replace('l','')
         ia += 1
 

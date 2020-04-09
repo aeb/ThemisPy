@@ -19,6 +19,7 @@ import argparse as ap
 import warnings
 from matplotlib.cbook import flatten
 import matplotlib.pyplot as plt
+import os
 
 import themispy.data as tydat
 
@@ -115,15 +116,6 @@ def set_parser() :
     return parser
     
 
-def strip_filename(filename) :
-    tokens = filename.split('.')
-    if (len(tokens)>1) :
-        ext = tokens[-1]
-    else :
-        ext = ''
-    stripped_filename = filename[:-(len(ext)+1)]
-    return stripped_filename, ext
-
 
 def read_uvfits(filename,polrep,args) :
 
@@ -187,7 +179,7 @@ if __name__ == "__main__" :
         print("Reading data from %s (%i of %i)"%(uvfits,iuv,len(list(flatten(args.uvfits_files)))))
 
         # Generate output file suffix
-        outfile_suffix=strip_filename(uvfits)[0]
+        outfile_suffix = os.path.splitext(uvfits)[0]
         if (args.scan_avg) :
             outfile_suffix += '_scanavg'
         elif (not args.avg_time is None) :
