@@ -24,13 +24,13 @@ except:
     astropy_found = False
 
 
-# Read in ehtim, if possible
-try:
-    import ehtim as eh
-    ehtim_found = True
-except:
-    warnings.warn("Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.", Warning)
-    ehtim_found = False
+# # Read in ehtim, if possible
+# try:
+#     import ehtim as eh
+#     ehtim_found = True
+# except:
+#     warnings.warn("Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.", Warning)
+#     ehtim_found = False
 
 
 def read_gain_amplitude_correction_file(gainfile) :
