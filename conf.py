@@ -14,6 +14,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath('./themispy/'))
+sys.path.insert(0, os.path.abspath('./scripts/'))
 print("Documentation generation searching",sys.path)
 
 # -- Project information -----------------------------------------------------
@@ -38,7 +39,8 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.ifconfig',
               'sphinx.ext.viewcode',
               'sphinx.ext.githubpages',
-              'sphinx.ext.napoleon']
+              'sphinx.ext.napoleon',
+              'sphinxarg.ext']
 
 #source_suffix = {'.rst': 'restructuredtext', '.txt': 'restructuredtext'} #, '.md': 'markdown'}
 

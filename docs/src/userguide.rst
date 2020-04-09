@@ -30,5 +30,17 @@ Individual package documentation organized by area.
    ./vis
 
 
+Command line tools
+------------------------------
+A set of executable python scripts are installed that provide both
+commonly used utilities and examples.  All can be found in the scripts
+subdirectory.  All are installed system wide during package installation.
+
+.. toctree::
+   :maxdepth: 1
+
+   ./scripts
+
+   
 .. _Themis: https://github.com/PerimeterInstitute/Themis
    
