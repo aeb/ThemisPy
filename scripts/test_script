@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+
+"""
+A test executable script to show the appropriate format.  All scripts prepended 
+with 'themispy_' will be installed during package installation.
+
+Example:
+$ ./test_script foo
+"""
+
+
+import numpy as np
+import argparse as ap
+
+
+def set_parser():
+
+    # Create a parser object to manage command line options
+    parser = ap.ArgumentParser(prog="themispy_test_script",description=__doc__)
+
+    parser.add_argument("on_the_line",
+                          type=str,
+                          nargs='+',
+                          action='append',
+                          help=("Some argument"))
+    parser.add_argument("-o",
+                        action='store_true',
+                        default=False,
+                        help=("An option"))
+
+
+    return parser
+
+
+if __name__ == "__main__" :
+
+
+    # Get command line options
+    typarser = set_parser()
+
+    args = typarser.parse_args()
+    
+    print("  ",args)
+    print("  ","This was just a test.")
+
+
