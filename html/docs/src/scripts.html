@@ -1,0 +1,667 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>themispy_trace_plots &mdash; ThemisPy 0+untagged.120.gdb1806e documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.120.gdb1806e documentation" href="../../index.html"/>
+        <link rel="up" title="User’s Guide" href="userguide.html"/>
+        <link rel="next" title="Developer’s Guide" href="devel.html"/>
+        <link rel="prev" title="Vis" href="vis.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> ThemisPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0+untagged.120.gdb1806e
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="userguide.html">User’s Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="userguide.html#structure-and-philosphy">Structure and philosphy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="userguide.html#packages">Packages</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="userguide.html#command-line-tools">Command line tools</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">themispy_trace_plots</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#themispy-best-sample">themispy_best_sample</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#themispy-generate-data">themispy_generate_data</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#themispy-resample">themispy_resample</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#themispy-deo-diagnostics">themispy_deo_diagnostics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#themispy-gain-plots">themispy_gain_plots</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#themispy-chain-diagnostics">themispy_chain_diagnostics</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="devel.html">Developer’s Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ThemisPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="userguide.html">User’s Guide</a> &raquo;</li>
+        
+      <li>themispy_trace_plots</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/docs/src/scripts.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-scripts"></span><div class="section" id="themispy-trace-plots">
+<h1>themispy_trace_plots<a class="headerlink" href="#themispy-trace-plots" title="Permalink to this headline">¶</a></h1>
+<p><p>Reads a Themis ensemble chain file, and optionally a likelihood file, and
+generates trace plots after a specified burn-in period.  If likelihood 
+files are provided, the output will be annotated trace plots.</p>
+<p>Example:
+$ themispy_trace_plots -c Chain.dat.r* -l Lklhd.dat.r* -s 10 –stream -p 0-4</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_trace_plots</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">CHAIN</span> <span class="p">[</span><span class="n">CHAIN</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">l</span> <span class="n">LKLHD</span> <span class="p">[</span><span class="n">LKLHD</span> <span class="o">...</span><span class="p">]]</span>
+                            <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="n">STRIDE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">bf</span> <span class="n">BURN_FRACTION</span><span class="p">]</span>
+                            <span class="p">[</span><span class="o">-</span><span class="n">p</span> <span class="n">PARAMETERS</span> <span class="p">[</span><span class="n">PARAMETERS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">w</span> <span class="n">WALKERS</span><span class="p">]</span>
+                            <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">lo</span> <span class="n">LIKELIHOOD_OUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">grids</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">m</span><span class="p">]</span>
+                            <span class="p">[</span><span class="o">-</span><span class="n">G</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">P</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">usetex</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>-c, --chain</kbd></dt>
+<dd><p>&lt;Required&gt; Name of chain file(s) to read.  If multiple files are listed, the burn-in will be independently be applied.</p>
+</dd>
+<dt><kbd>-l, --lklhd</kbd></dt>
+<dd><p>Name of likelihoood file to read.  If present, a matching likelihood file must be provided for every chain file.</p>
+<p>Default: []</p>
+</dd>
+<dt><kbd>-s, --stride</kbd></dt>
+<dd><p>Stride over which to sample the chain.</p>
+<p>Default: 1</p>
+</dd>
+<dt><kbd>-bf, --burn-fraction</kbd></dt>
+<dd><p>Fraction of chain to skip.</p>
+<p>Default: 0</p>
+</dd>
+<dt><kbd>-p, --parameters</kbd></dt>
+<dd><p>Selects a subset of parameters to output.  Parameter ranges may be specified either via individual numbers (e.g., 0 1 4), comma separated lists (e.g., 0, 2, 5), ranges (e.g., 0-3), or combinations thereof. By default, all parameters are sampled.</p>
+</dd>
+<dt><kbd>-w, --walkers</kbd></dt>
+<dd><p>Number of walkers.  Only necessary if likelihood files are not provided.</p>
+<p>Default: 400</p>
+</dd>
+<dt><kbd>-o, --out</kbd></dt>
+<dd><p>Output file name. Default: parameter_trace_plot.png</p>
+<p>Default: “parameter_trace_plot.png”</p>
+</dd>
+<dt><kbd>-lo, --likelihood-out</kbd></dt>
+<dd><p>Output file name. Default: likelihood_trace_plot.png</p>
+<p>Default: “likelihood_trace_plot.png”</p>
+</dd>
+<dt><kbd>--no-grids</kbd></dt>
+<dd><p>Turn off grid lines. Default: True.</p>
+</dd>
+<dt><kbd>-m, --means</kbd></dt>
+<dd><p>Turn on the plotting of means. Default: False.</p>
+</dd>
+<dt><kbd>-G, --Global</kbd></dt>
+<dd><p>Sets the likelihood colormap to use the global limits on the likelihood. Only meaningful if likelihood files are passed. Default: False.</p>
+</dd>
+<dt><kbd>-1, --one-column</kbd></dt>
+<dd><p>Organizes trace plots into a single column. Default: False.</p>
+</dd>
+<dt><kbd>-P, --parameters-only</kbd></dt>
+<dd><p>Disable likelihood plot on the parameter trace plot.  When likelihoods are passed, a likelihood trace is added to the traces of the parameters. Default: likelihood trace is added.</p>
+</dd>
+<dt><kbd>--usetex</kbd></dt>
+<dd><p>Turns on using LaTex in the rendering.  Note that this takes MUCH longer, but the result is MUCH better looking.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="themispy-best-sample">
+<h1>themispy_best_sample<a class="headerlink" href="#themispy-best-sample" title="Permalink to this headline">¶</a></h1>
+<p><p>Reads a Themis ensemble chain, likelihood file pair and determines 
+the entry with the highest likelihood. Optionally finds the lowest
+chi-squared, the reduced chi-squared, and/or generates a 
+fit_summaries.txt-style file from the best fit.</p>
+<p>Example:
+$ themispy_best_sample -c Chain.dat -l Lklhd.dat</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_best_sample</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">l</span> <span class="n">LKLHD</span> <span class="o">-</span><span class="n">c</span> <span class="n">CHAIN</span> <span class="p">[</span><span class="o">-</span><span class="n">q</span> <span class="n">CHISQ</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">d</span> <span class="n">DOF</span><span class="p">]</span>
+                            <span class="p">[</span><span class="o">-</span><span class="n">f</span> <span class="p">[</span><span class="n">F</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">m</span> <span class="p">[</span><span class="n">M</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">n</span> <span class="n">N</span><span class="p">]</span>
+                            <span class="p">[</span><span class="o">-</span><span class="n">p</span> <span class="n">PARAMETERS</span> <span class="p">[</span><span class="n">PARAMETERS</span> <span class="o">...</span><span class="p">]]</span>
+</pre></div>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>-l, --lklhd</kbd></dt>
+<dd><p>&lt;Required&gt; Name of likelihoood file to read.</p>
+</dd>
+<dt><kbd>-c, --chain</kbd></dt>
+<dd><p>&lt;Required&gt; Name of chain file to read.</p>
+</dd>
+<dt><kbd>-q, --chisq</kbd></dt>
+<dd><p>Name of chi-squared file to read.  Does not read this coherently with likelihood and chain.</p>
+</dd>
+<dt><kbd>-d, --dof</kbd></dt>
+<dd><p>Number of degrees of freedom to assume for reduced chi-squared computation.  Has no effect if -q,–chisq not set.</p>
+</dd>
+<dt><kbd>-f</kbd></dt>
+<dd><p>Output a fit_summaries.txt file with the highest-likelihood point. If an argument is provided, it will be assumed to be the desired file name.</p>
+</dd>
+<dt><kbd>-m</kbd></dt>
+<dd><p>Print initialization list appropriate for cutting and pasting into driver file.  If a string is passed, it will assume the parameters are of the form M[0], M[1], etc., are to be set.</p>
+</dd>
+<dt><kbd>-v</kbd></dt>
+<dd><p>Verbose mode is set, printing the chain location directly to standard out.</p>
+</dd>
+<dt><kbd>-n</kbd></dt>
+<dd><p>Number of optimal samples to output</p>
+<p>Default: 1</p>
+</dd>
+<dt><kbd>-p, --parameters</kbd></dt>
+<dd><p>Selects a subset of parameters to output.  Parameter ranges may be specified either via individual numbers (e.g., 0 1 4), comma separated lists (e.g., 0, 2, 5), ranges (e.g., 0-3), or combinations thereof. By default, all parameters are outputted.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="themispy-generate-data">
+<h1>themispy_generate_data<a class="headerlink" href="#themispy-generate-data" title="Permalink to this headline">¶</a></h1>
+<p><p>Reads in a uvfits file and produces the desired data files for Themis
+with various additions.  These include the ability to scan average the
+data, addition of fractional systematic error components, addition of
+fixed systematic error components, flagging of stations, and removal
+of baselines below some cutoff.</p>
+<p>Example:
+$ themispy_generate_data data.uvfits -d v -s -f 2.0</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_generate_data</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">d</span> <span class="n">DATA_TYPE</span> <span class="p">[</span><span class="n">DATA_TYPE</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span><span class="p">]</span>
+                              <span class="p">[</span><span class="o">--</span><span class="n">avg</span><span class="o">-</span><span class="n">time</span> <span class="n">AVG_TIME</span><span class="p">]</span>
+                              <span class="p">[</span><span class="o">-</span><span class="n">f</span> <span class="n">FRACTIONAL_SYSTEMATIC_ERROR</span><span class="p">]</span>
+                              <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="n">THRESHOLD_SYSTEMATIC_ERROR</span><span class="p">]</span>
+                              <span class="p">[</span><span class="o">-</span><span class="n">x</span> <span class="n">EXCLUDE_STATION</span> <span class="p">[</span><span class="n">EXCLUDE_STATION</span> <span class="o">...</span><span class="p">]]</span>
+                              <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="n">MINIMUM_BASELINE</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">debias</span><span class="p">]</span>
+                              <span class="p">[</span><span class="o">-</span><span class="n">snr</span> <span class="n">SNR_CUT</span><span class="p">]</span>
+                              <span class="p">[</span><span class="o">--</span><span class="n">crosshand</span><span class="o">-</span><span class="n">SNR</span><span class="o">-</span><span class="n">cut</span> <span class="n">CROSSHAND_SNR_CUT</span><span class="p">]</span>
+                              <span class="p">[</span><span class="o">--</span><span class="n">visibility</span><span class="o">-</span><span class="n">SNR</span><span class="o">-</span><span class="n">cut</span> <span class="n">VISIBILITY_SNR_CUT</span><span class="p">]</span>
+                              <span class="p">[</span><span class="o">--</span><span class="n">amplitude</span><span class="o">-</span><span class="n">SNR</span><span class="o">-</span><span class="n">cut</span> <span class="n">AMPLITUDE_SNR_CUT</span><span class="p">]</span>
+                              <span class="p">[</span><span class="o">--</span><span class="n">closure</span><span class="o">-</span><span class="n">phase</span><span class="o">-</span><span class="n">SNR</span><span class="o">-</span><span class="n">cut</span> <span class="n">CLOSURE_PHASE_SNR_CUT</span><span class="p">]</span>
+                              <span class="p">[</span><span class="o">-</span><span class="n">er5</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">xph</span><span class="p">]</span>
+                              <span class="n">uvfits_files</span> <span class="p">[</span><span class="n">uvfits_files</span> <span class="o">...</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments">
+<h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>uvfits_files</kbd></dt>
+<dd><p>&lt;Required&gt; Name of uvfits files to be processed.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>-d, --data-type</kbd></dt>
+<dd><p>Data types to generate.  Accepted types include x,v,a,p for crosshands, complex visibilities, amplitudes, closure phases.  May be specified in independent calls. Default: None.</p>
+</dd>
+<dt><kbd>-s, --scan-avg</kbd></dt>
+<dd><p>Produce scan averaged data.</p>
+</dd>
+<dt><kbd>--avg-time</kbd></dt>
+<dd><p>Timescale over which to average the data in seconds. Superseded by -s,–scan-avg. Default: None.</p>
+</dd>
+<dt><kbd>-f, --fractional-systematic-error</kbd></dt>
+<dd><p>Fractional systematic error to add IN PERCENT. Default: None.</p>
+</dd>
+<dt><kbd>-t, --threshold-systematic-error</kbd></dt>
+<dd><p>Constant systematic error threshold to add in mJy. Default: None.</p>
+</dd>
+<dt><kbd>-x, --exclude-station</kbd></dt>
+<dd><p>List of stations to flag.  Stations must be specified with the same station codes appearing in the uvfits file.  E.g., the 2017 code list. Default: None.</p>
+</dd>
+<dt><kbd>-b, --minimum-baseline</kbd></dt>
+<dd><p>Minimum baseline, below which data are excluded from ALL data generation. Default: None.</p>
+</dd>
+<dt><kbd>--no-debias</kbd></dt>
+<dd><p>Do not debias visibility amplitude data. Default: debias amplitudes.</p>
+</dd>
+<dt><kbd>-snr, --SNR-cut</kbd></dt>
+<dd><p>SNR cut to apply to all data products unless specific cuts are specified.</p>
+</dd>
+<dt><kbd>--crosshand-SNR-cut</kbd></dt>
+<dd><p>SNR cut to apply to crosshand data.</p>
+</dd>
+<dt><kbd>--visibility-SNR-cut</kbd></dt>
+<dd><p>SNR cut to apply to complex visibility data.</p>
+</dd>
+<dt><kbd>--amplitude-SNR-cut</kbd></dt>
+<dd><p>SNR cut to apply to amplitude data.</p>
+</dd>
+<dt><kbd>--closure-phase-SNR-cut</kbd></dt>
+<dd><p>SNR cut to apply to closure phase data.</p>
+</dd>
+<dt><kbd>-er5</kbd></dt>
+<dd><p>Indicates that this is an ER5 data set that suffers from the polsolve bug and must be corrected. Default: False.</p>
+</dd>
+<dt><kbd>-xph, --exclude-partial-hands</kbd></dt>
+<dd><p>Excludes partial hand data (e.g., JCMT) in the construction of crosshand visibility data sets. Default: include partials.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="themispy-resample">
+<h1>themispy_resample<a class="headerlink" href="#themispy-resample" title="Permalink to this headline">¶</a></h1>
+<p><p>Reads a Themis ensemble chain file, and optionally a likelihood file
+and samples it the desired number of times after a specified burn-in
+period.  Optionally generates a resampled likelihood file.</p>
+<p>Example:
+$ themispy_resample -c Chain.dat -l Lklhd.dat -s 1000 -bf 0.5</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_resample</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">CHAIN</span> <span class="p">[</span><span class="n">CHAIN</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">l</span> <span class="n">LKLHD</span> <span class="p">[</span><span class="n">LKLHD</span> <span class="o">...</span><span class="p">]]</span>
+                         <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="n">SAMPLES</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">bf</span> <span class="n">BURN_FRACTION</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">postfix</span> <span class="n">POSTFIX</span><span class="p">]</span>
+                         <span class="p">[</span><span class="o">-</span><span class="n">p</span> <span class="n">PARAMETERS</span> <span class="p">[</span><span class="n">PARAMETERS</span> <span class="o">...</span><span class="p">]]</span>
+</pre></div>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>-c, --chain</kbd></dt>
+<dd><p>&lt;Required&gt; Name of chain file to read.  If multiple files are listed, they will independently be sampled.</p>
+</dd>
+<dt><kbd>-l, --lklhd</kbd></dt>
+<dd><p>Name of likelihoood file to read.  If multiple files are listed, they will independently be sampled in order with the chain files.  That is, the first likelihood file will be coherently sampled with the first chain file, the second likelihood file will be coherently sampled with the second chain file, etc.</p>
+<p>Default: []</p>
+</dd>
+<dt><kbd>-s, --samples</kbd></dt>
+<dd><p>Number of samples to draw from the chain.</p>
+<p>Default: 10000</p>
+</dd>
+<dt><kbd>-bf, --burn-fraction</kbd></dt>
+<dd><p>Fraction of chain to skip.</p>
+<p>Default: 0</p>
+</dd>
+<dt><kbd>--postfix</kbd></dt>
+<dd><p>Postfix to add to chain [and likelihood] file names produced after sampling.</p>
+<p>Default: “_sample”</p>
+</dd>
+<dt><kbd>-p, --parameters</kbd></dt>
+<dd><p>Selects a subset of parameters to output.  Parameter ranges may be specified either via individual numbers (e.g., 0 1 4), comma separated lists (e.g., 0, 2, 5), ranges (e.g., 0-3), or combinations thereof. By default, all parameters are sampled.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="themispy-deo-diagnostics">
+<h1>themispy_deo_diagnostics<a class="headerlink" href="#themispy-deo-diagnostics" title="Permalink to this headline">¶</a></h1>
+<p><p>Reads in tempering summary output from DEO samplers in Themis and generates desired 
+diagnostic plots.  Various presentation options and diagnostic selection may be set.</p>
+<p>Example:
+$ themispy_deo_diagnostics -d tl</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_deo_diagnostics</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">ad</span> <span class="n">ANNEALING_DATA_FILE</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">-</span><span class="k">as</span> <span class="n">ANNEALING_SUMMARY_FILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">--</span><span class="n">density</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">stream</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">-</span><span class="n">d</span> <span class="n">DIAGNOSTICS</span> <span class="p">[</span><span class="n">DIAGNOSTICS</span> <span class="o">...</span><span class="p">]]</span>
+                                <span class="p">[</span><span class="o">-</span><span class="n">mr</span> <span class="n">MINIMUM_ROUND</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">Mr</span> <span class="n">MAXIMUM_ROUND</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>-ad, --annealing-data-file</kbd></dt>
+<dd><p>Annealing data file to be read in.
+Default: Annealing.dat</p>
+<p>Default: “Annealing.dat”</p>
+</dd>
+<dt><kbd>-as, --annealing-summary-file</kbd></dt>
+<dd><p>Annealing summary file to be read in.
+Default: &lt;annealing_data_file&gt;+.summary</p>
+</dd>
+<dt><kbd>-o, --out</kbd></dt>
+<dd><p>Output file name. Default: deo_diagnostics.png</p>
+<p>Default: “deo_diagnostics.png”</p>
+</dd>
+<dt><kbd>--density</kbd></dt>
+<dd><p>Sets the tempering level evolution plot to show the
+density of tempering levels via the colormap.
+Default: False.</p>
+</dd>
+<dt><kbd>--stream</kbd></dt>
+<dd><p>Sets the colormap of the tempering level evolution
+plot to use a streamline colormap. Default: False.</p>
+</dd>
+<dt><kbd>-d, --diagnostics</kbd></dt>
+<dd><p>Sets the list of diagnostic plots to generate.  Takes a
+combination of the letters t, r, l, which may be
+specified in any order and in any number of option
+calls. The appropriate plots will be made in the order
+trl. Diagnostic options are:</p>
+<blockquote>
+<div><p>t … tempering level evolution.
+r … rejection rate evolution.
+l … lambda vs. beta.</p>
+</div></blockquote>
+<p>Default: trl.</p>
+</dd>
+<dt><kbd>-mr, --minimum-round</kbd></dt>
+<dd><p>Minimum round to show. Default: 0</p>
+</dd>
+<dt><kbd>-Mr, --maximum-round</kbd></dt>
+<dd><p>Maximum round to show. Default: all rounds.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="themispy-gain-plots">
+<h1>themispy_gain_plots<a class="headerlink" href="#themispy-gain-plots" title="Permalink to this headline">¶</a></h1>
+<p><p>Reads in a Themis gain file of any type and generates combinations of plots of 
+the amplitude and phase corrections for each station.  A single gain file must 
+be provided.</p>
+<p>Example:
+$ themispy_gain_plots gain_corrections.d -i -o gplot.png –usetex</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_gain_plots</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">dt</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">ns</span><span class="p">]</span>
+                           <span class="p">[</span><span class="o">-</span><span class="n">gp</span> <span class="n">GAIN_PLOTS</span> <span class="p">[</span><span class="n">GAIN_PLOTS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span>
+                           <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">grid</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">usetex</span><span class="p">]</span>
+                           <span class="n">gain_file</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments">
+<h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>gain_file</kbd></dt>
+<dd><p>&lt;Required&gt; Name of gain file to read.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>-i, --invert</kbd></dt>
+<dd><p>Invert gains prior to plotting. This is as if the gains were applied to the data (heresy!).</p>
+</dd>
+<dt><kbd>-dt</kbd></dt>
+<dd><p>Plots the gains gains the time difference relative to the first epoch instead of absolute time.</p>
+</dd>
+<dt><kbd>-ns, --no-station-labels</kbd></dt>
+<dd><p>Remove station labels</p>
+</dd>
+<dt><kbd>-gp, --gain-plots</kbd></dt>
+<dd><p>Sets the list of gain plots to generate.  Takes a combination of the letters ‘a’ (amplitudes), ‘p’ (phases), which may be specified in any order and in any number of option calls.  The appropriate plots will be made in the order ap.</p>
+</dd>
+<dt><kbd>-o, --out</kbd></dt>
+<dd><p>Output file name. Default: gain_plot.png</p>
+<p>Default: “gain_plot.png”</p>
+</dd>
+<dt><kbd>--no-grid</kbd></dt>
+<dd><p>Turn off grid lines. Default: True.</p>
+</dd>
+<dt><kbd>--usetex</kbd></dt>
+<dd><p>Turns on using LaTex in the rendering.  Note that this takes longer, but the result is MUCH better looking.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="themispy-chain-diagnostics">
+<h1>themispy_chain_diagnostics<a class="headerlink" href="#themispy-chain-diagnostics" title="Permalink to this headline">¶</a></h1>
+<p><p>Computes various chain diagnostics for Themis ensemble MCMC chain data.
+Diagnostics generated include split-Rhat, mean rank, and variance rank
+plots.  Typically split-Rhat larger than 1.03 implies biases may persist
+in the posteriors, though frequently this is overkill for parameter 
+estimation if other diagnostics appear reasonable.</p>
+<p>Expample:
+$ themispy_chain_diagnostics</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_chain_diagnostics</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">CHAIN</span> <span class="p">[</span><span class="n">CHAIN</span> <span class="o">...</span><span class="p">]</span> <span class="o">-</span><span class="n">l</span> <span class="n">LKLHD</span>
+                                  <span class="p">[</span><span class="n">LKLHD</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">bf</span> <span class="n">BURN_FRACTION</span><span class="p">]</span>
+                                  <span class="p">[</span><span class="o">--</span><span class="n">stride</span> <span class="n">STRIDE</span><span class="p">]</span>
+                                  <span class="p">[</span><span class="o">-</span><span class="n">p</span> <span class="n">PARAMETERS</span> <span class="p">[</span><span class="n">PARAMETERS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span>
+                                  <span class="p">[</span><span class="o">-</span><span class="n">s</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">hist</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">usetex</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>-c, --chain</kbd></dt>
+<dd><p>&lt;Required&gt; Chain files to read in, can pass multiple. Must be equal to number of likelihood files to read in</p>
+</dd>
+<dt><kbd>-l, --lklhd</kbd></dt>
+<dd><p>&lt;Required&gt; Lklhd files to read in, can pass multiple. Must be equal to number of chain files to read in</p>
+</dd>
+<dt><kbd>-bf, --burn-fraction, -w, --warmup</kbd></dt>
+<dd><p>Fraction of chain to skip.  Default: 0.5.</p>
+<p>Default: 0.5</p>
+</dd>
+<dt><kbd>--stride, --nthin</kbd></dt>
+<dd><p>How much to thin the chain by. The DEFAULT is 1, i.e. no thinning</p>
+<p>Default: 1</p>
+</dd>
+<dt><kbd>-p, --parameters</kbd></dt>
+<dd><p>Selects a subset of parameters to output.  Parameter ranges may be specified either via individual numbers (e.g., 0 1 4), comma separated lists (e.g., 0, 2, 5), ranges (e.g., 0-3), or combinations thereof. By default, all parameters are outputted.</p>
+</dd>
+<dt><kbd>-o, --out</kbd></dt>
+<dd><p>Output file name. Default: chain_diagnostics.out</p>
+<p>Default: “chain_diagnostics.out”</p>
+</dd>
+<dt><kbd>-s, --save</kbd></dt>
+<dd><p>Flag to turn on whether the save the processed likelihood and chain files, i.e. thinned and burn-in removed</p>
+</dd>
+<dt><kbd>--hist</kbd></dt>
+<dd><p>Flag to create rank plots for the chains read in.</p>
+</dd>
+<dt><kbd>--usetex</kbd></dt>
+<dd><p>Turns on using LaTex in the rendering.  Note that this takes longer, but the result is MUCH better looking.</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="devel.html" class="btn btn-neutral float-right" title="Developer’s Guide" accesskey="n">Next →</a>
+      
+      
+        <a href="vis.html" class="btn btn-neutral" title="Vis" accesskey="p">← Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Themis Development Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0+untagged.120.gdb1806e',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE: 'true'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/language_data.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.calibration &mdash; ThemisPy 0+untagged.112.gdfc8f1b documentation</title>
+  <title>vis.calibration &mdash; ThemisPy 0+untagged.120.gdb1806e documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.112.gdfc8f1b documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.120.gdb1806e documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.112.gdfc8f1b
+                0+untagged.120.gdb1806e
               </div>
             
           
@@ -173,13 +173,13 @@
     <span class="n">astropy_found</span> <span class="o">=</span> <span class="kc">False</span>
 
 
-<span class="c1"># Read in ehtim, if possible</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">ehtim</span> <span class="k">as</span> <span class="nn">eh</span>
-    <span class="n">ehtim_found</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">except</span><span class="p">:</span>
-    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.&quot;</span><span class="p">,</span> <span class="ne">Warning</span><span class="p">)</span>
-    <span class="n">ehtim_found</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="c1"># # Read in ehtim, if possible</span>
+<span class="c1"># try:</span>
+<span class="c1">#     import ehtim as eh</span>
+<span class="c1">#     ehtim_found = True</span>
+<span class="c1"># except:</span>
+<span class="c1">#     warnings.warn(&quot;Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.&quot;, Warning)</span>
+<span class="c1">#     ehtim_found = False</span>
 
 
 <div class="viewcode-block" id="read_gain_amplitude_correction_file"><a class="viewcode-back" href="../../docs/src/vis.html#vis.calibration.read_gain_amplitude_correction_file">[docs]</a><span class="k">def</span> <span class="nf">read_gain_amplitude_correction_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">)</span> <span class="p">:</span>
@@ -621,7 +621,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.112.gdfc8f1b',
+            VERSION:'0+untagged.120.gdb1806e',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'
