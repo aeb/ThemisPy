@@ -9,7 +9,7 @@ import warnings
 from matplotlib.cbook import flatten
 import matplotlib.pyplot as plt
 
-import themispy.vis as tv
+import themispy.vis.calibration as tvc
 
 
 """
@@ -25,10 +25,9 @@ $ python3 generate_gain_plots.py -h
 parser = ap.ArgumentParser(description=("Reads a Themis gain file and generates plots of the amplitude and"
                                         " phase corrections for each station."))
 
-parser.add_argument("-g","--gain-file",
+parser.add_argument("gain_file",
                     type=str,
                     action='store',
-                    required=True,
                     help=("<Required> Name of gain file to read."))
 parser.add_argument("-i","--invert",
                     action='store_true',
@@ -91,7 +90,7 @@ print("Gain plots to be generaed:",gain_plots_list)
 
 
 # Read in the gain file
-gain_data = tv.read_gain_file(args.gain_file)
+gain_data = tvc.read_gain_file(args.gain_file)
 
 # Generate plot fig/axes
 figsizex = 3*len(gain_plots_list)
@@ -105,7 +104,7 @@ ia=0
 if ('a' in gain_plots_list) :
     print("  Generating gain amplitude plot.")
     plt.sca(axs[0,ia])
-    tv.plot_station_gain_amplitudes(gain_data,absolute_time=args.dt,invert=args.invert,grid=args.no_grid,add_station_labels=args.no_station_labels)
+    tvc.plot_station_gain_amplitudes(gain_data,absolute_time=args.dt,invert=args.invert,grid=args.no_grid,add_station_labels=args.no_station_labels)
     gain_plots_list = gain_plots_list.replace('a','')
     ia += 1
     
@@ -113,7 +112,7 @@ if ('a' in gain_plots_list) :
 if ('p' in gain_plots_list) :
     print("  Generating gain phase plot.")
     plt.sca(axs[0,ia])
-    tv.plot_station_gain_phases(gain_data,absolute_time=args.dt,invert=args.invert,grid=args.no_grid,add_station_labels=args.no_station_labels)
+    tvc.plot_station_gain_phases(gain_data,absolute_time=args.dt,invert=args.invert,grid=args.no_grid,add_station_labels=args.no_station_labels)
     gain_plots_list = gain_plots_list.replace('p','')
     ia += 1
 
