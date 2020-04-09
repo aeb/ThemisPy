@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vis &mdash; ThemisPy 0+untagged.120.gdb1806e documentation</title>
+  <title>Vis &mdash; ThemisPy 0+untagged.121.g0535eba documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.120.gdb1806e documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.121.g0535eba documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="themispy_trace_plots" href="scripts.html"/>
         <link rel="prev" title="Diag" href="diag.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.120.gdb1806e
+                0+untagged.121.g0535eba
               </div>
             
           
@@ -195,27 +195,6 @@ zero), and are therefore susceptable to rare instances of confusion.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="vis.calibration.axes_adjust">
-<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">axes_adjust</code><span class="sig-paren">(</span><em class="sig-param">fig=None</em>, <em class="sig-param">axes=None</em>, <em class="sig-param">shift_x0=0</em>, <em class="sig-param">shift_y0=0</em>, <em class="sig-param">shift_width=0</em>, <em class="sig-param">shift_height=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#axes_adjust"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.axes_adjust" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adjusts the axes by some shifts provided in the specified units.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fig</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)"><em>matplotlib.figure.Figure</em></a>) – Handle of figure to modify. If None, use the current figure object. Default: None.</p></li>
-<li><p><strong>axes</strong> (<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)"><em>matplotlib.axes.Axes</em></a>) – Handle of axes to modify. If None, use the current axes object. Default: None.</p></li>
-<li><p><strong>shift_x0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Number of inches to shift the axes to the right. Default: 0.</p></li>
-<li><p><strong>shift_y0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Number of inches to shift the axes up. Default: 0.</p></li>
-<li><p><strong>shift_width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Number of inches to increase the axes width. Default: 0.</p></li>
-<li><p><strong>shift_height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Number of inches to increase the axes height. Default: 0.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="function">
 <dt id="vis.calibration.plot_station_gain_amplitudes">
 <code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">plot_station_gain_amplitudes</code><span class="sig-paren">(</span><em class="sig-param">gain_data</em>, <em class="sig-param">invert=False</em>, <em class="sig-param">add_station_labels=True</em>, <em class="sig-param">add_quant_labels=False</em>, <em class="sig-param">absolute_time=True</em>, <em class="sig-param">colormap='jet'</em>, <em class="sig-param">grid=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#plot_station_gain_amplitudes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.plot_station_gain_amplitudes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots station gain amplitudes relative to the expected values of 1.  Optionally adds quantitative labels.</p>
@@ -327,6 +306,45 @@ The file type is determined automatically from the headers.</p>
 </div>
 <div class="section" id="module-vis.typlot">
 <span id="plotting-functions"></span><h2>Plotting Functions<a class="headerlink" href="#module-vis.typlot" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="vis.typlot.axes_adjust">
+<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">axes_adjust</code><span class="sig-paren">(</span><em class="sig-param">fig=None</em>, <em class="sig-param">axes=None</em>, <em class="sig-param">shift_x0=0</em>, <em class="sig-param">shift_y0=0</em>, <em class="sig-param">shift_width=0</em>, <em class="sig-param">shift_height=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#axes_adjust"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.axes_adjust" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adjusts the axes by some shifts provided in the specified units.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fig</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)"><em>matplotlib.figure.Figure</em></a>) – Handle of figure to modify. If None, use the current figure object. Default: None.</p></li>
+<li><p><strong>axes</strong> (<a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)"><em>matplotlib.axes.Axes</em></a>) – Handle of axes to modify. If None, use the current axes object. Default: None.</p></li>
+<li><p><strong>shift_x0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Number of inches to shift the axes to the right. Default: 0.</p></li>
+<li><p><strong>shift_y0</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Number of inches to shift the axes up. Default: 0.</p></li>
+<li><p><strong>shift_width</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Number of inches to increase the axes width. Default: 0.</p></li>
+<li><p><strong>shift_height</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Number of inches to increase the axes height. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="vis.typlot.generate_streamline_colormap">
+<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">generate_streamline_colormap</code><span class="sig-paren">(</span><em class="sig-param">colormap='plasma'</em>, <em class="sig-param">number_of_streams=None</em>, <em class="sig-param">oversample_factor=4</em>, <em class="sig-param">fluctuation_factor=0.2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#generate_streamline_colormap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.generate_streamline_colormap" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a new colormap that is generated by randomly subsampling a given colormap.
+Useful for making plots that indicate flow, e.g., <code class="xref py py-func docutils literal notranslate"><span class="pre">plot_deo_tempering_level_evolution()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.2.1)"><em>matplotlib.colors.Colormap</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. Default: ‘plasma’.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A new colormap that has random rearrangements.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.2.1)">matplotlib.colors.Colormap</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="function">
 <dt id="vis.typlot.kde_plot_1d">
 <code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">kde_plot_1d</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">limits=None</em>, <em class="sig-param">color='b'</em>, <em class="sig-param">alpha=1.0</em>, <em class="sig-param">linewidth=1</em>, <em class="sig-param">linestyle='-'</em>, <em class="sig-param">nbin=128</em>, <em class="sig-param">bw='scott'</em>, <em class="sig-param">scott_factor=0</em>, <em class="sig-param">filled=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#kde_plot_1d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.kde_plot_1d" title="Permalink to this definition">¶</a></dt>
@@ -465,7 +483,7 @@ The file type is determined automatically from the headers.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.120.gdb1806e',
+            VERSION:'0+untagged.121.g0535eba',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'
