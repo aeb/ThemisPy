@@ -2,6 +2,9 @@
 
 from setuptools import setup, find_packages
 import versioneer
+import glob
+
+
 
 setup(name='ThemisPy',
       version=versioneer.get_version(),
@@ -11,6 +14,7 @@ setup(name='ThemisPy',
       author_email='Themis@perimeterinstitute.ca',
       url='https://github.com/aeb/ThemisPy',
       packages=find_packages(),
-      install_requires=['numpy','scipy','matplotlib']
+      install_requires=['numpy','scipy','matplotlib'],
+      scripts=glob.glob('scripts/*')
      )
 
