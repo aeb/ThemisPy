@@ -546,7 +546,7 @@ def load_deo_summary(annealing_file="Annealing.dat", annealing_summary=None) :
 
     for n in range(nrounds) :
         beta[n,:] = annealing_data['Beta'][annealing_data['round']==n]
-        R[n,:] = annealing_data['Beta'][annealing_data['round']==n]
+        R[n,:] = annealing_data['R'][annealing_data['round']==n]
 
     annealing_data_dict = { 'Beta':beta, 'R':R }
         
