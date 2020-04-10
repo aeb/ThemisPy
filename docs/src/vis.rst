@@ -10,6 +10,11 @@ Calibration
 .. automodule:: vis.calibration
    :members:
 
+Image Models
+------------------------------
+.. automodule:: vis.image
+   :members:
+      
 Plotting Functions
 ------------------------------
 .. automodule:: vis.typlot
