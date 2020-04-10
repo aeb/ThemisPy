@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vis &mdash; ThemisPy 0+untagged.121.g0535eba documentation</title>
+  <title>Vis &mdash; ThemisPy 0+untagged.126.gc28607b.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.121.g0535eba documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.126.gc28607b.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="themispy_trace_plots" href="scripts.html"/>
         <link rel="prev" title="Diag" href="diag.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.121.g0535eba
+                0+untagged.126.gc28607b.dirty
               </div>
             
           
@@ -96,6 +96,7 @@
 <li class="toctree-l3"><a class="reference internal" href="diag.html">Diag</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Vis</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-vis.calibration">Calibration</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-vis.image">Image Models</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-vis.typlot">Plotting Functions</a></li>
 </ul>
 </li>
@@ -169,9 +170,9 @@
 <span id="id1"></span><h1>Vis<a class="headerlink" href="#vis" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-vis.calibration">
 <span id="calibration"></span><h2>Calibration<a class="headerlink" href="#module-vis.calibration" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="vis.calibration.annotate_gain_data">
-<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">annotate_gain_data</code><span class="sig-paren">(</span><em class="sig-param">gain_data</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#annotate_gain_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.annotate_gain_data" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">annotate_gain_data</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gain_data</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#annotate_gain_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.annotate_gain_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adds elements to the gain_data dict that indicate the uniqueness of the gain solution.
 This is indicated by an integer code under the key “&lt;station&gt;.status” which translates to:</p>
 <ul class="simple">
@@ -194,9 +195,9 @@ zero), and are therefore susceptable to rare instances of confusion.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vis.calibration.plot_station_gain_amplitudes">
-<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">plot_station_gain_amplitudes</code><span class="sig-paren">(</span><em class="sig-param">gain_data</em>, <em class="sig-param">invert=False</em>, <em class="sig-param">add_station_labels=True</em>, <em class="sig-param">add_quant_labels=False</em>, <em class="sig-param">absolute_time=True</em>, <em class="sig-param">colormap='jet'</em>, <em class="sig-param">grid=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#plot_station_gain_amplitudes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.plot_station_gain_amplitudes" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">plot_station_gain_amplitudes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gain_data</span></em>, <em class="sig-param"><span class="n">invert</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">add_station_labels</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">add_quant_labels</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">absolute_time</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'jet'</span></em>, <em class="sig-param"><span class="n">grid</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#plot_station_gain_amplitudes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.plot_station_gain_amplitudes" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots station gain amplitudes relative to the expected values of 1.  Optionally adds quantitative labels.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -219,9 +220,9 @@ zero), and are therefore susceptable to rare instances of confusion.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vis.calibration.plot_station_gain_phases">
-<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">plot_station_gain_phases</code><span class="sig-paren">(</span><em class="sig-param">gain_data</em>, <em class="sig-param">invert=False</em>, <em class="sig-param">add_station_labels=True</em>, <em class="sig-param">absolute_time=True</em>, <em class="sig-param">colormap='jet'</em>, <em class="sig-param">grid=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#plot_station_gain_phases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.plot_station_gain_phases" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">plot_station_gain_phases</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gain_data</span></em>, <em class="sig-param"><span class="n">invert</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">add_station_labels</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">absolute_time</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'jet'</span></em>, <em class="sig-param"><span class="n">grid</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#plot_station_gain_phases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.plot_station_gain_phases" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots station gain phases.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -243,9 +244,9 @@ zero), and are therefore susceptable to rare instances of confusion.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vis.calibration.read_complex_gain_file">
-<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">read_complex_gain_file</code><span class="sig-paren">(</span><em class="sig-param">gainfile</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#read_complex_gain_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.read_complex_gain_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">read_complex_gain_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gainfile</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#read_complex_gain_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.read_complex_gain_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in a complex gain file and returns an appropriately formatted dictionary.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -264,9 +265,9 @@ zero), and are therefore susceptable to rare instances of confusion.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vis.calibration.read_gain_amplitude_correction_file">
-<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">read_gain_amplitude_correction_file</code><span class="sig-paren">(</span><em class="sig-param">gainfile</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#read_gain_amplitude_correction_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.read_gain_amplitude_correction_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">read_gain_amplitude_correction_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gainfile</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#read_gain_amplitude_correction_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.read_gain_amplitude_correction_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in a gain amplitude correction file and returns an appropriately formatted dictionary.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -285,9 +286,9 @@ zero), and are therefore susceptable to rare instances of confusion.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vis.calibration.read_gain_file">
-<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">read_gain_file</code><span class="sig-paren">(</span><em class="sig-param">gainfile</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#read_gain_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.read_gain_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">read_gain_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gainfile</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#read_gain_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.read_gain_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in a gain file and returns an appropriately formatted dictionary.
 The file type is determined automatically from the headers.</p>
 <dl class="field-list simple">
@@ -304,11 +305,797 @@ The file type is determined automatically from the headers.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-vis.image">
+<span id="image-models"></span><h2>Image Models<a class="headerlink" href="#module-vis.image" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="vis.image.W_cubic_spline_1d">
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">W_cubic_spline_1d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">k</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">- 0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#W_cubic_spline_1d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.W_cubic_spline_1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fourier domain convolution function for the approximate 1D cubic spline.
+Useful for the splined raster image classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Wavenumber.</p></li>
+<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Cubic spline control parameter. Default: -0.5.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>1D array of values of the cubic spline weight function evaluated at each value of k.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.image.direct_cubic_spline_1d">
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">direct_cubic_spline_1d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">xx</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">- 0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#direct_cubic_spline_1d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.direct_cubic_spline_1d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Image-space approximate cubic spline convolution along 1D.  Useful for the splined raster image classes.
+This is VERY slow and should be used for debugging only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions of the control points. Must have the same length as f.</p></li>
+<li><p><strong>f</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of heights of the control points.  Must have the same length as x.</p></li>
+<li><p><strong>xx</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions at which to compute inteperolated values of f.</p></li>
+<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Cubic spline control parameter. Default: -0.5.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>1D array with the values of f interpolated to positions xx.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.image.direct_cubic_spline_2d">
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">direct_cubic_spline_2d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">xx</span></em>, <em class="sig-param"><span class="n">yy</span></em>, <em class="sig-param"><span class="n">rotation_angle</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">- 0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#direct_cubic_spline_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.direct_cubic_spline_2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Image-space approximate cubic spline convolution in 2D.  This is accomplished by
+convolving along x and they y.  Expects the data to be stored in a rectalinear grid.
+Useful for the splined raster image classes.  This is VERY slow and should be used
+for debugging only.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions of the control points in the x direction. Must have the same length as f.shape[0].</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions of the control points in the y direction. Must have the same length as f.shape[1].</p></li>
+<li><p><strong>f</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 2D array of heights of the control points.  Must have f.shape=[x.size,y.size].</p></li>
+<li><p><strong>xx</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions at which to compute inteperolated values of f.</p></li>
+<li><p><strong>ff</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions at which to compute inteperolated values of f.</p></li>
+<li><p><strong>rotation_angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Rotation angle of the field counter-clockwise in radians. If None, no rotation is performed. Default: None.</p></li>
+<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Cubic spline control parameter. Default: -0.5.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>2D array with the values of ff interpolated to positions [xx,yy].</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.image.fft_cubic_spline_2d">
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">fft_cubic_spline_2d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">xx</span></em>, <em class="sig-param"><span class="n">yy</span></em>, <em class="sig-param"><span class="n">rotation_angle</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">- 0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#fft_cubic_spline_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.fft_cubic_spline_2d" title="Permalink to this definition">¶</a></dt>
+<dd><p>FFT cubic spline convolution in 2D. This is accomplished by directly evaluating the
+Fourier transform of f (as a sum of Fourier components), applying the cubic spline as
+a filter in the Fourier space, and then inverting the Fourier transfor with FFT.
+Expects the data to be stored in a rectalinear grid. Useful for the splined raster
+image classes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions of the control points in the x direction. Must have the same length as f.shape[0].</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions of the control points in the y direction. Must have the same length as f.shape[1].</p></li>
+<li><p><strong>f</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 2D array of heights of the control points.  Must have f.shape=[x.size,y.size].</p></li>
+<li><p><strong>xx</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions at which to compute inteperolated values of f.</p></li>
+<li><p><strong>yy</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions at which to compute inteperolated values of f.</p></li>
+<li><p><strong>rotation_angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Rotation angle of the field counter-clockwise in radians. If None, no rotation is performed. Default: None.</p></li>
+<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Cubic spline control parameter. Default: -0.5.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>2D array with the values of ff interpolated to positions [xx,yy].</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="vis.image.model_image">
+<em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for Themis image models.
+This base class is intended to mirror the model_image base class, providing
+explicit visualizations of the output of Themis::model_image-derived model analyses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="vis.image.model_image.parameters">
+<code class="sig-name descname">parameters</code><a class="headerlink" href="#vis.image.model_image.parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter list for a given model. Default: None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.image.model_image.size">
+<code class="sig-name descname">size</code><a class="headerlink" href="#vis.image.model_image.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of parameters for a given model. Default: None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.image.model_image.themis_fft_sign">
+<code class="sig-name descname">themis_fft_sign</code><a class="headerlink" href="#vis.image.model_image.themis_fft_sign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Themis FFT sign convention flag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the model parameter list.  Mirrors similar a similar function within the
+Themis::model_image class.  Effectively simply copies the parameters into the
+local list with some additional run-time checking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Parameter list.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image.generate_intensity_map">
+<code class="sig-name descname">generate_intensity_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image.generate_intensity_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image.generate_intensity_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook for the intensity map function in child classes.  Assumes that the parameters
+list has been set.  This should never be called externally.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image.intensity_map">
+<code class="sig-name descname">intensity_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">parameters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image.intensity_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image.intensity_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>External access function to the intenesity map.  Child classes should not overwrite
+this function.  This implements some parameter assessment and checks the FFT sign
+convention.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Parameter list. If none is provided, uses the current set of parameters. Default: None.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="vis.image.model_image_adaptive_splined_raster">
+<em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_adaptive_splined_raster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Nx</span></em>, <em class="sig-param"><span class="n">Ny</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">- 0.5</span></em>, <em class="sig-param"><span class="n">spline_method</span><span class="o">=</span><span class="default_value">'fft'</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_adaptive_splined_raster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_adaptive_splined_raster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adaptive splined raster image class that is a mirror of Themis::model_image_adaptive_splined_raster.
+Has parameters:</p>
+<ul class="simple">
+<li><p>parameters[0] …….. Logarithm of the brightness at control point 0,0 (Jy/sr)</p></li>
+<li><p>parameters[1] …….. Logarithm of the brightness at control point 1,0 (Jy/sr)</p></li>
+</ul>
+<p>…</p>
+<ul class="simple">
+<li><p>parameters[Nx-1] ….. Logarithm of the brightness at control point Nx-1,0 (Jy/sr)</p></li>
+<li><p>parameters[Nx] ……. Logarithm of the brightness at control point 0,1 (Jy/sr)</p></li>
+<li><p>parameters[Nx+1] ….. Logarithm of the brightness at control point 1,1 (Jy/sr)</p></li>
+</ul>
+<p>…</p>
+<ul class="simple">
+<li><p>parameters[Nx*Ny-1] .. Logarithm of the brightness at control point Nx-1,Ny-1 (Jy/sr)</p></li>
+<li><p>parameters[Nx*Ny] …. Field of view in the x direction (rad)</p></li>
+<li><p>parameters[Nx*Ny+1] .. Field of view in the y direction (rad)</p></li>
+<li><p>parameters[Nx*Ny+2] .. Orientation of the x direction (rad)</p></li>
+</ul>
+<p>and size=Nx*Ny.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Nx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of control points in the -RA direction.</p></li>
+<li><p><strong>Ny</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of control points in the Dec direction.</p></li>
+<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Spline control factor. Default: -0.5.</p></li>
+<li><p><strong>spline_method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Spline method. Accepted values are ‘fft’ and ‘direct’.  Default: ‘fft’.</p></li>
+<li><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="vis.image.model_image_adaptive_splined_raster.Nx">
+<code class="sig-name descname">Nx</code><a class="headerlink" href="#vis.image.model_image_adaptive_splined_raster.Nx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of control points in the -RA direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.image.model_image_adaptive_splined_raster.Ny">
+<code class="sig-name descname">Ny</code><a class="headerlink" href="#vis.image.model_image_adaptive_splined_raster.Ny" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of control points in the Dec direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.image.model_image_adaptive_splined_raster.a">
+<code class="sig-name descname">a</code><a class="headerlink" href="#vis.image.model_image_adaptive_splined_raster.a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spline control factor. Default: -0.5.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.image.model_image_adaptive_splined_raster.spline_method">
+<code class="sig-name descname">spline_method</code><a class="headerlink" href="#vis.image.model_image_adaptive_splined_raster.spline_method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spline method. Accepted values are ‘fft’ and ‘direct’.  Default: ‘fft’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_adaptive_splined_raster.generate_intensity_map">
+<code class="sig-name descname">generate_intensity_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_adaptive_splined_raster.generate_intensity_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_adaptive_splined_raster.generate_intensity_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal generation of the intensity map. In practice you almost certainly want to call <a class="reference internal" href="#vis.image.model_image.intensity_map" title="vis.image.model_image.intensity_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_image.intensity_map()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="vis.image.model_image_asymmetric_gaussian">
+<em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_asymmetric_gaussian</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_asymmetric_gaussian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_asymmetric_gaussian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asymmetric gaussian image class that is a mirror of Themis::model_image_asymmetric_gaussian.
+Has parameters:</p>
+<ul class="simple">
+<li><p>parameters[0] … Total intensity <span class="math notranslate nohighlight">\(I_0\)</span> (Jy)</p></li>
+<li><p>parameters[1] … Symmetrized standard deviation <span class="math notranslate nohighlight">\(\sigma\)</span> (rad)</p></li>
+<li><p>parameters[2] … Asymmetry parameter <span class="math notranslate nohighlight">\(A\)</span> in (0,1)</p></li>
+<li><p>parameters[3] … Position angle <span class="math notranslate nohighlight">\(\phi\)</span> (rad)</p></li>
+</ul>
+<p>and size=4.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="vis.image.model_image_asymmetric_gaussian.generate_intensity_map">
+<code class="sig-name descname">generate_intensity_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_asymmetric_gaussian.generate_intensity_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_asymmetric_gaussian.generate_intensity_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal generation of the intensity map. In practice you almost certainly want to call <a class="reference internal" href="#vis.image.model_image.intensity_map" title="vis.image.model_image.intensity_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_image.intensity_map()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="vis.image.model_image_crescent">
+<em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_crescent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_crescent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_crescent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symmetric gaussian image class that is a mirror of Themis::model_image_crescent.
+Has parameters:</p>
+<ul class="simple">
+<li><p>parameters[0] … Total intensity <span class="math notranslate nohighlight">\(I_0\)</span> (Jy)</p></li>
+<li><p>parameters[1] … Outer radius <span class="math notranslate nohighlight">\(R\)</span> (rad)</p></li>
+<li><p>parameters[2] … Width paramter <span class="math notranslate nohighlight">\(\psi\)</span> in (0,1)</p></li>
+<li><p>parameters[3] … Eccentricity parameter <span class="math notranslate nohighlight">\(\epsilon\)</span> in (0,1)</p></li>
+<li><p>parameters[3] … Asymmetry parmaeter math:<cite>tau</cite> in (0,1)</p></li>
+<li><p>parameters[4] … Position angle <span class="math notranslate nohighlight">\(\phi\)</span> (rad)</p></li>
+</ul>
+<p>and size=5.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="vis.image.model_image_crescent.generate_intensity_map">
+<code class="sig-name descname">generate_intensity_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_crescent.generate_intensity_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_crescent.generate_intensity_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal generation of the intensity map. In practice you almost certainly want to call <a class="reference internal" href="#vis.image.model_image.intensity_map" title="vis.image.model_image.intensity_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_image.intensity_map()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="vis.image.model_image_smoothed">
+<em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_smoothed</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_smoothed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_smoothed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Smoothed image class that is a mirror of Themis::model_image_smooth. Generates a smoothed
+image from an existing image using an asymmetric Gaussian smoothing kernel.
+Has parameters:</p>
+<ul class="simple">
+<li><p>parameters[0] …………. First parameter of underlying image</p></li>
+</ul>
+<p>…</p>
+<ul class="simple">
+<li><p>parameters[image.size-1] .. Last parameter of underlying image</p></li>
+<li><p>parameters[image.size] …. Symmetrized standard deviation of smoothing kernel <span class="math notranslate nohighlight">\(\sigma\)</span> (rad)</p></li>
+<li><p>parameters[image.size+1] .. Asymmetry parameter of smoothing kernel <span class="math notranslate nohighlight">\(A\)</span> in (0,1)</p></li>
+<li><p>parameters[image.size+2] .. Position angle of smoothing kernel <span class="math notranslate nohighlight">\(\phi\)</span> (rad)</p></li>
+</ul>
+<p>and size=image.size+3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><em>model_image</em></a>) – <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object that will be smoothed.</p></li>
+<li><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="vis.image.model_image_smoothed.image">
+<code class="sig-name descname">image</code><a class="headerlink" href="#vis.image.model_image_smoothed.image" title="Permalink to this definition">¶</a></dt>
+<dd><p>A preexisting <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object to be smoothed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image">model_image</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_smoothed.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_smoothed.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_smoothed.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the model parameter list.  Mirrors similar a similar function within the Themis
+model_image_smooth class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Parameter list.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_smoothed.generate_intensity_map">
+<code class="sig-name descname">generate_intensity_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_smoothed.generate_intensity_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_smoothed.generate_intensity_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal generation of the intensity map. In practice you almost certainly want to call <a class="reference internal" href="#vis.image.model_image.intensity_map" title="vis.image.model_image.intensity_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_image.intensity_map()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="vis.image.model_image_splined_raster">
+<em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_splined_raster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Nx</span></em>, <em class="sig-param"><span class="n">Ny</span></em>, <em class="sig-param"><span class="n">fovx</span></em>, <em class="sig-param"><span class="n">fovy</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">- 0.5</span></em>, <em class="sig-param"><span class="n">spline_method</span><span class="o">=</span><span class="default_value">'fft'</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_splined_raster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_splined_raster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Splined raster image class that is a mirror of Themis::model_image_splined_raster.
+Has parameters:</p>
+<ul class="simple">
+<li><p>parameters[0] …….. Logarithm of the brightness at control point 0,0 (Jy/sr)</p></li>
+<li><p>parameters[1] …….. Logarithm of the brightness at control point 1,0 (Jy/sr)</p></li>
+</ul>
+<p>…</p>
+<ul class="simple">
+<li><p>parameters[Nx-1] ….. Logarithm of the brightness at control point Nx-1,0 (Jy/sr)</p></li>
+<li><p>parameters[Nx] ……. Logarithm of the brightness at control point 0,1 (Jy/sr)</p></li>
+<li><p>parameters[Nx+1] ….. Logarithm of the brightness at control point 1,1 (Jy/sr)</p></li>
+</ul>
+<p>…</p>
+<ul class="simple">
+<li><p>parameters[Nx*Ny-1] .. Logarithm of the brightness at control point Nx-1,Ny-1 (Jy/sr)</p></li>
+</ul>
+<p>and size=Nx*Ny.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Nx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of control points in the -RA direction.</p></li>
+<li><p><strong>Ny</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of control points in the Dec direction.</p></li>
+<li><p><strong>fovx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Field of view in the -RA direction (rad).</p></li>
+<li><p><strong>fovy</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Field of view in the Dec direction (rad).</p></li>
+<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Spline control factor. Default: -0.5.</p></li>
+<li><p><strong>spline_method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Spline method. Accepted values are ‘fft’ and ‘direct’.  Default: ‘fft’.</p></li>
+<li><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="vis.image.model_image_splined_raster.Nx">
+<code class="sig-name descname">Nx</code><a class="headerlink" href="#vis.image.model_image_splined_raster.Nx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of control points in the -RA direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.image.model_image_splined_raster.Ny">
+<code class="sig-name descname">Ny</code><a class="headerlink" href="#vis.image.model_image_splined_raster.Ny" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of control points in the Dec direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.image.model_image_splined_raster.fovx">
+<code class="sig-name descname">fovx</code><a class="headerlink" href="#vis.image.model_image_splined_raster.fovx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Field of view in the -RA direction (rad).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.image.model_image_splined_raster.fovy">
+<code class="sig-name descname">fovy</code><a class="headerlink" href="#vis.image.model_image_splined_raster.fovy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Field of view in the Dec direction (rad).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.image.model_image_splined_raster.a">
+<code class="sig-name descname">a</code><a class="headerlink" href="#vis.image.model_image_splined_raster.a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spline control factor. Default: -0.5.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.image.model_image_splined_raster.spline_method">
+<code class="sig-name descname">spline_method</code><a class="headerlink" href="#vis.image.model_image_splined_raster.spline_method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spline method. Accepted values are ‘fft’ and ‘direct’.  Default: ‘fft’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_splined_raster.generate_intensity_map">
+<code class="sig-name descname">generate_intensity_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_splined_raster.generate_intensity_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_splined_raster.generate_intensity_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal generation of the intensity map. In practice you almost certainly want to call <a class="reference internal" href="#vis.image.model_image.intensity_map" title="vis.image.model_image.intensity_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_image.intensity_map()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="vis.image.model_image_sum">
+<em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_sum</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">offset_coordinates</span><span class="o">=</span><span class="default_value">'Cartesian'</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_sum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summed image class that is a mirror of Themis::model_image_sum. Generates images by summing
+other images supplemented with some offset. The parameters list is expanded by 2 for each
+image, corresponding to the absolute positions. These may be specified either in Cartesian
+or polar coordinates; this selection must be made at construction and applies uniformly to
+all components (i.e., all component positions must be specified in the same coordinates).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> objects. If None, must be set prior to calling <code class="xref py py-func docutils literal notranslate"><span class="pre">intensity_map()</span></code>. Default: None.</p></li>
+<li><p><strong>offset_coordinates</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Coordinates in which to specify component shifts.  Options are ‘Cartesian’ and ‘polar’. Default: ‘Cartesian’.</p></li>
+<li><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="vis.image.model_image_sum.image_list">
+<code class="sig-name descname">image_list</code><a class="headerlink" href="#vis.image.model_image_sum.image_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> objects that are to be summed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.image.model_image_sum.shift_list">
+<code class="sig-name descname">shift_list</code><a class="headerlink" href="#vis.image.model_image_sum.shift_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of shifts transformed to Cartesian coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.image.model_image_sum.offset_coordinates">
+<code class="sig-name descname">offset_coordinates</code><a class="headerlink" href="#vis.image.model_image_sum.offset_coordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coordinates in which to specify component shifts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_sum.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_sum.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_sum.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an model_image object or list of model_image objects to the sum.  The size is recomputed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><em>model_image</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – A single model_image object or list of model_image objects to be added.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_sum.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_sum.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_sum.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the combined model parameter list.  Mirrors similar a similar function within the Themis
+model_image_sum class.  Effectively simply copies the parameters into the local list, transforms
+and copies the shift vector (x0,y0) for each model_image object, and performs some run-time checking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Parameter list.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_sum.generate_intensity_map">
+<code class="sig-name descname">generate_intensity_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_sum.generate_intensity_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_sum.generate_intensity_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal generation of the intensity map. In practice you almost certainly want to call <a class="reference internal" href="#vis.image.model_image.intensity_map" title="vis.image.model_image.intensity_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_image.intensity_map()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="vis.image.model_image_symmetric_gaussian">
+<em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_symmetric_gaussian</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_symmetric_gaussian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_symmetric_gaussian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symmetric gaussian image class that is a mirror of Themis::model_image_symmetric_gaussian.
+Has parameters:</p>
+<ul class="simple">
+<li><p>parameters[0] … Total intensity <span class="math notranslate nohighlight">\(I_0\)</span> (Jy)</p></li>
+<li><p>parameters[1] … Standard deviation <span class="math notranslate nohighlight">\(\sigma\)</span> (rad)</p></li>
+</ul>
+<p>and size=2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="vis.image.model_image_symmetric_gaussian.generate_intensity_map">
+<code class="sig-name descname">generate_intensity_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_symmetric_gaussian.generate_intensity_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_symmetric_gaussian.generate_intensity_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal generation of the intensity map. In practice you almost certainly want to call <a class="reference internal" href="#vis.image.model_image.intensity_map" title="vis.image.model_image.intensity_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_image.intensity_map()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="vis.image.model_image_xsring">
+<em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_xsring</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_xsring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_xsring" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symmetric gaussian image class that is a mirror of Themis::model_image_xsring.
+Has parameters:</p>
+<ul class="simple">
+<li><p>parameters[0] … Total intensity <span class="math notranslate nohighlight">\(I_0\)</span> (Jy)</p></li>
+<li><p>parameters[1] … Outer radius <span class="math notranslate nohighlight">\(R\)</span> (rad)</p></li>
+<li><p>parameters[2] … Width paramter <span class="math notranslate nohighlight">\(\psi\)</span> in (0,1)</p></li>
+<li><p>parameters[3] … Eccentricity parameter <span class="math notranslate nohighlight">\(\epsilon\)</span> in (0,1)</p></li>
+<li><p>parameters[4] … Linear fade parameter math:<cite>f</cite> in (0,1)</p></li>
+<li><p>parameters[5] … Position angle <span class="math notranslate nohighlight">\(\phi\)</span> (rad)</p></li>
+</ul>
+<p>and size=6.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="vis.image.model_image_xsring.generate_intensity_map">
+<code class="sig-name descname">generate_intensity_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_xsring.generate_intensity_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_xsring.generate_intensity_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal generation of the intensity map. In practice you almost certainly want to call <a class="reference internal" href="#vis.image.model_image.intensity_map" title="vis.image.model_image.intensity_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_image.intensity_map()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="vis.image.model_image_xsringauss">
+<em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_xsringauss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_xsringauss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_xsringauss" title="Permalink to this definition">¶</a></dt>
+<dd><p>Symmetric gaussian image class that is a mirror of Themis::model_image_xsring.
+Has parameters:</p>
+<ul class="simple">
+<li><p>parameters[0] … Total intensity <span class="math notranslate nohighlight">\(I_0\)</span> (Jy)</p></li>
+<li><p>parameters[1] … Outer radius <span class="math notranslate nohighlight">\(R\)</span> (rad)</p></li>
+<li><p>parameters[2] … Width parameter <span class="math notranslate nohighlight">\(\psi\)</span> in (0,1)</p></li>
+<li><p>parameters[3] … Eccentricity parameter <span class="math notranslate nohighlight">\(\epsilon\)</span> in (0,1)</p></li>
+<li><p>parameters[4] … Linear fade parameter math:<cite>f</cite> in (0,1)</p></li>
+<li><p>parameters[5] … FWHM of the main axis of the Gaussian in units of the ring outer radius math:<cite>g_{ax}</cite></p></li>
+<li><p>parameters[6] … Gaussian axial ratio math:<cite>a_q</cite></p></li>
+<li><p>parameters[7] … Ratio of Gaussian flux to ring flux math:<cite>g_q</cite></p></li>
+<li><p>parameters[8] … Position angle <span class="math notranslate nohighlight">\(\phi\)</span> (rad)</p></li>
+</ul>
+<p>and size=9.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="vis.image.model_image_xsringauss.generate_intensity_map">
+<code class="sig-name descname">generate_intensity_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_xsringauss.generate_intensity_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_xsringauss.generate_intensity_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal generation of the intensity map. In practice you almost certainly want to call <a class="reference internal" href="#vis.image.model_image.intensity_map" title="vis.image.model_image.intensity_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_image.intensity_map()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-vis.typlot">
 <span id="plotting-functions"></span><h2>Plotting Functions<a class="headerlink" href="#module-vis.typlot" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="vis.typlot.axes_adjust">
-<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">axes_adjust</code><span class="sig-paren">(</span><em class="sig-param">fig=None</em>, <em class="sig-param">axes=None</em>, <em class="sig-param">shift_x0=0</em>, <em class="sig-param">shift_y0=0</em>, <em class="sig-param">shift_width=0</em>, <em class="sig-param">shift_height=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#axes_adjust"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.axes_adjust" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">axes_adjust</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fig</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">shift_x0</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">shift_y0</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">shift_width</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">shift_height</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#axes_adjust"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.axes_adjust" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adjusts the axes by some shifts provided in the specified units.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -327,9 +1114,9 @@ The file type is determined automatically from the headers.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vis.typlot.generate_streamline_colormap">
-<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">generate_streamline_colormap</code><span class="sig-paren">(</span><em class="sig-param">colormap='plasma'</em>, <em class="sig-param">number_of_streams=None</em>, <em class="sig-param">oversample_factor=4</em>, <em class="sig-param">fluctuation_factor=0.2</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#generate_streamline_colormap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.generate_streamline_colormap" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">generate_streamline_colormap</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'plasma'</span></em>, <em class="sig-param"><span class="n">number_of_streams</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">oversample_factor</span><span class="o">=</span><span class="default_value">4</span></em>, <em class="sig-param"><span class="n">fluctuation_factor</span><span class="o">=</span><span class="default_value">0.2</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#generate_streamline_colormap"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.generate_streamline_colormap" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a new colormap that is generated by randomly subsampling a given colormap.
 Useful for making plots that indicate flow, e.g., <code class="xref py py-func docutils literal notranslate"><span class="pre">plot_deo_tempering_level_evolution()</span></code>.</p>
 <dl class="field-list simple">
@@ -345,14 +1132,14 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vis.typlot.kde_plot_1d">
-<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">kde_plot_1d</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">limits=None</em>, <em class="sig-param">color='b'</em>, <em class="sig-param">alpha=1.0</em>, <em class="sig-param">linewidth=1</em>, <em class="sig-param">linestyle='-'</em>, <em class="sig-param">nbin=128</em>, <em class="sig-param">bw='scott'</em>, <em class="sig-param">scott_factor=0</em>, <em class="sig-param">filled=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#kde_plot_1d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.kde_plot_1d" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">kde_plot_1d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">color</span><span class="o">=</span><span class="default_value">'b'</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">linewidth</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">linestyle</span><span class="o">=</span><span class="default_value">'-'</span></em>, <em class="sig-param"><span class="n">nbin</span><span class="o">=</span><span class="default_value">128</span></em>, <em class="sig-param"><span class="n">bw</span><span class="o">=</span><span class="default_value">'scott'</span></em>, <em class="sig-param"><span class="n">scott_factor</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">filled</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#kde_plot_1d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.kde_plot_1d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a 1d joint posterior plot using <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.gaussian_kde()</span></code> function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>numpy.array</em>) – List of data positions.</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – List of data positions.</p></li>
 <li><p><strong>limits</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Limits in the form [xmin,xmax].  If set to None, will use the minimum and maximum values of x, expanded by 10% on each side.  Default: None.</p></li>
 <li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>.</p></li>
 <li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Value of alpha for the individual likelihood traces. Default: 1.0.</p></li>
@@ -373,15 +1160,15 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vis.typlot.kde_plot_2d">
-<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">kde_plot_2d</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">y</em>, <em class="sig-param">plevels=None</em>, <em class="sig-param">limits=None</em>, <em class="sig-param">colormap='Purples'</em>, <em class="sig-param">alpha=1.0</em>, <em class="sig-param">nbin=128</em>, <em class="sig-param">bw='scott'</em>, <em class="sig-param">scott_factor=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#kde_plot_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.kde_plot_2d" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">kde_plot_2d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">plevels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'Purples'</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">nbin</span><span class="o">=</span><span class="default_value">128</span></em>, <em class="sig-param"><span class="n">bw</span><span class="o">=</span><span class="default_value">'scott'</span></em>, <em class="sig-param"><span class="n">scott_factor</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#kde_plot_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.kde_plot_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a 2d joint posterior plot using <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.gaussian_kde()</span></code> function and <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.contourf.html#matplotlib.pyplot.contourf" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.contourf()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>numpy.array</em>) – List of data positions in the 1st axis (horizontal).</p></li>
-<li><p><strong>y</strong> (<em>numpy.array</em>) – List of data positions in the 2nd axis (vertical).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – List of data positions in the 1st axis (horizontal).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – List of data positions in the 2nd axis (vertical).</p></li>
 <li><p><strong>plevels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of cummulative probability levels at which to draw contours. If set to None, will set to <span class="math notranslate nohighlight">\(1\sigma, 2\sigma, 3\sigma\)</span>. Default: None.</p></li>
 <li><p><strong>limits</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Limits in the form [[xmin,xmax],[ymin,ymax]].  If set to None, will use the minimum and maximum values of, expanded by 10% on each side.  Default: None.</p></li>
 <li><p><strong>colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.2.1)"><em>matplotlib.colors.Colormap</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. Default: ‘Purples’.</p></li>
@@ -400,9 +1187,9 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="vis.typlot.kde_triangle_plot">
-<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">kde_triangle_plot</code><span class="sig-paren">(</span><em class="sig-param">lower_data_array, upper_data_array=None, labels=None, upper_labels=None, truths=None, colormap='Blues', upper_colormap=None, color='blue', upper_color=None, truths_color='red', axis_location=None, alpha=1.0, quantiles=[0.99, 0.9, 0.5], nbin=128, linewidth=1, linestyle='-', truths_alpha=1.0, truths_linewidth=1, truths_linestype='-', scott_factor=1.41421, filled=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#kde_triangle_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.kde_triangle_plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">kde_triangle_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lower_data_array</span></em>, <em class="sig-param"><span class="n">upper_data_array</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">upper_labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">truths</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'Blues'</span></em>, <em class="sig-param"><span class="n">upper_colormap</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">color</span><span class="o">=</span><span class="default_value">'blue'</span></em>, <em class="sig-param"><span class="n">upper_color</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">truths_color</span><span class="o">=</span><span class="default_value">'red'</span></em>, <em class="sig-param"><span class="n">axis_location</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">quantiles</span><span class="o">=</span><span class="default_value">[0.99, 0.9, 0.5]</span></em>, <em class="sig-param"><span class="n">nbin</span><span class="o">=</span><span class="default_value">128</span></em>, <em class="sig-param"><span class="n">linewidth</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">linestyle</span><span class="o">=</span><span class="default_value">'-'</span></em>, <em class="sig-param"><span class="n">truths_alpha</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">truths_linewidth</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">truths_linestype</span><span class="o">=</span><span class="default_value">'-'</span></em>, <em class="sig-param"><span class="n">scott_factor</span><span class="o">=</span><span class="default_value">1.41421</span></em>, <em class="sig-param"><span class="n">filled</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#kde_triangle_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.kde_triangle_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produces a triangle plot with contours set by CDF.  Data may be plotted in both lower (required) and upper (optional) triangles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -483,7 +1270,7 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.121.g0535eba',
+            VERSION:'0+untagged.126.gc28607b.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'

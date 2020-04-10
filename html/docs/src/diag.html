@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Diag &mdash; ThemisPy 0+untagged.121.g0535eba documentation</title>
+  <title>Diag &mdash; ThemisPy 0+untagged.126.gc28607b.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.121.g0535eba documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.126.gc28607b.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Vis" href="vis.html"/>
         <link rel="prev" title="Data" href="data.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.121.g0535eba
+                0+untagged.126.gc28607b.dirty
               </div>
             
           
@@ -169,9 +169,9 @@
 <span id="id1"></span><h1>Diag<a class="headerlink" href="#diag" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-diag.convergence_tools">
 <span id="convergence-tools"></span><h2>Convergence Tools<a class="headerlink" href="#module-diag.convergence_tools" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="diag.convergence_tools.auto_window">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">auto_window</code><span class="sig-paren">(</span><em class="sig-param">taus</em>, <em class="sig-param">c</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#auto_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.auto_window" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">auto_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">taus</span></em>, <em class="sig-param"><span class="n">c</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#auto_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.auto_window" title="Permalink to this definition">¶</a></dt>
 <dd><p>Automatic windowing procedure following <a class="reference external" href="https://emcee.readthedocs.io/en/stable/tutorials/autocorr">emcee</a>, which follows <a class="reference external" href="https://pdfs.semanticscholar.org/0bfe/9e3db30605fe2d4d26e1a288a5e2997e7225.pdf">Sokal (1989)</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -189,9 +189,9 @@
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.convergence_tools.autocorr_func_1d">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">autocorr_func_1d</code><span class="sig-paren">(</span><em class="sig-param">x</em>, <em class="sig-param">norm=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#autocorr_func_1d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.autocorr_func_1d" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">autocorr_func_1d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">norm</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#autocorr_func_1d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.autocorr_func_1d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the 1D autocorrelation function of a sequences, following
 <a class="reference external" href="https://emcee.readthedocs.io/en/stable/tutorials/autocorr">emcee</a>.
 This is done via FFT, and thus assumes that the sequences is stationary.</p>
@@ -211,9 +211,9 @@ This is done via FFT, and thus assumes that the sequences is stationary.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.convergence_tools.bulk_split_rhat">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">bulk_split_rhat</code><span class="sig-paren">(</span><em class="sig-param">chains</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#bulk_split_rhat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.bulk_split_rhat" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">bulk_split_rhat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chains</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#bulk_split_rhat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.bulk_split_rhat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the bulk <span class="math notranslate nohighlight">\(\hat{R}\)</span> using rank normalized chains. The returned value is the
 maximum of the folded <span class="math notranslate nohighlight">\(\hat{R}\)</span> and regular rank normalized <span class="math notranslate nohighlight">\(\hat{R}\)</span> as recommended in
 <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2019arXiv190308008V/abstract">Vehtari (2019)</a>.</p>
@@ -230,9 +230,9 @@ maximum of the folded <span class="math notranslate nohighlight">\(\hat{R}\)</sp
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.convergence_tools.ensemble_autocorr">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">ensemble_autocorr</code><span class="sig-paren">(</span><em class="sig-param">param_chain</em>, <em class="sig-param">c=5.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#ensemble_autocorr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.ensemble_autocorr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">ensemble_autocorr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">param_chain</span></em>, <em class="sig-param"><span class="n">c</span><span class="o">=</span><span class="default_value">5.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#ensemble_autocorr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.ensemble_autocorr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the integrated autocorrelation time for the chain, following <a class="reference external" href="https://emcee.readthedocs.io/en/stable/tutorials/autocorr">emcee</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -250,9 +250,9 @@ maximum of the folded <span class="math notranslate nohighlight">\(\hat{R}\)</sp
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.convergence_tools.find_eautocorr">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">find_eautocorr</code><span class="sig-paren">(</span><em class="sig-param">echain</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#find_eautocorr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.find_eautocorr" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">find_eautocorr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">echain</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#find_eautocorr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.find_eautocorr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds and returns the integrated autocorrelation time (IACT) for each parameter
 in the ensemble chain.</p>
 <dl class="field-list simple">
@@ -268,9 +268,9 @@ in the ensemble chain.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.convergence_tools.fold_chains">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">fold_chains</code><span class="sig-paren">(</span><em class="sig-param">chains</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#fold_chains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.fold_chains" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">fold_chains</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chains</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#fold_chains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.fold_chains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the chain folded around the median of all the chains, i.e., for each
 parameter <span class="math notranslate nohighlight">\(p\)</span>, every chain sample is replaced with <span class="math notranslate nohighlight">\(|p-\bar{p}|\)</span>
 where <span class="math notranslate nohighlight">\(\bar{p}\)</span> is the median across all chains.
@@ -288,9 +288,9 @@ This helps with measuring <span class="math notranslate nohighlight">\(\hat{R}\)
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.convergence_tools.mean_echain">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">mean_echain</code><span class="sig-paren">(</span><em class="sig-param">echain</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#mean_echain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.mean_echain" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">mean_echain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">echain</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#mean_echain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.mean_echain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the average of the ensemble chain for each step. That is,
 we average over the walkers at each step converting the chain into a
 single particle chain of the average.</p>
@@ -307,9 +307,9 @@ single particle chain of the average.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.convergence_tools.mean_ess">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">mean_ess</code><span class="sig-paren">(</span><em class="sig-param">y</em>, <em class="sig-param">c=5.0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#mean_ess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.mean_ess" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">mean_ess</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">c</span><span class="o">=</span><span class="default_value">5.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#mean_ess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.mean_ess" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the average ESS across chains by dividing the number of steps by the IAC.
 Note the actual ESS of the entire chain and walkers is greater than this, but likely isn’t
 the number of walkers * mean_ess since the chains are correlated.</p>
@@ -326,9 +326,9 @@ the number of walkers * mean_ess since the chains are correlated.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.convergence_tools.next_pow_two">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">next_pow_two</code><span class="sig-paren">(</span><em class="sig-param">n</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#next_pow_two"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.next_pow_two" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">next_pow_two</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#next_pow_two"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.next_pow_two" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the value of 2**n, following <a class="reference external" href="https://emcee.readthedocs.io/en/stable/tutorials/autocorr">emcee</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -343,9 +343,9 @@ the number of walkers * mean_ess since the chains are correlated.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.convergence_tools.ranknormalized_chains">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">ranknormalized_chains</code><span class="sig-paren">(</span><em class="sig-param">chains</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#ranknormalized_chains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.ranknormalized_chains" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">ranknormalized_chains</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chains</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#ranknormalized_chains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.ranknormalized_chains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the rank-normalized chains, where the rank is taken over all the chains.
 This allows <span class="math notranslate nohighlight">\(\hat{R}\)</span> to be used when we the distribution might not have a finite
 mean or variance.</p>
@@ -363,9 +363,9 @@ mean or variance.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.convergence_tools.save_ensemble_diagnostics">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">save_ensemble_diagnostics</code><span class="sig-paren">(</span><em class="sig-param">out_file_name</em>, <em class="sig-param">chains</em>, <em class="sig-param">chainsname</em>, <em class="sig-param">method='rank'</em>, <em class="sig-param">stride=1</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#save_ensemble_diagnostics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.save_ensemble_diagnostics" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">save_ensemble_diagnostics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">out_file_name</span></em>, <em class="sig-param"><span class="n">chains</span></em>, <em class="sig-param"><span class="n">chainsname</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'rank'</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#save_ensemble_diagnostics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.save_ensemble_diagnostics" title="Permalink to this definition">¶</a></dt>
 <dd><p>Outputs the diagnostics of the multiple chains in <cite>chains</cite> to the out file,
 where the chain is kept track of in <cite>chainsname</cite>. Currently it only outputs
 the chains integrated autocorrelation time for each parameter. Eventually
@@ -389,9 +389,9 @@ between chains, then at least one of the chains is not converged.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.convergence_tools.split_rhat">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">split_rhat</code><span class="sig-paren">(</span><em class="sig-param">chains</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#split_rhat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.split_rhat" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">split_rhat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chains</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#split_rhat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.split_rhat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the split <span class="math notranslate nohighlight">\(\hat{R}\)</span> statistic from
 <a class="reference external" href="http://www.stat.columbia.edu/~gelman/book/">Gelman (2013)</a>. This is able to
 deal with distributions that don’t have finite mean and/or variance. Additionally,
@@ -411,9 +411,9 @@ have similar variance to check for intrachain convergence.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.convergence_tools.var_echain">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">var_echain</code><span class="sig-paren">(</span><em class="sig-param">echain</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#var_echain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.var_echain" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">var_echain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">echain</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#var_echain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.var_echain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the variance of the echain for each step. That is, we compute the
 variance of the walkers at each step, converting the chain into a single
 particle chain of the variance between chains.</p>
@@ -433,9 +433,9 @@ particle chain of the variance between chains.</p>
 </div>
 <div class="section" id="module-diag.diagnostic_plots">
 <span id="plotting-tools"></span><h2>Plotting Tools<a class="headerlink" href="#module-diag.diagnostic_plots" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
+<dl class="py function">
 <dt id="diag.diagnostic_plots.plot_annotated_parameter_trace">
-<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_annotated_parameter_trace</code><span class="sig-paren">(</span><em class="sig-param">echain</em>, <em class="sig-param">elklhd</em>, <em class="sig-param">parameter_list=None</em>, <em class="sig-param">parameter_names=None</em>, <em class="sig-param">likelihood_values=4</em>, <em class="sig-param">colormap='plasma'</em>, <em class="sig-param">one_column=False</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='k'</em>, <em class="sig-param">add_likelihood_trace=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_annotated_parameter_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_annotated_parameter_trace" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_annotated_parameter_trace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">echain</span></em>, <em class="sig-param"><span class="n">elklhd</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">likelihood_values</span><span class="o">=</span><span class="default_value">4</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'plasma'</span></em>, <em class="sig-param"><span class="n">one_column</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">step_norm</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">grid</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">means</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mean_color</span><span class="o">=</span><span class="default_value">'k'</span></em>, <em class="sig-param"><span class="n">add_likelihood_trace</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_annotated_parameter_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_annotated_parameter_trace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots traces of a subset of parameters for a Themis-style ensemble chain object.
 Points are color-coded by likelihood, which provides a better visualizations of
 where the high-probability regions are.</p>
@@ -465,9 +465,9 @@ where the high-probability regions are.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.diagnostic_plots.plot_annotated_parameter_trace_list">
-<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_annotated_parameter_trace_list</code><span class="sig-paren">(</span><em class="sig-param">echain_list</em>, <em class="sig-param">elklhd_list</em>, <em class="sig-param">parameter_list=None</em>, <em class="sig-param">parameter_names=None</em>, <em class="sig-param">likelihood_values=4</em>, <em class="sig-param">colormap='plasma'</em>, <em class="sig-param">one_column=False</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='k'</em>, <em class="sig-param">use_global_likelihoods=False</em>, <em class="sig-param">add_likelihood_trace=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_annotated_parameter_trace_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_annotated_parameter_trace_list" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_annotated_parameter_trace_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">echain_list</span></em>, <em class="sig-param"><span class="n">elklhd_list</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">likelihood_values</span><span class="o">=</span><span class="default_value">4</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'plasma'</span></em>, <em class="sig-param"><span class="n">one_column</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">step_norm</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">grid</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">means</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mean_color</span><span class="o">=</span><span class="default_value">'k'</span></em>, <em class="sig-param"><span class="n">use_global_likelihoods</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">add_likelihood_trace</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_annotated_parameter_trace_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_annotated_parameter_trace_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots traces of a subset of parameters for a list of Themis-style ensemble chains
 that are presumably temporally related in some fashion. Points are color-coded by
 likelihood, which provides a better visualizations of where the high-probability
@@ -499,9 +499,9 @@ regions are.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.diagnostic_plots.plot_deo_lambda">
-<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_deo_lambda</code><span class="sig-paren">(</span><em class="sig-param">annealing_summary_data</em>, <em class="sig-param">annealing_data</em>, <em class="sig-param">colormap='b'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_deo_lambda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_deo_lambda" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_deo_lambda</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">annealing_summary_data</span></em>, <em class="sig-param"><span class="n">annealing_data</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'b'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_deo_lambda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_deo_lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the rejection rate evolution with round for DEO tempered samplers in Themis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -520,9 +520,9 @@ regions are.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.diagnostic_plots.plot_deo_rejection_rate">
-<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_deo_rejection_rate</code><span class="sig-paren">(</span><em class="sig-param">annealing_summary_data</em>, <em class="sig-param">color='b'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_deo_rejection_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_deo_rejection_rate" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_deo_rejection_rate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">annealing_summary_data</span></em>, <em class="sig-param"><span class="n">color</span><span class="o">=</span><span class="default_value">'b'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_deo_rejection_rate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_deo_rejection_rate" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the rejection rate evolution with round for DEO tempered samplers in Themis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -540,9 +540,9 @@ regions are.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.diagnostic_plots.plot_deo_tempering_level_evolution">
-<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_deo_tempering_level_evolution</code><span class="sig-paren">(</span><em class="sig-param">annealing_data</em>, <em class="sig-param">colormap='plasma'</em>, <em class="sig-param">colormodel='tempering_level'</em>, <em class="sig-param">alpha=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_deo_tempering_level_evolution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_deo_tempering_level_evolution" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_deo_tempering_level_evolution</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">annealing_data</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'plasma'</span></em>, <em class="sig-param"><span class="n">colormodel</span><span class="o">=</span><span class="default_value">'tempering_level'</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_deo_tempering_level_evolution"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_deo_tempering_level_evolution" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the tempering level with evolution with round for DEO tempered samplers in Themis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -562,9 +562,9 @@ regions are.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.diagnostic_plots.plot_likelihood_trace">
-<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_likelihood_trace</code><span class="sig-paren">(</span><em class="sig-param">elklhd</em>, <em class="sig-param">colormap='plasma'</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='k'</em>, <em class="sig-param">alpha=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_likelihood_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_likelihood_trace" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_likelihood_trace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">elklhd</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'plasma'</span></em>, <em class="sig-param"><span class="n">step_norm</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">grid</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">means</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mean_color</span><span class="o">=</span><span class="default_value">'k'</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_likelihood_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_likelihood_trace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots to the current Axes object traces for a Themis-style ensemble likelihood
 objects. Optionally overplots the means and standard deviations of the likelihood.</p>
 <dl class="field-list simple">
@@ -588,9 +588,9 @@ objects. Optionally overplots the means and standard deviations of the likelihoo
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.diagnostic_plots.plot_likelihood_trace_list">
-<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_likelihood_trace_list</code><span class="sig-paren">(</span><em class="sig-param">elklhd_list</em>, <em class="sig-param">colormap='plasma'</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='k'</em>, <em class="sig-param">alpha=0.5</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_likelihood_trace_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_likelihood_trace_list" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_likelihood_trace_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">elklhd_list</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'plasma'</span></em>, <em class="sig-param"><span class="n">step_norm</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">grid</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">means</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mean_color</span><span class="o">=</span><span class="default_value">'k'</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_likelihood_trace_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_likelihood_trace_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots to the current Axes object traces for a list of Themis-style ensemble
 likelihood objects. Optionally overplots the means and standard deviations
 of the likelihood.</p>
@@ -615,9 +615,9 @@ of the likelihood.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.diagnostic_plots.plot_parameter_trace">
-<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_parameter_trace</code><span class="sig-paren">(</span><em class="sig-param">echain</em>, <em class="sig-param">parameter_list=None</em>, <em class="sig-param">parameter_names=None</em>, <em class="sig-param">sample_color='b'</em>, <em class="sig-param">one_column=False</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='r'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_parameter_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_parameter_trace" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_parameter_trace</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">echain</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sample_color</span><span class="o">=</span><span class="default_value">'b'</span></em>, <em class="sig-param"><span class="n">one_column</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">step_norm</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">grid</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">means</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mean_color</span><span class="o">=</span><span class="default_value">'r'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_parameter_trace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_parameter_trace" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates a set of trace plots for a Themis-style ensemble chain object.
 Optionally overplots the means and standard deviations for each parameter.</p>
 <dl class="field-list simple">
@@ -643,9 +643,9 @@ Optionally overplots the means and standard deviations for each parameter.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.diagnostic_plots.plot_parameter_trace_list">
-<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_parameter_trace_list</code><span class="sig-paren">(</span><em class="sig-param">echain_list</em>, <em class="sig-param">parameter_list=None</em>, <em class="sig-param">parameter_names=None</em>, <em class="sig-param">sample_color='b'</em>, <em class="sig-param">one_column=False</em>, <em class="sig-param">step_norm=1000</em>, <em class="sig-param">grid=True</em>, <em class="sig-param">means=False</em>, <em class="sig-param">mean_color='r'</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_parameter_trace_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_parameter_trace_list" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_parameter_trace_list</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">echain_list</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sample_color</span><span class="o">=</span><span class="default_value">'b'</span></em>, <em class="sig-param"><span class="n">one_column</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">step_norm</span><span class="o">=</span><span class="default_value">1000</span></em>, <em class="sig-param"><span class="n">grid</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">means</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">mean_color</span><span class="o">=</span><span class="default_value">'r'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_parameter_trace_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_parameter_trace_list" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots to the current Axes object traces of a subset of parameters for a list of
 Themis-style ensemble chains that are presumably temporally related in some fashion.</p>
 <dl class="field-list simple">
@@ -671,9 +671,9 @@ Themis-style ensemble chains that are presumably temporally related in some fash
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="diag.diagnostic_plots.plot_rank_hist">
-<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_rank_hist</code><span class="sig-paren">(</span><em class="sig-param">chains</em>, <em class="sig-param">bins=30</em>, <em class="sig-param">names=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_rank_hist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_rank_hist" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_rank_hist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chains</span></em>, <em class="sig-param"><span class="n">bins</span><span class="o">=</span><span class="default_value">30</span></em>, <em class="sig-param"><span class="n">names</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_rank_hist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_rank_hist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the rank plots, where the rank is taken over all the runs.
 The histograms should be roughly uniform. Any structure in them signals
 that the chains aren’t converged or mixing well, i.e. your Monte Carlo estimates
@@ -739,7 +739,7 @@ will be biased.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.121.g0535eba',
+            VERSION:'0+untagged.126.gc28607b.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'

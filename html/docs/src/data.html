@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Data &mdash; ThemisPy 0+untagged.121.g0535eba documentation</title>
+  <title>Data &mdash; ThemisPy 0+untagged.126.gc28607b.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.121.g0535eba documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.126.gc28607b.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Diag" href="diag.html"/>
         <link rel="prev" title="Chain" href="chain.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.121.g0535eba
+                0+untagged.126.gc28607b.dirty
               </div>
             
           
@@ -163,9 +163,9 @@
             
   <span class="target" id="module-data"></span><div class="section" id="data">
 <span id="id1"></span><h1>Data<a class="headerlink" href="#data" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-data.data"></span><dl class="function">
+<span class="target" id="module-data.data"></span><dl class="py function">
 <dt id="data.data.closure_phase_covariance_ordering">
-<code class="sig-prename descclassname">data.data.</code><code class="sig-name descname">closure_phase_covariance_ordering</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">snrcut=0</em>, <em class="sig-param">verbosity=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/data/data.html#closure_phase_covariance_ordering"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.data.closure_phase_covariance_ordering" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data.data.</code><code class="sig-name descname">closure_phase_covariance_ordering</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs</span></em>, <em class="sig-param"><span class="n">snrcut</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/data/data.html#closure_phase_covariance_ordering"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.data.closure_phase_covariance_ordering" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generates and returns a set of closure phases with the smallest off-diagonal
 covariances possible.  For EHT data this is possible due to the presence of
 a uniquely sensitive anchor station, ALMA, and may not be generally possible
@@ -177,7 +177,7 @@ for other data sets.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obs</strong> (<a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><em>ehtim.obsdata.Obsdata</em></a>) – An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).</p></li>
+<li><p><strong>obs</strong> (<a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><em>ehtim.obsdata.Obsdata</em></a>) – An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).</p></li>
 <li><p><strong>snrcut</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – A possible signal-to-noise ratio below which to reject points. Default: 0.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity level. 0 prints only warnings and errors.  1 prints information about each observation period.</p></li>
 </ul>
@@ -191,9 +191,9 @@ for other data sets.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="data.data.reconstruct_field_rotation_angles">
-<code class="sig-prename descclassname">data.data.</code><code class="sig-name descname">reconstruct_field_rotation_angles</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">isER5=False</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/data/data.html#reconstruct_field_rotation_angles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.data.reconstruct_field_rotation_angles" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">data.data.</code><code class="sig-name descname">reconstruct_field_rotation_angles</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs</span></em>, <em class="sig-param"><span class="n">isER5</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/data/data.html#reconstruct_field_rotation_angles"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.data.reconstruct_field_rotation_angles" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reconstructs the field rotation angle for polarization data from sub-quantities.  Also
 implements, upon request, corrections that are appropriate for ER5 data.  Should be
 deprecated for data generated following ER5 (e.g., upon the release of ER6 and for
@@ -205,7 +205,7 @@ subsequent intervening releases).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obs</strong> (<a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><em>ehtim.obsdata.Obsdata</em></a>) – An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).</p></li>
+<li><p><strong>obs</strong> (<a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><em>ehtim.obsdata.Obsdata</em></a>) – An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).</p></li>
 <li><p><strong>isER5</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag to indicate that this is an ER5 file with polconvert errors that modify the field rotation angles. Default: False.</p></li>
 </ul>
 </dd>
@@ -218,21 +218,21 @@ subsequent intervening releases).</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="data.data.write_amplitudes">
-<code class="sig-prename descclassname">data.data.</code><code class="sig-name descname">write_amplitudes</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">outname</em>, <em class="sig-param">debias_amplitudes=True</em>, <em class="sig-param">snrcut=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/data/data.html#write_amplitudes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.data.write_amplitudes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes visibility amplitudes in Themis format given an <a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> object.</p>
+<code class="sig-prename descclassname">data.data.</code><code class="sig-name descname">write_amplitudes</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs</span></em>, <em class="sig-param"><span class="n">outname</span></em>, <em class="sig-param"><span class="n">debias_amplitudes</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">snrcut</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/data/data.html#write_amplitudes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.data.write_amplitudes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes visibility amplitudes in Themis format given an <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> object.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <ul class="simple">
-<li><p>The <a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> must be read in with a polrep=’stokes’.  If this is not the case, raises a ValueError.  DO NOT SWITCH THE POLREP AS THIS INFLATES THE ERRORS.</p></li>
+<li><p>The <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> must be read in with a polrep=’stokes’.  If this is not the case, raises a ValueError.  DO NOT SWITCH THE POLREP AS THIS INFLATES THE ERRORS.</p></li>
 <li><p>This makes extensive use of ehtim and astropy and will not be available if either is not installed.  Raises a NotImplementedError if they are is unavailable.</p></li>
 </ul>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obs</strong> (<a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><em>ehtim.obsdata.Obsdata</em></a>) – An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).</p></li>
+<li><p><strong>obs</strong> (<a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><em>ehtim.obsdata.Obsdata</em></a>) – An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).</p></li>
 <li><p><strong>outname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the output file to which to write data.</p></li>
 <li><p><strong>debias_amplitudes</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag that sets amplitudes should be debiased in the normal way: <span class="math notranslate nohighlight">\(V_{db}=\sqrt{V^2-\sigma^2}\)</span>. Default: True.</p></li>
 <li><p><strong>snrcut</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – A possible signal-to-noise ratio below which to reject points. Default: 0.</p></li>
@@ -244,21 +244,21 @@ subsequent intervening releases).</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="data.data.write_closure_phases">
-<code class="sig-prename descclassname">data.data.</code><code class="sig-name descname">write_closure_phases</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">outname</em>, <em class="sig-param">snrcut=0</em>, <em class="sig-param">keep_trivial_triangles=False</em>, <em class="sig-param">choose_optimal_covariance_set=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/data/data.html#write_closure_phases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.data.write_closure_phases" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes closure phases in Themis format given an <a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> object.</p>
+<code class="sig-prename descclassname">data.data.</code><code class="sig-name descname">write_closure_phases</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs</span></em>, <em class="sig-param"><span class="n">outname</span></em>, <em class="sig-param"><span class="n">snrcut</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">keep_trivial_triangles</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">choose_optimal_covariance_set</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/data/data.html#write_closure_phases"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.data.write_closure_phases" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes closure phases in Themis format given an <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> object.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <ul class="simple">
-<li><p>The <a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> must be read in with a polrep=’stokes’.  If this is not the case, raises a ValueError.  DO NOT SWITCH THE POLREP AS THIS INFLATES THE ERRORS.</p></li>
+<li><p>The <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> must be read in with a polrep=’stokes’.  If this is not the case, raises a ValueError.  DO NOT SWITCH THE POLREP AS THIS INFLATES THE ERRORS.</p></li>
 <li><p>This makes extensive use of ehtim and astropy and will not be available if either is not installed.  Raises a NotImplementedError if they are is unavailable.</p></li>
 </ul>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obs</strong> (<a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><em>ehtim.obsdata.Obsdata</em></a>) – An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).</p></li>
+<li><p><strong>obs</strong> (<a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><em>ehtim.obsdata.Obsdata</em></a>) – An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).</p></li>
 <li><p><strong>outname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the output file to which to write data.</p></li>
 <li><p><strong>snrcut</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – A possible signal-to-noise ratio below which to reject points. Default: 0.</p></li>
 <li><p><strong>keep_trivial_triangles</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True, closure phases on trivial triangles will be included. Trivial triangles are defined to be the those with a baselines shorter than 100 Mlambda.  Default: False.</p></li>
@@ -271,21 +271,21 @@ subsequent intervening releases).</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="data.data.write_crosshand_visibilities">
-<code class="sig-prename descclassname">data.data.</code><code class="sig-name descname">write_crosshand_visibilities</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">outname</em>, <em class="sig-param">isER5=False</em>, <em class="sig-param">snrcut=0</em>, <em class="sig-param">keep_partial_hands=True</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/data/data.html#write_crosshand_visibilities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.data.write_crosshand_visibilities" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes complex crosshand RR,LL,RL,LR visibilities in Themis format given an <a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> object.</p>
+<code class="sig-prename descclassname">data.data.</code><code class="sig-name descname">write_crosshand_visibilities</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs</span></em>, <em class="sig-param"><span class="n">outname</span></em>, <em class="sig-param"><span class="n">isER5</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">snrcut</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">keep_partial_hands</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/data/data.html#write_crosshand_visibilities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.data.write_crosshand_visibilities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes complex crosshand RR,LL,RL,LR visibilities in Themis format given an <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> object.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <ul class="simple">
-<li><p>The <a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> must be read in with a polrep=’circ’.  If this is not the case, raises a ValueError.  DO NOT SWITCH THE POLREP AS THIS INFLATES THE ERRORS.</p></li>
+<li><p>The <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> must be read in with a polrep=’circ’.  If this is not the case, raises a ValueError.  DO NOT SWITCH THE POLREP AS THIS INFLATES THE ERRORS.</p></li>
 <li><p>This makes extensive use of ehtim and astropy and will not be available if either is not installed.  Raises a NotImplementedError if they are is unavailable.</p></li>
 </ul>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obs</strong> (<a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><em>ehtim.obsdata.Obsdata</em></a>) – An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).</p></li>
+<li><p><strong>obs</strong> (<a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><em>ehtim.obsdata.Obsdata</em></a>) – An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).</p></li>
 <li><p><strong>outname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the output file to which to write data.</p></li>
 <li><p><strong>isER5</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag to indicate that this is an ER5 file with polconvert errors that modify the field rotation angles. Default: False.</p></li>
 <li><p><strong>snrcut</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – A possible signal-to-noise ratio below which to reject points. Default: 0.</p></li>
@@ -298,10 +298,10 @@ subsequent intervening releases).</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="data.data.write_uvfits">
-<code class="sig-prename descclassname">data.data.</code><code class="sig-name descname">write_uvfits</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">outname</em>, <em class="sig-param">gains_data=None</em>, <em class="sig-param">dterm_data=None</em>, <em class="sig-param">verbosity=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/data/data.html#write_uvfits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.data.write_uvfits" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes uvfits file given an <a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> object.  Potentially applies gains and/or dterms from a Themis analysis</p>
+<code class="sig-prename descclassname">data.data.</code><code class="sig-name descname">write_uvfits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs</span></em>, <em class="sig-param"><span class="n">outname</span></em>, <em class="sig-param"><span class="n">gains_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">dterm_data</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/data/data.html#write_uvfits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.data.write_uvfits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes uvfits file given an <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> object.  Potentially applies gains and/or dterms from a Themis analysis</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <ul class="simple">
@@ -312,7 +312,7 @@ subsequent intervening releases).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obs</strong> (<a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><em>ehtim.obsdata.Obsdata</em></a>) – An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).</p></li>
+<li><p><strong>obs</strong> (<a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><em>ehtim.obsdata.Obsdata</em></a>) – An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).</p></li>
 <li><p><strong>outname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the output file to which to write data.</p></li>
 <li><p><strong>gains</strong> (<em>dictionary</em>) – Station gains organized as a dictionary indexed by the station codes in <code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.tarr</span></code>.</p></li>
 <li><p><strong>dterms</strong> (<em>dictionary</em>) – Station D terms organized as a dictionary indexed by the station codes in <code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.tarr</span></code>.</p></li>
@@ -325,21 +325,21 @@ subsequent intervening releases).</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="data.data.write_visibilities">
-<code class="sig-prename descclassname">data.data.</code><code class="sig-name descname">write_visibilities</code><span class="sig-paren">(</span><em class="sig-param">obs</em>, <em class="sig-param">outname</em>, <em class="sig-param">snrcut=0</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/data/data.html#write_visibilities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.data.write_visibilities" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes complex visibilities (Stokes I) in Themis format given an <a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> object.</p>
+<code class="sig-prename descclassname">data.data.</code><code class="sig-name descname">write_visibilities</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obs</span></em>, <em class="sig-param"><span class="n">outname</span></em>, <em class="sig-param"><span class="n">snrcut</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/data/data.html#write_visibilities"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.data.write_visibilities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes complex visibilities (Stokes I) in Themis format given an <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> object.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <ul class="simple">
-<li><p>The <a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> must be read in with a polrep=’stokes’.  If this is not the case, raises a ValueError.  DO NOT SWITCH THE POLREP AS THIS INFLATES THE ERRORS.</p></li>
+<li><p>The <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.Obsdata</span></code></a> must be read in with a polrep=’stokes’.  If this is not the case, raises a ValueError.  DO NOT SWITCH THE POLREP AS THIS INFLATES THE ERRORS.</p></li>
 <li><p>This makes extensive use of ehtim and astropy and will not be available if either is not installed.  Raises a NotImplementedError if they are is unavailable.</p></li>
 </ul>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>obs</strong> (<a class="reference external" href="https://achael.github.io/eht-imaging/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><em>ehtim.obsdata.Obsdata</em></a>) – An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).</p></li>
+<li><p><strong>obs</strong> (<a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/obsdata.html#ehtim.obsdata.Obsdata" title="(in ehtim v0.1)"><em>ehtim.obsdata.Obsdata</em></a>) – An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).</p></li>
 <li><p><strong>outname</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the output file to which to write data.</p></li>
 <li><p><strong>snrcut</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – A possible signal-to-noise ratio below which to reject points. Default: 0.</p></li>
 </ul>
@@ -393,7 +393,7 @@ subsequent intervening releases).</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.121.g0535eba',
+            VERSION:'0+untagged.126.gc28607b.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'

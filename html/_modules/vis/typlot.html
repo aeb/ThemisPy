@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.typlot &mdash; ThemisPy 0+untagged.121.g0535eba documentation</title>
+  <title>vis.typlot &mdash; ThemisPy 0+untagged.126.gc28607b.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.121.g0535eba documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.126.gc28607b.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.121.g0535eba
+                0+untagged.126.gc28607b.dirty
               </div>
             
           
@@ -255,7 +255,7 @@
 <span class="sd">    Creates a 1d joint posterior plot using :func:`scipy.stats.gaussian_kde` function.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">      x (numpy.array): List of data positions.</span>
+<span class="sd">      x (numpy.ndarray): List of data positions.</span>
 <span class="sd">      limits (list): Limits in the form [xmin,xmax].  If set to None, will use the minimum and maximum values of x, expanded by 10% on each side.  Default: None.</span>
 <span class="sd">      color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`.</span>
 <span class="sd">      alpha (float): Value of alpha for the individual likelihood traces. Default: 1.0.</span>
@@ -301,8 +301,8 @@
 <span class="sd">    Creates a 2d joint posterior plot using :func:`scipy.stats.gaussian_kde` function and :func:`matplotlib.pyplot.contourf`.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">      x (numpy.array): List of data positions in the 1st axis (horizontal).</span>
-<span class="sd">      y (numpy.array): List of data positions in the 2nd axis (vertical).</span>
+<span class="sd">      x (numpy.ndarray): List of data positions in the 1st axis (horizontal).</span>
+<span class="sd">      y (numpy.ndarray): List of data positions in the 2nd axis (vertical).</span>
 <span class="sd">      plevels (list): List of cummulative probability levels at which to draw contours. If set to None, will set to :math:`1\\sigma, 2\\sigma, 3\\sigma`. Default: None.</span>
 <span class="sd">      limits (list): Limits in the form [[xmin,xmax],[ymin,ymax]].  If set to None, will use the minimum and maximum values of, expanded by 10% on each side.  Default: None.</span>
 <span class="sd">      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: &#39;Purples&#39;.</span>
@@ -374,7 +374,7 @@
 <span class="sd">      factor (float): Factor by which to expand the limit on both sides. Default: 1.5.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">      (numpy.array): 1D array of [min,max] limits.</span>
+<span class="sd">      (numpy.ndarray): 1D array of [min,max] limits.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="n">dm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
@@ -656,7 +656,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.121.g0535eba',
+            VERSION:'0+untagged.126.gc28607b.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'

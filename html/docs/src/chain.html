@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Chain &mdash; ThemisPy 0+untagged.121.g0535eba documentation</title>
+  <title>Chain &mdash; ThemisPy 0+untagged.126.gc28607b.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.121.g0535eba documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.126.gc28607b.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Data" href="data.html"/>
         <link rel="prev" title="User’s Guide" href="userguide.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.121.g0535eba
+                0+untagged.126.gc28607b.dirty
               </div>
             
           
@@ -163,9 +163,9 @@
             
   <span class="target" id="module-chain"></span><div class="section" id="chain">
 <span id="id1"></span><h1>Chain<a class="headerlink" href="#chain" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-chain.mcmc_chain"></span><dl class="function">
+<span class="target" id="module-chain.mcmc_chain"></span><dl class="py function">
 <dt id="chain.mcmc_chain.file_length">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">file_length</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">header_string=None</em>, <em class="sig-param">comment_string=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#file_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.file_length" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">file_length</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">header_string</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">comment_string</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#file_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.file_length" title="Permalink to this definition">¶</a></dt>
 <dd><p>Counts the number of lines in a file.  Optionally will remove header lines,
 marked by a prepended character, and comment lines, marked by a possibly
 different prepended character.  These are differentiated by the presumed
@@ -190,9 +190,9 @@ for the header is significantly faster.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="chain.mcmc_chain.join_echains">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">join_echains</code><span class="sig-paren">(</span><em class="sig-param">echains</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#join_echains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.join_echains" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">join_echains</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">echains</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#join_echains"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.join_echains" title="Permalink to this definition">¶</a></dt>
 <dd><p>Join a list of ensemble chains from separate runs. If chains have a different
 number of steps then the largest even common size is used to join them.</p>
 <dl class="field-list simple">
@@ -208,9 +208,9 @@ number of steps then the largest even common size is used to join them.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="chain.mcmc_chain.load_deo_summary">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">load_deo_summary</code><span class="sig-paren">(</span><em class="sig-param">annealing_file='Annealing.dat'</em>, <em class="sig-param">annealing_summary=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#load_deo_summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.load_deo_summary" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">load_deo_summary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">annealing_file</span><span class="o">=</span><span class="default_value">'Annealing.dat'</span></em>, <em class="sig-param"><span class="n">annealing_summary</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#load_deo_summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.load_deo_summary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads the DEO annealing files, which contain information about the tempering ladder
 evolution, optimization, and performance for DEO annealing schemes.</p>
 <dl class="field-list simple">
@@ -229,9 +229,9 @@ evolution, optimization, and performance for DEO annealing schemes.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="chain.mcmc_chain.load_erun">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">load_erun</code><span class="sig-paren">(</span><em class="sig-param">chain_filename</em>, <em class="sig-param">lklhd_filename</em>, <em class="sig-param">stride=1</em>, <em class="sig-param">burn_fraction=0</em>, <em class="sig-param">skip=None</em>, <em class="sig-param">parameter_list=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#load_erun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.load_erun" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">load_erun</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chain_filename</span></em>, <em class="sig-param"><span class="n">lklhd_filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#load_erun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.load_erun" title="Permalink to this definition">¶</a></dt>
 <dd><p>Coherently loads a Themis chain and likelihood pair from an ensemble sampler.
 Optionally, a stride, burn-in fraction, number of <em>ensemble samples</em> to skip,
 or a set of parameters may be provided.  If set, the burn-in fraction is
@@ -256,9 +256,9 @@ computed for the <em>shorter</em> of the two files.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="chain.mcmc_chain.most_likely_erun">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">most_likely_erun</code><span class="sig-paren">(</span><em class="sig-param">chain_filename</em>, <em class="sig-param">lklhd_filename</em>, <em class="sig-param">samples=1</em>, <em class="sig-param">burn_fraction=0</em>, <em class="sig-param">skip=None</em>, <em class="sig-param">parameter_list=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#most_likely_erun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.most_likely_erun" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">most_likely_erun</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chain_filename</span></em>, <em class="sig-param"><span class="n">lklhd_filename</span></em>, <em class="sig-param"><span class="n">samples</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#most_likely_erun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.most_likely_erun" title="Permalink to this definition">¶</a></dt>
 <dd><p>Coherently loads and returns optimal samples from a Themis chain and likelihood pair
 from an ensemble sampler.  Optionally, a burn-in fraction, number of <em>ensemble samples</em>
 to skip, or a set of parameters may be provided.  If set, the burn-in fraction is
@@ -284,9 +284,9 @@ than load_erun and subsequently subsampling for large chains</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="chain.mcmc_chain.parse_parameter_arglist">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">parse_parameter_arglist</code><span class="sig-paren">(</span><em class="sig-param">arg_list</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#parse_parameter_arglist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.parse_parameter_arglist" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">parse_parameter_arglist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">arg_list</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#parse_parameter_arglist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.parse_parameter_arglist" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parses a list of lists of strings containing individual numbers (e.g., 0 1 4),
 comma separated lists (e.g., 0, 2, 5), ranges (e.g., 0-3), or combinations thereof,
 and reduces them to a unique, ordered list of integers.  Such a list of parameter
@@ -305,9 +305,9 @@ values arises naturally from ArgumentParser append, e.g., from
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="chain.mcmc_chain.read_echain">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_echain</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">walkers</em>, <em class="sig-param">stride=1</em>, <em class="sig-param">burn_fraction=0</em>, <em class="sig-param">skip=None</em>, <em class="sig-param">parameter_list=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_echain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_echain" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_echain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">walkers</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_echain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_echain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in a Themis chain file from an ensemble sampler.  The number of walkers
 must be supplied.  Optionally, a stride, burn-in fraction, number of <em>ensemble
 samples</em> to skip, or a set of parameters may be provided.  Returns an IndexError
@@ -332,9 +332,9 @@ if fewer ensemble samples exist in the chain file than skip.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="chain.mcmc_chain.read_elklhd">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_elklhd</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">stride=1</em>, <em class="sig-param">burn_fraction=0</em>, <em class="sig-param">skip=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_elklhd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_elklhd" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_elklhd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_elklhd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_elklhd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in a Themis likelihood file from an ensemble sampler.  Optionally, a
 stride, burn-in fraction, or number of <em>ensemble samples</em> to skip may be set.
 Returns an IndexError if fewer ensemble samples exist in the chain file than skip.</p>
@@ -356,9 +356,9 @@ Returns an IndexError if fewer ensemble samples exist in the chain file than ski
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="chain.mcmc_chain.sample_chain">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">sample_chain</code><span class="sig-paren">(</span><em class="sig-param">chain_filename</em>, <em class="sig-param">samples</em>, <em class="sig-param">burn_fraction=0</em>, <em class="sig-param">skip=None</em>, <em class="sig-param">parameter_list=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#sample_chain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.sample_chain" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">sample_chain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chain_filename</span></em>, <em class="sig-param"><span class="n">samples</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#sample_chain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.sample_chain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Loads and generates samples from a Themis chain a discrete sampler.  Optionally, a
 burn-in fraction, number of <em>samples</em>  to skip, or a set of parameters may be provided.
 Is faster and more memory efficient than load_erun and subsequently subsampling for
@@ -382,9 +382,9 @@ large chains.</p>
 </dl>
 </dd></dl>
 
-<dl class="function">
+<dl class="py function">
 <dt id="chain.mcmc_chain.sample_erun">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">sample_erun</code><span class="sig-paren">(</span><em class="sig-param">chain_filename</em>, <em class="sig-param">lklhd_filename</em>, <em class="sig-param">samples</em>, <em class="sig-param">burn_fraction=0</em>, <em class="sig-param">skip=None</em>, <em class="sig-param">parameter_list=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#sample_erun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.sample_erun" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">sample_erun</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chain_filename</span></em>, <em class="sig-param"><span class="n">lklhd_filename</span></em>, <em class="sig-param"><span class="n">samples</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#sample_erun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.sample_erun" title="Permalink to this definition">¶</a></dt>
 <dd><p>Coherently loads and generates samples from a Themis chain and likelihood pair from
 an ensemble sampler.  Optionally, a burn-in fraction, number of <em>ensemble samples</em>
 to skip, or a set of parameters may be provided.  If set, the burn-in fraction is
@@ -453,7 +453,7 @@ than load_erun and subsequently subsampling for large chains</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.121.g0535eba',
+            VERSION:'0+untagged.126.gc28607b.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             HAS_SOURCE: 'true'
