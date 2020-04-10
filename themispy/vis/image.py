@@ -766,8 +766,8 @@ class Image_adaptive_splined_raster(Image) :
         dx = x-x[0]
         dy = y-y[0]
         
-        uur = np.cos(PA)*uu - np.sin(PA)*vv
-        vvr = np.sin(PA)*uu + np.cos(PA)*vv
+        uur = np.cos(PA)*uu + np.sin(PA)*vv
+        vvr = -np.sin(PA)*uu + np.cos(PA)*vv
 
         tpi = 2.0j*np.pi
         FF = 0.0*uu
