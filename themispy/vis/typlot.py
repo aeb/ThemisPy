@@ -106,7 +106,7 @@ def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-'
     Creates a 1d joint posterior plot using :func:`scipy.stats.gaussian_kde` function.
 
     Args:
-      x (numpy.array): List of data positions.
+      x (numpy.ndarray): List of data positions.
       limits (list): Limits in the form [xmin,xmax].  If set to None, will use the minimum and maximum values of x, expanded by 10% on each side.  Default: None.
       color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`.
       alpha (float): Value of alpha for the individual likelihood traces. Default: 1.0.
@@ -152,8 +152,8 @@ def kde_plot_2d(x, y, plevels=None, limits=None, colormap='Purples', alpha=1.0, 
     Creates a 2d joint posterior plot using :func:`scipy.stats.gaussian_kde` function and :func:`matplotlib.pyplot.contourf`.
 
     Args:
-      x (numpy.array): List of data positions in the 1st axis (horizontal).
-      y (numpy.array): List of data positions in the 2nd axis (vertical).
+      x (numpy.ndarray): List of data positions in the 1st axis (horizontal).
+      y (numpy.ndarray): List of data positions in the 2nd axis (vertical).
       plevels (list): List of cummulative probability levels at which to draw contours. If set to None, will set to :math:`1\\sigma, 2\\sigma, 3\\sigma`. Default: None.
       limits (list): Limits in the form [[xmin,xmax],[ymin,ymax]].  If set to None, will use the minimum and maximum values of, expanded by 10% on each side.  Default: None.
       colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: 'Purples'.
@@ -225,7 +225,7 @@ def _find_limits(data,quantile=0.25,factor=1.5) :
       factor (float): Factor by which to expand the limit on both sides. Default: 1.5.
 
     Returns:
-      (numpy.array): 1D array of [min,max] limits.
+      (numpy.ndarray): 1D array of [min,max] limits.
     """
 
     dm = np.median(data)
