@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.image &mdash; ThemisPy 0+untagged.132.g01cffb0 documentation</title>
+  <title>vis.image &mdash; ThemisPy 0+untagged.132.g01cffb0.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.132.g01cffb0 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.132.g01cffb0.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.132.g01cffb0
+                0+untagged.132.g01cffb0.dirty
               </div>
             
           
@@ -170,8 +170,8 @@
 <div class="viewcode-block" id="model_image"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image">[docs]</a><span class="k">class</span> <span class="nc">model_image</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for Themis image models.</span>
-<span class="sd">    This base class is intended to mirror the Themis::model_image base class, providing </span>
-<span class="sd">    explicit visualizations of the output of Themis::model_image-derived model analyses.</span>
+<span class="sd">    This base class is intended to mirror the :cpp:class:`Themis::model_image` base class, providing </span>
+<span class="sd">    explicit visualizations of the output of :cpp:class:`Themis::model_image`-derived model analyses.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
 <span class="sd">      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</span>
@@ -189,9 +189,9 @@
         
 <div class="viewcode-block" id="model_image.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parameters</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sets the model parameter list.  Mirrors similar a similar function within the </span>
-<span class="sd">        Themis::model_image class.  Effectively simply copies the parameters into the </span>
-<span class="sd">        local list with some additional run-time checking.</span>
+<span class="sd">        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image::generate_model`, </span>
+<span class="sd">        a similar a similar function within the :cpp:class:`Themis::model_image` class.  Effectively </span>
+<span class="sd">        simply copies the parameters into the local list with some additional run-time checking.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          parameters (list): Parameter list.</span>
@@ -257,7 +257,7 @@
     
 <div class="viewcode-block" id="model_image_symmetric_gaussian"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_symmetric_gaussian">[docs]</a><span class="k">class</span> <span class="nc">model_image_symmetric_gaussian</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Symmetric gaussian image class that is a mirror of Themis::model_image_symmetric_gaussian.</span>
+<span class="sd">    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_symmetric_gaussian`.</span>
 <span class="sd">    Has parameters:</span>
 
 <span class="sd">    * parameters[0] ... Total intensity :math:`I_0` (Jy)</span>
@@ -300,7 +300,7 @@
     
 <div class="viewcode-block" id="model_image_asymmetric_gaussian"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_asymmetric_gaussian">[docs]</a><span class="k">class</span> <span class="nc">model_image_asymmetric_gaussian</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Asymmetric gaussian image class that is a mirror of Themis::model_image_asymmetric_gaussian.</span>
+<span class="sd">    Asymmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_asymmetric_gaussian`.</span>
 <span class="sd">    Has parameters:</span>
 
 <span class="sd">    * parameters[0] ... Total intensity :math:`I_0` (Jy)</span>
@@ -365,7 +365,7 @@
 
 <div class="viewcode-block" id="model_image_crescent"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_crescent">[docs]</a><span class="k">class</span> <span class="nc">model_image_crescent</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Symmetric gaussian image class that is a mirror of Themis::model_image_crescent.  </span>
+<span class="sd">    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_crescent`.</span>
 <span class="sd">    Has parameters:</span>
 
 <span class="sd">    * parameters[0] ... Total intensity :math:`I_0` (Jy)</span>
@@ -422,7 +422,7 @@
 
 <div class="viewcode-block" id="model_image_xsring"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_xsring">[docs]</a><span class="k">class</span> <span class="nc">model_image_xsring</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Symmetric gaussian image class that is a mirror of Themis::model_image_xsring.</span>
+<span class="sd">    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_xsring`.</span>
 <span class="sd">    Has parameters:</span>
 
 <span class="sd">    * parameters[0] ... Total intensity :math:`I_0` (Jy)</span>
@@ -493,7 +493,7 @@
 
 <div class="viewcode-block" id="model_image_xsringauss"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_xsringauss">[docs]</a><span class="k">class</span> <span class="nc">model_image_xsringauss</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Symmetric gaussian image class that is a mirror of Themis::model_image_xsring.</span>
+<span class="sd">    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_xsringauss`.</span>
 <span class="sd">    Has parameters:</span>
 
 <span class="sd">    * parameters[0] ... Total intensity :math:`I_0` (Jy)</span>
@@ -704,7 +704,7 @@
 
 <div class="viewcode-block" id="model_image_splined_raster"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_splined_raster">[docs]</a><span class="k">class</span> <span class="nc">model_image_splined_raster</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Splined raster image class that is a mirror of Themis::model_image_splined_raster.</span>
+<span class="sd">    Splined raster image class that is a mirror of :cpp:class:`Themis::model_image_splined_raster`.</span>
 <span class="sd">    Has parameters:</span>
 
 <span class="sd">    * parameters[0] ........ Logarithm of the brightness at control point 0,0 (Jy/sr)</span>
@@ -798,7 +798,7 @@
     
 <div class="viewcode-block" id="model_image_adaptive_splined_raster"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_adaptive_splined_raster">[docs]</a><span class="k">class</span> <span class="nc">model_image_adaptive_splined_raster</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Adaptive splined raster image class that is a mirror of Themis::model_image_adaptive_splined_raster.</span>
+<span class="sd">    Adaptive splined raster image class that is a mirror of :cpp:class:`Themis::model_image_adaptive_splined_raster`.</span>
 <span class="sd">    Has parameters:</span>
 
 <span class="sd">    * parameters[0] ........ Logarithm of the brightness at control point 0,0 (Jy/sr)</span>
@@ -892,9 +892,9 @@
 
 
 
-<div class="viewcode-block" id="model_image_smoothed"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_smoothed">[docs]</a><span class="k">class</span> <span class="nc">model_image_smoothed</span><span class="p">(</span><span class="n">model_image</span><span class="p">):</span>
+<div class="viewcode-block" id="model_image_smooth"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_smooth">[docs]</a><span class="k">class</span> <span class="nc">model_image_smooth</span><span class="p">(</span><span class="n">model_image</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Smoothed image class that is a mirror of Themis::model_image_smooth. Generates a smoothed </span>
+<span class="sd">    Smoothed image class that is a mirror of :cpp:class:`Themis::model_image_smooth`. Generates a smoothed </span>
 <span class="sd">    image from an existing image using an asymmetric Gaussian smoothing kernel.</span>
 <span class="sd">    Has parameters:</span>
 
@@ -923,10 +923,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span>
 
         
-<div class="viewcode-block" id="model_image_smoothed.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_smoothed.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parameters</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="model_image_smooth.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_smooth.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parameters</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sets the model parameter list.  Mirrors similar a similar function within the Themis</span>
-<span class="sd">        model_image_smooth class.</span>
+<span class="sd">        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_smooth::generate_model`, </span>
+<span class="sd">        a similar a similar function within the :cpp:class:`Themis::model_image_smooth` class.  Effectively </span>
+<span class="sd">        simply copies the parameters into the local list with some additional run-time checking.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          parameters (list): Parameter list.</span>
@@ -942,7 +943,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">parameters</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span></div>
 
         
-<div class="viewcode-block" id="model_image_smoothed.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_smoothed.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="model_image_smooth.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_smooth.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.</span>
 
@@ -989,7 +990,7 @@
     
 <div class="viewcode-block" id="model_image_sum"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_sum">[docs]</a><span class="k">class</span> <span class="nc">model_image_sum</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Summed image class that is a mirror of Themis::model_image_sum. Generates images by summing </span>
+<span class="sd">    Summed image class that is a mirror of :cpp:class:`Themis::model_image_sum`. Generates images by summing </span>
 <span class="sd">    other images supplemented with some offset. The parameters list is expanded by 2 for each </span>
 <span class="sd">    image, corresponding to the absolute positions. These may be specified either in Cartesian </span>
 <span class="sd">    or polar coordinates; this selection must be made at construction and applies uniformly to </span>
@@ -1049,8 +1050,9 @@
         
 <div class="viewcode-block" id="model_image_sum.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_sum.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parameters</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sets the combined model parameter list.  Mirrors similar a similar function within the Themis</span>
-<span class="sd">        model_image_sum class.  Effectively simply copies the parameters into the local list, transforms</span>
+<span class="sd">        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_sum::generate_model`, </span>
+<span class="sd">        a similar a similar function within the :cpp:class:`Themis::model_image_sum` class.  </span>
+<span class="sd">        Effectively simply copies the parameters into the local list, transforms</span>
 <span class="sd">        and copies the shift vector (x0,y0) for each model_image object, and performs some run-time checking.</span>
 
 <span class="sd">        Args:</span>
@@ -1143,7 +1145,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.132.g01cffb0',
+            VERSION:'0+untagged.132.g01cffb0.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
