@@ -123,7 +123,7 @@ if __name__ == "__main__" :
         gain_plots_list = gain_plots_list.replace('p','')
         ia += 1
 
-    if (not gain_plots_list is '') :
+    if (gain_plots_list!='') :
         print("ERROR: Unrecognized gain plot requested: %s"%(gain_plots_list))
         quit()
 

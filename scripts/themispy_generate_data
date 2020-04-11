@@ -295,7 +295,7 @@ if __name__ == "__main__" :
             data_type_list = data_type_list.replace('p','')
 
 
-        if (not data_type_list is '') :
+        if (data_type_list!='') :
             print("ERROR: Unrecognized data types requested: %s"%(data_type_list))
             quit()
 

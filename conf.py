@@ -92,8 +92,8 @@ except ModuleNotFoundError :
     print("WARNING: Could not import rtcat_sphix_theme.  Will used default.")
 
 
-#html_theme = html_theme_default
-#html_theme_path = []
+html_theme = html_theme_default
+html_theme_path = []
 #print("WARNING: Could not import rtcat_sphix_theme.  Will used default.")
     
 
