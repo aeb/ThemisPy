@@ -89,5 +89,7 @@ intersphinx_mapping = {'python': ('https://docs.python.org', None),
                        'numpy': ('https://docs.scipy.org/doc/numpy/', None),
                        'scipy': ('https://docs.scipy.org/doc/scipy/reference/', None),
                        'matplotlib': ('https://matplotlib.org/', None),
-                       'ehtim': ('https://achael.github.io/eht-imaging/', None)
+                       'ehtim': ('https://achael.github.io/eht-imaging/', None),
+                       'Themis': ('https://perimeterinstitute.github.io/Themis/html/', None)
+#                       'Themis': ('/Users/abroderick/Research/Themis/Themis/docs/html',None)
                    }
