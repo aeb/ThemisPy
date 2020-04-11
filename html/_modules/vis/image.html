@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.image &mdash; ThemisPy 0+untagged.127.g8b9c4fb.dirty documentation</title>
+  <title>vis.image &mdash; ThemisPy 0+untagged.132.g01cffb0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.127.g8b9c4fb.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.132.g01cffb0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.127.g8b9c4fb.dirty
+                0+untagged.132.g01cffb0
               </div>
             
           
@@ -166,10 +166,11 @@
 <span class="n">uas2rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="p">(</span><span class="mf">180.0</span> <span class="o">*</span> <span class="mi">3600</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">)</span>
 
 
+
 <div class="viewcode-block" id="model_image"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image">[docs]</a><span class="k">class</span> <span class="nc">model_image</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Base class for Themis image models.</span>
-<span class="sd">    This base class is intended to mirror the model_image base class, providing </span>
+<span class="sd">    This base class is intended to mirror the Themis::model_image base class, providing </span>
 <span class="sd">    explicit visualizations of the output of Themis::model_image-derived model analyses.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
@@ -1067,10 +1068,10 @@
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">image</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_list</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">image</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_coordinates</span> <span class="ow">is</span> <span class="s1">&#39;Cartesian&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_coordinates</span><span class="o">==</span><span class="s1">&#39;Cartesian&#39;</span><span class="p">)</span> <span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">]</span> <span class="o">*</span> <span class="n">rad2uas</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">rad2uas</span>
-            <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_coordinates</span> <span class="ow">is</span> <span class="s1">&#39;polar&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_coordinates</span><span class="o">==</span><span class="s1">&#39;polar&#39;</span><span class="p">)</span> <span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">rad2uas</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">rad2uas</span>
                 
@@ -1142,9 +1143,10 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.127.g8b9c4fb.dirty',
+            VERSION:'0+untagged.132.g01cffb0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
+            LINK_SUFFIX:'.html', 
             HAS_SOURCE: 'true'
         };
     </script>

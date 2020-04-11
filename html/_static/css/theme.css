@@ -4189,6 +4189,10 @@ div[class^='highlight'] pre {
     display: none;
   }
 }
+body {
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Microsoft Yahei", "WenQuanYi Micro Hei", Arial, Verdana, sans-serifsans-serif;
+}
+
 em {
   font-style: normal;
 }
@@ -4263,7 +4267,6 @@ a.btn.btn-neutral:hover {
 }
 .wy-menu-vertical header, .wy-menu-vertical p.caption {
   height: 32px;
-  display: inline-block;
   line-height: 32px;
   padding: 0 1.618em;
   margin-bottom: 0;
@@ -4422,7 +4425,6 @@ a.btn.btn-neutral:hover {
   display: inline-block;
   line-height: 18px;
   padding: 0.4045em 1.618em;
-  display: block;
   position: relative;
   font-size: 90%;
   color: #b3b3b3;
@@ -4611,6 +4613,7 @@ a.btn.btn-neutral:hover {
   margin-left: 300px;
   background: #fcfcfc;
   min-height: 100%;
+  font-size: 14px;
 }
 
 .wy-nav-content {
@@ -4618,6 +4621,7 @@ a.btn.btn-neutral:hover {
   height: 100%;
   min-height: 100vh;
   margin: auto;
+  font-size: 14px;
 }
 
 .wy-body-mask {
@@ -4639,7 +4643,7 @@ footer p {
   margin-bottom: 12px;
 }
 footer span.commit code, footer span.commit .rst-content tt, .rst-content footer span.commit tt {
-  padding: 0px;
+  padding: 0;
   font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
   font-size: 1em;
   background: none;
@@ -4748,6 +4752,13 @@ footer span.commit code, footer span.commit .rst-content tt, .rst-content footer
     margin-left: 0;
   }
 }
+.rst-content .document h3 {
+  margin-left: 15px;
+}
+.rst-content .document p {
+  margin: 0 15px 1px;
+}
+
 .rst-versions {
   position: fixed;
   bottom: 0;

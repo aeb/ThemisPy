@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>diag.diagnostic_plots &mdash; ThemisPy 0+untagged.127.g8b9c4fb.dirty documentation</title>
+  <title>diag.diagnostic_plots &mdash; ThemisPy 0+untagged.132.g01cffb0 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.127.g8b9c4fb.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.132.g01cffb0 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.127.g8b9c4fb.dirty
+                0+untagged.132.g01cffb0
               </div>
             
           
@@ -843,7 +843,7 @@
     <span class="c1"># Rename components of the annealing data</span>
     <span class="n">beta</span> <span class="o">=</span> <span class="n">annealing_data</span><span class="p">[</span><span class="s1">&#39;Beta&#39;</span><span class="p">]</span>
     
-    <span class="k">if</span> <span class="p">(</span><span class="n">colormodel</span> <span class="ow">is</span> <span class="s1">&#39;density&#39;</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">colormodel</span><span class="o">==</span><span class="s1">&#39;density&#39;</span><span class="p">)</span> <span class="p">:</span>
         <span class="n">beta_density</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">beta</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="n">dbdl</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">beta</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span><span class="o">-</span><span class="n">beta</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">centered_density</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">dbdl</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">dbdl</span><span class="p">[:,:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="p">)</span>
@@ -859,10 +859,10 @@
     
     <span class="n">round_indx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">beta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">beta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">colormodel</span> <span class="ow">is</span> <span class="ow">not</span> <span class="s1">&#39;density&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">colormodel</span><span class="o">!=</span><span class="s1">&#39;density&#39;</span><span class="p">)</span> <span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">is_color_like</span><span class="p">(</span><span class="n">colormodel</span><span class="p">))</span> <span class="p">:</span>
                 <span class="n">color</span> <span class="o">=</span> <span class="n">colormodel</span>
-            <span class="k">elif</span> <span class="p">(</span><span class="n">colormodel</span> <span class="ow">is</span> <span class="s1">&#39;tempering_level&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">colormodel</span><span class="o">==</span><span class="s1">&#39;tempering_level&#39;</span><span class="p">)</span> <span class="p">:</span>
                 <span class="n">color</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">beta</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
             <span class="k">else</span> <span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ERROR: Unknown colormodel </span><span class="si">%s</span><span class="s1">.  See documentation for supported colormodel options.&#39;</span><span class="o">%</span><span class="n">colormodel</span><span class="p">)</span>
@@ -1004,9 +1004,10 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.127.g8b9c4fb.dirty',
+            VERSION:'0+untagged.132.g01cffb0',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
+            LINK_SUFFIX:'.html', 
             HAS_SOURCE: 'true'
         };
     </script>
