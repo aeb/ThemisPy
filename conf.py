@@ -72,30 +72,8 @@ master_doc = 'docs/src/index'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme_default = 'bizstyle'
-html_theme_path_default = []
-
-
-try:
-    
-    import rtcat_sphinx_theme
-    html_theme = "rtcat_sphinx_theme"
-    html_theme_path = [rtcat_sphinx_theme.get_html_theme_path()]
-
-    #html_theme = 'solar_theme'
-    #import solar_theme
-    #html_theme_path = [solar_theme.theme_path]
-    
-except ModuleNotFoundError :
-    html_theme = html_theme_default
-    html_theme_path = []
-    print("WARNING: Could not import rtcat_sphix_theme.  Will used default.")
-
-
-html_theme = html_theme_default
-html_theme_path = []
-#print("WARNING: Could not import rtcat_sphix_theme.  Will used default.")
-    
+html_theme = "rtcat_sphinx_theme"
+html_theme_path = ["./docs/_themes"]
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
