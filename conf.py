@@ -43,6 +43,7 @@ extensions = ['sphinx.ext.autodoc',
               'sphinxarg.ext']
 
 #source_suffix = {'.rst': 'restructuredtext', '.txt': 'restructuredtext'} #, '.md': 'markdown'}
+#source_suffix = {'.rst': 'restructuredtext'} #, '.txt': 'restructuredtext'} #, '.md': 'markdown'}
 
 
 # Add any paths that contain templates here, relative to this directory.
@@ -106,9 +107,9 @@ html_static_path = ['docs/_static']
 
 # Example configuration for intersphinx: refer to the Python standard library.
 #intersphinx_mapping = {'https://docs.python.org/': None}
-intersphinx_mapping = {'python': ('http://docs.python.org', None),
-                       'numpy': ('http://docs.scipy.org/doc/numpy/', None),
-                       'scipy': ('http://docs.scipy.org/doc/scipy/reference/', None),
-                       'matplotlib': ('http://matplotlib.sourceforge.net/', None),
-                       'ehtim': ('https://achael.github.io/eht-imaging/',None)
-}
+intersphinx_mapping = {'python': ('https://docs.python.org', None),
+                       'numpy': ('https://docs.scipy.org/doc/numpy/', None),
+                       'scipy': ('https://docs.scipy.org/doc/scipy/reference/', None),
+                       'matplotlib': ('https://matplotlib.org/', None),
+                       'ehtim': ('https://achael.github.io/eht-imaging/', None)
+                   }
