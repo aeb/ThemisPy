@@ -40,7 +40,7 @@ def parse_parameter_arglist(arg_list) :
             if ('-' in token) : # range
                 toks=token.split('-')
                 plist.extend(list(range(int(toks[0]),int(toks[1])+1)))
-            elif (token.isspace() or token is '') : # whitespace or empty
+            elif (token.isspace() or token=='') : # whitespace or empty
                 continue
             else : # a number
                 plist.extend([int(token)])

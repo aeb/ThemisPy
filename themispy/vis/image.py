@@ -919,10 +919,10 @@ class model_image_sum(model_image) :
         for k,image in enumerate(self.image_list) :
             image.generate(q)
 
-            if (self.offset_coordinates is 'Cartesian') :
+            if (self.offset_coordinates=='Cartesian') :
                 self.shift_list[k][0] = q[image.size] * rad2uas
                 self.shift_list[k][1] = q[image.size+1] * rad2uas
-            elif (self.offset_coordinates is 'polar') :
+            elif (self.offset_coordinates=='polar') :
                 self.shift_list[k][0] = q[image.size]*np.cos(q[image.size+1]) * rad2uas
                 self.shift_list[k][1] = q[image.size]*np.sin(q[image.size+1]) * rad2uas
                 

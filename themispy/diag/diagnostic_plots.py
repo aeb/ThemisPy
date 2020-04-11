@@ -694,7 +694,7 @@ def plot_deo_tempering_level_evolution(annealing_data, colormap='plasma', colorm
     # Rename components of the annealing data
     beta = annealing_data['Beta']
     
-    if (colormodel is 'density') :
+    if (colormodel=='density') :
         beta_density = np.zeros(beta.shape)
         dbdl = -(beta[:,1:]-beta[:,:-1])
         centered_density = 0.5*( 1.0/dbdl[:,1:] + 1.0/dbdl[:,:-1] )
@@ -710,10 +710,10 @@ def plot_deo_tempering_level_evolution(annealing_data, colormap='plasma', colorm
     
     round_indx = np.arange(beta.shape[0])
     for i in range(beta.shape[1]-1):
-        if (colormodel is not 'density') :
+        if (colormodel!='density') :
             if (is_color_like(colormodel)) :
                 color = colormodel
-            elif (colormodel is 'tempering_level') :
+            elif (colormodel=='tempering_level') :
                 color = cmap(float(i)/float(beta.shape[1]-1))
             else :
                 print('ERROR: Unknown colormodel %s.  See documentation for supported colormodel options.'%colormodel)

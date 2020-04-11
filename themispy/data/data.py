@@ -378,7 +378,7 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
         raise NotImplementedError
 
     # Check polrep
-    if (not obs.polrep is 'circ') :
+    if (obs.polrep!='circ') :
         warnings.warn("Must supply an obs object with polrep='circ'", Warning)
         raise ValueError
 
@@ -467,7 +467,7 @@ def write_visibilities(obs, outname, snrcut=0) :
         raise NotImplementedError
 
     # Check polrep
-    if (not obs.polrep is 'stokes') :
+    if (obs.polrep!='stokes') :
         warnings.warn("Must supply an obs object with polrep='stokes'", Warning)
         raise ValueError
     
@@ -519,7 +519,7 @@ def write_amplitudes(obs, outname, debias_amplitudes=True, snrcut=0) :
         raise NotImplementedError
 
     # Check polrep
-    if (not obs.polrep is 'stokes') :
+    if (obs.polrep!='stokes') :
         warnings.warn("Must supply an obs object with polrep='stokes'", Warning)
         raise ValueError
 
@@ -574,7 +574,7 @@ def write_closure_phases(obs, outname, snrcut=0, keep_trivial_triangles=False, c
         raise NotImplementedError
 
     # Check polrep
-    if (not obs.polrep is 'stokes') :
+    if (obs.polrep!='stokes') :
         warnings.warn("Must supply an obs object with polrep='stokes'", Warning)
         raise ValueError
     
