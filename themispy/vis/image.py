@@ -21,8 +21,8 @@ uas2rad = np.pi/(180.0 * 3600 * 1e6)
 class model_image :
     """
     Base class for Themis image models.
-    This base class is intended to mirror the Themis::model_image base class, providing 
-    explicit visualizations of the output of Themis::model_image-derived model analyses.
+    This base class is intended to mirror the :cpp:class:`Themis::model_image` base class, providing 
+    explicit visualizations of the output of :cpp:class:`Themis::model_image`-derived model analyses.
     
     Args:
       themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
@@ -40,9 +40,9 @@ class model_image :
         
     def generate(self,parameters) :
         """
-        Sets the model parameter list.  Mirrors similar a similar function within the 
-        Themis::model_image class.  Effectively simply copies the parameters into the 
-        local list with some additional run-time checking.
+        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image::generate_model`, 
+        a similar a similar function within the :cpp:class:`Themis::model_image` class.  Effectively 
+        simply copies the parameters into the local list with some additional run-time checking.
 
         Args:
           parameters (list): Parameter list.
@@ -108,7 +108,7 @@ class model_image :
     
 class model_image_symmetric_gaussian(model_image) :
     """
-    Symmetric gaussian image class that is a mirror of Themis::model_image_symmetric_gaussian.
+    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_symmetric_gaussian`.
     Has parameters:
 
     * parameters[0] ... Total intensity :math:`I_0` (Jy)
@@ -151,7 +151,7 @@ class model_image_symmetric_gaussian(model_image) :
     
 class model_image_asymmetric_gaussian(model_image) :
     """
-    Asymmetric gaussian image class that is a mirror of Themis::model_image_asymmetric_gaussian.
+    Asymmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_asymmetric_gaussian`.
     Has parameters:
 
     * parameters[0] ... Total intensity :math:`I_0` (Jy)
@@ -216,7 +216,7 @@ class model_image_asymmetric_gaussian(model_image) :
 
 class model_image_crescent(model_image) :
     """
-    Symmetric gaussian image class that is a mirror of Themis::model_image_crescent.  
+    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_crescent`.
     Has parameters:
 
     * parameters[0] ... Total intensity :math:`I_0` (Jy)
@@ -273,7 +273,7 @@ class model_image_crescent(model_image) :
 
 class model_image_xsring(model_image) :
     """
-    Symmetric gaussian image class that is a mirror of Themis::model_image_xsring.
+    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_xsring`.
     Has parameters:
 
     * parameters[0] ... Total intensity :math:`I_0` (Jy)
@@ -344,7 +344,7 @@ class model_image_xsring(model_image) :
 
 class model_image_xsringauss(model_image) :
     """
-    Symmetric gaussian image class that is a mirror of Themis::model_image_xsring.
+    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_xsringauss`.
     Has parameters:
 
     * parameters[0] ... Total intensity :math:`I_0` (Jy)
@@ -555,7 +555,7 @@ def fft_cubic_spline_2d(x,y,f,xx,yy,rotation_angle=None,a=-0.5) :
 
 class model_image_splined_raster(model_image) :
     """
-    Splined raster image class that is a mirror of Themis::model_image_splined_raster.
+    Splined raster image class that is a mirror of :cpp:class:`Themis::model_image_splined_raster`.
     Has parameters:
 
     * parameters[0] ........ Logarithm of the brightness at control point 0,0 (Jy/sr)
@@ -649,7 +649,7 @@ class model_image_splined_raster(model_image) :
     
 class model_image_adaptive_splined_raster(model_image) :
     """
-    Adaptive splined raster image class that is a mirror of Themis::model_image_adaptive_splined_raster.
+    Adaptive splined raster image class that is a mirror of :cpp:class:`Themis::model_image_adaptive_splined_raster`.
     Has parameters:
 
     * parameters[0] ........ Logarithm of the brightness at control point 0,0 (Jy/sr)
@@ -743,9 +743,9 @@ class model_image_adaptive_splined_raster(model_image) :
 
 
 
-class model_image_smoothed(model_image):
+class model_image_smooth(model_image):
     """
-    Smoothed image class that is a mirror of Themis::model_image_smooth. Generates a smoothed 
+    Smoothed image class that is a mirror of :cpp:class:`Themis::model_image_smooth`. Generates a smoothed 
     image from an existing image using an asymmetric Gaussian smoothing kernel.
     Has parameters:
 
@@ -776,8 +776,9 @@ class model_image_smoothed(model_image):
         
     def generate(self,parameters) :
         """
-        Sets the model parameter list.  Mirrors similar a similar function within the Themis
-        model_image_smooth class.
+        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_smooth::generate_model`, 
+        a similar a similar function within the :cpp:class:`Themis::model_image_smooth` class.  Effectively 
+        simply copies the parameters into the local list with some additional run-time checking.
 
         Args:
           parameters (list): Parameter list.
@@ -840,7 +841,7 @@ class model_image_smoothed(model_image):
     
 class model_image_sum(model_image) :
     """
-    Summed image class that is a mirror of Themis::model_image_sum. Generates images by summing 
+    Summed image class that is a mirror of :cpp:class:`Themis::model_image_sum`. Generates images by summing 
     other images supplemented with some offset. The parameters list is expanded by 2 for each 
     image, corresponding to the absolute positions. These may be specified either in Cartesian 
     or polar coordinates; this selection must be made at construction and applies uniformly to 
@@ -900,8 +901,9 @@ class model_image_sum(model_image) :
         
     def generate(self,parameters) :
         """
-        Sets the combined model parameter list.  Mirrors similar a similar function within the Themis
-        model_image_sum class.  Effectively simply copies the parameters into the local list, transforms
+        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_sum::generate_model`, 
+        a similar a similar function within the :cpp:class:`Themis::model_image_sum` class.  
+        Effectively simply copies the parameters into the local list, transforms
         and copies the shift vector (x0,y0) for each model_image object, and performs some run-time checking.
 
         Args:
