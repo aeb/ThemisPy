@@ -18,6 +18,9 @@ import numpy as np
 from matplotlib.cbook import flatten
 import argparse
 
+# We don't need ehtim, so don't import it
+import sys
+sys.modules['ehtim'] = None
 from themispy import diag as td
 from themispy import chain as tc
 

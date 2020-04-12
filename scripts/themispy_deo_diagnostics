@@ -16,6 +16,9 @@ from matplotlib.cbook import flatten
 import argparse
 import matplotlib.pyplot as plt
 
+# We don't need ehtim, so don't import it
+import sys
+sys.modules['ehtim'] = None
 import themispy as ty
 
 

@@ -10,13 +10,15 @@ $ themispy_resample -c Chain.dat -l Lklhd.dat -s 1000 -bf 0.5
 """
 
 import numpy as np
-import themispy as ty
 import argparse as ap
 import warnings
 import os
-import sys
 from matplotlib.cbook import flatten
 
+# We don't need ehtim, so don't import it
+import sys
+sys.modules['ehtim'] = None
+import themispy as ty
 
 def set_parser() :
     # Create a parser object to manage command line options
