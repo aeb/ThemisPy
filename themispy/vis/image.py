@@ -18,6 +18,11 @@ uas2rad = np.pi/(180.0 * 3600 * 1e6)
 
 
 
+## Reads in a list of alphanumeric model specifiers and expands them as
+## appropriate.  This includes modifiers, models, and a number of repititions
+
+
+
 class model_image :
     """
     Base class for Themis image models.
@@ -963,3 +968,42 @@ class model_image_sum(model_image) :
 
 
     
+def expand_model_glob(model_glob, version='ccm_mexico') :
+    """
+    Reads in a model glob in the format
+    """
+
+    if (version=='ccm_mexico') :
+        return expand_model_image_ccm_mexico(model_glob)
+    else :
+        raise RuntimeError("Unrecognized model_glob version: %s"%(version))
+
+    
+def expand_model_image_ccm_mexico(model_glob) :
+    """
+    Reads a model glob as produced by the ccm_mexico driver and generates a corresponding :class:`model_image` object.
+
+    Args:
+      model_glob(str): A model glob string constructed of a,A,g,G,X, following the style and details of the model glob in the m87_ccm_mexico drivers.
+
+    Returns:
+      (model_image): A corresponding model image object.
+    """
+
+    expanded_model_list = []
+
+    for m in model_glob :
+
+        ms = re.split('(\d+)', m)
+
+        if (len(ms)==1) :
+            n = 1
+        else :
+            n = int(ms[1])
+
+        for k in range(n) :
+            expanded_model_list.append(ms[0])
+
+    return expanded_model_list
+
+

@@ -7,7 +7,6 @@
 #   Functions for loading for calibration quantities from Themis models
 #   
 
-
 import numpy as np
 import copy
 from matplotlib import cm
@@ -407,10 +406,3 @@ def plot_station_gain_phases(gain_data, invert=False, add_station_labels=True,  
 
     plt.gca().grid(grid)
 
-
-        
-    
-    
-    
-
-    
