@@ -201,6 +201,7 @@ def read_echain(filename, walkers, stride=1, burn_fraction=0, skip=None, paramet
         nskip = int(nsamp*burn_fraction)
     else :
         nskip = skip*walkers
+
     
     # If there are too few lines in the chain file, raise IndexError
     if (nskip>nsamp) :
@@ -275,7 +276,7 @@ def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=No
     elklhd = elklhd[skip:nsamp,:]
 
     # Read and restrict the chain
-    echain = read_echain(chain_filename, walkers, stride=stride, skip=skip, parameter_list=parameter_list)[:nsamp,:,:]
+    echain = read_echain(chain_filename, walkers, stride=stride, skip=skip*stride, parameter_list=parameter_list)[:nsamp,:,:]
     
     return echain,elklhd
     
@@ -501,11 +502,9 @@ def join_echains(echains):
     lengths = []
     for i in range(len(echains)):
         lengths.append(len(echains[i][:,0]))
-    #print(lengths)
     max_length = np.amin(lengths)
     if max_length%2!=0:
         max_length -=1
-    #print(len(echains), echains[0].shape, np.array(echains).shape)
     jechains = np.zeros((len(echains),max_length,echains[0].shape[1], echains[0].shape[2]))
     for i in range(len(echains)):
         jechains[i,:,:,:] = echains[i][-max_length:,:,:]

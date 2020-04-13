@@ -124,6 +124,7 @@ if __name__ == "__main__" :
         c, l = tc.load_erun(chainsname[i],lklhdname[i], stride=nthin, parameter_list=plist, burn_fraction=warmup_frac)
         if (c.shape[0] != l.shape[0]):
             print("Error reading in the file! Number of steps in chain and likelihood are different")
+            print(c.shape, l.shape)
         chains.append(c)
         #print(c.shape)
         if save:
@@ -138,15 +139,16 @@ if __name__ == "__main__" :
     if plot:
         #print(np.array(chains).shape)
         chains_split = np.vstack(np.array_split(np.array(chains),2,axis=1))
-        fig,_ = td.plot_rank_hist(np.mean(chains_split[:,:,:,iactmax],axis=2), names=chainsname)
-        fig.suptitle("Mean rank plots for param "+str(iactmax)
+        fig,_ = td.plot_rank_hist(np.median(chains_split[:,:,:,iactmax],axis=2), names=chainsname)
+        fig.suptitle("Median rank plots for param "+str(iactmax)
                      +"\n $\hat{R}_{\mu} = %.4f$"%(mean_rhat[iactmax]))
         #fig.tight_layout()
-        outfigmean = (".".join(out.split(".")[:-1]))+"_rankmean.png"
+        outfigmean = (".".join(out.split(".")[:-1]))+"_rankmedian.png"
         fig.savefig(outfigmean,dpi=300)
-        fig,_ = td.plot_rank_hist(np.var(chains_split[:,:,:,iactmax],axis=2,ddof=1), names=chainsname)
-        outfigvar = (".".join(out.split(".")[:-1]))+"_rankvar.png"
-        fig.suptitle("Var rank plots for param "+str(iactmax)
-                     +"\n $\hat{R}_{\sigma^2} = %.4f$"%(var_rhat[iactmax]))
+        fig,_ = td.plot_rank_hist(np.quantile(chains_split[:,:,:,iactmax],0.975,axis=2)-
+                                  np.quantile(chains_split[:,:,:,iactmax],0.025,axis=2), names=chainsname)
+        outfigvar = (".".join(out.split(".")[:-1]))+"_rankquantile.png"
+        fig.suptitle("0.95 Quantile rank plots for param "+str(iactmax)
+                     +"\n $\hat{R}_{95q} = %.4f$"%(var_rhat[iactmax]))
         #fig.tight_layout()
         fig.savefig(outfigvar,dpi=300)
