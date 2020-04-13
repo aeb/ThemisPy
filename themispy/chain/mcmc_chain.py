@@ -264,19 +264,19 @@ def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=No
 
     # Find the lengths of the chain and likelihood files
     chain_nsamp,nhead = file_length(chain_filename,header_string='#')
-    elklhd,nhead = read_elklhd(lklhd_filename, stride=stride, skip=skip)
-
+    elklhd,_ = read_elklhd(lklhd_filename, stride=stride, skip=skip)
+    
     # Determine the number of walkers, and set the burn-in relative to the shorter
     walkers = elklhd.shape[1]
-    nsamp = min(elklhd.shape[0],chain_nsamp//walkers)
+    nsamp = min(elklhd.shape[0],chain_nsamp//(walkers*stride))
     if (skip is None) :
         skip = int(burn_fraction*nsamp)
         
     # Restrict the likelihoods
-    elklhd = elklhd[skip:nsamp,:]
+    elklhd = elklhd[0:nsamp,:]
 
     # Read and restrict the chain
-    echain = read_echain(chain_filename, walkers, stride=stride, skip=skip*stride, parameter_list=parameter_list)[:nsamp,:,:]
+    echain = read_echain(chain_filename, walkers, stride=stride, skip=skip, parameter_list=parameter_list)[:nsamp,:,:]
     
     return echain,elklhd
     
