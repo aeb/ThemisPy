@@ -1179,7 +1179,7 @@ def expand_model_glob_ccm_mexico(model_glob) :
 
 
     
-def model_image_from_ccm_mexico(model_glob,hyperparameters=None) :
+def construct_model_image_from_ccm_mexico(model_glob,hyperparameters=None,verbosity=0) :
     """
     Reads a model glob as produced by the ccm_mexico driver and generates 
     a corresponding :class:`model_image` object. If more than one model
@@ -1198,20 +1198,22 @@ def model_image_from_ccm_mexico(model_glob,hyperparameters=None) :
     Args:
       model_glob (str): Model glob string.
       hyper_parameters (dict) : Optional set of hyperparameters for image models that require them.  Where they are not provided for required arguments a RuntimeError will be raised.
+      verbosity (int): Verbosity level. 0 prints nothing. 1 prints model_glob information.
 
     Returns:
       (model_image): A corresponding model image object.
     """
 
-    print("Generating model_image object for %s"%(model_glob))
+    if (verbosity>0) :
+        print("Generating model_image object for %s"%(model_glob))
 
     expanded_model_list = expand_model_glob_ccm_mexico(model_glob)
             
     # A list of the constructed image objects
     image_list=[]
-    hyperparameters_local = copy.deepcopy(hyperparameters)
     for m in expanded_model_list :
-        print(m)
+        if (verbosity>0) :
+            print(m)
         if (m[-1]=='g') :
             image_list.append(model_image_symmetric_gaussian())
         elif (m[-1]=='G') :
@@ -1230,31 +1232,31 @@ def model_image_from_ccm_mexico(model_glob,hyperparameters=None) :
             hpreq = ['splined_raster_Nx','splined_raster_Ny','splined_raster_fovx','splined_raster_fovy']
             hpopt = ['splined_raster_a','splined_raster_fft','splined_raster_themis_fft_sign']
             hpvals = [None,None,None,None,-0.5,'fft',True]
-            if (hyperparameters_local is None) :
+            if (hyperparameters is None) :
                 raise RuntimeError("hyperparameters must be provided to generate a model_image_splined_raster object.")
             for j in range(len(hpreq)) :
-                if ( hpreq[j] in hyperparameters_local.keys() ) :
-                    hpvals[j] = hyperparameters_local[hpreq[j]]
+                if ( hpreq[j] in hyperparameters.keys() ) :
+                    hpvals[j] = hyperparameters[hpreq[j]]
                 else :
                     raise RuntimeError("%s must be provided in the hyperparameters passed to generate a model_image_splined_raster object."%(hpreq[j]))
             for j in range(len(hpopt)) :
-                if ( hpopt[j] in hyperparameters_local.keys() ) :
-                    hpvals[j+len(hpreq)] = hyperparameters_local[hpopt[j]]
+                if ( hpopt[j] in hyperparameters.keys() ) :
+                    hpvals[j+len(hpreq)] = hyperparameters[hpopt[j]]
             image_list.append(model_image_splined_raster(hpvals[0],hpvals[1],hpvals[2],hpvals[3],a=hpvals[4],spline_method=hpvals[5],themis_fft_sign=hpvals[6]))
         elif (m[-1]=='R') :
             hpreq = ['adaptive_splined_raster_Nx','adaptive_splined_raster_Ny']
             hpopt = ['adaptive_splined_raster_a','adaptive_splined_raster_fft','adaptive_splined_raster_themis_fft_sign']
             hpvals = [None,None,-0.5,'fft',True]
-            if (hyperparameters_local is None) :
+            if (hyperparameters is None) :
                 raise RuntimeError("hyperparameters must be provided to generate a model_image_splined_raster object.")
             for j in range(len(hpreq)) :
-                if ( hpreq[j] in hyperparameters_local.keys() ) :
-                    hpvals[j] = hyperparameters_local[hpreq[j]]
+                if ( hpreq[j] in hyperparameters.keys() ) :
+                    hpvals[j] = hyperparameters[hpreq[j]]
                 else :
                     raise RuntimeError("%s must be provided in the hyperparameters passed to generate a model_image_splined_raster object."%(hpreq[j]))
             for j in range(len(hpopt)) :
-                if ( hpopt[j] in hyperparameters_local.keys() ) :
-                    hpvals[j+len(hpreq)] = hyperparameters_local[hpopt[j]]
+                if ( hpopt[j] in hyperparameters.keys() ) :
+                    hpvals[j+len(hpreq)] = hyperparameters[hpopt[j]]
             image_list.append(model_image_adaptive_splined_raster(hpvals[0],hpvals[1],a=hpvals[2],spline_method=hpvals[3],themis_fft_sign=hpvals[4]))
         else :
             raise RuntimeError("%s is not a valid model specifier in the ccm_mexico+ tag version set."%m[-1])
@@ -1395,7 +1397,7 @@ def tagv1_find_subtag(tag) :
     return tag[1:(k-1)]
     
     
-def model_image_from_tagv1(tag,verbosity=0) :
+def construct_model_image_from_tagv1(tag,verbosity=0) :
     """
     Parses a tagvers-1.0 Themis tag and recursively constructs a model image.
 
@@ -1430,22 +1432,21 @@ def model_image_from_tagv1(tag,verbosity=0) :
         return model_image_adaptive_splined_raster(int(toks[1]),int(toks[2]),float(toks[3])),tag[1:]
     elif (tag[0]=='model_image_smooth') :
         subtag = tagv1_find_subtag(tag[1:])
-        subimage,_ = model_image_from_tagv1(subtag,verbosity=verbosity)
-        print(type(subimage))
+        subimage,_ = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
         return model_image_smooth(subimage),tag[(len(subtag)+3):]
     elif (tag[0]=='model_image_sum') :
         subtag = tagv1_find_subtag(tag[1:])
         len_subtag = len(subtag)
         image_list = []
         while (len(subtag)>0) :
-            subimage,subtag = model_image_from_tagv1(subtag,verbosity=verbosity)
+            subimage,subtag = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
             image_list.append(subimage)
         return model_image_sum(image_list),tag[len_subtag+3:]
     else :
         raise RuntimeError("Unrecognized model tag %s"%(tag[0]))
 
     
-def model_image_from_tag_file(tag_file_name='model_image.tag', tagversion='tagvers-1.0',verbosity=0) :
+def construct_model_image_from_tag_file(tag_file_name='model_image.tag', tagversion='tagvers-1.0',verbosity=0) :
     """
     Reads tag file produced by the :cpp:func:`Themis::model_image::write_model_tag_file` function 
     and returns an appropriate model image. Model tag files can be generated from ccm_mexico+ model 
@@ -1471,7 +1472,7 @@ def model_image_from_tag_file(tag_file_name='model_image.tag', tagversion='tagve
     tag = tag[1:]
 
     if (tagversion_file==tagversion) :
-        image,tag = model_image_from_tagv1(tag,verbosity=verbosity)
+        image,tag = construct_model_image_from_tagv1(tag,verbosity=verbosity)
         if (len(tag)>0) :
             raise RuntimeError(("Remaining tag lines:"+len(tag)*("   %s\n"))%tuple(tag))
         return image
@@ -1479,7 +1480,7 @@ def model_image_from_tag_file(tag_file_name='model_image.tag', tagversion='tagve
         raise RuntimeError("Tag versions other than tagvers-1.0 are not supported at this time.")
 
     
-def model_image_from_glob(model_glob, glob_version, hyperparameters=None) :
+def construct_model_image_from_glob(model_glob, glob_version, hyperparameters=None) :
     """
     Constructs a :class:`model_image` object given an appropriate model specification glob.  
     Currently accepted globs include:
@@ -1499,12 +1500,10 @@ def model_image_from_glob(model_glob, glob_version, hyperparameters=None) :
 
     """
 
-    print(glob_version)
-    
     if (glob_version=='ccm_mexico' or glob_version=='ccm_mexico+') :
-        return model_image_from_ccm_mexico(model_glob,hyperparameters)
+        return construct_model_image_from_ccm_mexico(model_glob,hyperparameters)
     elif (glob_version=='tagvers-1.0') :
-        return model_image_from_tag_file(model_glob,glob_version)
+        return construct_model_image_from_tag_file(model_glob,glob_version)
     else :
         raise RuntimeError("Unrecognized model_glob version: %s"%(version))
 
