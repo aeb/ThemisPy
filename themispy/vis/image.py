@@ -9,6 +9,7 @@
 
 import numpy as np
 import copy
+import re
 from scipy import interpolate as sint
 from scipy.signal import fftconvolve
 
@@ -109,6 +110,16 @@ class model_image :
         
         raise NotImplementedError("intensity_map must be defined in children classes of model_image.")
 
+
+    def parameter_name_list(self) :
+        """
+        Hook for returning a list of parameter names.  Currently just returns the list of p0-p(size-1).
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        return [ 'p%i'%(j) for j in range(self.size) ]
     
     
 class model_image_symmetric_gaussian(model_image) :
@@ -153,6 +164,17 @@ class model_image_symmetric_gaussian(model_image) :
             
         return I
 
+    
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        return [ r'$I_0$ (Jy)', r'$\sigma$ (rad)']
+    
     
 class model_image_asymmetric_gaussian(model_image) :
     """
@@ -216,6 +238,17 @@ class model_image_asymmetric_gaussian(model_image) :
 
         return I
 
+    
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        return [ r'$I_0$ (Jy)', r'$\sigma$ (rad)', r'$A$', r'$\phi$ (rad)']
+    
 
 
 
@@ -275,7 +308,18 @@ class model_image_crescent(model_image) :
 
         return I    
 
+    
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
 
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        return [ r'$I_0$ (Jy)', r'$R_{\rm out}$ (rad)', r'$\psi$', r'$\epsilon$', r'$\tau$', r'$\phi$ (rad)']
+
+    
 class model_image_xsring(model_image) :
     """
     Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_xsring`.
@@ -297,6 +341,80 @@ class model_image_xsring(model_image) :
     def __init__(self, themis_fft_sign=True) :
         super().__init__(themis_fft_sign)
         self.size=6
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y).
+        """
+
+        I0 = max(1e-8,self.parameters[0])
+        Rp = max(1e-20,self.parameters[1]) * rad2uas
+        Rin = min( max(1e-4,1-self.parameters[2]), 0.9999 ) * Rp
+        d = min(max(self.parameters[3],1e-4),0.9999) * (Rp - Rin)
+        f = min(max(self.parameters[4],1e-4),0.9999);
+        phi = self.parameters[5]
+
+        Iring0 = (1-gq)*(2.*I0/np.pi) *1.0/((1.0+f)*(Rp**2 - Rin**2) - (1.0-f)*d*Rin**2/Rp);
+
+        c = np.cos(phi)
+        s = np.sin(phi)
+        dx = x*c - y*s
+        dy = x*s + y*c
+
+        Iring = Iring0*(0.5*(1.0-dx/Rp) + 0.5*f*(1.0+dx/Rp)) 
+        Iring *= ((dx**2+dy**2)<=Rp**2)
+        Iring *= (((dx-d)**2+(dy)**2)>Rin**2)
+        
+        if (verbosity>0) :
+            print("xsring:",I0,Rp,Rn,a,b)
+
+        return Iring
+
+    
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        return [ r'$I_0$ (Jy)', r'$R_{\rm out}$ (rad)', r'$\psi$', r'$\epsilon$', r'$f$', r'$\phi$ (rad)']
+
+
+class model_image_xsringauss(model_image) :
+    """
+    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_xsringauss`.
+    Has parameters:
+
+    * parameters[0] ... Total intensity :math:`I_0` (Jy)
+    * parameters[1] ... Outer radius :math:`R` (rad)
+    * parameters[2] ... Width parameter :math:`\\psi` in (0,1)
+    * parameters[3] ... Eccentricity parameter :math:`\\epsilon` in (0,1)
+    * parameters[4] ... Linear fade parameter math:`f` in (0,1)
+    * parameters[5] ... FWHM of the main axis of the Gaussian in units of the ring outer radius math:`g_{ax}`
+    * parameters[6] ... Gaussian axial ratio math:`a_q`
+    * parameters[7] ... Ratio of Gaussian flux to ring flux math:`g_q`
+    * parameters[8] ... Position angle :math:`\\phi` (rad)
+
+    and size=9.
+
+    Args:
+      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
+    """
+
+    def __init__(self, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+        self.size=9
 
         
     def generate_intensity_map(self,x,y,verbosity=0) :
@@ -347,62 +465,15 @@ class model_image_xsring(model_image) :
         return (Iring+Igauss)
 
 
-class model_image_xsringauss(model_image) :
-    """
-    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_xsringauss`.
-    Has parameters:
-
-    * parameters[0] ... Total intensity :math:`I_0` (Jy)
-    * parameters[1] ... Outer radius :math:`R` (rad)
-    * parameters[2] ... Width parameter :math:`\\psi` in (0,1)
-    * parameters[3] ... Eccentricity parameter :math:`\\epsilon` in (0,1)
-    * parameters[4] ... Linear fade parameter math:`f` in (0,1)
-    * parameters[5] ... FWHM of the main axis of the Gaussian in units of the ring outer radius math:`g_{ax}`
-    * parameters[6] ... Gaussian axial ratio math:`a_q`
-    * parameters[7] ... Ratio of Gaussian flux to ring flux math:`g_q`
-    * parameters[8] ... Position angle :math:`\\phi` (rad)
-
-    and size=9.
-
-    Args:
-      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
-    """
-
-    def __init__(self, themis_fft_sign=True) :
-        super().__init__(themis_fft_sign)
-        self.size=6
-
-        
-    def generate_intensity_map(self,x,y,verbosity=0) :
+    def parameter_name_list(self) :
         """
-        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
-
-        Args:
-          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
-          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
-          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+        Producess a lists parameter names.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y).
+          (list) List of strings of variable names.
         """
 
-        I0 = max(1e-8,self.paramters[0])
-        Rp = max(1e-20,self.parameters[1]) * rad2uas
-        Rn = min( max(1e-4,1-self.parameters[2]), 0.9999 ) * Rp
-        d = min(max(self.parameters[3],1e-4),0.9999) * (Rp - Rn)
-        a = d * np.cos(self.parameters[4])
-        b = d * np.sin(self.parameters[4])
-        I0 = I0/(np.pi*(Rp**2-Rn**2))
-        I = I0+0*x
-        I *= ((x**2+y**2)<=Rp**2)
-        I *= (((x-a)**2+(y-b)**2)>=Rn**2)
-        
-        if (verbosity>0) :
-            print("KD Crescent:",I0,Rp,Rn,a,b)
-
-        return I
-
-
+        return [ r'$I_0$ (Jy)', r'$R_{\rm out}$ (rad)', r'$\psi$', r'$\epsilon$', r'$f$', r'$g_{ax}$', r'$a_q$', r'$g_q$', r'$\phi$ (rad)']
 
 
 def direct_cubic_spline_1d(x,f,xx,a=-0.5) :
@@ -598,7 +669,7 @@ class model_image_splined_raster(model_image) :
 
     def __init__(self, Nx, Ny, fovx, fovy, a=-0.5, spline_method='fft', themis_fft_sign=True) :
         super().__init__(themis_fft_sign)
-        self.size=6
+        self.size=Nx*Ny
 
         self.Nx = Nx
         self.Ny = Ny
@@ -651,6 +722,21 @@ class model_image_splined_raster(model_image) :
         
         return I
 
+
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        names = []
+        for ix in range(self.Nx) :
+            for iy in range(self.Ny) :
+                names.append(r'$\ln(I_{%i,%i})$'%(ix,iy))
+        return names
+
     
 class model_image_adaptive_splined_raster(model_image) :
     """
@@ -691,7 +777,7 @@ class model_image_adaptive_splined_raster(model_image) :
 
     def __init__(self, Nx, Ny, a=-0.5, spline_method='fft', themis_fft_sign=True) :
         super().__init__(themis_fft_sign)
-        self.size=6
+        self.size=Nx*Ny+3
 
         self.Nx = Nx
         self.Ny = Ny
@@ -745,6 +831,24 @@ class model_image_adaptive_splined_raster(model_image) :
             I = np.transpose(I)
         
         return I
+
+    
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        names = []
+        for ix in range(self.Nx) :
+            for iy in range(self.Ny) :
+                names.append(r'$\ln(I_{%i,%i})$'%(ix,iy))
+        names.append('fovx (rad)')
+        names.append('fovy (rad)')
+        names.append(r'$\phi$ (rad)')
+        return names
 
 
 
@@ -840,6 +944,21 @@ class model_image_smooth(model_image):
             print('Gaussian smoothed:',sr1,sr2,sphi)
     
         return Ism/(px*py)
+
+    
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        names = self.image.parameter_name_list()
+        names.append(r'$\sigma_s$')
+        names.append(r'$A_s$')
+        names.append(r'$\phi_s$ (rad)')
+        return names
 
     
     
@@ -963,47 +1082,431 @@ class model_image_sum(model_image) :
                 print("   --> Sum shift:",self.shift_list[k],self.shift_list[k])
             
         return I
+
+
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        names = []
+        for image in self.image_list :
+            names.extend(image.parameter_name_list())
+            if (self.offset_coordinates=='Cartesian') :
+                names.append(r'$\Delta x (rad)$')
+                names.append(r'$\Delta y (rad)$')
+            elif (self.offset_coordinates=='polar') :
+                names.append(r'$\Delta r (rad)$')
+                names.append(r'$\Delta \theta (rad)$')
+        return names
     
 
 
-
     
-def expand_model_glob(model_glob, version='ccm_mexico') :
+def expand_model_glob_ccm_mexico(model_glob) :
     """
-    Reads in a model glob in the format
-    """
+    Expands an abbreviated model glob as produced by the ccm_mexico driver 
+    and generates a list of individual model specifiers. Model glob options 
+    are supplemented beyond that in the ccm_mexico driver in that they permit 
+    unlimited components of any type (i.e., the ccm_mexico+ standard).
 
-    if (version=='ccm_mexico') :
-        return expand_model_image_ccm_mexico(model_glob)
-    else :
-        raise RuntimeError("Unrecognized model_glob version: %s"%(version))
+    Current list of accepted model strings are:
 
-    
-def expand_model_image_ccm_mexico(model_glob) :
-    """
-    Reads a model glob as produced by the ccm_mexico driver and generates a corresponding :class:`model_image` object.
+    * 'g' ....... :class:`model_image_symmetric_gaussian`
+    * 'G' ....... :class:`model_image_symmetric_gaussian`
+    * 'a' ....... :class:`model_image_asymmetric_gaussian`
+    * 'A' ....... :class:`model_image_asymmetric_gaussian`
+    * 'c' ....... :class:`model_image_crescent`
+    * 'x' ....... :class:`model_image_xsring`
+    * 'X' ....... :class:`model_image_xsringauss`
+    * 'r' ....... :class:`model_image_splined_raster`, hyperparameters must be provided for ths model.  Required: {'splined_raster_Nx':Nx, 'splined_raster_Ny':Ny, 'splined_raster_fovx':fovx, 'splined_raster_fovy':fovy}.  Optional: {'splined_raster_a':-0.5, 'splined_raster_fft':'fft', 'splined_raster_themis_fft_sign':True}
+    * 'R' ....... :class:`model_image_adaptive_splined_raster`, hyperparameters must be provided for ths model.  Required: {'splined_raster_Nx':Nx, 'splined_raster_Ny':Ny}.  Optional: {'splined_raster_a':-0.5, 'splined_raster_fft':'fft', 'splined_raster_themis_fft_sign':True}
+    * 's' ....... The immediately following specification will be assumed to be part of a :class:`model_image_smooth` object.
+    * '<#>' ..... The immediately preceding model will repeated the specified number of times (e.g., 'a3' will be expanded to 'aaa', 'sX3' will be expanded to 'sXsXsX').
 
     Args:
-      model_glob(str): A model glob string constructed of a,A,g,G,X, following the style and details of the model glob in the m87_ccm_mexico drivers.
+      model_glob (str): Model glob string.
+      hyper_parameters (dict) : Optional set of hyperparameters for image models that require them.  Where they are not provided for required arguments a RuntimeError will be raised.
+
+    Returns:
+      (list): List of individual model specifiers.
+    """
+
+    # Make sure that model_glob is a string
+    if (not isinstance(model_glob,str)) :
+        raise RuntimeError("Unrecognized model_glob %s. model_glob must be string formatted as described in the documentation."%(model_glob))
+
+    # Expand model_glob to take out numbers
+    expanded_model_list = []
+    intsplit_model_glob = re.split('(\d+)',model_glob)
+    
+    ks = 0
+    while ( ks<len(intsplit_model_glob) ) :
+        
+        ms = intsplit_model_glob[ks]
+
+        # Peak ahead for integers
+        repeat_number=1
+        if ( ks+1<len(intsplit_model_glob) ) :
+            if ( intsplit_model_glob[ks+1].isdigit ) :
+                repeat_number = int(intsplit_model_glob[ks+1])
+                ks = ks+1
+        
+        k=0
+        while ( k<len(ms) ) :
+
+            m = ms[k]
+
+            # If smooth key-character passed, grab next specifier
+            if (m=='s') :
+                m = model_glob[k:k+2]
+                k = k+1
+
+            if (k==len(ms)-1) :
+                for j in range(repeat_number) :
+                    expanded_model_list.append(m)
+            else :
+                expanded_model_list.append(m)
+
+            k = k+1
+
+        ks = ks+1
+
+    return expanded_model_list
+
+
+    
+def model_image_from_ccm_mexico(model_glob,hyperparameters=None) :
+    """
+    Reads a model glob as produced by the ccm_mexico driver and generates 
+    a corresponding :class:`model_image` object. If more than one model
+    specifier is provided, an appropriate :class:`model_image_sum` object 
+    is returned. Model glob options are supplemented beyond that in the 
+    ccm_mexico driver in that they permit unlimited components of any type 
+    (i.e., the ccm_mexico+ standard).
+
+    Current list of accepted model strings are listed in :func:`expand_model_glob_ccm_mexico`.  
+    In addition, for the following model specifiers the associated hyperparameters
+    must be provided as a dictionary:
+
+    * 'r' ....... :class:`model_image_splined_raster`, hyperparameters must be provided for ths model.  Required: {'splined_raster_Nx':Nx, 'splined_raster_Ny':Ny, 'splined_raster_fovx':fovx, 'splined_raster_fovy':fovy}.  Optional: {'splined_raster_a':-0.5, 'splined_raster_fft':'fft', 'splined_raster_themis_fft_sign':True}
+    * 'R' ....... :class:`model_image_adaptive_splined_raster`, hyperparameters must be provided for ths model.  Required: {'splined_raster_Nx':Nx, 'splined_raster_Ny':Ny}.  Optional: {'splined_raster_a':-0.5, 'splined_raster_fft':'fft', 'splined_raster_themis_fft_sign':True}
+
+    Args:
+      model_glob (str): Model glob string.
+      hyper_parameters (dict) : Optional set of hyperparameters for image models that require them.  Where they are not provided for required arguments a RuntimeError will be raised.
 
     Returns:
       (model_image): A corresponding model image object.
     """
 
-    expanded_model_list = []
+    print("Generating model_image object for %s"%(model_glob))
 
-    for m in model_glob :
-
-        ms = re.split('(\d+)', m)
-
-        if (len(ms)==1) :
-            n = 1
+    expanded_model_list = expand_model_glob_ccm_mexico(model_glob)
+            
+    # A list of the constructed image objects
+    image_list=[]
+    hyperparameters_local = copy.deepcopy(hyperparameters)
+    for m in expanded_model_list :
+        print(m)
+        if (m[-1]=='g') :
+            image_list.append(model_image_symmetric_gaussian())
+        elif (m[-1]=='G') :
+            image_list.append(model_image_symmetric_gaussian())
+        elif (m[-1]=='a') :
+            image_list.append(model_image_asymmetric_gaussian())
+        elif (m[-1]=='A') :
+            image_list.append(model_image_asymmetric_gaussian())
+        elif (m[-1]=='c') :
+            image_list.append(model_image_crescent())
+        elif (m[-1]=='x') :
+            image_list.append(model_image_xsring())
+        elif (m[-1]=='X') :
+            image_list.append(model_image_xsringauss())
+        elif (m[-1]=='r') :
+            hpreq = ['splined_raster_Nx','splined_raster_Ny','splined_raster_fovx','splined_raster_fovy']
+            hpopt = ['splined_raster_a','splined_raster_fft','splined_raster_themis_fft_sign']
+            hpvals = [None,None,None,None,-0.5,'fft',True]
+            if (hyperparameters_local is None) :
+                raise RuntimeError("hyperparameters must be provided to generate a model_image_splined_raster object.")
+            for j in range(len(hpreq)) :
+                if ( hpreq[j] in hyperparameters_local.keys() ) :
+                    hpvals[j] = hyperparameters_local[hpreq[j]]
+                else :
+                    raise RuntimeError("%s must be provided in the hyperparameters passed to generate a model_image_splined_raster object."%(hpreq[j]))
+            for j in range(len(hpopt)) :
+                if ( hpopt[j] in hyperparameters_local.keys() ) :
+                    hpvals[j+len(hpreq)] = hyperparameters_local[hpopt[j]]
+            image_list.append(model_image_splined_raster(hpvals[0],hpvals[1],hpvals[2],hpvals[3],a=hpvals[4],spline_method=hpvals[5],themis_fft_sign=hpvals[6]))
+        elif (m[-1]=='R') :
+            hpreq = ['adaptive_splined_raster_Nx','adaptive_splined_raster_Ny']
+            hpopt = ['adaptive_splined_raster_a','adaptive_splined_raster_fft','adaptive_splined_raster_themis_fft_sign']
+            hpvals = [None,None,-0.5,'fft',True]
+            if (hyperparameters_local is None) :
+                raise RuntimeError("hyperparameters must be provided to generate a model_image_splined_raster object.")
+            for j in range(len(hpreq)) :
+                if ( hpreq[j] in hyperparameters_local.keys() ) :
+                    hpvals[j] = hyperparameters_local[hpreq[j]]
+                else :
+                    raise RuntimeError("%s must be provided in the hyperparameters passed to generate a model_image_splined_raster object."%(hpreq[j]))
+            for j in range(len(hpopt)) :
+                if ( hpopt[j] in hyperparameters_local.keys() ) :
+                    hpvals[j+len(hpreq)] = hyperparameters_local[hpopt[j]]
+            image_list.append(model_image_adaptive_splined_raster(hpvals[0],hpvals[1],a=hpvals[2],spline_method=hpvals[3],themis_fft_sign=hpvals[4]))
         else :
-            n = int(ms[1])
+            raise RuntimeError("%s is not a valid model specifier in the ccm_mexico+ tag version set."%m[-1])
+            
+        if (m[0]=='s') :
+            image_list[-1] = model_image_smooth(image_list[-1])
 
-        for k in range(n) :
-            expanded_model_list.append(ms[0])
+    if (len(image_list)==0) :
+        return None
+    elif (len(image_list)==1) :
+        return image_list[0]
+    else :
+        return ( model_image_sum(image_list) )
 
-    return expanded_model_list
+
+def write_model_tag_file_from_mexico_ccm(model_glob,hyperparameters=None,tag_file_name='model_image.tag') :
+    """
+    Reads a model glob as produced by the ccm_mexico driver and writes a
+    corresponding tagvers-1.0 model_image.tag file. Model glob options are 
+    supplemented beyond that in the ccm_mexico driver in that they permit 
+    unlimited components of any type (i.e., the ccm_mexico+ standard).
+
+    Current list of accepted model strings are listed in :func:`expand_model_glob_ccm_mexico`.  
+    In addition, for the following model specifiers the associated hyperparameters
+    must be provided as a dictionary:
+
+    * 'r' ....... :class:`model_image_splined_raster`, hyperparameters must be provided for ths model.  Required: {'splined_raster_Nx':Nx, 'splined_raster_Ny':Ny, 'splined_raster_fovx':fovx, 'splined_raster_fovy':fovy}.  Optional: {'splined_raster_a':-0.5, 'splined_raster_fft':'fft', 'splined_raster_themis_fft_sign':True}
+    * 'R' ....... :class:`model_image_adaptive_splined_raster`, hyperparameters must be provided for ths model.  Required: {'splined_raster_Nx':Nx, 'splined_raster_Ny':Ny}.  Optional: {'splined_raster_a':-0.5, 'splined_raster_fft':'fft', 'splined_raster_themis_fft_sign':True}
+
+    Args:
+      model_glob (str): Model glob string.
+      hyper_parameters (dict) : Optional set of hyperparameters for image models that require them.  Where they are not provided for required arguments a RuntimeError will be raised.
+      tag_file_name (str): Name of tag file to be written. Default: 'model_image.tag'.
+    """
+
+    print("Generating tag file for %s"%(model_glob))
+    
+    # Generate
+    expanded_model_list = expand_model_glob_ccm_mexico(model_glob)
+
+    # Open tag file
+    tagout=open(tag_file_name,'w')
+    tagout.write("tagvers-1.0\n")
+    
+    # If a model_image_sum object:
+    if (len(expanded_model_list)>1) :
+        tagout.write("model_image_sum\n")
+        tagout.write("SUBTAG START\n")
+
+    for m in expanded_model_list :
+        if (m[0]=='s') :
+            tagout.write("model_image_smooth\n")
+            tagout.write("SUBTAG START\n")
+        if (m[-1]=='g') :
+            tagout.write("model_image_symmetric_gaussian\n")
+        elif (m[-1]=='G') :
+            tagout.write("model_image_symmetric_gaussian\n")
+        elif (m[-1]=='a') :
+            tagout.write("model_image_asymmetric_gaussian\n")
+        elif (m[-1]=='A') :
+            tagout.write("model_image_asymmetric_gaussian\n")
+        elif (m[-1]=='c') :
+            tagout.write("model_image_crescent\n")
+        elif (m[-1]=='x') :
+            tagout.write("model_image_xsring\n")
+        elif (m[-1]=='X') :
+            tagout.write("model_image_xsringauss\n")
+        elif (m[-1]=='r') :
+            hpreq = ['splined_raster_Nx','splined_raster_Ny','splined_raster_fovx','splined_raster_fovy']
+            hpopt = ['splined_raster_a']
+            hpvals = [None,None,None,None,-0.5]
+            if (hyperparameters is None) :
+                raise RuntimeError("hyperparameters must be provided to generate a model_image_splined_raster object.")
+            for j in range(len(hpreq)) :
+                if ( hpreq[j] in hyperparameters.keys() ) :
+                    hpvals[j] = hyperparameters[hpreq[j]]
+                else :
+                    raise RuntimeError("%s must be provided in the hyperparameters passed to generate a model_image_splined_raster object."%(hpreq[j]))
+            for j in range(len(hpopt)) :
+                if ( hpopt[j] in hyperparameters.keys() ) :
+                    hpvals[j+len(hpreq)] = hyperparameters[hpopt[j]]
+            tagout.write("model_image_splined_raster %i %i %g %g %g\n"%(hpvals[0],hpvals[1],hpvals[2],hpvals[3],hpvals[4]))
+        elif (m[-1]=='R') :
+            hpreq = ['adaptive_splined_raster_Nx','adaptive_splined_raster_Ny']
+            hpopt = ['adaptive_splined_raster_a']
+            hpvals = [None,None,-0.5]
+            if (hyperparameters is None) :
+                raise RuntimeError("hyperparameters must be provided to generate a model_image_splined_raster object.")
+            for j in range(len(hpreq)) :
+                if ( hpreq[j] in hyperparameters.keys() ) :
+                    hpvals[j] = hyperparameters[hpreq[j]]
+                else :
+                    raise RuntimeError("%s must be provided in the hyperparameters passed to generate a model_image_splined_raster object."%(hpreq[j]))
+            for j in range(len(hpopt)) :
+                if ( hpopt[j] in hyperparameters.keys() ) :
+                    hpvals[j+len(hpreq)] = hyperparameters[hpopt[j]]
+            tagout.write("model_image_adaptive_splined_raster %i %i %g\n"%(hpvals[0],hpvals[1],hpvals[2]))
+        else :
+            raise RuntimeError("%s is not a valid model specifier in the ccm_mexico+ tag version set."%m[-1])
+        if (m[0]=='s') :
+            tagout.write("SUBTAG FINISH\n")
+
+    # If a model_image_sum object:
+    if (len(expanded_model_list)>1) :
+        tagout.write("SUBTAG FINISH\n")
+
+    # Finish tag file
+    tagout.close()
+    
+
+
+def tagv1_find_subtag(tag) :
+    """
+    Given a tag that begins with SUBTAG START, find the subtag within the matching
+    SUBTAG FINISH.
+
+    Args:
+      tag (list): List of tag lines.
+
+    Returns:
+      (list): List of tag lines.
+    """
+
+    # Make sure that the first line is indeed SUBTAG START
+    if (tag[0]!="SUBTAG START") :
+        RuntimeError("Invalid subtag!  Expected SUBTAG START.  Found %s."%(tag[0]))
+    
+    # Find index of matching SUBTAG FINISH
+    subtag_level=1
+    k=1
+    while (subtag_level>0) :
+        if (tag[k]=="SUBTAG START") :
+            subtag_level = subtag_level+1
+        elif (tag[k]=="SUBTAG FINISH") :
+            subtag_level = subtag_level-1
+        k = k+1
+
+    return tag[1:(k-1)]
+    
+    
+def model_image_from_tagv1(tag,verbosity=0) :
+    """
+    Parses a tagvers-1.0 Themis tag and recursively constructs a model image.
+
+    Args:
+      tag (list) : List of tags, arranged as str on separate lines.
+      verbosity (int): Verbosity level. 0 prints nothing. 1 prints tag information.
+
+    Returns:
+      (model_image, list) : The first :class:`model_image` object fully described within the tag; the remaining tag lines.
+    """
+
+    if (verbosity>0) :
+        for j,l in enumerate(tag) :
+            print("%i : %s"%(j,tag[j]))
+        print("---------------------------------")
+
+    if (tag[0]=='model_image_symmetric_gaussian') :
+        return model_image_symmetric_gaussian(),tag[1:]
+    elif (tag[0]=='model_image_asymmetric_gaussian') :
+        return model_image_asymmetric_gaussian(),tag[1:]
+    elif (tag[0]=='model_image_crescent') :
+        return model_image_crescent(),tag[1:]
+    elif (tag[0]=='model_image_xsring') :
+        return model_image_xsring(),tag[1:]
+    elif (tag[0]=='model_image_xsringauss') :
+        return model_image_xsringauss(),tag[1:]
+    elif (tag[0].split()[0]=='model_image_splined_raster') :
+        toks = tag[0].split()
+        return model_image_splined_raster(float(toks[1]),float(toks[2]),int(toks[3]),float(toks[4]),float(toks[5]),int(toks[6]),float(toks[7])),tag[1:]
+    elif (tag[0].split()[0]=='model_image_adaptive_splined_raster') :
+        toks = tag[0].split()
+        return model_image_adaptive_splined_raster(int(toks[1]),int(toks[2]),float(toks[3])),tag[1:]
+    elif (tag[0]=='model_image_smooth') :
+        subtag = tagv1_find_subtag(tag[1:])
+        subimage,_ = model_image_from_tagv1(subtag,verbosity=verbosity)
+        print(type(subimage))
+        return model_image_smooth(subimage),tag[(len(subtag)+3):]
+    elif (tag[0]=='model_image_sum') :
+        subtag = tagv1_find_subtag(tag[1:])
+        len_subtag = len(subtag)
+        image_list = []
+        while (len(subtag)>0) :
+            subimage,subtag = model_image_from_tagv1(subtag,verbosity=verbosity)
+            image_list.append(subimage)
+        return model_image_sum(image_list),tag[len_subtag+3:]
+    else :
+        raise RuntimeError("Unrecognized model tag %s"%(tag[0]))
+
+    
+def model_image_from_tag_file(tag_file_name='model_image.tag', tagversion='tagvers-1.0',verbosity=0) :
+    """
+    Reads tag file produced by the :cpp:func:`Themis::model_image::write_model_tag_file` function 
+    and returns an appropriate model image. Model tag files can be generated from ccm_mexico+ model 
+    specification strings using :func:`write_model_tag_file_from_mexico_ccm`. For details about
+    the available model tag syntax, see `Themis::model_image::write_model_tag_file`.
+
+    Args:
+      tag_file_name (str): Name of the tag_file. Default: 'model_image.tag'
+      tagversion (str): Version of tag system. Currently only tagvers-1.0 is implemented. Default 'tagvers-1.0'.
+      verbosity (int): Verbosity level. 0 prints nothing. 1 prints tag information.
+
+    Returns:
+      (model_image): :class:`model_image` object of the corresponding model.
+    """
+
+
+    tagin = open(tag_file_name,'r')
+    tag = tagin.readlines()
+    tagin.close()
+    
+    tag = [l.strip('\n\r') for l in tag]
+    tagversion_file = tag[0]
+    tag = tag[1:]
+
+    if (tagversion_file==tagversion) :
+        image,tag = model_image_from_tagv1(tag,verbosity=verbosity)
+        if (len(tag)>0) :
+            raise RuntimeError(("Remaining tag lines:"+len(tag)*("   %s\n"))%tuple(tag))
+        return image
+    else:
+        raise RuntimeError("Tag versions other than tagvers-1.0 are not supported at this time.")
+
+    
+def model_image_from_glob(model_glob, glob_version, hyperparameters=None) :
+    """
+    Constructs a :class:`model_image` object given an appropriate model specification glob.  
+    Currently accepted globs include:
+
+    * ccm_mexico+ model specification string. These are an extended set of the strings used by the ccm_m87_mexico drivers.  For example, sXaagG.  For raster model types, hyperparameters must be supplied.  See :func:`expand_model_glob_ccm_mexico` for details regarding the required form.
+    * model tag file name. These can be output by Themis directly and encompass a wider set of possible models.
+
+    The appropriate associated glob version must be specified. For some specifications an additional set of hyperparameters may need to be supplied.
+
+    Args:
+      model_glob (str): Glob defining model image. Examples are 'sXaagG' or 'model_image.tag'
+      tagversion (str): Version of tag system. Currently only tagvers-1.0 is implemented. Default 'tagvers-1.0'.
+      hyperparameters (dict): Dictionary of hyperparameters if needed by the specification.
+
+    Returns:
+      (model_image): class:`model_image` object of the corresponding model.
+
+    """
+
+    print(glob_version)
+    
+    if (glob_version=='ccm_mexico' or glob_version=='ccm_mexico+') :
+        return model_image_from_ccm_mexico(model_glob,hyperparameters)
+    elif (glob_version=='tagvers-1.0') :
+        return model_image_from_tag_file(model_glob,glob_version)
+    else :
+        raise RuntimeError("Unrecognized model_glob version: %s"%(version))
+
 
 
