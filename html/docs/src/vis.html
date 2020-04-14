@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vis &mdash; ThemisPy 0+untagged.132.g01cffb0.dirty documentation</title>
+  <title>Vis &mdash; ThemisPy 0+untagged.140.gf687f5e.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.132.g01cffb0.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.140.gf687f5e.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="themispy_trace_plots" href="scripts.html"/>
         <link rel="prev" title="Diag" href="diag.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.132.g01cffb0.dirty
+                0+untagged.140.gf687f5e.dirty
               </div>
             
           
@@ -329,6 +329,110 @@ Useful for the splined raster image classes.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="vis.image.construct_model_image_from_ccm_mexico">
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">construct_model_image_from_ccm_mexico</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_glob</span></em>, <em class="sig-param"><span class="n">hyperparameters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#construct_model_image_from_ccm_mexico"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.construct_model_image_from_ccm_mexico" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a model glob as produced by the ccm_mexico driver and generates
+a corresponding <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object. If more than one model
+specifier is provided, an appropriate <a class="reference internal" href="#vis.image.model_image_sum" title="vis.image.model_image_sum"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_sum</span></code></a> object
+is returned. Model glob options are supplemented beyond that in the
+ccm_mexico driver in that they permit unlimited components of any type
+(i.e., the ccm_mexico+ standard).</p>
+<p>Current list of accepted model strings are listed in <a class="reference internal" href="#vis.image.expand_model_glob_ccm_mexico" title="vis.image.expand_model_glob_ccm_mexico"><code class="xref py py-func docutils literal notranslate"><span class="pre">expand_model_glob_ccm_mexico()</span></code></a>.
+In addition, for the following model specifiers the associated hyperparameters
+must be provided as a dictionary:</p>
+<ul class="simple">
+<li><p>‘r’ ……. <a class="reference internal" href="#vis.image.model_image_splined_raster" title="vis.image.model_image_splined_raster"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_splined_raster</span></code></a>, hyperparameters must be provided for ths model.  Required: {‘splined_raster_Nx’:Nx, ‘splined_raster_Ny’:Ny, ‘splined_raster_fovx’:fovx, ‘splined_raster_fovy’:fovy}.  Optional: {‘splined_raster_a’:-0.5, ‘splined_raster_fft’:’fft’, ‘splined_raster_themis_fft_sign’:True}</p></li>
+<li><p>‘R’ ……. <a class="reference internal" href="#vis.image.model_image_adaptive_splined_raster" title="vis.image.model_image_adaptive_splined_raster"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_adaptive_splined_raster</span></code></a>, hyperparameters must be provided for ths model.  Required: {‘splined_raster_Nx’:Nx, ‘splined_raster_Ny’:Ny}.  Optional: {‘splined_raster_a’:-0.5, ‘splined_raster_fft’:’fft’, ‘splined_raster_themis_fft_sign’:True}</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_glob</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Model glob string.</p></li>
+<li><p><strong>hyper_parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Optional set of hyperparameters for image models that require them.  Where they are not provided for required arguments a RuntimeError will be raised.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity level. 0 prints nothing. 1 prints model_glob information.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A corresponding model image object.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image">model_image</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.image.construct_model_image_from_glob">
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">construct_model_image_from_glob</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_glob</span></em>, <em class="sig-param"><span class="n">glob_version</span></em>, <em class="sig-param"><span class="n">hyperparameters</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#construct_model_image_from_glob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.construct_model_image_from_glob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object given an appropriate model specification glob.
+Currently accepted globs include:</p>
+<ul class="simple">
+<li><p>ccm_mexico+ model specification string. These are an extended set of the strings used by the ccm_m87_mexico drivers.  For example, sXaagG.  For raster model types, hyperparameters must be supplied.  See <a class="reference internal" href="#vis.image.expand_model_glob_ccm_mexico" title="vis.image.expand_model_glob_ccm_mexico"><code class="xref py py-func docutils literal notranslate"><span class="pre">expand_model_glob_ccm_mexico()</span></code></a> for details regarding the required form.</p></li>
+<li><p>model tag file name. These can be output by Themis directly and encompass a wider set of possible models.</p></li>
+</ul>
+<p>The appropriate associated glob version must be specified. For some specifications an additional set of hyperparameters may need to be supplied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_glob</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Glob defining model image. Examples are ‘sXaagG’ or ‘model_image.tag’</p></li>
+<li><p><strong>tagversion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Version of tag system. Currently only tagvers-1.0 is implemented. Default ‘tagvers-1.0’.</p></li>
+<li><p><strong>hyperparameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Dictionary of hyperparameters if needed by the specification.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object of the corresponding model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image">model_image</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.image.construct_model_image_from_tag_file">
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">construct_model_image_from_tag_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tag_file_name</span><span class="o">=</span><span class="default_value">'model_image.tag'</span></em>, <em class="sig-param"><span class="n">tagversion</span><span class="o">=</span><span class="default_value">'tagvers-1.0'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#construct_model_image_from_tag_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.construct_model_image_from_tag_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads tag file produced by the <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">:model_image::write_model_tag_file</span></code> function
+and returns an appropriate model image. Model tag files can be generated from ccm_mexico+ model
+specification strings using <a class="reference internal" href="#vis.image.write_model_tag_file_from_mexico_ccm" title="vis.image.write_model_tag_file_from_mexico_ccm"><code class="xref py py-func docutils literal notranslate"><span class="pre">write_model_tag_file_from_mexico_ccm()</span></code></a>. For details about
+the available model tag syntax, see <cite>Themis::model_image::write_model_tag_file</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_file_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the tag_file. Default: ‘model_image.tag’</p></li>
+<li><p><strong>tagversion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Version of tag system. Currently only tagvers-1.0 is implemented. Default ‘tagvers-1.0’.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity level. 0 prints nothing. 1 prints tag information.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object of the corresponding model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image">model_image</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.image.construct_model_image_from_tagv1">
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">construct_model_image_from_tagv1</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tag</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#construct_model_image_from_tagv1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.construct_model_image_from_tagv1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a tagvers-1.0 Themis tag and recursively constructs a model image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of tags, arranged as str on separate lines.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity level. 0 prints nothing. 1 prints tag information.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The first <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object fully described within the tag; the remaining tag lines.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image">model_image</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="vis.image.direct_cubic_spline_1d">
 <code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">direct_cubic_spline_1d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">f</span></em>, <em class="sig-param"><span class="n">xx</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">- 0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#direct_cubic_spline_1d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.direct_cubic_spline_1d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Image-space approximate cubic spline convolution along 1D.  Useful for the splined raster image classes.
@@ -375,6 +479,43 @@ for debugging only.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.image.expand_model_glob_ccm_mexico">
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">expand_model_glob_ccm_mexico</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_glob</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#expand_model_glob_ccm_mexico"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.expand_model_glob_ccm_mexico" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expands an abbreviated model glob as produced by the ccm_mexico driver
+and generates a list of individual model specifiers. Model glob options
+are supplemented beyond that in the ccm_mexico driver in that they permit
+unlimited components of any type (i.e., the ccm_mexico+ standard).</p>
+<p>Current list of accepted model strings are:</p>
+<ul class="simple">
+<li><p>‘g’ ……. <a class="reference internal" href="#vis.image.model_image_symmetric_gaussian" title="vis.image.model_image_symmetric_gaussian"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_symmetric_gaussian</span></code></a></p></li>
+<li><p>‘G’ ……. <a class="reference internal" href="#vis.image.model_image_symmetric_gaussian" title="vis.image.model_image_symmetric_gaussian"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_symmetric_gaussian</span></code></a></p></li>
+<li><p>‘a’ ……. <a class="reference internal" href="#vis.image.model_image_asymmetric_gaussian" title="vis.image.model_image_asymmetric_gaussian"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_asymmetric_gaussian</span></code></a></p></li>
+<li><p>‘A’ ……. <a class="reference internal" href="#vis.image.model_image_asymmetric_gaussian" title="vis.image.model_image_asymmetric_gaussian"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_asymmetric_gaussian</span></code></a></p></li>
+<li><p>‘c’ ……. <a class="reference internal" href="#vis.image.model_image_crescent" title="vis.image.model_image_crescent"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_crescent</span></code></a></p></li>
+<li><p>‘x’ ……. <a class="reference internal" href="#vis.image.model_image_xsring" title="vis.image.model_image_xsring"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_xsring</span></code></a></p></li>
+<li><p>‘X’ ……. <a class="reference internal" href="#vis.image.model_image_xsringauss" title="vis.image.model_image_xsringauss"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_xsringauss</span></code></a></p></li>
+<li><p>‘r’ ……. <a class="reference internal" href="#vis.image.model_image_splined_raster" title="vis.image.model_image_splined_raster"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_splined_raster</span></code></a>, hyperparameters must be provided for ths model.  Required: {‘splined_raster_Nx’:Nx, ‘splined_raster_Ny’:Ny, ‘splined_raster_fovx’:fovx, ‘splined_raster_fovy’:fovy}.  Optional: {‘splined_raster_a’:-0.5, ‘splined_raster_fft’:’fft’, ‘splined_raster_themis_fft_sign’:True}</p></li>
+<li><p>‘R’ ……. <a class="reference internal" href="#vis.image.model_image_adaptive_splined_raster" title="vis.image.model_image_adaptive_splined_raster"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_adaptive_splined_raster</span></code></a>, hyperparameters must be provided for ths model.  Required: {‘splined_raster_Nx’:Nx, ‘splined_raster_Ny’:Ny}.  Optional: {‘splined_raster_a’:-0.5, ‘splined_raster_fft’:’fft’, ‘splined_raster_themis_fft_sign’:True}</p></li>
+<li><p>‘s’ ……. The immediately following specification will be assumed to be part of a <a class="reference internal" href="#vis.image.model_image_smooth" title="vis.image.model_image_smooth"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_smooth</span></code></a> object.</p></li>
+<li><p>‘&lt;#&gt;’ ….. The immediately preceding model will repeated the specified number of times (e.g., ‘a3’ will be expanded to ‘aaa’, ‘sX3’ will be expanded to ‘sXsXsX’).</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_glob</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Model glob string.</p></li>
+<li><p><strong>hyper_parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Optional set of hyperparameters for image models that require them.  Where they are not provided for required arguments a RuntimeError will be raised.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of individual model specifiers.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -508,6 +649,17 @@ convention.</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="vis.image.model_image.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook for returning a list of parameter names.  Currently just returns the list of p0-p(size-1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -606,6 +758,17 @@ Has parameters:</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="vis.image.model_image_adaptive_splined_raster.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_adaptive_splined_raster.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_adaptive_splined_raster.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Producess a lists parameter names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -639,6 +802,17 @@ Has parameters:</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_asymmetric_gaussian.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_asymmetric_gaussian.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_asymmetric_gaussian.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Producess a lists parameter names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -678,6 +852,17 @@ Has parameters:</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_crescent.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_crescent.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_crescent.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Producess a lists parameter names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -750,6 +935,17 @@ simply copies the parameters into the local list with some additional run-time c
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_smooth.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_smooth.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_smooth.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Producess a lists parameter names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -873,6 +1069,17 @@ Has parameters:</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="vis.image.model_image_splined_raster.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_splined_raster.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_splined_raster.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Producess a lists parameter names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -974,6 +1181,17 @@ and copies the shift vector (x0,y0) for each model_image object, and performs so
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="vis.image.model_image_sum.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_sum.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_sum.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Producess a lists parameter names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -1005,6 +1223,17 @@ Has parameters:</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_symmetric_gaussian.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_symmetric_gaussian.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_symmetric_gaussian.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Producess a lists parameter names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1044,6 +1273,17 @@ Has parameters:</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_xsring.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_xsring.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_xsring.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Producess a lists parameter names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1090,6 +1330,60 @@ Has parameters:</p>
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="vis.image.model_image_xsringauss.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_xsringauss.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_xsringauss.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Producess a lists parameter names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.image.tagv1_find_subtag">
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">tagv1_find_subtag</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tag</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#tagv1_find_subtag"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.tagv1_find_subtag" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given a tag that begins with SUBTAG START, find the subtag within the matching
+SUBTAG FINISH.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of tag lines.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of tag lines.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.image.write_model_tag_file_from_mexico_ccm">
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">write_model_tag_file_from_mexico_ccm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_glob</span></em>, <em class="sig-param"><span class="n">hyperparameters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tag_file_name</span><span class="o">=</span><span class="default_value">'model_image.tag'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#write_model_tag_file_from_mexico_ccm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.write_model_tag_file_from_mexico_ccm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads a model glob as produced by the ccm_mexico driver and writes a
+corresponding tagvers-1.0 model_image.tag file. Model glob options are
+supplemented beyond that in the ccm_mexico driver in that they permit
+unlimited components of any type (i.e., the ccm_mexico+ standard).</p>
+<p>Current list of accepted model strings are listed in <a class="reference internal" href="#vis.image.expand_model_glob_ccm_mexico" title="vis.image.expand_model_glob_ccm_mexico"><code class="xref py py-func docutils literal notranslate"><span class="pre">expand_model_glob_ccm_mexico()</span></code></a>.
+In addition, for the following model specifiers the associated hyperparameters
+must be provided as a dictionary:</p>
+<ul class="simple">
+<li><p>‘r’ ……. <a class="reference internal" href="#vis.image.model_image_splined_raster" title="vis.image.model_image_splined_raster"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_splined_raster</span></code></a>, hyperparameters must be provided for ths model.  Required: {‘splined_raster_Nx’:Nx, ‘splined_raster_Ny’:Ny, ‘splined_raster_fovx’:fovx, ‘splined_raster_fovy’:fovy}.  Optional: {‘splined_raster_a’:-0.5, ‘splined_raster_fft’:’fft’, ‘splined_raster_themis_fft_sign’:True}</p></li>
+<li><p>‘R’ ……. <a class="reference internal" href="#vis.image.model_image_adaptive_splined_raster" title="vis.image.model_image_adaptive_splined_raster"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_adaptive_splined_raster</span></code></a>, hyperparameters must be provided for ths model.  Required: {‘splined_raster_Nx’:Nx, ‘splined_raster_Ny’:Ny}.  Optional: {‘splined_raster_a’:-0.5, ‘splined_raster_fft’:’fft’, ‘splined_raster_themis_fft_sign’:True}</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_glob</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Model glob string.</p></li>
+<li><p><strong>hyper_parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Optional set of hyperparameters for image models that require them.  Where they are not provided for required arguments a RuntimeError will be raised.</p></li>
+<li><p><strong>tag_file_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of tag file to be written. Default: ‘model_image.tag’.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -1272,7 +1566,7 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.132.g01cffb0.dirty',
+            VERSION:'0+untagged.140.gf687f5e.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.image &mdash; ThemisPy 0+untagged.132.g01cffb0.dirty documentation</title>
+  <title>vis.image &mdash; ThemisPy 0+untagged.140.gf687f5e.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.132.g01cffb0.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.140.gf687f5e.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.132.g01cffb0.dirty
+                0+untagged.140.gf687f5e.dirty
               </div>
             
           
@@ -158,12 +158,18 @@
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">interpolate</span> <span class="k">as</span> <span class="n">sint</span>
 <span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">fftconvolve</span>
 
 
 <span class="n">rad2uas</span> <span class="o">=</span> <span class="mf">180.0</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">3600</span> <span class="o">*</span> <span class="mf">1e6</span>
 <span class="n">uas2rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="p">(</span><span class="mf">180.0</span> <span class="o">*</span> <span class="mi">3600</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">)</span>
+
+
+
+<span class="c1">## Reads in a list of alphanumeric model specifiers and expands them as</span>
+<span class="c1">## appropriate.  This includes modifiers, models, and a number of repititions</span>
 
 
 
@@ -251,8 +257,18 @@
 <span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y).</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;intensity_map must be defined in children classes of model_image.&quot;</span><span class="p">)</span></div></div>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;intensity_map must be defined in children classes of model_image.&quot;</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="model_image.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Hook for returning a list of parameter names.  Currently just returns the list of p0-p(size-1).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[</span> <span class="s1">&#39;p</span><span class="si">%i</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">]</span></div></div>
     
     
 <div class="viewcode-block" id="model_image_symmetric_gaussian"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_symmetric_gaussian">[docs]</a><span class="k">class</span> <span class="nc">model_image_symmetric_gaussian</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
@@ -295,8 +311,19 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Symmetric Gaussian:&quot;</span><span class="p">,</span><span class="n">I0</span><span class="p">,</span><span class="n">s</span><span class="p">)</span>
             
-        <span class="k">return</span> <span class="n">I</span></div></div>
+        <span class="k">return</span> <span class="n">I</span></div>
 
+    
+<div class="viewcode-block" id="model_image_symmetric_gaussian.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_symmetric_gaussian.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producess a lists parameter names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[</span> <span class="sa">r</span><span class="s1">&#39;$I_0$ (Jy)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\sigma$ (rad)&#39;</span><span class="p">]</span></div></div>
+    
     
 <div class="viewcode-block" id="model_image_asymmetric_gaussian"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_asymmetric_gaussian">[docs]</a><span class="k">class</span> <span class="nc">model_image_asymmetric_gaussian</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -358,8 +385,19 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Asymmetric Gaussian:&quot;</span><span class="p">,</span><span class="n">I0</span><span class="p">,</span><span class="n">sm</span><span class="p">,</span><span class="n">sM</span><span class="p">,</span><span class="n">phi</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">I</span></div></div>
+        <span class="k">return</span> <span class="n">I</span></div>
 
+    
+<div class="viewcode-block" id="model_image_asymmetric_gaussian.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_asymmetric_gaussian.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producess a lists parameter names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[</span> <span class="sa">r</span><span class="s1">&#39;$I_0$ (Jy)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\sigma$ (rad)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$A$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\phi$ (rad)&#39;</span><span class="p">]</span></div></div>
+    
 
 
 
@@ -417,9 +455,20 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KD Crescent:&quot;</span><span class="p">,</span><span class="n">I0</span><span class="p">,</span><span class="n">Rp</span><span class="p">,</span><span class="n">Rn</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="n">I</span>    </div></div>
+        <span class="k">return</span> <span class="n">I</span>    </div>
 
+    
+<div class="viewcode-block" id="model_image_crescent.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_crescent.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producess a lists parameter names.</span>
 
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[</span> <span class="sa">r</span><span class="s1">&#39;$I_0$ (Jy)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$R_{\rm out}$ (rad)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\psi$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\epsilon$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\tau$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\phi$ (rad)&#39;</span><span class="p">]</span></div></div>
+
+    
 <div class="viewcode-block" id="model_image_xsring"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_xsring">[docs]</a><span class="k">class</span> <span class="nc">model_image_xsring</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_xsring`.</span>
@@ -444,6 +493,80 @@
 
         
 <div class="viewcode-block" id="model_image_xsring.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_xsring.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">I0</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">Rp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-20</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">rad2uas</span>
+        <span class="n">Rin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="mf">0.9999</span> <span class="p">)</span> <span class="o">*</span> <span class="n">Rp</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="mf">1e-4</span><span class="p">),</span><span class="mf">0.9999</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">Rp</span> <span class="o">-</span> <span class="n">Rin</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="mf">1e-4</span><span class="p">),</span><span class="mf">0.9999</span><span class="p">);</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+
+        <span class="n">Iring0</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">gq</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">I0</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="p">((</span><span class="mf">1.0</span><span class="o">+</span><span class="n">f</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">Rp</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">Rin</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">f</span><span class="p">)</span><span class="o">*</span><span class="n">d</span><span class="o">*</span><span class="n">Rin</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">Rp</span><span class="p">);</span>
+
+        <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">c</span> <span class="o">-</span> <span class="n">y</span><span class="o">*</span><span class="n">s</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">s</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">c</span>
+
+        <span class="n">Iring</span> <span class="o">=</span> <span class="n">Iring0</span><span class="o">*</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">dx</span><span class="o">/</span><span class="n">Rp</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">f</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">+</span><span class="n">dx</span><span class="o">/</span><span class="n">Rp</span><span class="p">))</span> 
+        <span class="n">Iring</span> <span class="o">*=</span> <span class="p">((</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">dy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">Rp</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">Iring</span> <span class="o">*=</span> <span class="p">(((</span><span class="n">dx</span><span class="o">-</span><span class="n">d</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="n">dy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;</span><span class="n">Rin</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;xsring:&quot;</span><span class="p">,</span><span class="n">I0</span><span class="p">,</span><span class="n">Rp</span><span class="p">,</span><span class="n">Rn</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Iring</span></div>
+
+    
+<div class="viewcode-block" id="model_image_xsring.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_xsring.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producess a lists parameter names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[</span> <span class="sa">r</span><span class="s1">&#39;$I_0$ (Jy)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$R_{\rm out}$ (rad)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\psi$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\epsilon$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$f$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\phi$ (rad)&#39;</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="model_image_xsringauss"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_xsringauss">[docs]</a><span class="k">class</span> <span class="nc">model_image_xsringauss</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_xsringauss`.</span>
+<span class="sd">    Has parameters:</span>
+
+<span class="sd">    * parameters[0] ... Total intensity :math:`I_0` (Jy)</span>
+<span class="sd">    * parameters[1] ... Outer radius :math:`R` (rad)</span>
+<span class="sd">    * parameters[2] ... Width parameter :math:`\\psi` in (0,1)</span>
+<span class="sd">    * parameters[3] ... Eccentricity parameter :math:`\\epsilon` in (0,1)</span>
+<span class="sd">    * parameters[4] ... Linear fade parameter math:`f` in (0,1)</span>
+<span class="sd">    * parameters[5] ... FWHM of the main axis of the Gaussian in units of the ring outer radius math:`g_{ax}`</span>
+<span class="sd">    * parameters[6] ... Gaussian axial ratio math:`a_q`</span>
+<span class="sd">    * parameters[7] ... Ratio of Gaussian flux to ring flux math:`g_q`</span>
+<span class="sd">    * parameters[8] ... Position angle :math:`\\phi` (rad)</span>
+
+<span class="sd">    and size=9.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">themis_fft_sign</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">=</span><span class="mi">9</span>
+
+        
+<div class="viewcode-block" id="model_image_xsringauss.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_xsringauss.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.</span>
 
@@ -488,65 +611,18 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;xsringauss:&#39;</span><span class="p">,</span><span class="n">I0</span><span class="p">,</span> <span class="n">Rp</span><span class="p">,</span> <span class="n">Rin</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">sig1</span><span class="p">,</span> <span class="n">sig2</span><span class="p">,</span> <span class="n">gq</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
 
-        <span class="k">return</span> <span class="p">(</span><span class="n">Iring</span><span class="o">+</span><span class="n">Igauss</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="p">(</span><span class="n">Iring</span><span class="o">+</span><span class="n">Igauss</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="model_image_xsringauss"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_xsringauss">[docs]</a><span class="k">class</span> <span class="nc">model_image_xsringauss</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_xsringauss`.</span>
-<span class="sd">    Has parameters:</span>
-
-<span class="sd">    * parameters[0] ... Total intensity :math:`I_0` (Jy)</span>
-<span class="sd">    * parameters[1] ... Outer radius :math:`R` (rad)</span>
-<span class="sd">    * parameters[2] ... Width parameter :math:`\\psi` in (0,1)</span>
-<span class="sd">    * parameters[3] ... Eccentricity parameter :math:`\\epsilon` in (0,1)</span>
-<span class="sd">    * parameters[4] ... Linear fade parameter math:`f` in (0,1)</span>
-<span class="sd">    * parameters[5] ... FWHM of the main axis of the Gaussian in units of the ring outer radius math:`g_{ax}`</span>
-<span class="sd">    * parameters[6] ... Gaussian axial ratio math:`a_q`</span>
-<span class="sd">    * parameters[7] ... Ratio of Gaussian flux to ring flux math:`g_q`</span>
-<span class="sd">    * parameters[8] ... Position angle :math:`\\phi` (rad)</span>
-
-<span class="sd">    and size=9.</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">themis_fft_sign</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span>
-
-        
-<div class="viewcode-block" id="model_image_xsringauss.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_xsringauss.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="model_image_xsringauss.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_xsringauss.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).</span>
-<span class="sd">          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).</span>
-<span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
+<span class="sd">        Producess a lists parameter names.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y).</span>
+<span class="sd">          (list) List of strings of variable names.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">I0</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">paramters</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-        <span class="n">Rp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-20</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">rad2uas</span>
-        <span class="n">Rn</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="mf">0.9999</span> <span class="p">)</span> <span class="o">*</span> <span class="n">Rp</span>
-        <span class="n">d</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="mf">1e-4</span><span class="p">),</span><span class="mf">0.9999</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">Rp</span> <span class="o">-</span> <span class="n">Rn</span><span class="p">)</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="n">d</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
-        <span class="n">I0</span> <span class="o">=</span> <span class="n">I0</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">Rp</span><span class="o">**</span><span class="mi">2</span><span class="o">-</span><span class="n">Rn</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
-        <span class="n">I</span> <span class="o">=</span> <span class="n">I0</span><span class="o">+</span><span class="mi">0</span><span class="o">*</span><span class="n">x</span>
-        <span class="n">I</span> <span class="o">*=</span> <span class="p">((</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">Rp</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-        <span class="n">I</span> <span class="o">*=</span> <span class="p">(((</span><span class="n">x</span><span class="o">-</span><span class="n">a</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">b</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;=</span><span class="n">Rn</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-        
-        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;KD Crescent:&quot;</span><span class="p">,</span><span class="n">I0</span><span class="p">,</span><span class="n">Rp</span><span class="p">,</span><span class="n">Rn</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">I</span></div></div>
-
-
+        <span class="k">return</span> <span class="p">[</span> <span class="sa">r</span><span class="s1">&#39;$I_0$ (Jy)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$R_{\rm out}$ (rad)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\psi$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\epsilon$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$f$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$g_</span><span class="si">{ax}</span><span class="s1">$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$a_q$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$g_q$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\phi$ (rad)&#39;</span><span class="p">]</span></div></div>
 
 
 <div class="viewcode-block" id="direct_cubic_spline_1d"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.direct_cubic_spline_1d">[docs]</a><span class="k">def</span> <span class="nf">direct_cubic_spline_1d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">xx</span><span class="p">,</span><span class="n">a</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">)</span> <span class="p">:</span>
@@ -742,7 +818,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="p">,</span> <span class="n">fovx</span><span class="p">,</span> <span class="n">fovy</span><span class="p">,</span> <span class="n">a</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">spline_method</span><span class="o">=</span><span class="s1">&#39;fft&#39;</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">themis_fft_sign</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">=</span><span class="n">Nx</span><span class="o">*</span><span class="n">Ny</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">Nx</span> <span class="o">=</span> <span class="n">Nx</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Ny</span> <span class="o">=</span> <span class="n">Ny</span>
@@ -793,7 +869,22 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">transpose</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
         
-        <span class="k">return</span> <span class="n">I</span></div></div>
+        <span class="k">return</span> <span class="n">I</span></div>
+
+
+<div class="viewcode-block" id="model_image_splined_raster.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_splined_raster.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producess a lists parameter names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Nx</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">for</span> <span class="n">iy</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Ny</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\ln(I_{</span><span class="si">%i</span><span class="s1">,</span><span class="si">%i</span><span class="s1">})$&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">names</span></div></div>
 
     
 <div class="viewcode-block" id="model_image_adaptive_splined_raster"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_adaptive_splined_raster">[docs]</a><span class="k">class</span> <span class="nc">model_image_adaptive_splined_raster</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
@@ -835,7 +926,7 @@
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="p">,</span> <span class="n">a</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">spline_method</span><span class="o">=</span><span class="s1">&#39;fft&#39;</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">themis_fft_sign</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">=</span><span class="n">Nx</span><span class="o">*</span><span class="n">Ny</span><span class="o">+</span><span class="mi">3</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">Nx</span> <span class="o">=</span> <span class="n">Nx</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">Ny</span> <span class="o">=</span> <span class="n">Ny</span>
@@ -888,7 +979,25 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">transpose</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
         
-        <span class="k">return</span> <span class="n">I</span></div></div>
+        <span class="k">return</span> <span class="n">I</span></div>
+
+    
+<div class="viewcode-block" id="model_image_adaptive_splined_raster.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_adaptive_splined_raster.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producess a lists parameter names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Nx</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">for</span> <span class="n">iy</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Ny</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\ln(I_{</span><span class="si">%i</span><span class="s1">,</span><span class="si">%i</span><span class="s1">})$&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">))</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;fovx (rad)&#39;</span><span class="p">)</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;fovy (rad)&#39;</span><span class="p">)</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\phi$ (rad)&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">names</span></div></div>
 
 
 
@@ -983,7 +1092,22 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Gaussian smoothed:&#39;</span><span class="p">,</span><span class="n">sr1</span><span class="p">,</span><span class="n">sr2</span><span class="p">,</span><span class="n">sphi</span><span class="p">)</span>
     
-        <span class="k">return</span> <span class="n">Ism</span><span class="o">/</span><span class="p">(</span><span class="n">px</span><span class="o">*</span><span class="n">py</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">Ism</span><span class="o">/</span><span class="p">(</span><span class="n">px</span><span class="o">*</span><span class="n">py</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="model_image_smooth.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_smooth.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producess a lists parameter names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">parameter_name_list</span><span class="p">()</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\sigma_s$&#39;</span><span class="p">)</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$A_s$&#39;</span><span class="p">)</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\phi_s$ (rad)&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">names</span></div></div>
 
     
     
@@ -1106,12 +1230,434 @@
             <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   --&gt; Sum shift:&quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
             
-        <span class="k">return</span> <span class="n">I</span></div></div>
+        <span class="k">return</span> <span class="n">I</span></div>
+
+
+<div class="viewcode-block" id="model_image_sum.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_sum.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producess a lists parameter names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_list</span> <span class="p">:</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">parameter_name_list</span><span class="p">())</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_coordinates</span><span class="o">==</span><span class="s1">&#39;Cartesian&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\Delta x (rad)$&#39;</span><span class="p">)</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\Delta y (rad)$&#39;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_coordinates</span><span class="o">==</span><span class="s1">&#39;polar&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\Delta r (rad)$&#39;</span><span class="p">)</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\Delta \theta (rad)$&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">names</span></div></div>
     
 
 
+    
+<div class="viewcode-block" id="expand_model_glob_ccm_mexico"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.expand_model_glob_ccm_mexico">[docs]</a><span class="k">def</span> <span class="nf">expand_model_glob_ccm_mexico</span><span class="p">(</span><span class="n">model_glob</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Expands an abbreviated model glob as produced by the ccm_mexico driver </span>
+<span class="sd">    and generates a list of individual model specifiers. Model glob options </span>
+<span class="sd">    are supplemented beyond that in the ccm_mexico driver in that they permit </span>
+<span class="sd">    unlimited components of any type (i.e., the ccm_mexico+ standard).</span>
+
+<span class="sd">    Current list of accepted model strings are:</span>
+
+<span class="sd">    * &#39;g&#39; ....... :class:`model_image_symmetric_gaussian`</span>
+<span class="sd">    * &#39;G&#39; ....... :class:`model_image_symmetric_gaussian`</span>
+<span class="sd">    * &#39;a&#39; ....... :class:`model_image_asymmetric_gaussian`</span>
+<span class="sd">    * &#39;A&#39; ....... :class:`model_image_asymmetric_gaussian`</span>
+<span class="sd">    * &#39;c&#39; ....... :class:`model_image_crescent`</span>
+<span class="sd">    * &#39;x&#39; ....... :class:`model_image_xsring`</span>
+<span class="sd">    * &#39;X&#39; ....... :class:`model_image_xsringauss`</span>
+<span class="sd">    * &#39;r&#39; ....... :class:`model_image_splined_raster`, hyperparameters must be provided for ths model.  Required: {&#39;splined_raster_Nx&#39;:Nx, &#39;splined_raster_Ny&#39;:Ny, &#39;splined_raster_fovx&#39;:fovx, &#39;splined_raster_fovy&#39;:fovy}.  Optional: {&#39;splined_raster_a&#39;:-0.5, &#39;splined_raster_fft&#39;:&#39;fft&#39;, &#39;splined_raster_themis_fft_sign&#39;:True}</span>
+<span class="sd">    * &#39;R&#39; ....... :class:`model_image_adaptive_splined_raster`, hyperparameters must be provided for ths model.  Required: {&#39;splined_raster_Nx&#39;:Nx, &#39;splined_raster_Ny&#39;:Ny}.  Optional: {&#39;splined_raster_a&#39;:-0.5, &#39;splined_raster_fft&#39;:&#39;fft&#39;, &#39;splined_raster_themis_fft_sign&#39;:True}</span>
+<span class="sd">    * &#39;s&#39; ....... The immediately following specification will be assumed to be part of a :class:`model_image_smooth` object.</span>
+<span class="sd">    * &#39;&lt;#&gt;&#39; ..... The immediately preceding model will repeated the specified number of times (e.g., &#39;a3&#39; will be expanded to &#39;aaa&#39;, &#39;sX3&#39; will be expanded to &#39;sXsXsX&#39;).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      model_glob (str): Model glob string.</span>
+<span class="sd">      hyper_parameters (dict) : Optional set of hyperparameters for image models that require them.  Where they are not provided for required arguments a RuntimeError will be raised.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (list): List of individual model specifiers.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Make sure that model_glob is a string</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">model_glob</span><span class="p">,</span><span class="nb">str</span><span class="p">))</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unrecognized model_glob </span><span class="si">%s</span><span class="s2">. model_glob must be string formatted as described in the documentation.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">model_glob</span><span class="p">))</span>
+
+    <span class="c1"># Expand model_glob to take out numbers</span>
+    <span class="n">expanded_model_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">intsplit_model_glob</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;(\d+)&#39;</span><span class="p">,</span><span class="n">model_glob</span><span class="p">)</span>
+    
+    <span class="n">ks</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="p">(</span> <span class="n">ks</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">intsplit_model_glob</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
+        
+        <span class="n">ms</span> <span class="o">=</span> <span class="n">intsplit_model_glob</span><span class="p">[</span><span class="n">ks</span><span class="p">]</span>
+
+        <span class="c1"># Peak ahead for integers</span>
+        <span class="n">repeat_number</span><span class="o">=</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="n">ks</span><span class="o">+</span><span class="mi">1</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">intsplit_model_glob</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="n">intsplit_model_glob</span><span class="p">[</span><span class="n">ks</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">isdigit</span> <span class="p">)</span> <span class="p">:</span>
+                <span class="n">repeat_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">intsplit_model_glob</span><span class="p">[</span><span class="n">ks</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">ks</span> <span class="o">=</span> <span class="n">ks</span><span class="o">+</span><span class="mi">1</span>
+        
+        <span class="n">k</span><span class="o">=</span><span class="mi">0</span>
+        <span class="k">while</span> <span class="p">(</span> <span class="n">k</span><span class="o">&lt;</span><span class="nb">len</span><span class="p">(</span><span class="n">ms</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
+
+            <span class="n">m</span> <span class="o">=</span> <span class="n">ms</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+
+            <span class="c1"># If smooth key-character passed, grab next specifier</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">m</span><span class="o">==</span><span class="s1">&#39;s&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">m</span> <span class="o">=</span> <span class="n">model_glob</span><span class="p">[</span><span class="n">k</span><span class="p">:</span><span class="n">k</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">k</span> <span class="o">=</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">k</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="n">ms</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeat_number</span><span class="p">)</span> <span class="p">:</span>
+                    <span class="n">expanded_model_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="n">expanded_model_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+            <span class="n">k</span> <span class="o">=</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span>
+
+        <span class="n">ks</span> <span class="o">=</span> <span class="n">ks</span><span class="o">+</span><span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">expanded_model_list</span></div>
+
 
     
+<div class="viewcode-block" id="construct_model_image_from_ccm_mexico"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.construct_model_image_from_ccm_mexico">[docs]</a><span class="k">def</span> <span class="nf">construct_model_image_from_ccm_mexico</span><span class="p">(</span><span class="n">model_glob</span><span class="p">,</span><span class="n">hyperparameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads a model glob as produced by the ccm_mexico driver and generates </span>
+<span class="sd">    a corresponding :class:`model_image` object. If more than one model</span>
+<span class="sd">    specifier is provided, an appropriate :class:`model_image_sum` object </span>
+<span class="sd">    is returned. Model glob options are supplemented beyond that in the </span>
+<span class="sd">    ccm_mexico driver in that they permit unlimited components of any type </span>
+<span class="sd">    (i.e., the ccm_mexico+ standard).</span>
+
+<span class="sd">    Current list of accepted model strings are listed in :func:`expand_model_glob_ccm_mexico`.  </span>
+<span class="sd">    In addition, for the following model specifiers the associated hyperparameters</span>
+<span class="sd">    must be provided as a dictionary:</span>
+
+<span class="sd">    * &#39;r&#39; ....... :class:`model_image_splined_raster`, hyperparameters must be provided for ths model.  Required: {&#39;splined_raster_Nx&#39;:Nx, &#39;splined_raster_Ny&#39;:Ny, &#39;splined_raster_fovx&#39;:fovx, &#39;splined_raster_fovy&#39;:fovy}.  Optional: {&#39;splined_raster_a&#39;:-0.5, &#39;splined_raster_fft&#39;:&#39;fft&#39;, &#39;splined_raster_themis_fft_sign&#39;:True}</span>
+<span class="sd">    * &#39;R&#39; ....... :class:`model_image_adaptive_splined_raster`, hyperparameters must be provided for ths model.  Required: {&#39;splined_raster_Nx&#39;:Nx, &#39;splined_raster_Ny&#39;:Ny}.  Optional: {&#39;splined_raster_a&#39;:-0.5, &#39;splined_raster_fft&#39;:&#39;fft&#39;, &#39;splined_raster_themis_fft_sign&#39;:True}</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      model_glob (str): Model glob string.</span>
+<span class="sd">      hyper_parameters (dict) : Optional set of hyperparameters for image models that require them.  Where they are not provided for required arguments a RuntimeError will be raised.</span>
+<span class="sd">      verbosity (int): Verbosity level. 0 prints nothing. 1 prints model_glob information.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (model_image): A corresponding model image object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Generating model_image object for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">model_glob</span><span class="p">))</span>
+
+    <span class="n">expanded_model_list</span> <span class="o">=</span> <span class="n">expand_model_glob_ccm_mexico</span><span class="p">(</span><span class="n">model_glob</span><span class="p">)</span>
+            
+    <span class="c1"># A list of the constructed image objects</span>
+    <span class="n">image_list</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">expanded_model_list</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;g&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">image_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_image_symmetric_gaussian</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;G&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">image_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_image_symmetric_gaussian</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">image_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_image_asymmetric_gaussian</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;A&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">image_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_image_asymmetric_gaussian</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;c&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">image_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_image_crescent</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">image_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_image_xsring</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;X&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">image_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_image_xsringauss</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">hpreq</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;splined_raster_Nx&#39;</span><span class="p">,</span><span class="s1">&#39;splined_raster_Ny&#39;</span><span class="p">,</span><span class="s1">&#39;splined_raster_fovx&#39;</span><span class="p">,</span><span class="s1">&#39;splined_raster_fovy&#39;</span><span class="p">]</span>
+            <span class="n">hpopt</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;splined_raster_a&#39;</span><span class="p">,</span><span class="s1">&#39;splined_raster_fft&#39;</span><span class="p">,</span><span class="s1">&#39;splined_raster_themis_fft_sign&#39;</span><span class="p">]</span>
+            <span class="n">hpvals</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="s1">&#39;fft&#39;</span><span class="p">,</span><span class="kc">True</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hyperparameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;hyperparameters must be provided to generate a model_image_splined_raster object.&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hpreq</span><span class="p">))</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="n">hpreq</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="n">hpvals</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">hyperparameters</span><span class="p">[</span><span class="n">hpreq</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span>
+                <span class="k">else</span> <span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> must be provided in the hyperparameters passed to generate a model_image_splined_raster object.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">hpreq</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hpopt</span><span class="p">))</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="n">hpopt</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="n">hpvals</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">hpreq</span><span class="p">)]</span> <span class="o">=</span> <span class="n">hyperparameters</span><span class="p">[</span><span class="n">hpopt</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span>
+            <span class="n">image_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_image_splined_raster</span><span class="p">(</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">a</span><span class="o">=</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="n">spline_method</span><span class="o">=</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span><span class="n">themis_fft_sign</span><span class="o">=</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">6</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;R&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">hpreq</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;adaptive_splined_raster_Nx&#39;</span><span class="p">,</span><span class="s1">&#39;adaptive_splined_raster_Ny&#39;</span><span class="p">]</span>
+            <span class="n">hpopt</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;adaptive_splined_raster_a&#39;</span><span class="p">,</span><span class="s1">&#39;adaptive_splined_raster_fft&#39;</span><span class="p">,</span><span class="s1">&#39;adaptive_splined_raster_themis_fft_sign&#39;</span><span class="p">]</span>
+            <span class="n">hpvals</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="s1">&#39;fft&#39;</span><span class="p">,</span><span class="kc">True</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hyperparameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;hyperparameters must be provided to generate a model_image_splined_raster object.&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hpreq</span><span class="p">))</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="n">hpreq</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="n">hpvals</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">hyperparameters</span><span class="p">[</span><span class="n">hpreq</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span>
+                <span class="k">else</span> <span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> must be provided in the hyperparameters passed to generate a model_image_splined_raster object.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">hpreq</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hpopt</span><span class="p">))</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="n">hpopt</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="n">hpvals</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">hpreq</span><span class="p">)]</span> <span class="o">=</span> <span class="n">hyperparameters</span><span class="p">[</span><span class="n">hpopt</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span>
+            <span class="n">image_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model_image_adaptive_splined_raster</span><span class="p">(</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">a</span><span class="o">=</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">spline_method</span><span class="o">=</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">themis_fft_sign</span><span class="o">=</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is not a valid model specifier in the ccm_mexico+ tag version set.&quot;</span><span class="o">%</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+            
+        <span class="k">if</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;s&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">image_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">model_image_smooth</span><span class="p">(</span><span class="n">image_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">image_list</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">image_list</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">image_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span> <span class="n">model_image_sum</span><span class="p">(</span><span class="n">image_list</span><span class="p">)</span> <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="write_model_tag_file_from_mexico_ccm"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.write_model_tag_file_from_mexico_ccm">[docs]</a><span class="k">def</span> <span class="nf">write_model_tag_file_from_mexico_ccm</span><span class="p">(</span><span class="n">model_glob</span><span class="p">,</span><span class="n">hyperparameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">tag_file_name</span><span class="o">=</span><span class="s1">&#39;model_image.tag&#39;</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads a model glob as produced by the ccm_mexico driver and writes a</span>
+<span class="sd">    corresponding tagvers-1.0 model_image.tag file. Model glob options are </span>
+<span class="sd">    supplemented beyond that in the ccm_mexico driver in that they permit </span>
+<span class="sd">    unlimited components of any type (i.e., the ccm_mexico+ standard).</span>
+
+<span class="sd">    Current list of accepted model strings are listed in :func:`expand_model_glob_ccm_mexico`.  </span>
+<span class="sd">    In addition, for the following model specifiers the associated hyperparameters</span>
+<span class="sd">    must be provided as a dictionary:</span>
+
+<span class="sd">    * &#39;r&#39; ....... :class:`model_image_splined_raster`, hyperparameters must be provided for ths model.  Required: {&#39;splined_raster_Nx&#39;:Nx, &#39;splined_raster_Ny&#39;:Ny, &#39;splined_raster_fovx&#39;:fovx, &#39;splined_raster_fovy&#39;:fovy}.  Optional: {&#39;splined_raster_a&#39;:-0.5, &#39;splined_raster_fft&#39;:&#39;fft&#39;, &#39;splined_raster_themis_fft_sign&#39;:True}</span>
+<span class="sd">    * &#39;R&#39; ....... :class:`model_image_adaptive_splined_raster`, hyperparameters must be provided for ths model.  Required: {&#39;splined_raster_Nx&#39;:Nx, &#39;splined_raster_Ny&#39;:Ny}.  Optional: {&#39;splined_raster_a&#39;:-0.5, &#39;splined_raster_fft&#39;:&#39;fft&#39;, &#39;splined_raster_themis_fft_sign&#39;:True}</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      model_glob (str): Model glob string.</span>
+<span class="sd">      hyper_parameters (dict) : Optional set of hyperparameters for image models that require them.  Where they are not provided for required arguments a RuntimeError will be raised.</span>
+<span class="sd">      tag_file_name (str): Name of tag file to be written. Default: &#39;model_image.tag&#39;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Generating tag file for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">model_glob</span><span class="p">))</span>
+    
+    <span class="c1"># Generate</span>
+    <span class="n">expanded_model_list</span> <span class="o">=</span> <span class="n">expand_model_glob_ccm_mexico</span><span class="p">(</span><span class="n">model_glob</span><span class="p">)</span>
+
+    <span class="c1"># Open tag file</span>
+    <span class="n">tagout</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="n">tag_file_name</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;tagvers-1.0</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># If a model_image_sum object:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">expanded_model_list</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;model_image_sum</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;SUBTAG START</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">expanded_model_list</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;s&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;model_image_smooth</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;SUBTAG START</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;g&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;model_image_symmetric_gaussian</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;G&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;model_image_symmetric_gaussian</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;model_image_asymmetric_gaussian</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;A&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;model_image_asymmetric_gaussian</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;c&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;model_image_crescent</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;model_image_xsring</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;X&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;model_image_xsringauss</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">hpreq</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;splined_raster_Nx&#39;</span><span class="p">,</span><span class="s1">&#39;splined_raster_Ny&#39;</span><span class="p">,</span><span class="s1">&#39;splined_raster_fovx&#39;</span><span class="p">,</span><span class="s1">&#39;splined_raster_fovy&#39;</span><span class="p">]</span>
+            <span class="n">hpopt</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;splined_raster_a&#39;</span><span class="p">]</span>
+            <span class="n">hpvals</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hyperparameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;hyperparameters must be provided to generate a model_image_splined_raster object.&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hpreq</span><span class="p">))</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="n">hpreq</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="n">hpvals</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">hyperparameters</span><span class="p">[</span><span class="n">hpreq</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span>
+                <span class="k">else</span> <span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> must be provided in the hyperparameters passed to generate a model_image_splined_raster object.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">hpreq</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hpopt</span><span class="p">))</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="n">hpopt</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="n">hpvals</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">hpreq</span><span class="p">)]</span> <span class="o">=</span> <span class="n">hyperparameters</span><span class="p">[</span><span class="n">hpopt</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span>
+            <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;model_image_splined_raster </span><span class="si">%i</span><span class="s2"> </span><span class="si">%i</span><span class="s2"> </span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="s2"> </span><span class="si">%g</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;R&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">hpreq</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;adaptive_splined_raster_Nx&#39;</span><span class="p">,</span><span class="s1">&#39;adaptive_splined_raster_Ny&#39;</span><span class="p">]</span>
+            <span class="n">hpopt</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;adaptive_splined_raster_a&#39;</span><span class="p">]</span>
+            <span class="n">hpvals</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span><span class="kc">None</span><span class="p">,</span><span class="o">-</span><span class="mf">0.5</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">hyperparameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;hyperparameters must be provided to generate a model_image_splined_raster object.&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hpreq</span><span class="p">))</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="n">hpreq</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="n">hpvals</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">hyperparameters</span><span class="p">[</span><span class="n">hpreq</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span>
+                <span class="k">else</span> <span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> must be provided in the hyperparameters passed to generate a model_image_splined_raster object.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">hpreq</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hpopt</span><span class="p">))</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="n">hpopt</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="n">hpvals</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">hpreq</span><span class="p">)]</span> <span class="o">=</span> <span class="n">hyperparameters</span><span class="p">[</span><span class="n">hpopt</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span>
+            <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;model_image_adaptive_splined_raster </span><span class="si">%i</span><span class="s2"> </span><span class="si">%i</span><span class="s2"> </span><span class="si">%g</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">hpvals</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is not a valid model specifier in the ccm_mexico+ tag version set.&quot;</span><span class="o">%</span><span class="n">m</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;s&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;SUBTAG FINISH</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># If a model_image_sum object:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">expanded_model_list</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;SUBTAG FINISH</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Finish tag file</span>
+    <span class="n">tagout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    
+
+
+<div class="viewcode-block" id="tagv1_find_subtag"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.tagv1_find_subtag">[docs]</a><span class="k">def</span> <span class="nf">tagv1_find_subtag</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Given a tag that begins with SUBTAG START, find the subtag within the matching</span>
+<span class="sd">    SUBTAG FINISH.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      tag (list): List of tag lines.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (list): List of tag lines.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Make sure that the first line is indeed SUBTAG START</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">!=</span><span class="s2">&quot;SUBTAG START&quot;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Invalid subtag!  Expected SUBTAG START.  Found </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    
+    <span class="c1"># Find index of matching SUBTAG FINISH</span>
+    <span class="n">subtag_level</span><span class="o">=</span><span class="mi">1</span>
+    <span class="n">k</span><span class="o">=</span><span class="mi">1</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">subtag_level</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;SUBTAG START&quot;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">subtag_level</span> <span class="o">=</span> <span class="n">subtag_level</span><span class="o">+</span><span class="mi">1</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;SUBTAG FINISH&quot;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">subtag_level</span> <span class="o">=</span> <span class="n">subtag_level</span><span class="o">-</span><span class="mi">1</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k</span><span class="o">+</span><span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:(</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span></div>
+    
+    
+<div class="viewcode-block" id="construct_model_image_from_tagv1"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.construct_model_image_from_tagv1">[docs]</a><span class="k">def</span> <span class="nf">construct_model_image_from_tagv1</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Parses a tagvers-1.0 Themis tag and recursively constructs a model image.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      tag (list) : List of tags, arranged as str on separate lines.</span>
+<span class="sd">      verbosity (int): Verbosity level. 0 prints nothing. 1 prints tag information.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (model_image, list) : The first :class:`model_image` object fully described within the tag; the remaining tag lines.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%i</span><span class="s2"> : </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">j</span><span class="p">,</span><span class="n">tag</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---------------------------------&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_symmetric_gaussian&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">model_image_symmetric_gaussian</span><span class="p">(),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_asymmetric_gaussian&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">model_image_asymmetric_gaussian</span><span class="p">(),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_crescent&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">model_image_crescent</span><span class="p">(),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_xsring&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">model_image_xsring</span><span class="p">(),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_xsringauss&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">model_image_xsringauss</span><span class="p">(),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_splined_raster&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">toks</span> <span class="o">=</span> <span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">model_image_splined_raster</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">6</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">7</span><span class="p">])),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_adaptive_splined_raster&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">toks</span> <span class="o">=</span> <span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">model_image_adaptive_splined_raster</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_smooth&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">subtag</span> <span class="o">=</span> <span class="n">tagv1_find_subtag</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="n">subimage</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">construct_model_image_from_tagv1</span><span class="p">(</span><span class="n">subtag</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model_image_smooth</span><span class="p">(</span><span class="n">subimage</span><span class="p">),</span><span class="n">tag</span><span class="p">[(</span><span class="nb">len</span><span class="p">(</span><span class="n">subtag</span><span class="p">)</span><span class="o">+</span><span class="mi">3</span><span class="p">):]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_sum&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">subtag</span> <span class="o">=</span> <span class="n">tagv1_find_subtag</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="n">len_subtag</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">subtag</span><span class="p">)</span>
+        <span class="n">image_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subtag</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">subimage</span><span class="p">,</span><span class="n">subtag</span> <span class="o">=</span> <span class="n">construct_model_image_from_tagv1</span><span class="p">(</span><span class="n">subtag</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+            <span class="n">image_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subimage</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model_image_sum</span><span class="p">(</span><span class="n">image_list</span><span class="p">),</span><span class="n">tag</span><span class="p">[</span><span class="n">len_subtag</span><span class="o">+</span><span class="mi">3</span><span class="p">:]</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unrecognized model tag </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span></div>
+
+    
+<div class="viewcode-block" id="construct_model_image_from_tag_file"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.construct_model_image_from_tag_file">[docs]</a><span class="k">def</span> <span class="nf">construct_model_image_from_tag_file</span><span class="p">(</span><span class="n">tag_file_name</span><span class="o">=</span><span class="s1">&#39;model_image.tag&#39;</span><span class="p">,</span> <span class="n">tagversion</span><span class="o">=</span><span class="s1">&#39;tagvers-1.0&#39;</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads tag file produced by the :cpp:func:`Themis::model_image::write_model_tag_file` function </span>
+<span class="sd">    and returns an appropriate model image. Model tag files can be generated from ccm_mexico+ model </span>
+<span class="sd">    specification strings using :func:`write_model_tag_file_from_mexico_ccm`. For details about</span>
+<span class="sd">    the available model tag syntax, see `Themis::model_image::write_model_tag_file`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      tag_file_name (str): Name of the tag_file. Default: &#39;model_image.tag&#39;</span>
+<span class="sd">      tagversion (str): Version of tag system. Currently only tagvers-1.0 is implemented. Default &#39;tagvers-1.0&#39;.</span>
+<span class="sd">      verbosity (int): Verbosity level. 0 prints nothing. 1 prints tag information.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (model_image): :class:`model_image` object of the corresponding model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+
+    <span class="n">tagin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">tag_file_name</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="n">tagin</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">tagin</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    
+    <span class="n">tag</span> <span class="o">=</span> <span class="p">[</span><span class="n">l</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\r</span><span class="s1">&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">tag</span><span class="p">]</span>
+    <span class="n">tagversion_file</span> <span class="o">=</span> <span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">tag</span> <span class="o">=</span> <span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">tagversion_file</span><span class="o">==</span><span class="n">tagversion</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">image</span><span class="p">,</span><span class="n">tag</span> <span class="o">=</span> <span class="n">construct_model_image_from_tagv1</span><span class="p">(</span><span class="n">tag</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">((</span><span class="s2">&quot;Remaining tag lines:&quot;</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="s2">&quot;   </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">))</span><span class="o">%</span><span class="nb">tuple</span><span class="p">(</span><span class="n">tag</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">image</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Tag versions other than tagvers-1.0 are not supported at this time.&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="construct_model_image_from_glob"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.construct_model_image_from_glob">[docs]</a><span class="k">def</span> <span class="nf">construct_model_image_from_glob</span><span class="p">(</span><span class="n">model_glob</span><span class="p">,</span> <span class="n">glob_version</span><span class="p">,</span> <span class="n">hyperparameters</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constructs a :class:`model_image` object given an appropriate model specification glob.  </span>
+<span class="sd">    Currently accepted globs include:</span>
+
+<span class="sd">    * ccm_mexico+ model specification string. These are an extended set of the strings used by the ccm_m87_mexico drivers.  For example, sXaagG.  For raster model types, hyperparameters must be supplied.  See :func:`expand_model_glob_ccm_mexico` for details regarding the required form.</span>
+<span class="sd">    * model tag file name. These can be output by Themis directly and encompass a wider set of possible models.</span>
+
+<span class="sd">    The appropriate associated glob version must be specified. For some specifications an additional set of hyperparameters may need to be supplied.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      model_glob (str): Glob defining model image. Examples are &#39;sXaagG&#39; or &#39;model_image.tag&#39;</span>
+<span class="sd">      tagversion (str): Version of tag system. Currently only tagvers-1.0 is implemented. Default &#39;tagvers-1.0&#39;.</span>
+<span class="sd">      hyperparameters (dict): Dictionary of hyperparameters if needed by the specification.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (model_image): :class:`model_image` object of the corresponding model.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">glob_version</span><span class="o">==</span><span class="s1">&#39;ccm_mexico&#39;</span> <span class="ow">or</span> <span class="n">glob_version</span><span class="o">==</span><span class="s1">&#39;ccm_mexico+&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">construct_model_image_from_ccm_mexico</span><span class="p">(</span><span class="n">model_glob</span><span class="p">,</span><span class="n">hyperparameters</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">glob_version</span><span class="o">==</span><span class="s1">&#39;tagvers-1.0&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">construct_model_image_from_tag_file</span><span class="p">(</span><span class="n">model_glob</span><span class="p">,</span><span class="n">glob_version</span><span class="p">)</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unrecognized model_glob version: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">version</span><span class="p">))</span></div>
+
+
+
 </pre></div>
 
            </div>
@@ -1145,7 +1691,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.132.g01cffb0.dirty',
+            VERSION:'0+untagged.140.gf687f5e.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>diag.convergence_tools &mdash; ThemisPy 0+untagged.132.g01cffb0.dirty documentation</title>
+  <title>diag.convergence_tools &mdash; ThemisPy 0+untagged.140.gf687f5e.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.132.g01cffb0.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.140.gf687f5e.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.132.g01cffb0.dirty
+                0+untagged.140.gf687f5e.dirty
               </div>
             
           
@@ -462,16 +462,16 @@
         <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">iact</span><span class="p">,</span><span class="mi">2</span><span class="p">)),</span> <span class="n">chainsname</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
         <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Split-Rhat: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">meanchains</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">chains</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-    <span class="n">varchains</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">chains</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">meanchains</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">chains</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">varchains</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">chains</span><span class="p">,</span><span class="mf">0.975</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">chains</span><span class="p">,</span><span class="mf">0.025</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">mean_rhat</span> <span class="o">=</span> <span class="n">bulk_split_rhat</span><span class="p">(</span><span class="n">meanchains</span><span class="p">)</span>
     <span class="n">var_rhat</span> <span class="o">=</span> <span class="n">bulk_split_rhat</span><span class="p">(</span><span class="n">varchains</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;bulk Rhat mean: &quot;</span><span class="p">,</span> <span class="n">mean_rhat</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;bulk Rhat var: &quot;</span><span class="p">,</span> <span class="n">var_rhat</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;bulk Rhat median: &quot;</span><span class="p">,</span> <span class="n">mean_rhat</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;bulk Rhat 0.95 quantile: &quot;</span><span class="p">,</span> <span class="n">var_rhat</span><span class="p">)</span>
     <span class="n">row_fmt</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&gt;15}</span><span class="s2">&quot;</span><span class="o">*</span><span class="p">(</span><span class="n">mean_rhat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="s2">&quot; </span><span class="si">{:&lt;25}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">mean_rhat</span><span class="p">,</span><span class="mi">6</span><span class="p">)),</span> <span class="s2">&quot;mean&quot;</span><span class="p">))</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">mean_rhat</span><span class="p">,</span><span class="mi">6</span><span class="p">)),</span> <span class="s2">&quot;median&quot;</span><span class="p">))</span>
     <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">var_rhat</span><span class="p">,</span><span class="mi">6</span><span class="p">)),</span> <span class="s2">&quot;variance&quot;</span><span class="p">))</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">var_rhat</span><span class="p">,</span><span class="mi">6</span><span class="p">)),</span> <span class="s2">&quot;quantile&quot;</span><span class="p">))</span>
     <span class="n">io</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">iact</span><span class="p">,</span> <span class="n">mean_rhat</span><span class="p">,</span> <span class="n">var_rhat</span></div>
@@ -513,7 +513,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.132.g01cffb0.dirty',
+            VERSION:'0+untagged.140.gf687f5e.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

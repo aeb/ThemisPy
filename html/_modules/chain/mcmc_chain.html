@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>chain.mcmc_chain &mdash; ThemisPy 0+untagged.132.g01cffb0.dirty documentation</title>
+  <title>chain.mcmc_chain &mdash; ThemisPy 0+untagged.140.gf687f5e.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.132.g01cffb0.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.140.gf687f5e.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.132.g01cffb0.dirty
+                0+untagged.140.gf687f5e.dirty
               </div>
             
           
@@ -350,6 +350,7 @@
         <span class="n">nskip</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">nsamp</span><span class="o">*</span><span class="n">burn_fraction</span><span class="p">)</span>
     <span class="k">else</span> <span class="p">:</span>
         <span class="n">nskip</span> <span class="o">=</span> <span class="n">skip</span><span class="o">*</span><span class="n">walkers</span>
+
     
     <span class="c1"># If there are too few lines in the chain file, raise IndexError</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">nskip</span><span class="o">&gt;</span><span class="n">nsamp</span><span class="p">)</span> <span class="p">:</span>
@@ -412,16 +413,16 @@
 
     <span class="c1"># Find the lengths of the chain and likelihood files</span>
     <span class="n">chain_nsamp</span><span class="p">,</span><span class="n">nhead</span> <span class="o">=</span> <span class="n">file_length</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span><span class="n">header_string</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">)</span>
-    <span class="n">elklhd</span><span class="p">,</span><span class="n">nhead</span> <span class="o">=</span> <span class="n">read_elklhd</span><span class="p">(</span><span class="n">lklhd_filename</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
-
+    <span class="n">elklhd</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">read_elklhd</span><span class="p">(</span><span class="n">lklhd_filename</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">)</span>
+    
     <span class="c1"># Determine the number of walkers, and set the burn-in relative to the shorter</span>
     <span class="n">walkers</span> <span class="o">=</span> <span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-    <span class="n">nsamp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">chain_nsamp</span><span class="o">//</span><span class="n">walkers</span><span class="p">)</span>
+    <span class="n">nsamp</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">chain_nsamp</span><span class="o">//</span><span class="p">(</span><span class="n">walkers</span><span class="o">*</span><span class="n">stride</span><span class="p">))</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">skip</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
         <span class="n">skip</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">burn_fraction</span><span class="o">*</span><span class="n">nsamp</span><span class="p">)</span>
         
     <span class="c1"># Restrict the likelihoods</span>
-    <span class="n">elklhd</span> <span class="o">=</span> <span class="n">elklhd</span><span class="p">[</span><span class="n">skip</span><span class="p">:</span><span class="n">nsamp</span><span class="p">,:]</span>
+    <span class="n">elklhd</span> <span class="o">=</span> <span class="n">elklhd</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">nsamp</span><span class="p">,:]</span>
 
     <span class="c1"># Read and restrict the chain</span>
     <span class="n">echain</span> <span class="o">=</span> <span class="n">read_echain</span><span class="p">(</span><span class="n">chain_filename</span><span class="p">,</span> <span class="n">walkers</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="n">stride</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="n">skip</span><span class="p">,</span> <span class="n">parameter_list</span><span class="o">=</span><span class="n">parameter_list</span><span class="p">)[:</span><span class="n">nsamp</span><span class="p">,:,:]</span>
@@ -650,11 +651,9 @@
     <span class="n">lengths</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">echains</span><span class="p">)):</span>
         <span class="n">lengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">echains</span><span class="p">[</span><span class="n">i</span><span class="p">][:,</span><span class="mi">0</span><span class="p">]))</span>
-    <span class="c1">#print(lengths)</span>
     <span class="n">max_length</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">amin</span><span class="p">(</span><span class="n">lengths</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">max_length</span><span class="o">%</span><span class="mi">2</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
         <span class="n">max_length</span> <span class="o">-=</span><span class="mi">1</span>
-    <span class="c1">#print(len(echains), echains[0].shape, np.array(echains).shape)</span>
     <span class="n">jechains</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">echains</span><span class="p">),</span><span class="n">max_length</span><span class="p">,</span><span class="n">echains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">echains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">echains</span><span class="p">)):</span>
         <span class="n">jechains</span><span class="p">[</span><span class="n">i</span><span class="p">,:,:,:]</span> <span class="o">=</span> <span class="n">echains</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="o">-</span><span class="n">max_length</span><span class="p">:,:,:]</span>
@@ -734,7 +733,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.132.g01cffb0.dirty',
+            VERSION:'0+untagged.140.gf687f5e.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
