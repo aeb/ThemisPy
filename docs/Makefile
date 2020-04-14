@@ -33,6 +33,7 @@ latexpdf:
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-#	cd scripts; ./write_scripts_docs.py; cp scripts.rst.autogen ../src/scripts.rst
+
 %: Makefile
+	cd scripts; ./write_scripts_docs.py; cp scripts.rst.autogen ../src/scripts.rst
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
