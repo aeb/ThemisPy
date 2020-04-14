@@ -1496,7 +1496,7 @@ def construct_model_image_from_glob(model_glob, glob_version, hyperparameters=No
       hyperparameters (dict): Dictionary of hyperparameters if needed by the specification.
 
     Returns:
-      (model_image): class:`model_image` object of the corresponding model.
+      (model_image): :class:`model_image` object of the corresponding model.
 
     """
 
