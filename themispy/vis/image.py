@@ -92,7 +92,7 @@ class model_image :
         if (not parameters is None) :
             self.generate(parameters)
 
-        I = self.generate_intensity_map(x,y,verbosity=0)
+        I = self.generate_intensity_map(x,y,verbosity=verbosity)
 
         if (self.themis_fft_sign) :
             x = -x
@@ -923,9 +923,9 @@ class model_image_smooth(model_image):
         """
 
         # Doesn't to boundary checking here.  Probably not a major problem, but consider it in the future.
-        sr1 = self.parameters[0] * rad2uas * np.sqrt( 1./(1.-self.parameters[1]) )
-        sr2 = self.parameters[0] * rad2uas * np.sqrt( 1./(1.+self.parameters[1]) )
-        sphi = self.parameters[2]
+        sr1 = self.parameters[-3] * rad2uas * np.sqrt( 1./(1.-self.parameters[-2]) )
+        sr2 = self.parameters[-3] * rad2uas * np.sqrt( 1./(1.+self.parameters[-2]) )
+        sphi = self.parameters[-1]
 
         # Check to prevent convolving with zero
         dx = 1.5*max(abs(x[1,1]-x[0,0]),abs(y[1,1]-y[0,0]))
@@ -943,12 +943,12 @@ class model_image_smooth(model_image):
         px = x[1,1]-x[0,0]
         py = y[1,1]-y[0,0]
 
-        I = self.image.intensity_map(x,y,parameters=self.parameters,verbosity=verbosity)
+        I = self.image.intensity_map(x,y,parameters=self.parameters[:-3],verbosity=verbosity)
         Ism = np.abs(fftconvolve(I*px*py,K*px*py, mode='same'))
 
         if (verbosity>0) :
-            print('Gaussian smoothed:',sr1,sr2,sphi)
-    
+            print('Gaussian smoothed:',sr1,sr2,sphi,self.parameters)
+            
         return Ism/(px*py)
 
     
@@ -1586,7 +1586,7 @@ def plot_intensity_map(model_image, parameters, limits=None, shape=None, colorma
     x,y = np.mgrid[limits[0]:limits[1]:shape[0]*1j,limits[2]:limits[3]:shape[1]*1j]
     # Generate a set of intensities (Jy/uas^2)
     I = model_image.intensity_map(x,y,parameters,verbosity=verbosity)
-
+    
     # Flip x to flip x axis so that RA decreases right to left
     if (in_radec) :
         x = -x
