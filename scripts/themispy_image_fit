@@ -21,8 +21,6 @@ import numpy as np
 from matplotlib.cbook import flatten
 import os
 
-import sys
-sys.modules['ehtim'] = None
 import themispy as ty
 
 
