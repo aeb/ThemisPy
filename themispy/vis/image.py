@@ -7,21 +7,28 @@
 #   Provides model image classes and functions.
 #
 
+from themispy.utils import *
+
 import numpy as np
 import copy
 import re
 from scipy import interpolate as sint
 from scipy.signal import fftconvolve
+import matplotlib.pyplot as plt
+from matplotlib import cm
+
+# Read in ehtim, if possible
+try:
+    import ehtim as eh
+    ehtim_found = True
+except:
+    warnings.warn("Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.", Warning)
+    ehtim_found = False
 
 
+# Some constants
 rad2uas = 180.0/np.pi * 3600 * 1e6
 uas2rad = np.pi/(180.0 * 3600 * 1e6)
-
-
-
-## Reads in a list of alphanumeric model specifiers and expands them as
-## appropriate.  This includes modifiers, models, and a number of repititions
-
 
 
 class model_image :
@@ -74,7 +81,7 @@ class model_image :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y).
+          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
         """
 
         # 
@@ -105,7 +112,7 @@ class model_image :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y).
+          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
         """
         
         raise NotImplementedError("intensity_map must be defined in children classes of model_image.")
@@ -151,7 +158,7 @@ class model_image_symmetric_gaussian(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y).
+          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
         """
         
         s = self.parameters[1] * rad2uas
@@ -207,7 +214,7 @@ class model_image_asymmetric_gaussian(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y).
+          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
         """
         
         s = self.parameters[1] * rad2uas
@@ -260,7 +267,6 @@ class model_image_crescent(model_image) :
     * parameters[0] ... Total intensity :math:`I_0` (Jy)
     * parameters[1] ... Outer radius :math:`R` (rad)
     * parameters[2] ... Width paramter :math:`\\psi` in (0,1)
-    * parameters[3] ... Eccentricity parameter :math:`\\epsilon` in (0,1)
     * parameters[3] ... Asymmetry parmaeter math:`\\tau` in (0,1)
     * parameters[4] ... Position angle :math:`\\phi` (rad)
 
@@ -285,7 +291,7 @@ class model_image_crescent(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y).
+          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
         """
 
         # Make sure that delta ring is resolvable
@@ -353,7 +359,7 @@ class model_image_xsring(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y).
+          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
         """
 
         I0 = max(1e-8,self.parameters[0])
@@ -427,7 +433,7 @@ class model_image_xsringauss(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y).
+          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
         """
 
         # Make sure that delta ring is resolvable
@@ -689,7 +695,7 @@ class model_image_splined_raster(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y).
+          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
         """
 
         f = np.array(self.parameters).reshape([self.Nx,self.Ny])
@@ -795,7 +801,7 @@ class model_image_adaptive_splined_raster(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y).
+          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
         """
 
         f = np.array(self.parameters[:-3]).reshape([self.Nx,self.Ny])
@@ -913,7 +919,7 @@ class model_image_smooth(model_image):
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y).
+          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
         """
 
         # Doesn't to boundary checking here.  Probably not a major problem, but consider it in the future.
@@ -1065,14 +1071,14 @@ class model_image_sum(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y).
+          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
         """
 
         I = np.zeros(x.shape)
         q = self.parameters
         for k,image in enumerate(self.image_list) :
-            dx = x-self.x0_list[k]
-            dy = y-self.y0_list[k]
+            dx = x-self.shift_list[k][0]
+            dy = y-self.shift_list[k][1]
 
             I = I+image.generate_intensity_map(dx,dy,verbosity=verbosity)
 
@@ -1197,7 +1203,7 @@ def construct_model_image_from_ccm_mexico(model_glob,hyperparameters=None,verbos
 
     Args:
       model_glob (str): Model glob string.
-      hyper_parameters (dict) : Optional set of hyperparameters for image models that require them.  Where they are not provided for required arguments a RuntimeError will be raised.
+      hyper_parameters (dict) : Optional set of hyperparameters for image models that require them. This optionally includes {'offset_coordinates':'Cartesian'/'polar'} to set the coordinate type for the construction of a :class:`model_image_sum` object when more than one element is implied by the model_glob. Where they are not provided for required arguments a RuntimeError will be raised.
       verbosity (int): Verbosity level. 0 prints nothing. 1 prints model_glob information.
 
     Returns:
@@ -1269,10 +1275,13 @@ def construct_model_image_from_ccm_mexico(model_glob,hyperparameters=None,verbos
     elif (len(image_list)==1) :
         return image_list[0]
     else :
-        return ( model_image_sum(image_list) )
+        if ( 'offset_coordinates' in hyperparameters.keys() ) :
+            return ( model_image_sum(image_list,offset_coordinates=hyperparameters['offset_coordinates']) )
+        else :
+            return ( model_image_sum(image_list) )
+            
 
-
-def write_model_tag_file_from_mexico_ccm(model_glob,hyperparameters=None,tag_file_name='model_image.tag') :
+def write_model_tag_file_from_ccm_mexico(model_glob,hyperparameters=None,tag_file_name='model_image.tag') :
     """
     Reads a model glob as produced by the ccm_mexico driver and writes a
     corresponding tagvers-1.0 model_image.tag file. Model glob options are 
@@ -1303,7 +1312,11 @@ def write_model_tag_file_from_mexico_ccm(model_glob,hyperparameters=None,tag_fil
     
     # If a model_image_sum object:
     if (len(expanded_model_list)>1) :
-        tagout.write("model_image_sum\n")
+        offset_coordinates = 'Cartesian'
+        if ( not (hyperparameters is None) ):
+            if ('offset_coordinates' in hyperparameters.keys()) :
+                offset_coordinates = hyperparameters['offset_coordinates']
+        tagout.write("model_image_sum %s\n"%(offset_coordinates))
         tagout.write("SUBTAG START\n")
 
     for m in expanded_model_list :
@@ -1434,14 +1447,15 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
         subtag = tagv1_find_subtag(tag[1:])
         subimage,_ = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
         return model_image_smooth(subimage),tag[(len(subtag)+3):]
-    elif (tag[0]=='model_image_sum') :
+    elif (tag[0].split()[0]=='model_image_sum') :
+        offset_coordinates = tag[0].split()[1]
         subtag = tagv1_find_subtag(tag[1:])
         len_subtag = len(subtag)
         image_list = []
         while (len(subtag)>0) :
             subimage,subtag = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
             image_list.append(subimage)
-        return model_image_sum(image_list),tag[len_subtag+3:]
+        return model_image_sum(image_list,offset_coordinates=offset_coordinates),tag[len_subtag+3:]
     else :
         raise RuntimeError("Unrecognized model tag %s"%(tag[0]))
 
@@ -1450,8 +1464,8 @@ def construct_model_image_from_tag_file(tag_file_name='model_image.tag', tagvers
     """
     Reads tag file produced by the :cpp:func:`Themis::model_image::write_model_tag_file` function 
     and returns an appropriate model image. Model tag files can be generated from ccm_mexico+ model 
-    specification strings using :func:`write_model_tag_file_from_mexico_ccm`. For details about
-    the available model tag syntax, see `Themis::model_image::write_model_tag_file`.
+    specification strings using :func:`write_model_tag_file_from_ccm_mexico`. For details about
+    the available model tag syntax, see :cpp:func:`Themis::model_image::write_model_tag_file`.
 
     Args:
       tag_file_name (str): Name of the tag_file. Default: 'model_image.tag'
@@ -1508,4 +1522,191 @@ def construct_model_image_from_glob(model_glob, glob_version, hyperparameters=No
         raise RuntimeError("Unrecognized model_glob version: %s"%(version))
 
 
+    
+def plot_intensity_map(model_image, parameters, limits=None, shape=None, colormap='afmhot', Imin=0.0, Imax=None, in_radec=True, xlabel=None, ylabel=None, return_intensity_map=False, transfer_function='linear', verbosity=0) :
+    """
+    Plots an intensity map associated with a given :class:`model_image` object evaluated at a 
+    specified set of parameters. A number of additional practical options may be passed. Access
+    to a matplotlib pcolor object, the figure handle and axes hanldes are returned. Optionally,
+    the intensity map is returned.
 
+    Args:
+      model_image (model_image): :class:`model_image` object to plot.
+      parameters (list): List of parameters that define model_image intensity map.
+      limits (float,list): Limits in uas on image size. If a single float is given, the limits are uniformly set. If a list is given, it must be in the form [xmin,xmax,ymin,ymax]. Default: 75
+      shape (int,list): Number of pixels. If a single int is given, the number of pixels are uniformly set in both directions.  If a list is given, it must be in the form [Nx,Ny]. Default: 256
+      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: 'afmhot'.
+      Imin (float): Minimum intensity for colormap. Default: 0 (though see transfer_function).
+      Imax (float): Maximum intensity for colormap. Default: maximum intensity.
+      in_radec (bool): If True, plots in :math:`\\Delta RA` and :math:`\\Delta Dec`.  If False, plots in sky-right Cartesian coordinates. Default: True
+      xlabel (str): Label for xaxis. Default: ':math:`\\Delta RA (\\mu as)` if in_radec is True, :math:`\\Delta x (\\mu as)` if in_radec is False
+      ylabel (str): Label for yaxis. Default: ':math:`\\Delta Dec (\\mu as)` if in_radec is True, :math:`\\Delta y (\\mu as)` if in_radec is False
+      return_intensity_map (bool): If True returns the intensity map in addition to standard return items.
+      transfer_function (str): Transfer function to plot.  Options are 'linear','sqrt','log'.  If 'log', if Imin=0 it will be set to Imax/1000.0 by default, else if Imin<0 it will be assumed to be a dynamic range and Imin = Imax * 10**(Imin).
+      verbosity (int): Verbosity level. 0 prints nothing. 1 prints various elements of the plotting process. Passed to :func:`model_image.generate_intensity_map`. Default: 0.
+
+    Returns :
+      (matplotlib.pyplot.image,matplotlib.pyplot.axes,matplotlib.pyplot.fig,[numpy.ndarray,numpy.ndarray,numpy.ndarray]): Image handle; Figure object; Axes object; Optionally intensity map (x,y,I).
+    """
+    
+    # Shape limits
+    if (limits is None) :
+        limits = [-75, 75, -75, 75]
+    elif (isinstance(limits,list)) :
+        limits = limits
+    else :
+        limits = [-limits, limits, -limits, limits]
+
+    # Set shape
+    if (shape is None) :
+        shape = [256, 256]
+    elif (isinstance(shape,list)) :
+        shape = shape
+    else :
+        shape = [shape, shape]
+
+    # Set labels
+    if (xlabel is None) :
+        if (in_radec) :
+            xlabel=r'$\Delta$RA ($\mu$as)'
+        else :
+            xlabel=r'$\Delta$x ($\mu$as)'
+    if (ylabel is None) :
+        if (in_radec) :
+            ylabel=r'$\Delta$Dec ($\mu$as)'
+        else :
+            ylabel=r'$\Delta$y ($\mu$as)'
+        
+
+    if (verbosity>0) :
+        print("limits:",limits)
+        print("shape:",shape)
+    
+    # Generate a set of pixels
+    x,y = np.mgrid[limits[0]:limits[1]:shape[0]*1j,limits[2]:limits[3]:shape[1]*1j]
+    # Generate a set of intensities (Jy/uas^2)
+    I = model_image.intensity_map(x,y,parameters,verbosity=verbosity)
+
+    # Flip x to flip x axis so that RA decreases right to left
+    if (in_radec) :
+        x = -x
+    plt.gca().set_xlim(limits[0],limits[1])
+    plt.gca().set_ylim(limits[2],limits[3])
+    
+    # Determine scale
+    if (Imax is None) :
+        Imax = np.max(I)
+
+    if (verbosity>0) :
+        print("Minimum/Maximum I: %g / %g"%(Imin,Imax))
+        
+    # Transfered I for plotting
+    if (transfer_function=='linear') :
+        tI = I/Imax
+        Imin = Imin/Imax
+        Imax = 1.0
+    elif (transfer_function=='sqrt') :
+        tI = np.sqrt(I/Imax)
+        Imin = np.sqrt(Imin/Imax)
+        Imax = 1.0
+    elif (transfer_function=='log') :
+        tI = np.log10(I/Imax)
+        if (Imin==0) :
+            Imin = np.log10(1.0e-3)
+        elif (Imin>0) :
+            Imin = np.log10(Imin/Imax)
+        Imax = 0.0
+
+    # Set background color in Axes
+    cmap = cm.get_cmap(colormap)    
+    plt.gca().set_facecolor(cmap(0.0))
+
+    # Make plot
+    h = plt.pcolor(x,y,tI,cmap=colormap,vmin=Imin,vmax=Imax)
+    
+    # Add labels
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    
+    # Fix aspect ratio
+    plt.axis('square')
+
+    # Fix x-axis to run in sky
+    if (in_radec) :
+        plt.gca().invert_xaxis()
+
+    if (return_intensity_map) :
+        return h,plt.gca(),plt.gcf(),x,y,I
+    else:
+        return h,plt.gca(),plt.gcf()
+    
+
+
+def write_fits(x,y,I,fits_filename,uvfits_filename=None,time=0,verbosity=0) :
+    """
+    Writes a FITS format image file given 2D image data.  
+
+    Warning: 
+
+      * This makes extensive use of ehtim and will not be available if ehtim is not installed.  Raises a NotImplementedError if ehtim is unavailable.
+      * Due to ehtim, only *square* images are supported at this time.
+
+    Args:
+      x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+      y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+      I (numpy.ndarray): Array of intensity values in (Jy/uas^2)
+      fits_filename (str): Name of output FITS file.
+      uvfits_filename (str): Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.
+      time (float): Time in hr on the relevant observation day (set by uvfits file) represented by image data.
+      verbosity (int): Verbosity parameter. If 0, no information is printed.  If >=1, prints information about sizes and values.  If >=2, generates debugging plots.
+    """
+
+    if (ehtim_found==False) :
+        raise NotImplementedError("ERROR: write_fits requires ehtim to be installed.")
+
+    if (verbosity>0) :
+        print("Shapes",x.shape,y.shape,I.shape)
+
+    if (I.shape[0]!=I.shape[1]) :
+        raise RuntimeError("ERROR: ehtim cannot handle non-square images. Your image had shape",I.shape)
+
+    if (verbosity>2) :
+        plt.figure(figsize=(5,5))
+        plt.axes([0.15,0.15,0.8,0.8])
+        plt.pcolor(x,y,I,cmap='afmhot')
+    
+    uas2rad = 1e-6 / 3600.0 * np.pi/180.0
+    pixel_size = abs(x[1,1]-x[0,0])*uas2rad
+    Ippx = np.transpose(I) * abs((x[1,1]-x[0,0])*(y[1,1]-y[0,0]))
+    Ippx = np.flipud(Ippx)
+
+    if (uvfits_filename is None) :
+        warnings.warn("No uvfits file has been specified. This will probably result in an nonfunctional FITS header.", Warning)
+        ra=0.0
+        dec=0.0
+        rf=230e9
+        src='NA'
+        mjd=58583
+    else :
+        obs = eh.obsdata.load_uvfits(uvfits_filename)
+        ra=obs.ra
+        dec=obs.dec
+        rf=obs.rf
+        src=obs.source
+        mjd=obs.mjd
+
+    if (verbosity>0) :
+        print('pixel size:',pixel_size)
+        print('ra:',ra)
+        print('dec:',ra)
+        print('rf:',ra)
+        print('src:',ra)
+        print('mjd:',ra)
+
+    image = eh.image.Image(Ippx,pixel_size,ra,dec,rf=rf,source=src,mjd=mjd,time=time,pulse=eh.observing.pulses.deltaPulse2D)
+
+    if (verbosity>1) :
+        image.display()
+        plt.show()
+    
+    image.save_fits(fits_filename)
