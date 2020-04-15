@@ -81,7 +81,7 @@ class model_image :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
 
         # 
@@ -112,7 +112,7 @@ class model_image :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
         
         raise NotImplementedError("intensity_map must be defined in children classes of model_image.")
@@ -158,7 +158,7 @@ class model_image_symmetric_gaussian(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
         
         s = self.parameters[1] * rad2uas
@@ -214,7 +214,7 @@ class model_image_asymmetric_gaussian(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
         
         s = self.parameters[1] * rad2uas
@@ -291,7 +291,7 @@ class model_image_crescent(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
 
         # Make sure that delta ring is resolvable
@@ -359,7 +359,7 @@ class model_image_xsring(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
 
         I0 = max(1e-8,self.parameters[0])
@@ -433,7 +433,7 @@ class model_image_xsringauss(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
 
         # Make sure that delta ring is resolvable
@@ -695,7 +695,7 @@ class model_image_splined_raster(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
 
         f = np.array(self.parameters).reshape([self.Nx,self.Ny])
@@ -801,7 +801,7 @@ class model_image_adaptive_splined_raster(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
 
         f = np.array(self.parameters[:-3]).reshape([self.Nx,self.Ny])
@@ -919,7 +919,7 @@ class model_image_smooth(model_image):
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
 
         # Doesn't to boundary checking here.  Probably not a major problem, but consider it in the future.
@@ -1071,7 +1071,7 @@ class model_image_sum(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
 
         I = np.zeros(x.shape)
