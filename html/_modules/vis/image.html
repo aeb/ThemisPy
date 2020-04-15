@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.image &mdash; ThemisPy 0+untagged.154.gabee3c1.dirty documentation</title>
+  <title>vis.image &mdash; ThemisPy 0+untagged.155.g70aa856.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.154.gabee3c1.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.155.g70aa856.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.154.gabee3c1.dirty
+                0+untagged.155.g70aa856.dirty
               </div>
             
           
@@ -230,7 +230,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># </span>
@@ -261,7 +261,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;intensity_map must be defined in children classes of model_image.&quot;</span><span class="p">)</span></div>
@@ -307,7 +307,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">rad2uas</span>
@@ -363,7 +363,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">rad2uas</span>
@@ -440,7 +440,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Make sure that delta ring is resolvable</span>
@@ -508,7 +508,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">I0</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -582,7 +582,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Make sure that delta ring is resolvable</span>
@@ -844,7 +844,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">Nx</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Ny</span><span class="p">])</span>
@@ -950,7 +950,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">Nx</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Ny</span><span class="p">])</span>
@@ -1068,7 +1068,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Doesn&#39;t to boundary checking here.  Probably not a major problem, but consider it in the future.</span>
@@ -1220,7 +1220,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -1892,7 +1892,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.154.gabee3c1.dirty',
+            VERSION:'0+untagged.155.g70aa856.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
