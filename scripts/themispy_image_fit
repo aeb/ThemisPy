@@ -147,21 +147,28 @@ if __name__ == "__main__" :
 
     # Construct a model_image from glob
     if ('.' in args.model) :
+        print("Reading tag file %s"%(args.model))
         model_image = ty.vis.construct_model_image_from_glob(args.model,'tagvers-1.0')
     else :
-        model_image = ty.vis.construct_model_image_from_glob(args.model,'ccm_mexico')
+        print("Using ccm_mexico glob %s"%(args.model))
+        model_image = ty.vis.construct_model_image_from_glob(args.model,'ccm_mexico+')
+    print(type(model_image),model_image.size)
     
     # Run through checkdown for different ways of specifying parameters
     if (not (args.fsfile is None) ) :
         # An fit_summaries file has been passed:
+        print("Reading fit_summaries file %s"%(args.fsfile))
         parameters = np.loadtxt(args.fsfile,skiprows=(1+args.index),max_rows=1,usecols=np.arange(1,model_image.size+1))
     elif (not (args.chain is None) ) :
         if (args.lklhd is None) :
             # Picking a single index
+            print("Reading sample %i from chain file %s"%(args.index,args.chain))
             parameters = np.loadtxt(args.chain,skiprows=(1+args.index),max_rows=1,usecols=np.arange(0,model_image.size))
         else :
             # Picking the maximum likelihood
+            print("Reading highest likelihood sample from lklhd file %s and chain file %s"%(args.lklhd,args.chain))
             parameters,_ = ty.chain.most_likely_erun(args.chain,args.lklhd)
+            parameters = parameters[0][:model_image.size]
     else :
         # No acceptable method has been indicated
         print("ERROR: Some method of specifying parameters must be set.")
