@@ -5,7 +5,7 @@ Reads in various Themis output files and generates a plot of the resulting image
 A sample parameter value must be provided in one of three ways: (1) by specifying a
 fit_summaries.txt file, (2) by specifying an MCMC chain file with an index (optional),
 or (3) by specifying an MCMC chain file and corresponding likelihood file.
-This may be saved in ways TODO.
+This may be saved in ways, including standard image formats (PNG,JPG,PDF) and FITS.
 
 Example:
 $ themispy_image_fit -c Chain.dat -l Lklhd.dat
@@ -20,6 +20,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.cbook import flatten
 import os
+import copy
 
 import themispy as ty
 
@@ -87,9 +88,9 @@ def set_parser():
                         nargs="+",
                         action='store',
                         default=None,
-                        help=("Limits (in uas) of the plot region.  May be a single float or a set of four"
-                              " floats. If None uses the default in vis.image.plot_model_image function."
-                              " Default: None."))
+                        help=("Limits (in microarcseconds) of the plot region.  May be a single float or"
+                              " a set of four floats. If None uses the default in vis.image.plot_model_image"
+                              " function. Default: None."))
                         
     parser.add_argument("-n","--norm",
                         type=float,
@@ -120,7 +121,13 @@ def set_parser():
                         default=None,
                         help=("Specifies a uvfits file from which fits header information for the relevant"
                               " sources may be extracted."))
-    
+
+    parser.add_argument("-s","--smooth",
+                        type=float,
+                        action='store',
+                        default=None,
+                        help=("If passed, will smooth the image with a symmetric Gaussian filter with FWHM given in microarcseconds."))
+
     parser.add_argument("--usetex",
                         action='store_true',
                         default=False,
@@ -131,7 +138,6 @@ def set_parser():
                         action='store_true',
                         default=False,
                         help=("Provides verbose output about model and plot construction."))
-    
     
     return parser
 
@@ -160,7 +166,7 @@ if __name__ == "__main__" :
         if (args.verbose):
             print("Using ccm_mexico glob %s"%(args.model))
         model_image = ty.vis.construct_model_image_from_glob(args.model,'ccm_mexico+')
-
+        
     if (args.verbose):
         print("Model type and size:",type(model_image),model_image.size)
     
@@ -190,7 +196,16 @@ if __name__ == "__main__" :
     if (args.verbose):
         print("Parameters:",parameters)
 
+    # Add smoothing if desired
+    if (not (args.smooth is None)) :
+        uas2rad = np.pi/(180.0*3600e6)
+        model_image_unsmoothed = copy.deepcopy(model_image)
+        model_image = ty.vis.model_image_smooth(model_image_unsmoothed)
+        parameters = np.append(parameters,[args.smooth*uas2rad/np.sqrt(8.0*np.log(2.0)), 0, 0])
 
+        if (args.verbose):
+            print("Smoothed parameters:",parameters)            
+        
     # Check limits
     if (not (args.N is None) ):
         if (len(args.N)==1) :
@@ -217,7 +232,7 @@ if __name__ == "__main__" :
     plt.axes([0.15,0.15,0.8,0.8])
 
     # Generate plot
-    h,fig,axs,x,y,I = ty.vis.plot_intensity_map(model_image, parameters, limits=args.limits, shape=args.N, colormap='afmhot', return_intensity_map=True, transfer_function=args.transfer)
+    h,fig,axs,x,y,I = ty.vis.plot_intensity_map(model_image, parameters, limits=args.limits, shape=args.N, colormap='afmhot', return_intensity_map=True, transfer_function=args.transfer, verbosity=int(args.verbose))
 
     # Set the proper normalization
     Imed = np.median(I)
