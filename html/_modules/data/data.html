@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>data.data &mdash; ThemisPy 0+untagged.140.gf687f5e.dirty documentation</title>
+  <title>data.data &mdash; ThemisPy 0+untagged.151.gd742fef.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.140.gf687f5e.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.151.gd742fef.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.140.gf687f5e.dirty
+                0+untagged.151.gd742fef.dirty
               </div>
             
           
@@ -157,11 +157,7 @@
 <span class="c1">#   and to generate uvfits files from Themis results.</span>
 <span class="c1">#</span>
 
-<span class="c1">## REMOVE WHEN DONE TESTING</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="k">def</span> <span class="nf">warning_on_one_line</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="k">return</span> <span class="s1">&#39;WARNING: </span><span class="si">%s</span><span class="s1">:</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">category</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
-<span class="n">warnings</span><span class="o">.</span><span class="n">formatwarning</span> <span class="o">=</span> <span class="n">warning_on_one_line</span>
+<span class="kn">from</span> <span class="nn">themispy.utils</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -878,7 +874,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.140.gf687f5e.dirty',
+            VERSION:'0+untagged.151.gd742fef.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

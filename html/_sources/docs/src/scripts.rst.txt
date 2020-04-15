@@ -9,7 +9,7 @@ themispy_trace_plots
    :filename: ../scripts/themispy_trace_plots
    :func: set_parser
    :prog: themispy_trace_plots
-   :nodefaultconst:
+   :nodefault:
 
 
 themispy_best_sample
@@ -18,7 +18,7 @@ themispy_best_sample
    :filename: ../scripts/themispy_best_sample
    :func: set_parser
    :prog: themispy_best_sample
-   :nodefaultconst:
+   :nodefault:
 
 
 themispy_generate_data
@@ -27,7 +27,7 @@ themispy_generate_data
    :filename: ../scripts/themispy_generate_data
    :func: set_parser
    :prog: themispy_generate_data
-   :nodefaultconst:
+   :nodefault:
 
 
 themispy_resample
@@ -36,7 +36,16 @@ themispy_resample
    :filename: ../scripts/themispy_resample
    :func: set_parser
    :prog: themispy_resample
-   :nodefaultconst:
+   :nodefault:
+
+
+themispy_image_fit
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_image_fit
+   :func: set_parser
+   :prog: themispy_image_fit
+   :nodefault:
 
 
 themispy_deo_diagnostics
@@ -45,7 +54,7 @@ themispy_deo_diagnostics
    :filename: ../scripts/themispy_deo_diagnostics
    :func: set_parser
    :prog: themispy_deo_diagnostics
-   :nodefaultconst:
+   :nodefault:
 
 
 themispy_gain_plots
@@ -54,7 +63,7 @@ themispy_gain_plots
    :filename: ../scripts/themispy_gain_plots
    :func: set_parser
    :prog: themispy_gain_plots
-   :nodefaultconst:
+   :nodefault:
 
 
 themispy_chain_diagnostics
@@ -63,6 +72,6 @@ themispy_chain_diagnostics
    :filename: ../scripts/themispy_chain_diagnostics
    :func: set_parser
    :prog: themispy_chain_diagnostics
-   :nodefaultconst:
+   :nodefault:
 
 

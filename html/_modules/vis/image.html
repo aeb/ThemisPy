@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.image &mdash; ThemisPy 0+untagged.140.gf687f5e.dirty documentation</title>
+  <title>vis.image &mdash; ThemisPy 0+untagged.151.gd742fef.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.140.gf687f5e.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.151.gd742fef.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.140.gf687f5e.dirty
+                0+untagged.151.gd742fef.dirty
               </div>
             
           
@@ -156,21 +156,28 @@
 <span class="c1">#   Provides model image classes and functions.</span>
 <span class="c1">#</span>
 
+<span class="kn">from</span> <span class="nn">themispy.utils</span> <span class="kn">import</span> <span class="o">*</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">copy</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">interpolate</span> <span class="k">as</span> <span class="n">sint</span>
 <span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">fftconvolve</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
+
+<span class="c1"># Read in ehtim, if possible</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">ehtim</span> <span class="k">as</span> <span class="nn">eh</span>
+    <span class="n">ehtim_found</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.&quot;</span><span class="p">,</span> <span class="ne">Warning</span><span class="p">)</span>
+    <span class="n">ehtim_found</span> <span class="o">=</span> <span class="kc">False</span>
 
 
+<span class="c1"># Some constants</span>
 <span class="n">rad2uas</span> <span class="o">=</span> <span class="mf">180.0</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">3600</span> <span class="o">*</span> <span class="mf">1e6</span>
 <span class="n">uas2rad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="p">(</span><span class="mf">180.0</span> <span class="o">*</span> <span class="mi">3600</span> <span class="o">*</span> <span class="mf">1e6</span><span class="p">)</span>
-
-
-
-<span class="c1">## Reads in a list of alphanumeric model specifiers and expands them as</span>
-<span class="c1">## appropriate.  This includes modifiers, models, and a number of repititions</span>
-
 
 
 <div class="viewcode-block" id="model_image"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image">[docs]</a><span class="k">class</span> <span class="nc">model_image</span> <span class="p">:</span>
@@ -223,7 +230,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y).</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># </span>
@@ -254,7 +261,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y).</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;intensity_map must be defined in children classes of model_image.&quot;</span><span class="p">)</span></div>
@@ -300,7 +307,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y).</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">rad2uas</span>
@@ -356,7 +363,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y).</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
         <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">rad2uas</span>
@@ -409,7 +416,6 @@
 <span class="sd">    * parameters[0] ... Total intensity :math:`I_0` (Jy)</span>
 <span class="sd">    * parameters[1] ... Outer radius :math:`R` (rad)</span>
 <span class="sd">    * parameters[2] ... Width paramter :math:`\\psi` in (0,1)</span>
-<span class="sd">    * parameters[3] ... Eccentricity parameter :math:`\\epsilon` in (0,1)</span>
 <span class="sd">    * parameters[3] ... Asymmetry parmaeter math:`\\tau` in (0,1)</span>
 <span class="sd">    * parameters[4] ... Position angle :math:`\\phi` (rad)</span>
 
@@ -434,7 +440,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y).</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Make sure that delta ring is resolvable</span>
@@ -502,7 +508,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y).</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">I0</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
@@ -576,7 +582,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y).</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Make sure that delta ring is resolvable</span>
@@ -838,7 +844,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y).</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">Nx</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Ny</span><span class="p">])</span>
@@ -944,7 +950,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y).</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">Nx</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Ny</span><span class="p">])</span>
@@ -1062,7 +1068,7 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y).</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Doesn&#39;t to boundary checking here.  Probably not a major problem, but consider it in the future.</span>
@@ -1214,14 +1220,14 @@
 <span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
 
 <span class="sd">        Returns:</span>
-<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y).</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
         <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">image</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_list</span><span class="p">)</span> <span class="p">:</span>
-            <span class="n">dx</span> <span class="o">=</span> <span class="n">x</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">x0_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
-            <span class="n">dy</span> <span class="o">=</span> <span class="n">y</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">y0_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+            <span class="n">dx</span> <span class="o">=</span> <span class="n">x</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">dy</span> <span class="o">=</span> <span class="n">y</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
 
             <span class="n">I</span> <span class="o">=</span> <span class="n">I</span><span class="o">+</span><span class="n">image</span><span class="o">.</span><span class="n">generate_intensity_map</span><span class="p">(</span><span class="n">dx</span><span class="p">,</span><span class="n">dy</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
 
@@ -1346,7 +1352,7 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">      model_glob (str): Model glob string.</span>
-<span class="sd">      hyper_parameters (dict) : Optional set of hyperparameters for image models that require them.  Where they are not provided for required arguments a RuntimeError will be raised.</span>
+<span class="sd">      hyper_parameters (dict) : Optional set of hyperparameters for image models that require them. This optionally includes {&#39;offset_coordinates&#39;:&#39;Cartesian&#39;/&#39;polar&#39;} to set the coordinate type for the construction of a :class:`model_image_sum` object when more than one element is implied by the model_glob. Where they are not provided for required arguments a RuntimeError will be raised.</span>
 <span class="sd">      verbosity (int): Verbosity level. 0 prints nothing. 1 prints model_glob information.</span>
 
 <span class="sd">    Returns:</span>
@@ -1418,10 +1424,13 @@
     <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">image_list</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">return</span> <span class="n">image_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span> <span class="p">:</span>
-        <span class="k">return</span> <span class="p">(</span> <span class="n">model_image_sum</span><span class="p">(</span><span class="n">image_list</span><span class="p">)</span> <span class="p">)</span></div>
+        <span class="k">if</span> <span class="p">(</span> <span class="s1">&#39;offset_coordinates&#39;</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">)</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span> <span class="n">model_image_sum</span><span class="p">(</span><span class="n">image_list</span><span class="p">,</span><span class="n">offset_coordinates</span><span class="o">=</span><span class="n">hyperparameters</span><span class="p">[</span><span class="s1">&#39;offset_coordinates&#39;</span><span class="p">])</span> <span class="p">)</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="p">(</span> <span class="n">model_image_sum</span><span class="p">(</span><span class="n">image_list</span><span class="p">)</span> <span class="p">)</span></div>
+            
 
-
-<div class="viewcode-block" id="write_model_tag_file_from_mexico_ccm"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.write_model_tag_file_from_mexico_ccm">[docs]</a><span class="k">def</span> <span class="nf">write_model_tag_file_from_mexico_ccm</span><span class="p">(</span><span class="n">model_glob</span><span class="p">,</span><span class="n">hyperparameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">tag_file_name</span><span class="o">=</span><span class="s1">&#39;model_image.tag&#39;</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="write_model_tag_file_from_ccm_mexico"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.write_model_tag_file_from_ccm_mexico">[docs]</a><span class="k">def</span> <span class="nf">write_model_tag_file_from_ccm_mexico</span><span class="p">(</span><span class="n">model_glob</span><span class="p">,</span><span class="n">hyperparameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">tag_file_name</span><span class="o">=</span><span class="s1">&#39;model_image.tag&#39;</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads a model glob as produced by the ccm_mexico driver and writes a</span>
 <span class="sd">    corresponding tagvers-1.0 model_image.tag file. Model glob options are </span>
@@ -1452,7 +1461,11 @@
     
     <span class="c1"># If a model_image_sum object:</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">expanded_model_list</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
-        <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;model_image_sum</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">offset_coordinates</span> <span class="o">=</span> <span class="s1">&#39;Cartesian&#39;</span>
+        <span class="k">if</span> <span class="p">(</span> <span class="ow">not</span> <span class="p">(</span><span class="n">hyperparameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">):</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;offset_coordinates&#39;</span> <span class="ow">in</span> <span class="n">hyperparameters</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="p">:</span>
+                <span class="n">offset_coordinates</span> <span class="o">=</span> <span class="n">hyperparameters</span><span class="p">[</span><span class="s1">&#39;offset_coordinates&#39;</span><span class="p">]</span>
+        <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;model_image_sum </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">offset_coordinates</span><span class="p">))</span>
         <span class="n">tagout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;SUBTAG START</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
 
     <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">expanded_model_list</span> <span class="p">:</span>
@@ -1583,14 +1596,15 @@
         <span class="n">subtag</span> <span class="o">=</span> <span class="n">tagv1_find_subtag</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
         <span class="n">subimage</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">construct_model_image_from_tagv1</span><span class="p">(</span><span class="n">subtag</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">model_image_smooth</span><span class="p">(</span><span class="n">subimage</span><span class="p">),</span><span class="n">tag</span><span class="p">[(</span><span class="nb">len</span><span class="p">(</span><span class="n">subtag</span><span class="p">)</span><span class="o">+</span><span class="mi">3</span><span class="p">):]</span>
-    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_sum&#39;</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_sum&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">offset_coordinates</span> <span class="o">=</span> <span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">subtag</span> <span class="o">=</span> <span class="n">tagv1_find_subtag</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
         <span class="n">len_subtag</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">subtag</span><span class="p">)</span>
         <span class="n">image_list</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">while</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">subtag</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">subimage</span><span class="p">,</span><span class="n">subtag</span> <span class="o">=</span> <span class="n">construct_model_image_from_tagv1</span><span class="p">(</span><span class="n">subtag</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
             <span class="n">image_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subimage</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">model_image_sum</span><span class="p">(</span><span class="n">image_list</span><span class="p">),</span><span class="n">tag</span><span class="p">[</span><span class="n">len_subtag</span><span class="o">+</span><span class="mi">3</span><span class="p">:]</span>
+        <span class="k">return</span> <span class="n">model_image_sum</span><span class="p">(</span><span class="n">image_list</span><span class="p">,</span><span class="n">offset_coordinates</span><span class="o">=</span><span class="n">offset_coordinates</span><span class="p">),</span><span class="n">tag</span><span class="p">[</span><span class="n">len_subtag</span><span class="o">+</span><span class="mi">3</span><span class="p">:]</span>
     <span class="k">else</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unrecognized model tag </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span></div>
 
@@ -1599,8 +1613,8 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads tag file produced by the :cpp:func:`Themis::model_image::write_model_tag_file` function </span>
 <span class="sd">    and returns an appropriate model image. Model tag files can be generated from ccm_mexico+ model </span>
-<span class="sd">    specification strings using :func:`write_model_tag_file_from_mexico_ccm`. For details about</span>
-<span class="sd">    the available model tag syntax, see `Themis::model_image::write_model_tag_file`.</span>
+<span class="sd">    specification strings using :func:`write_model_tag_file_from_ccm_mexico`. For details about</span>
+<span class="sd">    the available model tag syntax, see :cpp:func:`Themis::model_image::write_model_tag_file`.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      tag_file_name (str): Name of the tag_file. Default: &#39;model_image.tag&#39;</span>
@@ -1657,7 +1671,194 @@
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unrecognized model_glob version: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">version</span><span class="p">))</span></div>
 
 
+    
+<div class="viewcode-block" id="plot_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.plot_intensity_map">[docs]</a><span class="k">def</span> <span class="nf">plot_intensity_map</span><span class="p">(</span><span class="n">model_image</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">limits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;afmhot&#39;</span><span class="p">,</span> <span class="n">Imin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">Imax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">in_radec</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_intensity_map</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">transfer_function</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots an intensity map associated with a given :class:`model_image` object evaluated at a </span>
+<span class="sd">    specified set of parameters. A number of additional practical options may be passed. Access</span>
+<span class="sd">    to a matplotlib pcolor object, the figure handle and axes hanldes are returned. Optionally,</span>
+<span class="sd">    the intensity map is returned.</span>
 
+<span class="sd">    Args:</span>
+<span class="sd">      model_image (model_image): :class:`model_image` object to plot.</span>
+<span class="sd">      parameters (list): List of parameters that define model_image intensity map.</span>
+<span class="sd">      limits (float,list): Limits in uas on image size. If a single float is given, the limits are uniformly set. If a list is given, it must be in the form [xmin,xmax,ymin,ymax]. Default: 75</span>
+<span class="sd">      shape (int,list): Number of pixels. If a single int is given, the number of pixels are uniformly set in both directions.  If a list is given, it must be in the form [Nx,Ny]. Default: 256</span>
+<span class="sd">      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: &#39;afmhot&#39;.</span>
+<span class="sd">      Imin (float): Minimum intensity for colormap. Default: 0 (though see transfer_function).</span>
+<span class="sd">      Imax (float): Maximum intensity for colormap. Default: maximum intensity.</span>
+<span class="sd">      in_radec (bool): If True, plots in :math:`\\Delta RA` and :math:`\\Delta Dec`.  If False, plots in sky-right Cartesian coordinates. Default: True</span>
+<span class="sd">      xlabel (str): Label for xaxis. Default: &#39;:math:`\\Delta RA (\\mu as)` if in_radec is True, :math:`\\Delta x (\\mu as)` if in_radec is False</span>
+<span class="sd">      ylabel (str): Label for yaxis. Default: &#39;:math:`\\Delta Dec (\\mu as)` if in_radec is True, :math:`\\Delta y (\\mu as)` if in_radec is False</span>
+<span class="sd">      return_intensity_map (bool): If True returns the intensity map in addition to standard return items.</span>
+<span class="sd">      transfer_function (str): Transfer function to plot.  Options are &#39;linear&#39;,&#39;sqrt&#39;,&#39;log&#39;.  If &#39;log&#39;, if Imin=0 it will be set to Imax/1000.0 by default, else if Imin&lt;0 it will be assumed to be a dynamic range and Imin = Imax * 10**(Imin).</span>
+<span class="sd">      verbosity (int): Verbosity level. 0 prints nothing. 1 prints various elements of the plotting process. Passed to :func:`model_image.generate_intensity_map`. Default: 0.</span>
+
+<span class="sd">    Returns :</span>
+<span class="sd">      (matplotlib.pyplot.image,matplotlib.pyplot.axes,matplotlib.pyplot.fig,[numpy.ndarray,numpy.ndarray,numpy.ndarray]): Image handle; Figure object; Axes object; Optionally intensity map (x,y,I).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Shape limits</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">limits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">limits</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="o">-</span><span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">limits</span><span class="p">,</span><span class="nb">list</span><span class="p">))</span> <span class="p">:</span>
+        <span class="n">limits</span> <span class="o">=</span> <span class="n">limits</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">limits</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">limits</span><span class="p">,</span> <span class="n">limits</span><span class="p">,</span> <span class="o">-</span><span class="n">limits</span><span class="p">,</span> <span class="n">limits</span><span class="p">]</span>
+
+    <span class="c1"># Set shape</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span><span class="nb">list</span><span class="p">))</span> <span class="p">:</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">shape</span><span class="p">,</span> <span class="n">shape</span><span class="p">]</span>
+
+    <span class="c1"># Set labels</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">xlabel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">in_radec</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">xlabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\Delta$RA ($\mu$as)&#39;</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">xlabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\Delta$x ($\mu$as)&#39;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ylabel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">in_radec</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\Delta$Dec ($\mu$as)&#39;</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\Delta$y ($\mu$as)&#39;</span>
+        
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;limits:&quot;</span><span class="p">,</span><span class="n">limits</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;shape:&quot;</span><span class="p">,</span><span class="n">shape</span><span class="p">)</span>
+    
+    <span class="c1"># Generate a set of pixels</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="n">limits</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">limits</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="p">,</span><span class="n">limits</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="n">limits</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="p">]</span>
+    <span class="c1"># Generate a set of intensities (Jy/uas^2)</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="n">model_image</span><span class="o">.</span><span class="n">intensity_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">parameters</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+
+    <span class="c1"># Flip x to flip x axis so that RA decreases right to left</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">in_radec</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">limits</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">limits</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    
+    <span class="c1"># Determine scale</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Imax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">Imax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Minimum/Maximum I: </span><span class="si">%g</span><span class="s2"> / </span><span class="si">%g</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">Imin</span><span class="p">,</span><span class="n">Imax</span><span class="p">))</span>
+        
+    <span class="c1"># Transfered I for plotting</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">transfer_function</span><span class="o">==</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">tI</span> <span class="o">=</span> <span class="n">I</span><span class="o">/</span><span class="n">Imax</span>
+        <span class="n">Imin</span> <span class="o">=</span> <span class="n">Imin</span><span class="o">/</span><span class="n">Imax</span>
+        <span class="n">Imax</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">transfer_function</span><span class="o">==</span><span class="s1">&#39;sqrt&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">tI</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">I</span><span class="o">/</span><span class="n">Imax</span><span class="p">)</span>
+        <span class="n">Imin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">Imin</span><span class="o">/</span><span class="n">Imax</span><span class="p">)</span>
+        <span class="n">Imax</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">transfer_function</span><span class="o">==</span><span class="s1">&#39;log&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">tI</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">I</span><span class="o">/</span><span class="n">Imax</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Imin</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">Imin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="mf">1.0e-3</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">Imin</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">Imin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">Imin</span><span class="o">/</span><span class="n">Imax</span><span class="p">)</span>
+        <span class="n">Imax</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+    <span class="c1"># Set background color in Axes</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span>    
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="n">cmap</span><span class="p">(</span><span class="mf">0.0</span><span class="p">))</span>
+
+    <span class="c1"># Make plot</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolor</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">tI</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">Imin</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">Imax</span><span class="p">)</span>
+    
+    <span class="c1"># Add labels</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+    
+    <span class="c1"># Fix aspect ratio</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;square&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Fix x-axis to run in sky</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">in_radec</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_xaxis</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">return_intensity_map</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">h</span><span class="p">,</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">I</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">h</span><span class="p">,</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span></div>
+    
+
+
+<div class="viewcode-block" id="write_fits"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.write_fits">[docs]</a><span class="k">def</span> <span class="nf">write_fits</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">I</span><span class="p">,</span><span class="n">fits_filename</span><span class="p">,</span><span class="n">uvfits_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Writes a FITS format image file given 2D image data.  </span>
+
+<span class="sd">    Warning: </span>
+
+<span class="sd">      * This makes extensive use of ehtim and will not be available if ehtim is not installed.  Raises a NotImplementedError if ehtim is unavailable.</span>
+<span class="sd">      * Due to ehtim, only *square* images are supported at this time.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">      y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">      I (numpy.ndarray): Array of intensity values in (Jy/uas^2)</span>
+<span class="sd">      fits_filename (str): Name of output FITS file.</span>
+<span class="sd">      uvfits_filename (str): Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.</span>
+<span class="sd">      time (float): Time in hr on the relevant observation day (set by uvfits file) represented by image data.</span>
+<span class="sd">      verbosity (int): Verbosity parameter. If 0, no information is printed.  If &gt;=1, prints information about sizes and values.  If &gt;=2, generates debugging plots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;ERROR: write_fits requires ehtim to be installed.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shapes&quot;</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">I</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">!=</span><span class="n">I</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;ERROR: ehtim cannot handle non-square images. Your image had shape&quot;</span><span class="p">,</span><span class="n">I</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">2</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span><span class="mf">0.15</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">pcolor</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">I</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;afmhot&#39;</span><span class="p">)</span>
+    
+    <span class="n">uas2rad</span> <span class="o">=</span> <span class="mf">1e-6</span> <span class="o">/</span> <span class="mf">3600.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.0</span>
+    <span class="n">pixel_size</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">uas2rad</span>
+    <span class="n">Ippx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">Ippx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">Ippx</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">uvfits_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No uvfits file has been specified. This will probably result in an nonfunctional FITS header.&quot;</span><span class="p">,</span> <span class="ne">Warning</span><span class="p">)</span>
+        <span class="n">ra</span><span class="o">=</span><span class="mf">0.0</span>
+        <span class="n">dec</span><span class="o">=</span><span class="mf">0.0</span>
+        <span class="n">rf</span><span class="o">=</span><span class="mf">230e9</span>
+        <span class="n">src</span><span class="o">=</span><span class="s1">&#39;NA&#39;</span>
+        <span class="n">mjd</span><span class="o">=</span><span class="mi">58583</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">eh</span><span class="o">.</span><span class="n">obsdata</span><span class="o">.</span><span class="n">load_uvfits</span><span class="p">(</span><span class="n">uvfits_filename</span><span class="p">)</span>
+        <span class="n">ra</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">ra</span>
+        <span class="n">dec</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">dec</span>
+        <span class="n">rf</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">rf</span>
+        <span class="n">src</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">source</span>
+        <span class="n">mjd</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">mjd</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;pixel size:&#39;</span><span class="p">,</span><span class="n">pixel_size</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ra:&#39;</span><span class="p">,</span><span class="n">ra</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;dec:&#39;</span><span class="p">,</span><span class="n">ra</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;rf:&#39;</span><span class="p">,</span><span class="n">ra</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;src:&#39;</span><span class="p">,</span><span class="n">ra</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;mjd:&#39;</span><span class="p">,</span><span class="n">ra</span><span class="p">)</span>
+
+    <span class="n">image</span> <span class="o">=</span> <span class="n">eh</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">Ippx</span><span class="p">,</span><span class="n">pixel_size</span><span class="p">,</span><span class="n">ra</span><span class="p">,</span><span class="n">dec</span><span class="p">,</span><span class="n">rf</span><span class="o">=</span><span class="n">rf</span><span class="p">,</span><span class="n">source</span><span class="o">=</span><span class="n">src</span><span class="p">,</span><span class="n">mjd</span><span class="o">=</span><span class="n">mjd</span><span class="p">,</span><span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span><span class="n">pulse</span><span class="o">=</span><span class="n">eh</span><span class="o">.</span><span class="n">observing</span><span class="o">.</span><span class="n">pulses</span><span class="o">.</span><span class="n">deltaPulse2D</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    
+    <span class="n">image</span><span class="o">.</span><span class="n">save_fits</span><span class="p">(</span><span class="n">fits_filename</span><span class="p">)</span></div>
 </pre></div>
 
            </div>
@@ -1691,7 +1892,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.140.gf687f5e.dirty',
+            VERSION:'0+untagged.151.gd742fef.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vis &mdash; ThemisPy 0+untagged.140.gf687f5e.dirty documentation</title>
+  <title>Vis &mdash; ThemisPy 0+untagged.151.gd742fef.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.140.gf687f5e.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.151.gd742fef.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="themispy_trace_plots" href="scripts.html"/>
         <link rel="prev" title="Diag" href="diag.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.140.gf687f5e.dirty
+                0+untagged.151.gd742fef.dirty
               </div>
             
           
@@ -348,7 +348,7 @@ must be provided as a dictionary:</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model_glob</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Model glob string.</p></li>
-<li><p><strong>hyper_parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Optional set of hyperparameters for image models that require them.  Where they are not provided for required arguments a RuntimeError will be raised.</p></li>
+<li><p><strong>hyper_parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Optional set of hyperparameters for image models that require them. This optionally includes {‘offset_coordinates’:’Cartesian’/’polar’} to set the coordinate type for the construction of a <a class="reference internal" href="#vis.image.model_image_sum" title="vis.image.model_image_sum"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_sum</span></code></a> object when more than one element is implied by the model_glob. Where they are not provided for required arguments a RuntimeError will be raised.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity level. 0 prints nothing. 1 prints model_glob information.</p></li>
 </ul>
 </dd>
@@ -391,10 +391,10 @@ Currently accepted globs include:</p>
 <dl class="py function">
 <dt id="vis.image.construct_model_image_from_tag_file">
 <code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">construct_model_image_from_tag_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tag_file_name</span><span class="o">=</span><span class="default_value">'model_image.tag'</span></em>, <em class="sig-param"><span class="n">tagversion</span><span class="o">=</span><span class="default_value">'tagvers-1.0'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#construct_model_image_from_tag_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.construct_model_image_from_tag_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads tag file produced by the <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">:model_image::write_model_tag_file</span></code> function
+<dd><p>Reads tag file produced by the <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00069.html#a216b2294bcbf313605b73ae5eba6363e" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image::write_model_tag_file</span></code></a> function
 and returns an appropriate model image. Model tag files can be generated from ccm_mexico+ model
-specification strings using <a class="reference internal" href="#vis.image.write_model_tag_file_from_mexico_ccm" title="vis.image.write_model_tag_file_from_mexico_ccm"><code class="xref py py-func docutils literal notranslate"><span class="pre">write_model_tag_file_from_mexico_ccm()</span></code></a>. For details about
-the available model tag syntax, see <cite>Themis::model_image::write_model_tag_file</cite>.</p>
+specification strings using <a class="reference internal" href="#vis.image.write_model_tag_file_from_ccm_mexico" title="vis.image.write_model_tag_file_from_ccm_mexico"><code class="xref py py-func docutils literal notranslate"><span class="pre">write_model_tag_file_from_ccm_mexico()</span></code></a>. For details about
+the available model tag syntax, see <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00069.html#a216b2294bcbf313605b73ae5eba6363e" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image::write_model_tag_file</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -553,8 +553,8 @@ image classes.</p>
 <dt id="vis.image.model_image">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for Themis image models.
-This base class is intended to mirror the <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00047.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image</span></code></a> base class, providing
-explicit visualizations of the output of <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00047.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image</span></code></a>-derived model analyses.</p>
+This base class is intended to mirror the <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00069.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image</span></code></a> base class, providing
+explicit visualizations of the output of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00069.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image</span></code></a>-derived model analyses.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</p>
@@ -596,8 +596,8 @@ explicit visualizations of the output of <a class="reference external" href="htt
 <dl class="py method">
 <dt id="vis.image.model_image.generate">
 <code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image.generate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the model parameter list.  Mirrors <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00047.html#a7945f9c4716ebe7f1026b999467d9c32" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image::generate_model</span></code></a>,
-a similar a similar function within the <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00047.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image</span></code></a> class.  Effectively
+<dd><p>Sets the model parameter list.  Mirrors <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00069.html#a7945f9c4716ebe7f1026b999467d9c32" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image::generate_model</span></code></a>,
+a similar a similar function within the <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00069.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image</span></code></a> class.  Effectively
 simply copies the parameters into the local list with some additional run-time checking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -623,7 +623,7 @@ list has been set.  This should never be called externally.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -644,7 +644,7 @@ convention.</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -665,7 +665,7 @@ convention.</p>
 <dl class="py class">
 <dt id="vis.image.model_image_adaptive_splined_raster">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_adaptive_splined_raster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Nx</span></em>, <em class="sig-param"><span class="n">Ny</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">- 0.5</span></em>, <em class="sig-param"><span class="n">spline_method</span><span class="o">=</span><span class="default_value">'fft'</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_adaptive_splined_raster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_adaptive_splined_raster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adaptive splined raster image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_adaptive_splined_raster</span></code>.
+<dd><p>Adaptive splined raster image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00070.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_adaptive_splined_raster</span></code></a>.
 Has parameters:</p>
 <ul class="simple">
 <li><p>parameters[0] …….. Logarithm of the brightness at control point 0,0 (Jy/sr)</p></li>
@@ -753,7 +753,7 @@ Has parameters:</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -774,7 +774,7 @@ Has parameters:</p>
 <dl class="py class">
 <dt id="vis.image.model_image_asymmetric_gaussian">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_asymmetric_gaussian</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_asymmetric_gaussian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_asymmetric_gaussian" title="Permalink to this definition">¶</a></dt>
-<dd><p>Asymmetric gaussian image class that is a mirror of <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00049.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_asymmetric_gaussian</span></code></a>.
+<dd><p>Asymmetric gaussian image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00072.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_asymmetric_gaussian</span></code></a>.
 Has parameters:</p>
 <ul class="simple">
 <li><p>parameters[0] … Total intensity <span class="math notranslate nohighlight">\(I_0\)</span> (Jy)</p></li>
@@ -801,7 +801,7 @@ Has parameters:</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -822,13 +822,12 @@ Has parameters:</p>
 <dl class="py class">
 <dt id="vis.image.model_image_crescent">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_crescent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_crescent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_crescent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Symmetric gaussian image class that is a mirror of <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00050.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_crescent</span></code></a>.
+<dd><p>Symmetric gaussian image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00073.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_crescent</span></code></a>.
 Has parameters:</p>
 <ul class="simple">
 <li><p>parameters[0] … Total intensity <span class="math notranslate nohighlight">\(I_0\)</span> (Jy)</p></li>
 <li><p>parameters[1] … Outer radius <span class="math notranslate nohighlight">\(R\)</span> (rad)</p></li>
 <li><p>parameters[2] … Width paramter <span class="math notranslate nohighlight">\(\psi\)</span> in (0,1)</p></li>
-<li><p>parameters[3] … Eccentricity parameter <span class="math notranslate nohighlight">\(\epsilon\)</span> in (0,1)</p></li>
 <li><p>parameters[3] … Asymmetry parmaeter math:<cite>tau</cite> in (0,1)</p></li>
 <li><p>parameters[4] … Position angle <span class="math notranslate nohighlight">\(\phi\)</span> (rad)</p></li>
 </ul>
@@ -851,7 +850,7 @@ Has parameters:</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -872,7 +871,7 @@ Has parameters:</p>
 <dl class="py class">
 <dt id="vis.image.model_image_smooth">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_smooth</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_smooth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_smooth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Smoothed image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_smooth</span></code>. Generates a smoothed
+<dd><p>Smoothed image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00095.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_smooth</span></code></a>. Generates a smoothed
 image from an existing image using an asymmetric Gaussian smoothing kernel.
 Has parameters:</p>
 <ul class="simple">
@@ -908,8 +907,8 @@ Has parameters:</p>
 <dl class="py method">
 <dt id="vis.image.model_image_smooth.generate">
 <code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_smooth.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_smooth.generate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the model parameter list.  Mirrors <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">:model_image_smooth::generate_model</span></code>,
-a similar a similar function within the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_smooth</span></code> class.  Effectively
+<dd><p>Sets the model parameter list.  Mirrors <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00095.html#a7945f9c4716ebe7f1026b999467d9c32" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_smooth::generate_model</span></code></a>,
+a similar a similar function within the <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00095.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_smooth</span></code></a> class.  Effectively
 simply copies the parameters into the local list with some additional run-time checking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -934,7 +933,7 @@ simply copies the parameters into the local list with some additional run-time c
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -955,7 +954,7 @@ simply copies the parameters into the local list with some additional run-time c
 <dl class="py class">
 <dt id="vis.image.model_image_splined_raster">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_splined_raster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Nx</span></em>, <em class="sig-param"><span class="n">Ny</span></em>, <em class="sig-param"><span class="n">fovx</span></em>, <em class="sig-param"><span class="n">fovy</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">- 0.5</span></em>, <em class="sig-param"><span class="n">spline_method</span><span class="o">=</span><span class="default_value">'fft'</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_splined_raster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_splined_raster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Splined raster image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_splined_raster</span></code>.
+<dd><p>Splined raster image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00096.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_splined_raster</span></code></a>.
 Has parameters:</p>
 <ul class="simple">
 <li><p>parameters[0] …….. Logarithm of the brightness at control point 0,0 (Jy/sr)</p></li>
@@ -1064,7 +1063,7 @@ Has parameters:</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1085,7 +1084,7 @@ Has parameters:</p>
 <dl class="py class">
 <dt id="vis.image.model_image_sum">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_sum</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">offset_coordinates</span><span class="o">=</span><span class="default_value">'Cartesian'</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_sum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_sum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Summed image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_sum</span></code>. Generates images by summing
+<dd><p>Summed image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00097.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_sum</span></code></a>. Generates images by summing
 other images supplemented with some offset. The parameters list is expanded by 2 for each
 image, corresponding to the absolute positions. These may be specified either in Cartesian
 or polar coordinates; this selection must be made at construction and applies uniformly to
@@ -1149,8 +1148,8 @@ all components (i.e., all component positions must be specified in the same coor
 <dl class="py method">
 <dt id="vis.image.model_image_sum.generate">
 <code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_sum.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_sum.generate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the model parameter list.  Mirrors <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">:model_image_sum::generate_model</span></code>,
-a similar a similar function within the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_sum</span></code> class.
+<dd><p>Sets the model parameter list.  Mirrors <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00097.html#a7945f9c4716ebe7f1026b999467d9c32" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_sum::generate_model</span></code></a>,
+a similar a similar function within the <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00097.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_sum</span></code></a> class.
 Effectively simply copies the parameters into the local list, transforms
 and copies the shift vector (x0,y0) for each model_image object, and performs some run-time checking.</p>
 <dl class="field-list simple">
@@ -1176,7 +1175,7 @@ and copies the shift vector (x0,y0) for each model_image object, and performs so
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1197,7 +1196,7 @@ and copies the shift vector (x0,y0) for each model_image object, and performs so
 <dl class="py class">
 <dt id="vis.image.model_image_symmetric_gaussian">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_symmetric_gaussian</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_symmetric_gaussian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_symmetric_gaussian" title="Permalink to this definition">¶</a></dt>
-<dd><p>Symmetric gaussian image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_symmetric_gaussian</span></code>.
+<dd><p>Symmetric gaussian image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00098.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_symmetric_gaussian</span></code></a>.
 Has parameters:</p>
 <ul class="simple">
 <li><p>parameters[0] … Total intensity <span class="math notranslate nohighlight">\(I_0\)</span> (Jy)</p></li>
@@ -1222,7 +1221,7 @@ Has parameters:</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1243,7 +1242,7 @@ Has parameters:</p>
 <dl class="py class">
 <dt id="vis.image.model_image_xsring">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_xsring</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_xsring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_xsring" title="Permalink to this definition">¶</a></dt>
-<dd><p>Symmetric gaussian image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_xsring</span></code>.
+<dd><p>Symmetric gaussian image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00101.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_xsring</span></code></a>.
 Has parameters:</p>
 <ul class="simple">
 <li><p>parameters[0] … Total intensity <span class="math notranslate nohighlight">\(I_0\)</span> (Jy)</p></li>
@@ -1272,7 +1271,7 @@ Has parameters:</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1293,7 +1292,7 @@ Has parameters:</p>
 <dl class="py class">
 <dt id="vis.image.model_image_xsringauss">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_xsringauss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_xsringauss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_xsringauss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Symmetric gaussian image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_xsringauss</span></code>.
+<dd><p>Symmetric gaussian image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00102.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_xsringauss</span></code></a>.
 Has parameters:</p>
 <ul class="simple">
 <li><p>parameters[0] … Total intensity <span class="math notranslate nohighlight">\(I_0\)</span> (Jy)</p></li>
@@ -1325,7 +1324,7 @@ Has parameters:</p>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y).</p>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y) in Jy/uas**2.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1341,6 +1340,38 @@ Has parameters:</p>
 </dl>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.image.plot_intensity_map">
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">plot_intensity_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_image</span></em>, <em class="sig-param"><span class="n">parameters</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'afmhot'</span></em>, <em class="sig-param"><span class="n">Imin</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">Imax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">in_radec</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">xlabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ylabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">return_intensity_map</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">transfer_function</span><span class="o">=</span><span class="default_value">'linear'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#plot_intensity_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.plot_intensity_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots an intensity map associated with a given <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object evaluated at a
+specified set of parameters. A number of additional practical options may be passed. Access
+to a matplotlib pcolor object, the figure handle and axes hanldes are returned. Optionally,
+the intensity map is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_image</strong> (<a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><em>model_image</em></a>) – <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object to plot.</p></li>
+<li><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameters that define model_image intensity map.</p></li>
+<li><p><strong>limits</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Limits in uas on image size. If a single float is given, the limits are uniformly set. If a list is given, it must be in the form [xmin,xmax,ymin,ymax]. Default: 75</p></li>
+<li><p><strong>shape</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Number of pixels. If a single int is given, the number of pixels are uniformly set in both directions.  If a list is given, it must be in the form [Nx,Ny]. Default: 256</p></li>
+<li><p><strong>colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.2.1)"><em>matplotlib.colors.Colormap</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. Default: ‘afmhot’.</p></li>
+<li><p><strong>Imin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Minimum intensity for colormap. Default: 0 (though see transfer_function).</p></li>
+<li><p><strong>Imax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Maximum intensity for colormap. Default: maximum intensity.</p></li>
+<li><p><strong>in_radec</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True, plots in <span class="math notranslate nohighlight">\(\Delta RA\)</span> and <span class="math notranslate nohighlight">\(\Delta Dec\)</span>.  If False, plots in sky-right Cartesian coordinates. Default: True</p></li>
+<li><p><strong>xlabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Label for xaxis. Default: ‘<span class="math notranslate nohighlight">\(\Delta RA (\mu as)\)</span> if in_radec is True, <span class="math notranslate nohighlight">\(\Delta x (\mu as)\)</span> if in_radec is False</p></li>
+<li><p><strong>ylabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Label for yaxis. Default: ‘<span class="math notranslate nohighlight">\(\Delta Dec (\mu as)\)</span> if in_radec is True, <span class="math notranslate nohighlight">\(\Delta y (\mu as)\)</span> if in_radec is False</p></li>
+<li><p><strong>return_intensity_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True returns the intensity map in addition to standard return items.</p></li>
+<li><p><strong>transfer_function</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Transfer function to plot.  Options are ‘linear’,’sqrt’,’log’.  If ‘log’, if Imin=0 it will be set to Imax/1000.0 by default, else if Imin&lt;0 it will be assumed to be a dynamic range and Imin = Imax * 10**(Imin).</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity level. 0 prints nothing. 1 prints various elements of the plotting process. Passed to <a class="reference internal" href="#vis.image.model_image.generate_intensity_map" title="vis.image.model_image.generate_intensity_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_image.generate_intensity_map()</span></code></a>. Default: 0.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Returns :</dt><dd><p>(matplotlib.pyplot.image,matplotlib.pyplot.axes,matplotlib.pyplot.fig,[numpy.ndarray,numpy.ndarray,numpy.ndarray]): Image handle; Figure object; Axes object; Optionally intensity map (x,y,I).</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">
@@ -1362,8 +1393,34 @@ SUBTAG FINISH.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="vis.image.write_model_tag_file_from_mexico_ccm">
-<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">write_model_tag_file_from_mexico_ccm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_glob</span></em>, <em class="sig-param"><span class="n">hyperparameters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tag_file_name</span><span class="o">=</span><span class="default_value">'model_image.tag'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#write_model_tag_file_from_mexico_ccm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.write_model_tag_file_from_mexico_ccm" title="Permalink to this definition">¶</a></dt>
+<dt id="vis.image.write_fits">
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">write_fits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">I</span></em>, <em class="sig-param"><span class="n">fits_filename</span></em>, <em class="sig-param"><span class="n">uvfits_filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">time</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#write_fits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.write_fits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a FITS format image file given 2D image data.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>This makes extensive use of ehtim and will not be available if ehtim is not installed.  Raises a NotImplementedError if ehtim is unavailable.</p></li>
+<li><p>Due to ehtim, only <em>square</em> images are supported at this time.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>I</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of intensity values in (Jy/uas^2)</p></li>
+<li><p><strong>fits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of output FITS file.</p></li>
+<li><p><strong>uvfits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.</p></li>
+<li><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time in hr on the relevant observation day (set by uvfits file) represented by image data.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If 0, no information is printed.  If &gt;=1, prints information about sizes and values.  If &gt;=2, generates debugging plots.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.image.write_model_tag_file_from_ccm_mexico">
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">write_model_tag_file_from_ccm_mexico</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_glob</span></em>, <em class="sig-param"><span class="n">hyperparameters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tag_file_name</span><span class="o">=</span><span class="default_value">'model_image.tag'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#write_model_tag_file_from_ccm_mexico"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.write_model_tag_file_from_ccm_mexico" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads a model glob as produced by the ccm_mexico driver and writes a
 corresponding tagvers-1.0 model_image.tag file. Model glob options are
 supplemented beyond that in the ccm_mexico driver in that they permit
@@ -1566,7 +1623,7 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.140.gf687f5e.dirty',
+            VERSION:'0+untagged.151.gd742fef.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

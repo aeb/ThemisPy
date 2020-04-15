@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.typlot &mdash; ThemisPy 0+untagged.140.gf687f5e.dirty documentation</title>
+  <title>vis.typlot &mdash; ThemisPy 0+untagged.151.gd742fef.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.140.gf687f5e.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.151.gd742fef.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.140.gf687f5e.dirty
+                0+untagged.151.gd742fef.dirty
               </div>
             
           
@@ -156,6 +156,8 @@
 <span class="c1">#   Provides general utility functions plotting.  Ambitiously named.</span>
 <span class="c1">#</span>
 
+<span class="kn">from</span> <span class="nn">themispy.utils</span> <span class="kn">import</span> <span class="o">*</span>
+
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rc</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -168,11 +170,6 @@
 <span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
 <span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">interpolate</span> <span class="k">as</span> <span class="n">scint</span>
-
-
-<span class="c1">#rc(&#39;font&#39;,**{&#39;family&#39;:&#39;serif&#39;,&#39;serif&#39;:[&#39;Times&#39;,&#39;Palatino&#39;,&#39;Computer Modern Roman&#39;]})</span>
-<span class="c1">#plt.rc(&#39;text&#39;, usetex=True)</span>
-
 
 
 <div class="viewcode-block" id="generate_streamline_colormap"><a class="viewcode-back" href="../../docs/src/vis.html#vis.typlot.generate_streamline_colormap">[docs]</a><span class="k">def</span> <span class="nf">generate_streamline_colormap</span><span class="p">(</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="n">number_of_streams</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oversample_factor</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">fluctuation_factor</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span> <span class="p">:</span>
@@ -618,6 +615,8 @@
 
     <span class="k">return</span> <span class="p">(</span><span class="n">axes_handles</span><span class="p">,</span><span class="n">lower_triangle_plot_handles</span><span class="p">,</span><span class="n">upper_triangle_plot_handles</span><span class="p">,</span><span class="n">diagonal_plot_handles</span><span class="p">)</span></div>
 
+
+
 </pre></div>
 
            </div>
@@ -651,7 +650,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.140.gf687f5e.dirty',
+            VERSION:'0+untagged.151.gd742fef.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
