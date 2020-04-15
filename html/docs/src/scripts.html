@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>themispy_trace_plots &mdash; ThemisPy 0+untagged.152.g550c083.dirty documentation</title>
+  <title>themispy_trace_plots &mdash; ThemisPy 0+untagged.154.gabee3c1.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.152.g550c083.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.154.gabee3c1.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Developer’s Guide" href="devel.html"/>
         <link rel="prev" title="Vis" href="vis.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.152.g550c083.dirty
+                0+untagged.154.gabee3c1.dirty
               </div>
             
           
@@ -412,11 +412,11 @@ $ themispy_resample -c Chain.dat -l Lklhd.dat -s 1000 -bf 0.5</p>
 A sample parameter value must be provided in one of three ways: (1) by specifying a
 fit_summaries.txt file, (2) by specifying an MCMC chain file with an index (optional),
 or (3) by specifying an MCMC chain file and corresponding likelihood file.
-This may be saved in ways TODO.</p>
+This may be saved in ways, including standard image formats (PNG,JPG,PDF) and FITS.</p>
 <p>Example:
 $ themispy_image_fit -c Chain.dat -l Lklhd.dat</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_image_fit</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span> <span class="n">CHAIN</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">l</span> <span class="n">LKLHD</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">f</span> <span class="n">FSFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="n">INDEX</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">m</span> <span class="n">MODEL</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">N</span> <span class="p">[</span><span class="n">N</span> <span class="p">[</span><span class="n">N</span> <span class="o">...</span><span class="p">]]]</span> <span class="p">[</span><span class="o">--</span><span class="n">limits</span> <span class="n">LIMITS</span> <span class="p">[</span><span class="n">LIMITS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">n</span> <span class="n">NORM</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="n">TRANSFER</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span> <span class="p">[</span><span class="n">OUT</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">uvfits</span> <span class="n">UVFITS</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">usetex</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_image_fit</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span> <span class="n">CHAIN</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">l</span> <span class="n">LKLHD</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">f</span> <span class="n">FSFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="n">INDEX</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">m</span> <span class="n">MODEL</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">N</span> <span class="p">[</span><span class="n">N</span> <span class="p">[</span><span class="n">N</span> <span class="o">...</span><span class="p">]]]</span> <span class="p">[</span><span class="o">--</span><span class="n">limits</span> <span class="n">LIMITS</span> <span class="p">[</span><span class="n">LIMITS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">n</span> <span class="n">NORM</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="n">TRANSFER</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span> <span class="p">[</span><span class="n">OUT</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">uvfits</span> <span class="n">UVFITS</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="n">SMOOTH</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">usetex</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="section" id="Named Arguments">
@@ -441,7 +441,7 @@ $ themispy_image_fit -c Chain.dat -l Lklhd.dat</p>
 <dd><p>Number of pixels in image. May be a single integer (square image) or two integers (non-square image). If None uses the default in vis.image.plot_model_image function. Default: None.</p>
 </dd>
 <dt><kbd>--limits</kbd></dt>
-<dd><p>Limits (in uas) of the plot region.  May be a single float or a set of four floats. If None uses the default in vis.image.plot_model_image function. Default: None.</p>
+<dd><p>Limits (in microarcseconds) of the plot region.  May be a single float or a set of four floats. If None uses the default in vis.image.plot_model_image function. Default: None.</p>
 </dd>
 <dt><kbd>-n, --norm</kbd></dt>
 <dd><p>Logarithmic normalization relative to to the median and maximum brightness. A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum.</p>
@@ -454,6 +454,9 @@ $ themispy_image_fit -c Chain.dat -l Lklhd.dat</p>
 </dd>
 <dt><kbd>--uvfits</kbd></dt>
 <dd><p>Specifies a uvfits file from which fits header information for the relevant sources may be extracted.</p>
+</dd>
+<dt><kbd>-s, --smooth</kbd></dt>
+<dd><p>If passed, will smooth the image with a symmetric Gaussian filter with FWHM given in microarcseconds.</p>
 </dd>
 <dt><kbd>--usetex</kbd></dt>
 <dd><p>Turns on using LaTex in the rendering.  Note that this takes longer, but the result is MUCH better looking.</p>
@@ -641,7 +644,7 @@ $ themispy_chain_diagnostics</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.152.g550c083.dirty',
+            VERSION:'0+untagged.154.gabee3c1.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
