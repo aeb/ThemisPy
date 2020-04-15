@@ -7,6 +7,7 @@
 #   Provides utility functions for reading and manipulating MCMC chains produced by Themis.
 #
 
+from themispy.utils import *
 
 import numpy as np
 import warnings

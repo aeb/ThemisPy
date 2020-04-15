@@ -7,6 +7,8 @@
 #   Provides general utility functions plotting.  Ambitiously named.
 #
 
+from themispy.utils import *
+
 import numpy as np
 from matplotlib import rc
 import matplotlib.pyplot as plt
@@ -468,4 +470,6 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, labels=None, uppe
 
 
     return (axes_handles,lower_triangle_plot_handles,upper_triangle_plot_handles,diagonal_plot_handles)
+
+
 

@@ -22,11 +22,6 @@ __bibtex__ = r"""@Article{Themis:2020,
   %%% Fill in from ADS!
 }"""
 
-import warnings
-def warning_on_one_line(message, category, filename, lineno, file=None, line=None):
-    return 'WARNING: %s:%s: %s: %s\n' % (filename, lineno, category.__name__, message)
-warnings.formatwarning = warning_on_one_line
-
 
 __all__=['chain', 'diag', 'data', 'vis']
 from . import *

@@ -7,7 +7,7 @@
 #   Functions for computing convergence diagonstics of MCMC chains produced by Themis.
 #   
 
-
+from themispy.utils import *
 
 import numpy as np
 import scipy.stats as stats

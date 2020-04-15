@@ -7,7 +7,7 @@
 #   Functions for diagonostic plots from MCMC chains produced by Themis.
 #
 
-
+from themispy.utils import *
 
 import numpy as np
 import matplotlib.pyplot as plt

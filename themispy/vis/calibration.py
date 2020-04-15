@@ -7,6 +7,8 @@
 #   Functions for loading for calibration quantities from Themis models
 #   
 
+from themispy.utils import *
+
 import numpy as np
 import copy
 from matplotlib import cm
