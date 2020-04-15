@@ -391,10 +391,10 @@ Currently accepted globs include:</p>
 <dl class="py function">
 <dt id="vis.image.construct_model_image_from_tag_file">
 <code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">construct_model_image_from_tag_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tag_file_name</span><span class="o">=</span><span class="default_value">'model_image.tag'</span></em>, <em class="sig-param"><span class="n">tagversion</span><span class="o">=</span><span class="default_value">'tagvers-1.0'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#construct_model_image_from_tag_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.construct_model_image_from_tag_file" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads tag file produced by the <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00069.html#a216b2294bcbf313605b73ae5eba6363e" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image::write_model_tag_file</span></code></a> function
+<dd><p>Reads tag file produced by the <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">:model_image::write_model_tag_file</span></code> function
 and returns an appropriate model image. Model tag files can be generated from ccm_mexico+ model
 specification strings using <a class="reference internal" href="#vis.image.write_model_tag_file_from_ccm_mexico" title="vis.image.write_model_tag_file_from_ccm_mexico"><code class="xref py py-func docutils literal notranslate"><span class="pre">write_model_tag_file_from_ccm_mexico()</span></code></a>. For details about
-the available model tag syntax, see <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00069.html#a216b2294bcbf313605b73ae5eba6363e" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image::write_model_tag_file</span></code></a>.</p>
+the available model tag syntax, see <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">:model_image::write_model_tag_file</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
@@ -553,8 +553,8 @@ image classes.</p>
 <dt id="vis.image.model_image">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image" title="Permalink to this definition">¶</a></dt>
 <dd><p>Base class for Themis image models.
-This base class is intended to mirror the <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00069.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image</span></code></a> base class, providing
-explicit visualizations of the output of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00069.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image</span></code></a>-derived model analyses.</p>
+This base class is intended to mirror the <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00047.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image</span></code></a> base class, providing
+explicit visualizations of the output of <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00047.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image</span></code></a>-derived model analyses.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</p>
@@ -596,8 +596,8 @@ explicit visualizations of the output of <a class="reference external" href="/Us
 <dl class="py method">
 <dt id="vis.image.model_image.generate">
 <code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image.generate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the model parameter list.  Mirrors <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00069.html#a7945f9c4716ebe7f1026b999467d9c32" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image::generate_model</span></code></a>,
-a similar a similar function within the <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00069.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image</span></code></a> class.  Effectively
+<dd><p>Sets the model parameter list.  Mirrors <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00047.html#a7945f9c4716ebe7f1026b999467d9c32" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image::generate_model</span></code></a>,
+a similar a similar function within the <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00047.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image</span></code></a> class.  Effectively
 simply copies the parameters into the local list with some additional run-time checking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -665,7 +665,7 @@ convention.</p>
 <dl class="py class">
 <dt id="vis.image.model_image_adaptive_splined_raster">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_adaptive_splined_raster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Nx</span></em>, <em class="sig-param"><span class="n">Ny</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">- 0.5</span></em>, <em class="sig-param"><span class="n">spline_method</span><span class="o">=</span><span class="default_value">'fft'</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_adaptive_splined_raster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_adaptive_splined_raster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Adaptive splined raster image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00070.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_adaptive_splined_raster</span></code></a>.
+<dd><p>Adaptive splined raster image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_adaptive_splined_raster</span></code>.
 Has parameters:</p>
 <ul class="simple">
 <li><p>parameters[0] …….. Logarithm of the brightness at control point 0,0 (Jy/sr)</p></li>
@@ -774,7 +774,7 @@ Has parameters:</p>
 <dl class="py class">
 <dt id="vis.image.model_image_asymmetric_gaussian">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_asymmetric_gaussian</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_asymmetric_gaussian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_asymmetric_gaussian" title="Permalink to this definition">¶</a></dt>
-<dd><p>Asymmetric gaussian image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00072.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_asymmetric_gaussian</span></code></a>.
+<dd><p>Asymmetric gaussian image class that is a mirror of <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00049.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_asymmetric_gaussian</span></code></a>.
 Has parameters:</p>
 <ul class="simple">
 <li><p>parameters[0] … Total intensity <span class="math notranslate nohighlight">\(I_0\)</span> (Jy)</p></li>
@@ -822,7 +822,7 @@ Has parameters:</p>
 <dl class="py class">
 <dt id="vis.image.model_image_crescent">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_crescent</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_crescent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_crescent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Symmetric gaussian image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00073.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_crescent</span></code></a>.
+<dd><p>Symmetric gaussian image class that is a mirror of <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00050.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_crescent</span></code></a>.
 Has parameters:</p>
 <ul class="simple">
 <li><p>parameters[0] … Total intensity <span class="math notranslate nohighlight">\(I_0\)</span> (Jy)</p></li>
@@ -871,7 +871,7 @@ Has parameters:</p>
 <dl class="py class">
 <dt id="vis.image.model_image_smooth">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_smooth</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_smooth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_smooth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Smoothed image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00095.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_smooth</span></code></a>. Generates a smoothed
+<dd><p>Smoothed image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_smooth</span></code>. Generates a smoothed
 image from an existing image using an asymmetric Gaussian smoothing kernel.
 Has parameters:</p>
 <ul class="simple">
@@ -907,8 +907,8 @@ Has parameters:</p>
 <dl class="py method">
 <dt id="vis.image.model_image_smooth.generate">
 <code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_smooth.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_smooth.generate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the model parameter list.  Mirrors <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00095.html#a7945f9c4716ebe7f1026b999467d9c32" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_smooth::generate_model</span></code></a>,
-a similar a similar function within the <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00095.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_smooth</span></code></a> class.  Effectively
+<dd><p>Sets the model parameter list.  Mirrors <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">:model_image_smooth::generate_model</span></code>,
+a similar a similar function within the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_smooth</span></code> class.  Effectively
 simply copies the parameters into the local list with some additional run-time checking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -954,7 +954,7 @@ simply copies the parameters into the local list with some additional run-time c
 <dl class="py class">
 <dt id="vis.image.model_image_splined_raster">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_splined_raster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Nx</span></em>, <em class="sig-param"><span class="n">Ny</span></em>, <em class="sig-param"><span class="n">fovx</span></em>, <em class="sig-param"><span class="n">fovy</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">- 0.5</span></em>, <em class="sig-param"><span class="n">spline_method</span><span class="o">=</span><span class="default_value">'fft'</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_splined_raster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_splined_raster" title="Permalink to this definition">¶</a></dt>
-<dd><p>Splined raster image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00096.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_splined_raster</span></code></a>.
+<dd><p>Splined raster image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_splined_raster</span></code>.
 Has parameters:</p>
 <ul class="simple">
 <li><p>parameters[0] …….. Logarithm of the brightness at control point 0,0 (Jy/sr)</p></li>
@@ -1084,7 +1084,7 @@ Has parameters:</p>
 <dl class="py class">
 <dt id="vis.image.model_image_sum">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_sum</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">offset_coordinates</span><span class="o">=</span><span class="default_value">'Cartesian'</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_sum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_sum" title="Permalink to this definition">¶</a></dt>
-<dd><p>Summed image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00097.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_sum</span></code></a>. Generates images by summing
+<dd><p>Summed image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_sum</span></code>. Generates images by summing
 other images supplemented with some offset. The parameters list is expanded by 2 for each
 image, corresponding to the absolute positions. These may be specified either in Cartesian
 or polar coordinates; this selection must be made at construction and applies uniformly to
@@ -1148,8 +1148,8 @@ all components (i.e., all component positions must be specified in the same coor
 <dl class="py method">
 <dt id="vis.image.model_image_sum.generate">
 <code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_sum.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_sum.generate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the model parameter list.  Mirrors <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00097.html#a7945f9c4716ebe7f1026b999467d9c32" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_sum::generate_model</span></code></a>,
-a similar a similar function within the <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00097.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_sum</span></code></a> class.
+<dd><p>Sets the model parameter list.  Mirrors <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">:model_image_sum::generate_model</span></code>,
+a similar a similar function within the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_sum</span></code> class.
 Effectively simply copies the parameters into the local list, transforms
 and copies the shift vector (x0,y0) for each model_image object, and performs some run-time checking.</p>
 <dl class="field-list simple">
@@ -1196,7 +1196,7 @@ and copies the shift vector (x0,y0) for each model_image object, and performs so
 <dl class="py class">
 <dt id="vis.image.model_image_symmetric_gaussian">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_symmetric_gaussian</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_symmetric_gaussian"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_symmetric_gaussian" title="Permalink to this definition">¶</a></dt>
-<dd><p>Symmetric gaussian image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00098.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_symmetric_gaussian</span></code></a>.
+<dd><p>Symmetric gaussian image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_symmetric_gaussian</span></code>.
 Has parameters:</p>
 <ul class="simple">
 <li><p>parameters[0] … Total intensity <span class="math notranslate nohighlight">\(I_0\)</span> (Jy)</p></li>
@@ -1242,7 +1242,7 @@ Has parameters:</p>
 <dl class="py class">
 <dt id="vis.image.model_image_xsring">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_xsring</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_xsring"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_xsring" title="Permalink to this definition">¶</a></dt>
-<dd><p>Symmetric gaussian image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00101.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_xsring</span></code></a>.
+<dd><p>Symmetric gaussian image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_xsring</span></code>.
 Has parameters:</p>
 <ul class="simple">
 <li><p>parameters[0] … Total intensity <span class="math notranslate nohighlight">\(I_0\)</span> (Jy)</p></li>
@@ -1292,7 +1292,7 @@ Has parameters:</p>
 <dl class="py class">
 <dt id="vis.image.model_image_xsringauss">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_xsringauss</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_xsringauss"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_xsringauss" title="Permalink to this definition">¶</a></dt>
-<dd><p>Symmetric gaussian image class that is a mirror of <a class="reference external" href="/Users/abroderick/Research/Themis/Themis/docs/html/a00102.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_xsringauss</span></code></a>.
+<dd><p>Symmetric gaussian image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_xsringauss</span></code>.
 Has parameters:</p>
 <ul class="simple">
 <li><p>parameters[0] … Total intensity <span class="math notranslate nohighlight">\(I_0\)</span> (Jy)</p></li>
