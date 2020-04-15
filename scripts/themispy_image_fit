@@ -1,0 +1,225 @@
+#!/usr/bin/env python3
+
+"""
+Reads in various Themis output files and generates a plot of the resulting image.
+A sample parameter value must be provided in one of three ways: (1) by specifying a
+fit_summaries.txt file, (2) by specifying an MCMC chain file with an index (optional),
+or (3) by specifying an MCMC chain file and corresponding likelihood file.
+This may be saved in ways TODO.
+
+Example:
+$ themispy_image_fit -c Chain.dat -l Lklhd.dat
+"""
+
+from matplotlib import use,rc
+use('Agg')
+
+import numpy as np
+import argparse as ap
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.cbook import flatten
+import os
+
+import sys
+sys.modules['ehtim'] = None
+import themispy as ty
+
+
+def set_parser():
+
+    # Create a parser object to manage command line options
+    parser = ap.ArgumentParser(prog="themispy_image_fit",description=__doc__)
+
+    parser.add_argument("-c","--chain",
+                        type=str,
+                        action='store',
+                        default=None,
+                        help=("Name of chain file to read.  If given, either an index must be specified with"
+                              " -i,--index or likelihood file must be specified with -l,-lklhd."
+                              " Default: Chain.dat"))
+
+    parser.add_argument("-l","--lklhd",
+                        type=str,
+                        action='store',
+                        default=None,
+                        help=("Name of likelihood file to read.  If given, will plot the highest likelihood"
+                              " sample. Requires chain file to be provided with -c,--chain."
+                              " Default: Lklhd.dat"))
+
+    parser.add_argument("-f","--fsfile",
+                        type=str,
+                        action='store',
+                        default=None,
+                        help=("Name of fit summaries file to read.  If given, will plot records listed"
+                              " within.  If an index is given with -i,--index will plot the corresponding"
+                              " line; otherwise plots the first line."
+                              " Default: fit_summaries.txt"))
+
+    parser.add_argument("-i","--index",
+                        type=int,
+                        action='store',
+                        default=0,
+                        help=("Name of fit summaries file to read.  If given, will plot records listed"
+                              " within.  If an index is given with -i,--index will plot the corresponding"
+                              " line; otherwise plots the first line."))
+
+    parser.add_argument("-m","--model",
+                        type=str,
+                        action='store',
+                        default="model_image.tag",
+                        help=("Model specification glob. May be a model tag file name or an ccm_mexico+"
+                              " model specification glob. See the vis.image.construct_model_image_from_glob"
+                              " function documentation for format details. If contains a '.' will assume"
+                              " that it is a tagvers-1.0 tag file."
+                              " Default: model_image.tag"))
+    
+    parser.add_argument("-N",
+                        type=int,
+                        nargs="*",
+                        action='store',
+                        default=None,
+                        help=("Number of pixels in image. May be a single integer (square image) or two"
+                              " integers (non-square image). If None uses the default in"
+                              " vis.image.plot_model_image function."
+                              " Default: None."))
+
+    parser.add_argument("--limits",
+                        type=float,
+                        nargs="+",
+                        action='store',
+                        default=None,
+                        help=("Limits (in uas) of the plot region.  May be a single float or a set of four"
+                              " floats. If None uses the default in vis.image.plot_model_image function."
+                              " Default: None."))
+                        
+    parser.add_argument("-n","--norm",
+                        type=float,
+                        action='store',
+                        default=0.0,
+                        help=("Logarithmic normalization relative to to the median and maximum brightness."
+                              " A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum."))
+
+    parser.add_argument("-t","--transfer",
+                        type=str,
+                        action='store',
+                        default='linear',
+                        help=("Set the transfer function ('linear','sqrt','log'). Default: 'linear'"))
+
+    parser.add_argument("-o","--out",
+                        type=str,
+                        nargs="+",
+                        action='append',
+                        default=None,
+                        help=("Set output files.  Multiple files and filetypes may be specified,"
+                              " including fits.  However, if fits is set, the path to a uvfits data file"
+                              " must be provided via --uvfits to set the appropriate header information."
+                              " Default: fit.png"))
+
+    parser.add_argument("--uvfits",
+                        type=str,
+                        action='store',
+                        default=None,
+                        help=("Specifies a uvfits file from which fits header information for the relevant"
+                              " sources may be extracted."))
+    
+    parser.add_argument("--usetex",
+                        action='store_true',
+                        default=False,
+                        help=("Turns on using LaTex in the rendering.  Note that this takes longer,"
+                              " but the result is MUCH better looking."))
+                        
+
+    return parser
+
+
+
+if __name__ == "__main__" :
+
+
+    # Get command line options
+    args = set_parser().parse_args()    
+    print("  ",args)
+
+    # Use LaTex or not
+    if (args.usetex) :
+        rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
+        rc('text', usetex=True)
+    
+
+    # Construct a model_image from glob
+    if ('.' in args.model) :
+        model_image = ty.vis.construct_model_image_from_glob(args.model,'tagvers-1.0')
+    else :
+        model_image = ty.vis.construct_model_image_from_glob(args.model,'ccm_mexico')
+    
+    # Run through checkdown for different ways of specifying parameters
+    if (not (args.fsfile is None) ) :
+        # An fit_summaries file has been passed:
+        parameters = np.loadtxt(args.fsfile,skiprows=(1+args.index),max_rows=1,usecols=np.arange(1,model_image.size+1))
+    elif (not (args.chain is None) ) :
+        if (args.lklhd is None) :
+            # Picking a single index
+            parameters = np.loadtxt(args.chain,skiprows=(1+args.index),max_rows=1,usecols=np.arange(0,model_image.size))
+        else :
+            # Picking the maximum likelihood
+            parameters,_ = ty.chain.most_likely_erun(args.chain,args.lklhd)
+    else :
+        # No acceptable method has been indicated
+        print("ERROR: Some method of specifying parameters must be set.")
+        quit()
+
+    print("Parameters:",parameters)
+
+
+    # Check limits
+    if (not (args.N is None) ):
+        if (len(args.N)==1) :
+            args.N = args.N[0]
+        elif (len(args.N)==2) :
+            pass
+        else :
+            print("ERROR: Either 1 or 2 arguments are expected after -N.")
+            quit()
+
+    # Check limits
+    if (not (args.limits is None) ):
+        if (len(args.limits)==1) :
+            args.limits = args.limits[0]
+        elif (len(args.limits)==4) :
+            pass
+        else :
+            print("ERROR: Either 1 or 4 arguments are expected after --limits.")
+            quit()
+    
+        
+    # Start figure particulars
+    plt.figure(figsize=(6,6))
+    plt.axes([0.15,0.15,0.8,0.8])
+
+    # Generate plot
+    h,fig,axs,x,y,I = ty.vis.plot_intensity_map(model_image, parameters, limits=args.limits, shape=args.N, colormap='afmhot', return_intensity_map=True, transfer_function=args.transfer)
+
+    # Set the proper normalization
+    Imed = np.median(I)
+    Imax = np.max(I)
+    if (args.transfer=='linear') :
+        vmax = 10**(args.norm - (1-args.norm)*np.log10(Imed/Imax))
+        vmin = 0
+    elif (args.transfer=='sqrt') :
+        vmax = np.sqrt( 10**(args.norm - (1-args.norm)*Imed/Imax ) )
+        vmin = 0
+    elif (args.transfer=='log') :
+        vmax = args.norm - (1-args.norm)*np.log10(Imed/Imax)
+        vmin = vmax-2
+    
+    # Save image as desired
+    if (args.out is None) :
+        args.out = ['fit.png']
+        
+    for outfile in flatten(args.out) :
+        _,ext = os.path.splitext(outfile)
+        if (ext=='.fits' or ext=='.FITS') :
+            ty.vis.write_fits(x,y,I,outfile,args.uvfits)
+        else :
+            plt.savefig(outfile,dpi=300)
