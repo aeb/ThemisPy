@@ -41,7 +41,7 @@ for script in script_list :
     out.write('   :filename: %s\n'%filename)
     out.write('   :func: set_parser\n')
     out.write('   :prog: %s\n'%prog)
-    out.write('   :nodefaultconst:')
+    out.write('   :nodefault:')
     out.write('\n\n\n')
 
 
