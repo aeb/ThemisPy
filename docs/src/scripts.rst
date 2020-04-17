@@ -3,15 +3,6 @@
 .. module:: scripts
 
 
-themispy_trace_plots
-----------------------------------
-.. argparse::
-   :filename: ../scripts/themispy_trace_plots
-   :func: set_parser
-   :prog: themispy_trace_plots
-   :nodefault:
-
-
 themispy_best_sample
 ----------------------------------
 .. argparse::
@@ -21,30 +12,12 @@ themispy_best_sample
    :nodefault:
 
 
-themispy_generate_data
+themispy_chain_diagnostics
 ----------------------------------
 .. argparse::
-   :filename: ../scripts/themispy_generate_data
+   :filename: ../scripts/themispy_chain_diagnostics
    :func: set_parser
-   :prog: themispy_generate_data
-   :nodefault:
-
-
-themispy_resample
-----------------------------------
-.. argparse::
-   :filename: ../scripts/themispy_resample
-   :func: set_parser
-   :prog: themispy_resample
-   :nodefault:
-
-
-themispy_image_fit
-----------------------------------
-.. argparse::
-   :filename: ../scripts/themispy_image_fit
-   :func: set_parser
-   :prog: themispy_image_fit
+   :prog: themispy_chain_diagnostics
    :nodefault:
 
 
@@ -66,12 +39,48 @@ themispy_gain_plots
    :nodefault:
 
 
-themispy_chain_diagnostics
+themispy_generate_data
 ----------------------------------
 .. argparse::
-   :filename: ../scripts/themispy_chain_diagnostics
+   :filename: ../scripts/themispy_generate_data
    :func: set_parser
-   :prog: themispy_chain_diagnostics
+   :prog: themispy_generate_data
+   :nodefault:
+
+
+themispy_image_fit
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_image_fit
+   :func: set_parser
+   :prog: themispy_image_fit
+   :nodefault:
+
+
+themispy_image_stats
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_image_stats
+   :func: set_parser
+   :prog: themispy_image_stats
+   :nodefault:
+
+
+themispy_resample
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_resample
+   :func: set_parser
+   :prog: themispy_resample
+   :nodefault:
+
+
+themispy_trace_plots
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_trace_plots
+   :func: set_parser
+   :prog: themispy_trace_plots
    :nodefault:
 
 

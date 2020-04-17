@@ -18,6 +18,7 @@ import glob
 
 # Get the list of command line tools to document
 script_list = glob.glob('../../scripts/themispy_*[!~]')
+script_list.sort()
 print("Adding documentation for the following:")
 print("  ",script_list)
 
