@@ -232,21 +232,23 @@ if __name__ == "__main__" :
     plt.axes([0.15,0.15,0.8,0.8])
 
     # Generate plot
-    h,fig,axs,x,y,I = ty.vis.plot_intensity_map(model_image, parameters, limits=args.limits, shape=args.N, colormap='afmhot', return_intensity_map=True, transfer_function=args.transfer, verbosity=int(args.verbose))
+    h,fig,axs,x,y,I = ty.vis.plot_intensity_map(model_image, parameters, limits=args.limits, shape=args.N, colormap='afmhot', return_intensity_map=True, transfer_function=args.transfer, verbosity=int(args.verbose),Imax=1)
 
     # Set the proper normalization
     Imed = np.median(I)
     Imax = np.max(I)
     if (args.transfer=='linear') :
-        vmax = 10**(args.norm - (1-args.norm)*np.log10(Imed/Imax))
+        vmax = (Imed) * 10**( args.norm*np.log10(Imax/Imed) )
         vmin = 0
     elif (args.transfer=='sqrt') :
-        vmax = np.sqrt( 10**(args.norm - (1-args.norm)*Imed/Imax ) )
+        vmax = np.sqrt( (Imed) * 10**( args.norm*np.log10(Imax/Imed) ) )
         vmin = 0
     elif (args.transfer=='log') :
-        vmax = args.norm - (1-args.norm)*np.log10(Imed/Imax)
+        vmax = args.norm*np.log10(Imax/Imed) + np.log10(Imed)
         vmin = vmax-2
-    
+
+    plt.clim(vmin=vmin,vmax=vmax)
+        
     # Save image as desired
     if (args.out is None) :
         args.out = ['fit.png']
