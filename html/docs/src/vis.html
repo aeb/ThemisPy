@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vis &mdash; ThemisPy 0+untagged.155.g70aa856.dirty documentation</title>
+  <title>Vis &mdash; ThemisPy 0+untagged.160.g585b8f4.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.155.g70aa856.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.160.g585b8f4.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="themispy_trace_plots" href="scripts.html"/>
         <link rel="prev" title="Diag" href="diag.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.155.g70aa856.dirty
+                0+untagged.160.g585b8f4.dirty
               </div>
             
           
@@ -869,6 +869,84 @@ Has parameters:</p>
 </dd></dl>
 
 <dl class="py class">
+<dt id="vis.image.model_image_single_point_statistics">
+<em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_single_point_statistics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">stats_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">median_store_size</span><span class="o">=</span><span class="default_value">16</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_single_point_statistics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_single_point_statistics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object that is filed with a desired set of
+single-point statistics (mean, median, standard deviation, kurtosis, etc.) given
+a specified model_image object and appropriate chain data.</p>
+<dl class="py method">
+<dt id="vis.image.model_image_single_point_statistics.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chain</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_single_point_statistics.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_single_point_statistics.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the model parameter list.  Mirrors <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00047.html#a7945f9c4716ebe7f1026b999467d9c32" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image::generate_model</span></code></a>,
+a similar a similar function within the <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00047.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image</span></code></a> class.  Effectively
+simply copies the parameters into the local list with some additional run-time checking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Parameter list.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_single_point_statistics.generate_intensity_map">
+<code class="sig-name descname">generate_intensity_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_single_point_statistics.generate_intensity_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_single_point_statistics.generate_intensity_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook for the intensity map function in child classes.  Assumes that the parameters
+list has been set.  This should never be called externally.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y) in <span class="math notranslate nohighlight">\(Jy/\mu as^2\)</span>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_single_point_statistics.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_single_point_statistics.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_single_point_statistics.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook for returning a list of parameter names.  Currently just returns the list of p0-p(size-1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_single_point_statistics.set_default_stat">
+<code class="sig-name descname">set_default_stat</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">stat</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_single_point_statistics.set_default_stat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_single_point_statistics.set_default_stat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the statistic to be returned on the next call to <code class="xref py py-func docutils literal notranslate"><span class="pre">intensity_map()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>stat</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – A statistic in the stats_list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_single_point_statistics.set_median_store_size">
+<code class="sig-name descname">set_median_store_size</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">median_store_size</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_single_point_statistics.set_median_store_size"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_single_point_statistics.set_median_store_size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the number of images to remember in the computation of the median.  If
+set to None, will store all images in the chain, possibly running afoul of
+system memory constraints.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>median_store_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of images to store.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="vis.image.model_image_smooth">
 <em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_smooth</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_smooth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_smooth" title="Permalink to this definition">¶</a></dt>
 <dd><p>Smoothed image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_smooth</span></code>. Generates a smoothed
@@ -1623,7 +1701,7 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.155.g70aa856.dirty',
+            VERSION:'0+untagged.160.g585b8f4.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

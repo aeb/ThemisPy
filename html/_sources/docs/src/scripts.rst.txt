@@ -75,3 +75,12 @@ themispy_chain_diagnostics
    :nodefault:
 
 
+themispy_image_stats
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_image_stats
+   :func: set_parser
+   :prog: themispy_image_stats
+   :nodefault:
+
+
