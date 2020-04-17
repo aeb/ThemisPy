@@ -104,8 +104,9 @@ def set_parser():
                         action='append',
                         default=None,
                         help=("Set output files.  Multiple files and filetypes may be specified,"
-                              " including fits.  However, if fits is set, the path to a uvfits data file"
-                              " must be provided via --uvfits to set the appropriate header information."
+                              " including fits.  However, if a filename ending in '.fits' is passed,"
+                              " the path to a uvfits data file must be provided via --uvfits to set"
+                              " the appropriate header information."
                               " Default: fit.png"))
 
     parser.add_argument("--uvfits",
