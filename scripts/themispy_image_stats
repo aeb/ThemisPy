@@ -7,7 +7,7 @@ A set of sample parameters must be provided via a chain file.
 This may be saved in ways, including standard image formats (PNG,JPG,PDF) and FITS.
 
 Example:
-$ themispy_image_fit -c Chain.dat --samples 10
+$ themispy_image_stats -c Chain.dat --samples 10
 """
 
 from matplotlib import use,rc
@@ -34,14 +34,14 @@ def set_parser():
                         action='store',
                         default=None,
                         required=True,
-                        help=("Name of chain file to read. Default: Chain.dat"))
+                        help=("<Required> Name of chain file to read. Default: Chain.dat"))
 
     parser.add_argument("-s","--samples",
                         type=int,
                         action='store',
                         default=32,
                         required=True,
-                        help=("Number of samples to draw from the specified chain file. Default: 32."))
+                        help=("<Required> Number of samples to draw from the specified chain file. Default: 32."))
 
     parser.add_argument("--stats",
                         type=str,
