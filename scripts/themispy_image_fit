@@ -35,16 +35,14 @@ def set_parser():
                         action='store',
                         default=None,
                         help=("Name of chain file to read.  If given, either an index must be specified with"
-                              " -i,--index or likelihood file must be specified with -l,-lklhd."
-                              " Default: Chain.dat"))
+                              " -i,--index or likelihood file must be specified with -l,-lklhd."))
 
     parser.add_argument("-l","--lklhd",
                         type=str,
                         action='store',
                         default=None,
                         help=("Name of likelihood file to read.  If given, will plot the highest likelihood"
-                              " sample. Requires chain file to be provided with -c,--chain."
-                              " Default: Lklhd.dat"))
+                              " sample. Requires chain file to be provided with -c,--chain."))
 
     parser.add_argument("-f","--fsfile",
                         type=str,
