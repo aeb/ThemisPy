@@ -1110,7 +1110,198 @@ class model_image_sum(model_image) :
         return names
     
 
+class model_image_single_point_statistics(model_image) :
+    """
+    Generates a :class:`model_image` object that is filed with a desired set of 
+    single-point statistics (mean, median, standard deviation, kurtosis, etc.) given
+    a specified model_image object and appropriate chain data.
 
+    
+    """
+
+    def __init__(self,image, stats_list=None, median_store_size=16, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+
+        self.image = image
+
+        if (stats_list is None) :
+            self.stats_list = ['mean', 'median', 'stddev']
+        else :
+            self.stats_list = stats_list
+            
+        self.default_stat = self.stats_list[0]
+            
+        self.Idict={}
+        for stat in self.stats_list :
+            self.Idict[stat] = None
+            
+        self.stats_generated = False
+
+        self.median_store_size = median_store_size
+
+        self.chain = None
+        
+            
+    def generate(self,chain) :
+
+        if (np.all(self.chain==chain)) :
+            return
+
+        self.chain = chain
+        
+        self.stats_generated = False
+        self.x = None
+        self.y = None
+
+
+    def set_default_stat(self,stat) :
+        """
+        Sets the statistic to be returned on the next call to :func:`intensity_map`.
+
+        Args:
+          stat (str): A statistic in the stats_list.
+        """
+
+        if (not (stat in self.stats_list)) :
+            raise RuntimeError(("Requested statistic %s is not in currently computed statistic list:"+len(self.stats_list)*" %s")%(stat,tuple(self.stats_list)))
+        else :
+            self.default_stat = stat
+
+
+    def set_median_store_size(self,median_store_size) :
+        """
+        Sets the number of images to remember in the computation of the median.  If 
+        set to None, will store all images in the chain, possibly running afoul of 
+        system memory constraints.
+
+        Args:
+          median_store_size(int): Number of images to store.
+        """
+        self.median_store_size = size
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+
+        # If new place, regenerate
+        if (np.any(self.x!=x) or np.any(self.y!=y)) :
+            self.x=x
+            self.y=y
+            self.stats_generated = False
+            
+        # If not generated, generate the relevant bits
+        if (self.stats_generated==False) :
+
+            for stat in self.Idict.keys() :
+                self.Idict[stat] = np.zeros(x.shape)
+            
+            nparams = self.chain.shape[-1]
+            flattened_chain = self.chain.reshape([-1,nparams])
+
+            if (verbosity) :
+                print("Number of parameters is %i"%(nparams))
+                print("Size of chain / flattened chain :",self.chain.shape,flattened_chain.shape)
+
+            
+            # Generate room for keeping track of images for median computation.
+            if ('median' in self.stats_list) :
+                if ( self.median_store_size is None ) :
+                    nmedstore = flattened_chain.shape[0]
+                else :
+                    nmedstore = self.median_store_size
+                I_median_list = np.zeros((nmedstore+1,)+x.shape)
+                I_median_boundary_count = np.zeros((2,)+x.shape).astype(int)
+
+            # Determine which things to computes
+            compute_median = ( 'median' in self.stats_list )
+            compute_kurtosis = ( 'kurtosis' in self.stats_list )
+            compute_skewness = ( 'skewness' in self.stats_list ) or compute_kurtosis
+            compute_stddev = ( 'stddev' in self.stats_list ) or compute_skewness
+            compute_mean = ( 'mean' in self.stats_list ) or compute_stddev
+
+            
+            # Loop over chain elmenets and accumulate quantities that will be turned into the desired statisics
+            if (verbosity==0) :
+                pb = progress_bar('Stats Computation:',length=40)
+                pb.start()
+                
+            for k in range(flattened_chain.shape[0]) :
+
+                if (verbosity>0) :
+                    print("  On frame k = %i"%(k))
+                else :
+                    pb.increment(k/float(flattened_chain.shape[0]))
+                    
+                    
+                I = self.image.intensity_map(x,y,flattened_chain[k,:],verbosity=verbosity)
+                
+                if ( compute_mean ) :
+                    self.Idict['mean'] = self.Idict['mean'] + I
+
+                if ( compute_stddev ) :
+                    self.Idict['stddev'] = self.Idict['stddev'] + I**2
+
+                if ( compute_skewness ) :
+                    self.Idict['skewness'] = self.Idict['skewness'] + I**3
+
+                if ( compute_kurtosis ) :
+                    self.Idict['kurtosis'] = self.Idict['kurtosis'] + I**4
+
+                if ( compute_median ) :
+                    if (k<nmedstore) :
+                        # Just store
+                        I_median_list[k,:,:] = I
+                    else :
+                        # Store new image
+                        I_median_list[-1,:,:] = I
+                        # Sort the new list
+                        I_median_list = np.sort(I_median_list,axis=0)
+                        # Find the new median with the boundary shifts
+                        index_median = (I_median_boundary_count[1,:,:]-I_median_boundary_count[0,:,:] + nmedstore )//2
+                        # Remove the side furthest from the median
+                        shift_median = (index_median>0.5*nmedstore).astype(int)
+                        for ix in range(x.shape[0]) :
+                            for iy in range(x.shape[1]) :
+                                I_median_list[0:nmedstore,ix,iy] = I_median_list[(shift_median[ix,iy]):(nmedstore+shift_median[ix,iy]),ix,iy]
+                        #I_median_list[0:nmedstore,:,:] = I_median_list[(shift_median):(nmedstore+shift_median),:,:]
+                        # Accumulate the lost side
+                        I_median_boundary_count[0,:,:] += (shift_median==1)
+                        I_median_boundary_count[1,:,:] += (shift_median==0)
+
+
+            # Finish the computation of the statistics
+            if ( compute_mean ) :
+                self.Idict['mean'] = self.Idict['mean'] / float(flattened_chain.shape[0])
+
+            if ( compute_stddev ) :
+                self.Idict['stddev'] = np.sqrt( self.Idict['stddev'] / float(flattened_chain.shape[0]) - self.Idict['mean']**2 )
+                
+            if ( compute_skewness ) :
+                self.Idict['skewness'] = ( self.Idict['skewness'] / float(flattened_chain.shape[0]) - 3.0*self.Idict['mean']*self.Idict['stddev']**2 - self.Idict['mean']**3 )/(self.Idict['stddev']**3)
+                
+            if ( compute_kurtosis ) :
+                self.Idict['kurtosis'] = ( self.Idict['kurtosis'] / float(flattened_chain.shape[0]) - 4.0*self.Idict['mean']*(self.Idict['stddev']**3)*self.Idict['skewness'] - 6.0*(self.Idict['mean']**2)*(self.Idict['stddev']**2)  - self.Idict['mean']**4 )/(self.Idict['stddev']**4)
+
+            if ( compute_median ) :
+                I_median_list = np.sort(I_median_list[:-1,:,:],axis=0)
+                index_median = (I_median_boundary_count[1,:,:]-I_median_boundary_count[0,:,:] + nmedstore )//2
+                for ix in range(x.shape[0]) :
+                    for iy in range(x.shape[1]) :
+                        self.Idict['median'][ix,iy] = I_median_list[index_median[ix,iy],ix,iy]
+            
+            if (verbosity==0) :
+                pb.finish()
+
+            self.stats_generated = True
+
+            
+        # Return desired quantities
+        return self.Idict[self.default_stat]
+            
+            
+    
+    def parameter_name_list(self) :
+        return self.image.parameter_name_list()
+    
     
 def expand_model_glob_ccm_mexico(model_glob) :
     """
@@ -1275,7 +1466,7 @@ def construct_model_image_from_ccm_mexico(model_glob,hyperparameters=None,verbos
     elif (len(image_list)==1) :
         return image_list[0]
     else :
-        if ( 'offset_coordinates' in hyperparameters.keys() ) :
+        if (not (hyperparameters is None)) and ( 'offset_coordinates' in hyperparameters.keys() ) :
             return ( model_image_sum(image_list,offset_coordinates=hyperparameters['offset_coordinates']) )
         else :
             return ( model_image_sum(image_list) )
@@ -1520,7 +1711,6 @@ def construct_model_image_from_glob(model_glob, glob_version, hyperparameters=No
         return construct_model_image_from_tag_file(model_glob,glob_version)
     else :
         raise RuntimeError("Unrecognized model_glob version: %s"%(version))
-
 
     
 def plot_intensity_map(model_image, parameters, limits=None, shape=None, colormap='afmhot', Imin=0.0, Imax=None, in_radec=True, xlabel=None, ylabel=None, return_intensity_map=False, transfer_function='linear', verbosity=0) :
