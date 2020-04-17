@@ -1,0 +1,308 @@
+#!/usr/bin/env python3
+
+"""
+Reads in various Themis output files and generates a plot of various single-point
+image statistics (e.g., the mean image, the standard deviation, the skewness, etc.).
+A set of sample parameters must be provided via a chain file.
+This may be saved in ways, including standard image formats (PNG,JPG,PDF) and FITS.
+
+Example:
+$ themispy_image_fit -c Chain.dat --samples 10
+"""
+
+from matplotlib import use,rc
+use('Agg')
+
+import numpy as np
+import argparse as ap
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.cbook import flatten
+import os
+import copy
+
+import themispy as ty
+
+
+def set_parser():
+
+    # Create a parser object to manage command line options
+    parser = ap.ArgumentParser(prog="themispy_image_fit",description=__doc__)
+
+    parser.add_argument("-c","--chain",
+                        type=str,
+                        action='store',
+                        default=None,
+                        required=True,
+                        help=("Name of chain file to read. Default: Chain.dat"))
+
+    parser.add_argument("-s","--samples",
+                        type=int,
+                        action='store',
+                        default=32,
+                        required=True,
+                        help=("Number of samples to draw from the specified chain file. Default: 32."))
+
+    parser.add_argument("--stats",
+                        type=str,
+                        nargs='+',
+                        action='append',
+                        default=None,
+                        help=("Statistics to compute and plot.  Can be any statistic provided by :class:`model_image_single_point_statistics`"))
+        
+    parser.add_argument("-m","--model",
+                        type=str,
+                        action='store',
+                        default="model_image.tag",
+                        help=("Model specification glob. May be a model tag file name or an ccm_mexico+"
+                              " model specification glob. See the vis.image.construct_model_image_from_glob"
+                              " function documentation for format details. If contains a '.' will assume"
+                              " that it is a tagvers-1.0 tag file."
+                              " Default: model_image.tag"))
+
+    parser.add_argument("-bf","--burn-fraction",
+                        type=float,
+                        action='store',
+                        default=0.5,
+                        help=("Fraction of chain to excise as burn in. Default: 0.5"))
+    
+    parser.add_argument("-N",
+                        type=int,
+                        nargs="*",
+                        action='store',
+                        default=None,
+                        help=("Number of pixels in image. May be a single integer (square image) or two"
+                              " integers (non-square image). If None uses the default in"
+                              " vis.image.plot_model_image function."
+                              " Default: None."))
+
+    parser.add_argument("--limits",
+                        type=float,
+                        nargs="+",
+                        action='store',
+                        default=None,
+                        help=("Limits (in microarcseconds) of the plot region.  May be a single float or"
+                              " a set of four floats. If None uses the default in vis.image.plot_model_image"
+                              " function. Default: None."))
+                        
+    parser.add_argument("-n","--norm",
+                        type=float,
+                        action='store',
+                        default=0.0,
+                        help=("Logarithmic normalization relative to to the median and maximum brightness."
+                              " A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum."))
+
+    parser.add_argument("-t","--transfer",
+                        type=str,
+                        action='store',
+                        default='linear',
+                        help=("Set the transfer function ('linear','sqrt','log'). Default: 'linear'"))
+
+    parser.add_argument("-o","--out",
+                        type=str,
+                        nargs="+",
+                        action='append',
+                        default=None,
+                        help=("Set output files.  Multiple files and filetypes may be specified,"
+                              " including fits.  However, if fits is set, the path to a uvfits data file"
+                              " must be provided via --uvfits to set the appropriate header information."
+                              " Default: fit.png"))
+
+    parser.add_argument("--uvfits",
+                        type=str,
+                        action='store',
+                        default=None,
+                        help=("Specifies a uvfits file from which fits header information for the relevant"
+                              " sources may be extracted."))
+
+    parser.add_argument("--smooth",
+                        type=float,
+                        action='store',
+                        default=None,
+                        help=("If passed, will smooth the image with a symmetric Gaussian filter with FWHM given in microarcseconds."))
+
+    parser.add_argument("--usetex",
+                        action='store_true',
+                        default=False,
+                        help=("Turns on using LaTex in the rendering.  Note that this takes longer,"
+                              " but the result is MUCH better looking."))
+                        
+    parser.add_argument("-v","--verbose",
+                        action='store_true',
+                        default=False,
+                        help=("Provides verbose output about model and plot construction."))
+    
+    return parser
+
+
+
+if __name__ == "__main__" :
+
+
+    # Get command line options
+    args = set_parser().parse_args()    
+    if (args.verbose) :
+        print("  ",args)
+
+    # Use LaTex or not
+    if (args.usetex) :
+        rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
+        rc('text', usetex=True)
+    
+
+    # Construct a model_image from glob
+    if ('.' in args.model) :
+        if (args.verbose):
+            print("Reading tag file %s"%(args.model))
+        model_image = ty.vis.construct_model_image_from_glob(args.model,'tagvers-1.0')
+    else :
+        if (args.verbose):
+            print("Using ccm_mexico glob %s"%(args.model))
+        model_image = ty.vis.construct_model_image_from_glob(args.model,'ccm_mexico+')
+        
+    if (args.verbose):
+        print("Model type and size:",type(model_image),model_image.size)
+
+    # Add smoothing if desired
+    if (not (args.smooth is None)) :
+        uas2rad = np.pi/(180.0*3600e6)
+        model_image_unsmoothed = copy.deepcopy(model_image)
+        model_image = ty.vis.model_image_smooth(model_image_unsmoothed)
+        parameters = np.append(parameters,[args.smooth*uas2rad/np.sqrt(8.0*np.log(2.0)), 0, 0])
+
+        if (args.verbose):
+            print("Smoothed parameters:",parameters)            
+        
+    # Check limits
+    if (not (args.N is None) ):
+        if (len(args.N)==1) :
+            args.N = args.N[0]
+        elif (len(args.N)==2) :
+            pass
+        else :
+            print("ERROR: Either 1 or 2 arguments are expected after -N.")
+            quit()
+
+    # Check limits
+    if (not (args.limits is None) ):
+        if (len(args.limits)==1) :
+            args.limits = args.limits[0]
+        elif (len(args.limits)==4) :
+            pass
+        else :
+            print("ERROR: Either 1 or 4 arguments are expected after --limits.")
+            quit()
+
+    # Generate single point statistics image object
+    # Always make mean and always make mean first
+    if (args.stats is None) :
+        stats_list = ['mean', 'stddev']
+    else :
+        stats_list = list(flatten(args.stats))
+        stats_list = np.array(stats_list)
+        stats_list = ['mean'] + stats_list[stats_list!='mean'].tolist()
+
+            
+    if (args.verbose) :
+        print("Generating the following statistics:",stats_list)
+
+        
+    stats_image = ty.vis.model_image_single_point_statistics(model_image,stats_list,32)
+
+    # Run through checkdown for different ways of specifying parameters
+    chain = ty.chain.sample_chain(args.chain,args.samples,burn_fraction=args.burn_fraction,parameter_list=range(model_image.size))
+
+    
+    # Save image as desired
+    if (args.out is None) :
+        args.out = ['fit.png']
+
+    for stat in stats_list :
+        
+        stats_image.set_default_stat(stat)
+        
+        # Start figure particulars
+        plt.figure(figsize=(6,6))
+        plt.axes([0.15,0.15,0.8,0.8])
+
+        # Set transfer for skewness and kurtosis to linear always
+        if (stat=='skewness' or stat=='kurtosis') :
+            transfer = 'linear'
+        else :
+            transfer = args.transfer
+
+        
+        # Generate plot
+        h,fig,axs,x,y,I = ty.vis.plot_intensity_map(stats_image, chain, limits=args.limits, shape=args.N, return_intensity_map=True, transfer_function=transfer, verbosity=int(args.verbose),Imax=1)
+
+        # Set the proper normalization
+        if (stat=='mean') :
+            Imed = np.median(I)
+            Imax = np.max(I)
+            if (args.transfer=='linear') :
+                vmax = (Imed) * 10**( args.norm*np.log10(Imax/Imed) )
+                vmin = 0
+            elif (args.transfer=='sqrt') :
+                vmax = np.sqrt( (Imed) * 10**( args.norm*np.log10(Imax/Imed) ) )
+                vmin = 0
+            elif (args.transfer=='log') :
+                vmax = args.norm*np.log10(Imax/Imed) + np.log10(Imed)
+                vmin = vmax-2
+
+        if (stat=='mean') :
+            plt.clim(vmin=vmin,vmax=vmax)
+            plt.set_cmap('afmhot')
+            plt.text(0.025,0.975,'Mean',color='w',transform=plt.gca().transAxes,ha='left',va='top')
+
+        if (stat=='median') :
+            plt.clim(vmin=vmin,vmax=vmax)
+            plt.set_cmap('afmhot')
+            plt.text(0.025,0.975,'Median',color='w',transform=plt.gca().transAxes,ha='left',va='top')
+            
+        if (stat=='stddev') :
+            SDmax = np.max(I)/vmax
+            if ( np.log10(SDmax) < -1 ) :
+                if ( np.ceil(np.log10(SDmax))>-2 ) :
+                    lbl = r'$\times10$'
+                    SDmax = 1.0/10.0
+                else :
+                    lbl = r'$\times10^{%i}$'%(-int(np.ceil(np.log10(SDmax))))
+                    SDmax = 10**(int(np.ceil(np.log10(SDmax))))
+                plt.text(0.975,0.975,lbl,color='w',transform=plt.gca().transAxes,ha='right',va='top')
+            else :
+                SDmax = 1
+            print("SDmax:",SDmax)
+            plt.clim(vmin=vmin*SDmax,vmax=vmax*SDmax)
+            plt.text(0.025,0.975,'Std Dev',color='w',transform=plt.gca().transAxes,ha='left',va='top')
+            
+        if (stat=='skewness') :
+            Sminmax = max(abs(np.min(I)),abs(np.max(I)))
+            plt.clim(vmin=-Sminmax,vmax=Sminmax)
+            plt.set_cmap('seismic')
+            plt.text(0.025,0.975,'Skewness',color='k',transform=plt.gca().transAxes,ha='left',va='top')
+            plt.colorbar()
+            
+        if (stat=='kurtosis') :
+            Kminmax = max(abs(np.min(I)),abs(np.max(I)))
+            plt.clim(vmin=0,vmax=Kminmax)
+            plt.set_cmap('seismic')
+            plt.text(0.025,0.975,'Kurtosis',color='k',transform=plt.gca().transAxes,ha='left',va='top')
+            plt.colorbar()
+                
+        for outfile in flatten(args.out) :
+            if (args.verbose):
+                print("Saving file %s"%(outfile))
+            name,ext = os.path.splitext(outfile)
+
+            outfile_name = name + '_' + stat + ext
+            
+            if (ext=='.fits' or ext=='.FITS') :
+                if (args.verbose):
+                    print("  Saving FITS file.")
+                ty.vis.write_fits(x,y,I,outfile_name,args.uvfits)
+            else :
+                if (args.verbose):
+                    print("  Saving non-FITS file.")
+                plt.savefig(outfile_name,dpi=300)
+
+        plt.close()
