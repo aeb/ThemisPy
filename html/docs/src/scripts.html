@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>themispy_best_sample &mdash; ThemisPy 0+untagged.160.g585b8f4.dirty documentation</title>
+  <title>themispy_best_sample &mdash; ThemisPy 0+untagged.165.g908593a documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.160.g585b8f4.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.165.g908593a documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Developer’s Guide" href="devel.html"/>
         <link rel="prev" title="Vis" href="vis.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.160.g585b8f4.dirty
+                0+untagged.165.g908593a
               </div>
             
           
@@ -467,10 +467,10 @@ $ themispy_image_fit -c Chain.dat -l Lklhd.dat</p>
 <h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>-c, --chain</kbd></dt>
-<dd><p>Name of chain file to read.  If given, either an index must be specified with -i,–index or likelihood file must be specified with -l,-lklhd. Default: Chain.dat</p>
+<dd><p>Name of chain file to read.  If given, either an index must be specified with -i,–index or likelihood file must be specified with -l,-lklhd.</p>
 </dd>
 <dt><kbd>-l, --lklhd</kbd></dt>
-<dd><p>Name of likelihood file to read.  If given, will plot the highest likelihood sample. Requires chain file to be provided with -c,–chain. Default: Lklhd.dat</p>
+<dd><p>Name of likelihood file to read.  If given, will plot the highest likelihood sample. Requires chain file to be provided with -c,–chain.</p>
 </dd>
 <dt><kbd>-f, --fsfile</kbd></dt>
 <dd><p>Name of fit summaries file to read.  If given, will plot records listed within.  If an index is given with -i,–index will plot the corresponding line; otherwise plots the first line. Default: fit_summaries.txt</p>
@@ -494,7 +494,7 @@ $ themispy_image_fit -c Chain.dat -l Lklhd.dat</p>
 <dd><p>Set the transfer function (‘linear’,’sqrt’,’log’). Default: ‘linear’</p>
 </dd>
 <dt><kbd>-o, --out</kbd></dt>
-<dd><p>Set output files.  Multiple files and filetypes may be specified, including fits.  However, if fits is set, the path to a uvfits data file must be provided via –uvfits to set the appropriate header information. Default: fit.png</p>
+<dd><p>Set output files.  Multiple files and filetypes may be specified, including fits.  However, if a filename ending in ‘.fits’ is passed, the path to a uvfits data file must be provided via –uvfits to set the appropriate header information. Default: fit.png</p>
 </dd>
 <dt><kbd>--uvfits</kbd></dt>
 <dd><p>Specifies a uvfits file from which fits header information for the relevant sources may be extracted.</p>
@@ -528,10 +528,10 @@ $ themispy_image_stats -c Chain.dat –samples 10</p>
 <h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
 <dl class="option-list">
 <dt><kbd>-c, --chain</kbd></dt>
-<dd><p>Name of chain file to read. Default: Chain.dat</p>
+<dd><p>&lt;Required&gt; Name of chain file to read. Default: Chain.dat</p>
 </dd>
 <dt><kbd>-s, --samples</kbd></dt>
-<dd><p>Number of samples to draw from the specified chain file. Default: 32.</p>
+<dd><p>&lt;Required&gt; Number of samples to draw from the specified chain file. Default: 32.</p>
 </dd>
 <dt><kbd>--stats</kbd></dt>
 <dd><p>Statistics to compute and plot.  Can be any statistic provided by <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_single_point_statistics</span></code></p>
@@ -555,7 +555,7 @@ $ themispy_image_stats -c Chain.dat –samples 10</p>
 <dd><p>Set the transfer function (‘linear’,’sqrt’,’log’). Default: ‘linear’</p>
 </dd>
 <dt><kbd>-o, --out</kbd></dt>
-<dd><p>Set output files.  Multiple files and filetypes may be specified, including fits.  However, if fits is set, the path to a uvfits data file must be provided via –uvfits to set the appropriate header information. Default: fit.png</p>
+<dd><p>Set output files.  Multiple files and filetypes may be specified, including fits.  However, if a filename ending in ‘.fits’ is passed, the path to a uvfits data file must be provided via –uvfits to set the appropriate header information. Default: fit.png</p>
 </dd>
 <dt><kbd>--uvfits</kbd></dt>
 <dd><p>Specifies a uvfits file from which fits header information for the relevant sources may be extracted.</p>
@@ -709,7 +709,7 @@ $ themispy_trace_plots -c Chain.dat.r* -l Lklhd.dat.r* -s 10 –stream -p 0-4</p
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.160.g585b8f4.dirty',
+            VERSION:'0+untagged.165.g908593a',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
