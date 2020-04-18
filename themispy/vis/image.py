@@ -961,7 +961,7 @@ class model_image_smooth(model_image):
         """
 
         names = self.image.parameter_name_list()
-        names.append(r'$\sigma_s$')
+        names.append(r'$\sigma_s$ (rad)')
         names.append(r'$A_s$')
         names.append(r'$\phi_s$ (rad)')
         return names
@@ -1102,11 +1102,11 @@ class model_image_sum(model_image) :
         for image in self.image_list :
             names.extend(image.parameter_name_list())
             if (self.offset_coordinates=='Cartesian') :
-                names.append(r'$\Delta x (rad)$')
-                names.append(r'$\Delta y (rad)$')
+                names.append(r'$\Delta x$ (rad)')
+                names.append(r'$\Delta y$ (rad)')
             elif (self.offset_coordinates=='polar') :
-                names.append(r'$\Delta r (rad)$')
-                names.append(r'$\Delta \theta (rad)$')
+                names.append(r'$\Delta r$ (rad)')
+                names.append(r'$\Delta \theta$ (rad)')
         return names
     
 
