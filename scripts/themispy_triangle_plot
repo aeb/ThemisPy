@@ -70,9 +70,9 @@ def set_parser() :
                         help="Output file name. Default: parameter_trace_plot.png")
 
     parser.add_argument("--no-grids",
-                        action='store_false',
-                        default=True,
-                        help=("Turn off grid lines. Default: True."))
+                        action='store_true',
+                        default=False,
+                        help=("Turn off grid lines. Default: grid lines are plotted."))
 
     parser.add_argument("-m","--model",
                         type=str,
@@ -230,13 +230,12 @@ if __name__ == "__main__" :
         if (args.verbose) :
             print(parameter_names)
         
-
     # Set figure
     nparams = chain.shape[1]
     plt.figure(figsize=(2*nparams,2*nparams))
 
     # Make triangle plot
-    ty.vis.kde_triangle_plot(chain,upper_data_array=upper_chain,labels=parameter_names,filled=True,colormap='Reds',color='r',upper_colormap='Blues',upper_color='b')
+    ty.vis.kde_triangle_plot(chain,upper_data_array=upper_chain,labels=parameter_names,filled=True,colormap='Reds',color='r',upper_colormap='Blues',upper_color='b',grid=(not args.no_grids))
 
     # Save
     plt.savefig(args.out,dpi=200)
