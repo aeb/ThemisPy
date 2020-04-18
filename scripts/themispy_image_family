@@ -1,0 +1,341 @@
+#!/usr/bin/env python3
+
+"""
+Reads in various Themis output files and generates a plot of various single-point
+image statistics (e.g., the mean image, the standard deviation, the skewness, etc.).
+A set of sample parameters must be provided via a chain file.
+This may be saved in ways, including standard image formats (PNG,JPG,PDF) and FITS.
+
+Example:
+$ themispy_image_stats -c Chain.dat --samples 10
+"""
+
+from matplotlib import use,rc
+use('Agg')
+
+import numpy as np
+import argparse as ap
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.cbook import flatten
+import os
+import copy
+
+import themispy as ty
+
+def set_parser():
+
+    # Create a parser object to manage command line options
+    parser = ap.ArgumentParser(prog="themispy_image_fit",description=__doc__)
+
+    parser.add_argument("-c","--chain",
+                        type=str,
+                        action='store',
+                        default=None,
+                        required=True,
+                        help=("<Required> Name of chain file to read."))
+
+    parser.add_argument("-l","--lklhd",
+                        type=str,
+                        action='store',
+                        default=None,
+                        help=("Name of likelihood file to read.  If given, will plot the highest likelihood"
+                              " sample in the center of the family."))
+
+    parser.add_argument("-s","--samples",
+                        type=int,
+                        action='store',
+                        default=9,
+                        help=("Number of samples to draw from the specified chain file. Default: 9."))
+        
+    parser.add_argument("-m","--model",
+                        type=str,
+                        action='store',
+                        default="model_image.tag",
+                        help=("Model specification glob. May be a model tag file name or an ccm_mexico+"
+                              " model specification glob. See the vis.image.construct_model_image_from_glob"
+                              " function documentation for format details. If contains a '.' will assume"
+                              " that it is a tagvers-1.0 tag file."
+                              " Default: model_image.tag"))
+
+    parser.add_argument("-bf","--burn-fraction",
+                        type=float,
+                        action='store',
+                        default=0.5,
+                        help=("Fraction of chain to excise as burn in. Default: 0.5"))
+    
+    parser.add_argument("-N",
+                        type=int,
+                        nargs="*",
+                        action='store',
+                        default=None,
+                        help=("Number of pixels in image. May be a single integer (square image) or two"
+                              " integers (non-square image). If None uses the default in"
+                              " vis.image.plot_model_image function."
+                              " Default: None."))
+
+    parser.add_argument("--limits",
+                        type=float,
+                        nargs="+",
+                        action='store',
+                        default=None,
+                        help=("Limits (in microarcseconds) of the plot region.  May be a single float or"
+                              " a set of four floats. If None uses the default in vis.image.plot_model_image"
+                              " function. Default: None."))
+                        
+    parser.add_argument("-n","--norm",
+                        type=float,
+                        action='store',
+                        default=0.0,
+                        help=("Logarithmic normalization relative to to the median and maximum brightness."
+                              " A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum."))
+
+    parser.add_argument("-t","--transfer",
+                        type=str,
+                        action='store',
+                        default='linear',
+                        help=("Set the transfer function ('linear','sqrt','log'). Default: 'linear'"))
+
+
+    parser.add_argument("-nm","--no-multipanel",
+                        action='store_false',
+                        default=False,
+                        help=("Plots individual panels instead of a single multipanel figure. Output"
+                              " file names will be appended with the integer number of the frame with"
+                              " index 0 corresponding to the best fit.  Default: multiplanel plot."))
+    
+    parser.add_argument("-o","--out",
+                        type=str,
+                        nargs="+",
+                        action='append',
+                        default=None,
+                        help=("Set output files.  Multiple files and filetypes may be specified,"
+                              " including fits.  However, if a filename ending in '.fits' is passed,"
+                              " the path to a uvfits data file must be provided via --uvfits to set"
+                              " the appropriate header information."
+                              " Default: fit_family.png"))
+
+    parser.add_argument("--uvfits",
+                        type=str,
+                        action='store',
+                        default=None,
+                        help=("Specifies a uvfits file from which fits header information for the relevant"
+                              " sources may be extracted."))
+
+    parser.add_argument("--smooth",
+                        type=float,
+                        action='store',
+                        default=None,
+                        help=("If passed, will smooth the image with a symmetric Gaussian filter with FWHM given in microarcseconds."))
+
+    parser.add_argument("--usetex",
+                        action='store_true',
+                        default=False,
+                        help=("Turns on using LaTex in the rendering.  Note that this takes longer,"
+                              " but the result is MUCH better looking."))
+                        
+    parser.add_argument("-v","--verbose",
+                        action='store_true',
+                        default=False,
+                        help=("Provides verbose output about model and plot construction."))
+    
+    return parser
+
+
+
+if __name__ == "__main__" :
+
+
+    # Get command line options
+    args = set_parser().parse_args()    
+    if (args.verbose) :
+        print("  ",args)
+
+    # Use LaTex or not
+    if (args.usetex) :
+        rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
+        rc('text', usetex=True)
+    
+
+    # Construct a model_image from glob
+    if ('.' in args.model) :
+        if (args.verbose):
+            print("Reading tag file %s"%(args.model))
+        model_image = ty.vis.construct_model_image_from_glob(args.model,'tagvers-1.0')
+    else :
+        if (args.verbose):
+            print("Using ccm_mexico glob %s"%(args.model))
+        model_image = ty.vis.construct_model_image_from_glob(args.model,'ccm_mexico+')
+        
+    if (args.verbose):
+        print("Model type and size:",type(model_image),model_image.size)
+
+    # Add smoothing if desired
+    uas2rad = np.pi/(180.0*3600e6)
+    if (not (args.smooth is None)) :
+        model_image_unsmoothed = copy.deepcopy(model_image)
+        model_image = ty.vis.model_image_smooth(model_image_unsmoothed)
+        
+    # Check limits
+    if (not (args.N is None) ):
+        if (len(args.N)==1) :
+            args.N = args.N[0]
+        elif (len(args.N)==2) :
+            pass
+        else :
+            print("ERROR: Either 1 or 2 arguments are expected after -N.")
+            quit()
+
+    # Check limits
+    if (not (args.limits is None) ):
+        if (len(args.limits)==1) :
+            args.limits = args.limits[0]
+        elif (len(args.limits)==4) :
+            pass
+        else :
+            print("ERROR: Either 1 or 4 arguments are expected after --limits.")
+            quit()
+
+
+    # Get a random sample
+    # If likelihoods are passed, get the best fit
+    if (not (args.lklhd is None)) :
+        print("Reading likelihood file %s"%(args.lklhd))
+        print("Reading chain file %s"%(args.chain))
+        best_chain,best_lklhd = ty.chain.most_likely_erun(args.chain,args.lklhd,parameter_list=range(model_image.size))
+        print(("Highest likelihood is" + " %f"*len(best_lklhd))%tuple(best_lklhd))
+
+        chain,lklhd = ty.chain.sample_erun(args.chain,args.lklhd,args.samples,burn_fraction=args.burn_fraction,parameter_list=range(model_image.size))
+
+        chain[0,:] = best_chain
+        lklhd[0] = best_lklhd
+        
+    else :
+        best_lklhd=0
+        chain = ty.chain.sample_chain(args.chain,args.samples,burn_fraction=args.burn_fraction,parameter_list=range(model_image.size))
+            
+        
+        
+    # Save image as desired
+    if (args.out is None) :
+        args.out = ['fit_family.png']
+
+
+
+    # Start figure particulars
+    if (args.no_multipanel==False) :
+        Nwx = int(np.sqrt(args.samples))
+        Nwy = args.samples//Nwx
+        if (Nwx*Nwy<args.samples) :
+            Nwy += 1
+        figsize = (Nwx*4,Nwy*4)
+        spfig,spaxs = plt.subplots(Nwy,Nwx,sharex=True,sharey=True,figsize=figsize,squeeze=False)
+    else :
+        Nwx=1
+        Nwy=1
+
+
+    pb = ty.utils.progress_bar('Plotting samples',length=40)
+    pb.start()
+    
+    kshift = ((Nwx-1)//2) + Nwx*((Nwy-1)//2)
+    for k in range(args.samples) :
+
+        pb.increment(k/float(args.samples))
+        
+        # Start figure particulars
+        if (args.no_multipanel==True) :
+            plt.figure(figsize=(6,6))
+            plt.axes([0.15,0.15,0.8,0.8])
+
+            
+        # Select parameters
+        parameters = chain[k,:]
+
+        # Set subplot axis
+        kw = (k + kshift)%args.samples
+        ix = kw%Nwx
+        iy = kw//Nwx
+        plt.sca(spaxs[iy,ix])
+
+        # Add smoothing if desired
+        if (not (args.smooth is None)) :
+            parameters = np.append(parameters,[args.smooth*uas2rad/np.sqrt(8.0*np.log(2.0)), 0, 0])
+
+        if (args.verbose):
+            print("Smoothed parameters:",parameters)            
+        
+        # Generate plot
+        h,fig,axs,x,y,I = ty.vis.plot_intensity_map(model_image, parameters, limits=args.limits, shape=args.N, return_intensity_map=True, transfer_function=args.transfer, verbosity=int(args.verbose),Imax=1)
+
+        # Set the brightness normalization by the central panel
+        if (k==0) :
+            Imed = np.median(I)
+            Imax = np.max(I)
+            if (args.transfer=='linear') :
+                vmax = (Imed) * 10**( args.norm*np.log10(Imax/Imed) )
+                vmin = 0
+            elif (args.transfer=='sqrt') :
+                vmax = np.sqrt( (Imed) * 10**( args.norm*np.log10(Imax/Imed) ) )
+                vmin = 0
+            elif (args.transfer=='log') :
+                vmax = args.norm*np.log10(Imax/Imed) + np.log10(Imed)
+                vmin = vmax-2
+
+        # Set the brightness normalization
+        plt.clim(vmin=vmin,vmax=vmax)
+        plt.set_cmap('afmhot')
+        
+        # Add some labels if a likelihood file is given
+        if (not (args.lklhd is None)) :
+            if (k==0) :
+                plt.text(0.025,0.975,r'${\bf\mathcal{L}=%g}$'%(best_lklhd),color='w',transform=plt.gca().transAxes,ha='left',va='top')
+            else :
+                plt.text(0.025,0.975,r'$\Delta\mathcal{L}=%g$'%(lklhd[k]-best_lklhd),color='w',transform=plt.gca().transAxes,ha='left',va='top')
+
+        # Remove the x,y label unless lower left corner
+        if (args.no_multipanel==False) :
+            if (iy<Nwy-1) :
+                plt.xlabel('')
+            if (ix>0) :
+                plt.ylabel('')
+
+        else :
+
+            for outfile in flatten(args.out) :
+                if (args.verbose):
+                    print("Saving file %s"%(outfile))
+                name,ext = os.path.splitext(outfile)
+
+                outfile_name = name + '_%03i'%k + ext
+            
+                if (ext=='.fits' or ext=='.FITS') :
+                    if (args.verbose):
+                        print("  Saving FITS file.")
+                    ty.vis.write_fits(x,y,I,outfile_name,args.uvfits)
+                else :
+                    if (args.verbose):
+                        print("  Saving non-FITS file.")
+                    plt.savefig(outfile_name,dpi=300)
+
+            plt.close()
+
+    pb.finish()
+
+    if (args.no_multipanel==False) :
+        plt.subplots_adjust(left=0.85/figsize[0],bottom=0.85/figsize[1],right=(figsize[0]-0.45)/figsize[0],top=(figsize[1]-0.45)/figsize[1],wspace=0.075,hspace=0.075)
+        for outfile in flatten(args.out) :
+            if (args.verbose):
+                print("Saving file %s"%(outfile))
+            name,ext = os.path.splitext(outfile)
+            
+            if (ext=='.fits' or ext=='.FITS') :
+                if (args.verbose):
+                    print("  Cannot save a fit family as a single FITS file right now.  Try --no-multipanel.")
+            else :
+                if (args.verbose):
+                    print("  Saving non-FITS file.")
+                plt.savefig(outfile,dpi=300)
+
+
+    
