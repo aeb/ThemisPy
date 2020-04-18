@@ -10,17 +10,18 @@
 from themispy.utils import *
 
 import numpy as np
-from matplotlib import rc
+
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gs
+from matplotlib import rc
+from matplotlib import cm
+from matplotlib.colors import LogNorm
+from matplotlib.colors import ListedColormap
+
+from scipy import interpolate as scint
 from scipy.optimize import bisect
 from scipy.stats import gaussian_kde as KDEsci
-from matplotlib.colors import LogNorm
-import matplotlib.gridspec as gs
 from scipy.stats import percentileofscore
-from matplotlib.colors import ListedColormap
-from matplotlib import cm
-from scipy import interpolate as scint
 
 
 def generate_streamline_colormap(colormap='plasma', number_of_streams=None, oversample_factor=4, fluctuation_factor=0.2) :
@@ -122,7 +123,7 @@ def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-'
         bw = scott_factor*(float(x.size))**(-1.0/6.0)
 
     kde = KDEsci(x, bw_method=bw)
-    if not limits:
+    if (not (limits is None)):
         xmin = x.min()
         xmax = x.max()
         dx = xmax-xmin
@@ -232,7 +233,7 @@ def _find_limits(data,quantile=0.25,factor=1.5) :
     return lim
 
 
-def kde_triangle_plot(lower_data_array, upper_data_array=None, labels=None, upper_labels=None, truths=None, colormap='Blues', upper_colormap=None, color='blue', upper_color=None, truths_color='red', axis_location=None, alpha=1.0, quantiles=[0.99,0.9,0.5], nbin=128, linewidth=1, linestyle='-', truths_alpha=1.0, truths_linewidth=1, truths_linestype='-', scott_factor=1.41421, filled=False) :
+def kde_triangle_plot(lower_data_array, upper_data_array=None, labels=None, upper_labels=None, truths=None, colormap='Blues', upper_colormap=None, color='blue', upper_color=None, truths_color='red', axis_location=None, alpha=1.0, quantiles=[0.99,0.9,0.5], nbin=128, linewidth=1, linestyle='-', truths_alpha=1.0, truths_linewidth=1, truths_linestype='-', scott_factor=1.41421, filled=False, grid=True) :
     """
     Produces a triangle plot with contours set by CDF.  Data may be plotted in both lower (required) and upper (optional) triangles.
 
@@ -257,7 +258,8 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, labels=None, uppe
       truths_linewidth (float): Linewidth to be passed to :func:`matplotlib.pyplot.plot` for diagonal 1d histograms of lower data. Default: 1.
       truths_linestype (str): Linestyle to be passed to :func:`matplotlib.pyplot.plot` for diagonal 1d histograms of lower data. Default: '-'.
       scott_factor (float): Factor by which to expand the standard `scott` bandwidth factor.  Overrides bw if nonzero.  Default: 1.41421.
-      filled (bool): If true, the 1d histograms along the diagonal are plotted filled. Default: False.
+      filled (bool): If True, the 1d histograms along the diagonal are plotted filled. Default: False.
+      grid (bool): If True, adds gridlines to plots. Default: True.
 
     Returns:
       (matplotlib.axes.Axes, list, list, list): Handles to the array of axes objects in the plot, list of handels to the 2d kde plot objects in the lower triangle, 2d kde plot objects in the upper triangle, and 1d plot objects in along the diagonal (see :func:`kde_plot_2d` and :func:`kde_plot_1d` for more information).
@@ -333,7 +335,7 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, labels=None, uppe
 
 
             # Make 2d joint distribution plot
-            lower_triangle_plot_handles[j,k] = kde_plot_2d(lower_data_array[:,j],lower_data_array[:,k],cmap=colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=scott_factor)
+            lower_triangle_plot_handles[j,k] = kde_plot_2d(lower_data_array[:,j],lower_data_array[:,k],colormap=colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=scott_factor)
             axes_handles[j,k] = plt.gca()
 
             # Fix up tickmarks
@@ -361,6 +363,9 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, labels=None, uppe
                 plt.xlim(xlim)
                 plt.ylim(ylim)
 
+            # Add grid if requested
+            if (grid) :
+                plt.grid(alpha=0.5)
 
 
     ########
@@ -390,7 +395,7 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, labels=None, uppe
 
 
                 # Make 2d joint distribution plot
-                upper_triangle_plot_handles[j,k] = kde_plot_2d(upper_data_array[:,j],upper_data_array[:,k],cmap=upper_colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=scott_factor)
+                upper_triangle_plot_handles[j,k] = kde_plot_2d(upper_data_array[:,j],upper_data_array[:,k],colormap=upper_colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=scott_factor)
                 axes_handles[j,k] = plt.gca()
 
                 # Fix up tickmarks
@@ -406,7 +411,7 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, labels=None, uppe
                     plt.gca().tick_params(labelright=True)
                     if (upper_labels is not None) :
                         if (j>k) :
-                            plt.ylabel(upper_labels[k],rotation=-90)
+                            plt.ylabel(upper_labels[k],rotation=90)
                             plt.gca().yaxis.set_label_position('right')
 
                 # Add truths if requested
@@ -420,6 +425,9 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, labels=None, uppe
                     plt.xlim(xlim)
                     plt.ylim(ylim)
 
+                # Add grid if requested
+                if (grid) :
+                    plt.grid(alpha=0.5)
 
     ########
     # Diagonal
@@ -464,6 +472,11 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, labels=None, uppe
             plt.ylim(ylim)
 
 
+        # Add grid if requested
+        if (grid) :
+            plt.grid(alpha=0.5)
+
+            
     return (axes_handles,lower_triangle_plot_handles,upper_triangle_plot_handles,diagonal_plot_handles)
 
 
