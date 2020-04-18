@@ -10,14 +10,22 @@
 
 # Warnings
 import warnings
-def warning_on_one_line(message, category, filename, lineno, file=None, line=None):
+def _warning_on_one_line(message, category, filename, lineno, file=None, line=None):
     return 'WARNING: %s:%s: %s: %s\n' % (filename, lineno, category.__name__, message)
-warnings.formatwarning = warning_on_one_line
+warnings.formatwarning = _warning_on_one_line
 
 
 # A simple progress bar
 from sys import stderr as pbo
 class progress_bar :
+    """
+    A simple ASCII progress bar to provide confidence that something is happening.
+
+    Args:
+      preamble (str): String to print before the bar. Default: 'Progress'.
+      char (str): Character from which the progress bar is composed. Default: '='.
+      length (int): Number of instances of the character that correspond to 100%. Default: 10.
+    """
     
     def __init__(self,preamble='Progress',char='=',length=10) :
 
@@ -25,10 +33,17 @@ class progress_bar :
         self.char = char
         self.length = length
         self.fmt = preamble + ' |' + '%' + '%i'%(self.length) + 's| %3i%%'
-        self.full_length = len(self.fmt%(self.length*' ',0))
+        self.full_length = len(self.fmt%(self.length*len(self.char)*' ',0))
 
     def increment(self,completion_fraction) :
-        ncomp = int(completion_fraction*self.length)
+        """
+        Increments the progress bar.
+
+        Args: 
+          completion_fraction (float): Fraction of the job to indicate complete. Must be between [0,1].
+        """
+        
+        ncomp = int(min(1.0,completion_fraction)*self.length)
         bar = ncomp*self.char + (self.length-ncomp)*' '
         pbo.write(self.full_length*'\b')
         pbo.write(self.fmt%(bar,int(100*completion_fraction)))
@@ -36,10 +51,20 @@ class progress_bar :
         
         
     def start(self) :
+        """
+        Starts the progress bar. Alias for increment(0).
+        """
         self.increment(0)
 
-    def finish(self) :
+    def finish(self, epilog='DONE!') :
+        """
+        Finishes the progress bar and prints an epilog.
+
+        Args:
+          epilog (str): Epilog message to print. Default: 'DONE!'.
+        """
+        
         self.increment(1.0)
-        pbo.write('  DONE! \n')
+        pbo.write('  %s\n'%(epilog))
         pbo.flush()
         
