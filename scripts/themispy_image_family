@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 
 """
-Reads in various Themis output files and generates a plot of various single-point
-image statistics (e.g., the mean image, the standard deviation, the skewness, etc.).
-A set of sample parameters must be provided via a chain file.
-This may be saved in ways, including standard image formats (PNG,JPG,PDF) and FITS.
+Reads in a Themis MCMC run and generates images for a subsample.  If a likelihood
+file is specified, the highest likelihood model will be plotted in the center.  
+Optionally will generate individual images instead of one multi-panel plot.
 
 Example:
-$ themispy_image_stats -c Chain.dat --samples 10
+$ themispy_image_family -c Chain.dat -l Lklhd.dat --samples 9
 """
 
 from matplotlib import use,rc
