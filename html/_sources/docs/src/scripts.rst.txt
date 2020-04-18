@@ -93,3 +93,12 @@ themispy_trace_plots
    :nodefault:
 
 
+themispy_triangle_plot
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_triangle_plot
+   :func: set_parser
+   :prog: themispy_triangle_plot
+   :nodefault:
+
+

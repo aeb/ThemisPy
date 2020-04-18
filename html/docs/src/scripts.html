@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>themispy_best_sample &mdash; ThemisPy 0+untagged.173.g5e88a32 documentation</title>
+  <title>themispy_best_sample &mdash; ThemisPy 0+untagged.178.gc5e8489.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.173.g5e88a32 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.178.gc5e8489.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Developer’s Guide" href="devel.html"/>
         <link rel="prev" title="Utils" href="utils.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0+untagged.173.g5e88a32
+                0+untagged.178.gc5e8489.dirty
               </div>
             
           
@@ -131,6 +131,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#themispy-trace-plots">themispy_trace_plots</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#themispy-triangle-plot">themispy_triangle_plot</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
 </ul>
 </li>
@@ -734,6 +738,57 @@ $ themispy_trace_plots -c Chain.dat.r* -l Lklhd.dat.r* -s 10 –stream -p 0-4</p
 </dl>
 </div>
 </div>
+<div class="section" id="themispy-triangle-plot">
+<h1>themispy_triangle_plot<a class="headerlink" href="#themispy-triangle-plot" title="Permalink to this headline">¶</a></h1>
+<p><p>Reads a Themis chain file and produces triangle plots. The parameters to show
+may be specified.  Up to two chain files may be specified, which will be plotted
+on lower and upper triangles, respectively.  If a model glob is given, the
+appropriate labels will be set. If a model is set, setting -deg will attempt to 
+specify angles in the appropriate degree format (e.g., deg, arcmin, arcsec, mas,
+etc.).</p>
+<p>TODO: Upper triangle, uas 2 rad</p>
+<p>Example:
+$ themispy_triangle_plot -c Chain.dat -p 0-5</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_triangle_plot</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">CHAIN</span> <span class="p">[</span><span class="n">CHAIN</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="n">SAMPLES</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">bf</span> <span class="n">BURN_FRACTION</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span> <span class="n">PARAMETERS</span> <span class="p">[</span><span class="n">PARAMETERS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">grids</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">m</span> <span class="p">[</span><span class="n">MODEL</span> <span class="p">[</span><span class="n">MODEL</span> <span class="o">...</span><span class="p">]]]</span> <span class="p">[</span><span class="o">-</span><span class="n">deg</span> <span class="p">[</span><span class="n">DEG</span> <span class="p">[</span><span class="n">DEG</span> <span class="o">...</span><span class="p">]]]</span> <span class="p">[</span><span class="o">--</span><span class="n">usetex</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>-c, --chain</kbd></dt>
+<dd><p>&lt;Required&gt; Name of chain file(s) to read.  If multiple files are listed, the burn-in will be independently be applied.</p>
+</dd>
+<dt><kbd>-s, --samples</kbd></dt>
+<dd><p>Stride over which to sample the chain.</p>
+</dd>
+<dt><kbd>-bf, --burn-fraction</kbd></dt>
+<dd><p>Fraction of chain to skip.</p>
+</dd>
+<dt><kbd>-p, --parameters</kbd></dt>
+<dd><p>Selects a subset of parameters to output.  Parameter ranges may be specified either via individual numbers (e.g., 0 1 4), comma separated lists (e.g., 0, 2, 5), ranges (e.g., 0-3), or combinations thereof. By default, all parameters are sampled.</p>
+</dd>
+<dt><kbd>-o, --out</kbd></dt>
+<dd><p>Output file name. Default: parameter_trace_plot.png</p>
+</dd>
+<dt><kbd>--no-grids</kbd></dt>
+<dd><p>Turn off grid lines. Default: grid lines are plotted.</p>
+</dd>
+<dt><kbd>-m, --model</kbd></dt>
+<dd><p>Model specification glob. May be a model tag file name or an ccm_mexico+ model specification glob. See the vis.image.construct_model_image_from_glob function documentation for format details. If contains a ‘.’ will assume that it is a tagvers-1.0 tag file.  If no argument is given, will search for ‘model_image.tag’</p>
+</dd>
+<dt><kbd>-deg</kbd></dt>
+<dd><p>Converts quantities to the appropriate degree format based on the mean and variance.  Parameter arguments may be specified in the same format as the the -p option for the <em>original</em> parameter ordering.  If no format is given it will attempt to identify the relevant parameters from the parameter names by searching for ‘(rad)’.</p>
+</dd>
+<dt><kbd>--usetex</kbd></dt>
+<dd><p>Turns on using LaTex in the rendering.  Note that this takes MUCH longer, but the result is MUCH better looking.</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Provides verbose output about model and plot construction.</p>
+</dd>
+</dl>
+</div>
+</div>
 
 
            </div>
@@ -776,7 +831,7 @@ $ themispy_trace_plots -c Chain.dat.r* -l Lklhd.dat.r* -s 10 –stream -p 0-4</p
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.173.g5e88a32',
+            VERSION:'0+untagged.178.gc5e8489.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

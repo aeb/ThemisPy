@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.typlot &mdash; ThemisPy 0+untagged.173.g5e88a32 documentation</title>
+  <title>vis.typlot &mdash; ThemisPy 0+untagged.178.gc5e8489.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0+untagged.173.g5e88a32 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.178.gc5e8489.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0+untagged.173.g5e88a32
+                0+untagged.178.gc5e8489.dirty
               </div>
             
           
@@ -159,17 +159,18 @@
 <span class="kn">from</span> <span class="nn">themispy.utils</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rc</span>
+
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">matplotlib.gridspec</span> <span class="k">as</span> <span class="nn">gs</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">rc</span>
+<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
+<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span>
+
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">interpolate</span> <span class="k">as</span> <span class="n">scint</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">bisect</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">gaussian_kde</span> <span class="k">as</span> <span class="n">KDEsci</span>
-<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LogNorm</span>
-<span class="kn">import</span> <span class="nn">matplotlib.gridspec</span> <span class="k">as</span> <span class="nn">gs</span>
 <span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">percentileofscore</span>
-<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">ListedColormap</span>
-<span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">interpolate</span> <span class="k">as</span> <span class="n">scint</span>
 
 
 <div class="viewcode-block" id="generate_streamline_colormap"><a class="viewcode-back" href="../../docs/src/vis.html#vis.typlot.generate_streamline_colormap">[docs]</a><span class="k">def</span> <span class="nf">generate_streamline_colormap</span><span class="p">(</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="n">number_of_streams</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">oversample_factor</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">fluctuation_factor</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span> <span class="p">:</span>
@@ -271,7 +272,7 @@
         <span class="n">bw</span> <span class="o">=</span> <span class="n">scott_factor</span><span class="o">*</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">))</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">)</span>
 
     <span class="n">kde</span> <span class="o">=</span> <span class="n">KDEsci</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">bw_method</span><span class="o">=</span><span class="n">bw</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">limits</span><span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">limits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)):</span>
         <span class="n">xmin</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span>
         <span class="n">xmax</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
         <span class="n">dx</span> <span class="o">=</span> <span class="n">xmax</span><span class="o">-</span><span class="n">xmin</span>
@@ -381,7 +382,7 @@
     <span class="k">return</span> <span class="n">lim</span>
 
 
-<div class="viewcode-block" id="kde_triangle_plot"><a class="viewcode-back" href="../../docs/src/vis.html#vis.typlot.kde_triangle_plot">[docs]</a><span class="k">def</span> <span class="nf">kde_triangle_plot</span><span class="p">(</span><span class="n">lower_data_array</span><span class="p">,</span> <span class="n">upper_data_array</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">upper_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">truths</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">,</span> <span class="n">upper_colormap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">upper_color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">truths_color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">axis_location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.99</span><span class="p">,</span><span class="mf">0.9</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span> <span class="n">nbin</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">truths_alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">truths_linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">truths_linestype</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">scott_factor</span><span class="o">=</span><span class="mf">1.41421</span><span class="p">,</span> <span class="n">filled</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="kde_triangle_plot"><a class="viewcode-back" href="../../docs/src/vis.html#vis.typlot.kde_triangle_plot">[docs]</a><span class="k">def</span> <span class="nf">kde_triangle_plot</span><span class="p">(</span><span class="n">lower_data_array</span><span class="p">,</span> <span class="n">upper_data_array</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">upper_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">truths</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">,</span> <span class="n">upper_colormap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">upper_color</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">truths_color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">axis_location</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">quantiles</span><span class="o">=</span><span class="p">[</span><span class="mf">0.99</span><span class="p">,</span><span class="mf">0.9</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span> <span class="n">nbin</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">truths_alpha</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">truths_linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">truths_linestype</span><span class="o">=</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">scott_factor</span><span class="o">=</span><span class="mf">1.41421</span><span class="p">,</span> <span class="n">filled</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Produces a triangle plot with contours set by CDF.  Data may be plotted in both lower (required) and upper (optional) triangles.</span>
 
@@ -406,7 +407,8 @@
 <span class="sd">      truths_linewidth (float): Linewidth to be passed to :func:`matplotlib.pyplot.plot` for diagonal 1d histograms of lower data. Default: 1.</span>
 <span class="sd">      truths_linestype (str): Linestyle to be passed to :func:`matplotlib.pyplot.plot` for diagonal 1d histograms of lower data. Default: &#39;-&#39;.</span>
 <span class="sd">      scott_factor (float): Factor by which to expand the standard `scott` bandwidth factor.  Overrides bw if nonzero.  Default: 1.41421.</span>
-<span class="sd">      filled (bool): If true, the 1d histograms along the diagonal are plotted filled. Default: False.</span>
+<span class="sd">      filled (bool): If True, the 1d histograms along the diagonal are plotted filled. Default: False.</span>
+<span class="sd">      grid (bool): If True, adds gridlines to plots. Default: True.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">      (matplotlib.axes.Axes, list, list, list): Handles to the array of axes objects in the plot, list of handels to the 2d kde plot objects in the lower triangle, 2d kde plot objects in the upper triangle, and 1d plot objects in along the diagonal (see :func:`kde_plot_2d` and :func:`kde_plot_1d` for more information).</span>
@@ -482,7 +484,7 @@
 
 
             <span class="c1"># Make 2d joint distribution plot</span>
-            <span class="n">lower_triangle_plot_handles</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">kde_plot_2d</span><span class="p">(</span><span class="n">lower_data_array</span><span class="p">[:,</span><span class="n">j</span><span class="p">],</span><span class="n">lower_data_array</span><span class="p">[:,</span><span class="n">k</span><span class="p">],</span><span class="n">cmap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span><span class="n">plevels</span><span class="o">=</span><span class="n">quantiles</span><span class="p">,</span><span class="n">limits</span><span class="o">=</span><span class="p">[</span><span class="n">limx</span><span class="p">,</span><span class="n">limy</span><span class="p">],</span><span class="n">nbin</span><span class="o">=</span><span class="n">nbin</span><span class="p">,</span><span class="n">scott_factor</span><span class="o">=</span><span class="n">scott_factor</span><span class="p">)</span>
+            <span class="n">lower_triangle_plot_handles</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">kde_plot_2d</span><span class="p">(</span><span class="n">lower_data_array</span><span class="p">[:,</span><span class="n">j</span><span class="p">],</span><span class="n">lower_data_array</span><span class="p">[:,</span><span class="n">k</span><span class="p">],</span><span class="n">colormap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span><span class="n">plevels</span><span class="o">=</span><span class="n">quantiles</span><span class="p">,</span><span class="n">limits</span><span class="o">=</span><span class="p">[</span><span class="n">limx</span><span class="p">,</span><span class="n">limy</span><span class="p">],</span><span class="n">nbin</span><span class="o">=</span><span class="n">nbin</span><span class="p">,</span><span class="n">scott_factor</span><span class="o">=</span><span class="n">scott_factor</span><span class="p">)</span>
             <span class="n">axes_handles</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
 
             <span class="c1"># Fix up tickmarks</span>
@@ -510,6 +512,9 @@
                 <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
                 <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
 
+            <span class="c1"># Add grid if requested</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
 
     <span class="c1">########</span>
@@ -539,7 +544,7 @@
 
 
                 <span class="c1"># Make 2d joint distribution plot</span>
-                <span class="n">upper_triangle_plot_handles</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">kde_plot_2d</span><span class="p">(</span><span class="n">upper_data_array</span><span class="p">[:,</span><span class="n">j</span><span class="p">],</span><span class="n">upper_data_array</span><span class="p">[:,</span><span class="n">k</span><span class="p">],</span><span class="n">cmap</span><span class="o">=</span><span class="n">upper_colormap</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span><span class="n">plevels</span><span class="o">=</span><span class="n">quantiles</span><span class="p">,</span><span class="n">limits</span><span class="o">=</span><span class="p">[</span><span class="n">limx</span><span class="p">,</span><span class="n">limy</span><span class="p">],</span><span class="n">nbin</span><span class="o">=</span><span class="n">nbin</span><span class="p">,</span><span class="n">scott_factor</span><span class="o">=</span><span class="n">scott_factor</span><span class="p">)</span>
+                <span class="n">upper_triangle_plot_handles</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">kde_plot_2d</span><span class="p">(</span><span class="n">upper_data_array</span><span class="p">[:,</span><span class="n">j</span><span class="p">],</span><span class="n">upper_data_array</span><span class="p">[:,</span><span class="n">k</span><span class="p">],</span><span class="n">colormap</span><span class="o">=</span><span class="n">upper_colormap</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">,</span><span class="n">plevels</span><span class="o">=</span><span class="n">quantiles</span><span class="p">,</span><span class="n">limits</span><span class="o">=</span><span class="p">[</span><span class="n">limx</span><span class="p">,</span><span class="n">limy</span><span class="p">],</span><span class="n">nbin</span><span class="o">=</span><span class="n">nbin</span><span class="p">,</span><span class="n">scott_factor</span><span class="o">=</span><span class="n">scott_factor</span><span class="p">)</span>
                 <span class="n">axes_handles</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
 
                 <span class="c1"># Fix up tickmarks</span>
@@ -555,7 +560,7 @@
                     <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelright</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                     <span class="k">if</span> <span class="p">(</span><span class="n">upper_labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
                         <span class="k">if</span> <span class="p">(</span><span class="n">j</span><span class="o">&gt;</span><span class="n">k</span><span class="p">)</span> <span class="p">:</span>
-                            <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">upper_labels</span><span class="p">[</span><span class="n">k</span><span class="p">],</span><span class="n">rotation</span><span class="o">=-</span><span class="mi">90</span><span class="p">)</span>
+                            <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">upper_labels</span><span class="p">[</span><span class="n">k</span><span class="p">],</span><span class="n">rotation</span><span class="o">=</span><span class="mi">90</span><span class="p">)</span>
                             <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_label_position</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
 
                 <span class="c1"># Add truths if requested</span>
@@ -569,6 +574,9 @@
                     <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">xlim</span><span class="p">)</span>
                     <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
 
+                <span class="c1"># Add grid if requested</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">)</span> <span class="p">:</span>
+                    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
 
     <span class="c1">########</span>
     <span class="c1"># Diagonal</span>
@@ -613,6 +621,11 @@
             <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">ylim</span><span class="p">)</span>
 
 
+        <span class="c1"># Add grid if requested</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+            
     <span class="k">return</span> <span class="p">(</span><span class="n">axes_handles</span><span class="p">,</span><span class="n">lower_triangle_plot_handles</span><span class="p">,</span><span class="n">upper_triangle_plot_handles</span><span class="p">,</span><span class="n">diagonal_plot_handles</span><span class="p">)</span></div>
 
 
@@ -650,7 +663,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0+untagged.173.g5e88a32',
+            VERSION:'0+untagged.178.gc5e8489.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
