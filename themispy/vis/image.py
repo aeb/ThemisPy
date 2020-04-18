@@ -267,7 +267,7 @@ class model_image_crescent(model_image) :
     * parameters[0] ... Total intensity :math:`I_0` (Jy)
     * parameters[1] ... Outer radius :math:`R` (rad)
     * parameters[2] ... Width paramter :math:`\\psi` in (0,1)
-    * parameters[3] ... Asymmetry parmaeter math:`\\tau` in (0,1)
+    * parameters[3] ... Asymmetry parmaeter :math:`\\tau` in (0,1)
     * parameters[4] ... Position angle :math:`\\phi` (rad)
 
     and size=5.
