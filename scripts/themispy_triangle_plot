@@ -1,0 +1,248 @@
+#!/usr/bin/env python3
+
+"""
+Reads a Themis chain file and produces triangle plots. The parameters to show
+may be specified.  Up to two chain files may be specified, which will be plotted
+on lower and upper triangles, respectively.  If a model glob is given, the
+appropriate labels will be set. If a model is set, setting -deg will attempt to 
+specify angles in the appropriate degree format (e.g., deg, arcmin, arcsec, mas,
+etc.).
+
+TODO: Upper triangle, uas 2 rad
+
+Example:
+$ themispy_triangle_plot -c Chain.dat -p 0-5 
+"""
+
+from matplotlib import use,rc
+use('Agg')
+
+import numpy as np
+import argparse as ap
+import warnings
+import sys
+import os
+from matplotlib.cbook import flatten
+import matplotlib.pyplot as plt
+
+# We don't need ehtim, so don't import it
+import sys
+sys.modules['ehtim'] = None
+import themispy as ty
+
+
+def set_parser() :
+    # Create a parser object to manage command line options
+    parser = ap.ArgumentParser(prog='themispy_trace_plots',description=__doc__)
+    parser.add_argument("-c","--chain",
+                        type=str,
+                        nargs="+",
+                        action='append',
+                        required=True,
+                        help=("<Required> Name of chain file(s) to read.  If multiple files are listed, the"
+                              " burn-in will be independently be applied."))
+
+    parser.add_argument("-s","--samples",
+                        type=int,
+                        action='store',
+                        default=None,
+                        help=("Stride over which to sample the chain."))
+    
+    parser.add_argument("-bf","--burn-fraction",
+                        type=float,
+                        action='store',
+                        default=0,
+                        help=("Fraction of chain to skip."))
+
+    parser.add_argument("-p","--parameters",
+                        type=str,
+                        nargs='+',
+                        action='append',
+                        help=("Selects a subset of parameters to output.  Parameter ranges may be"
+                              " specified either via individual numbers (e.g., 0 1 4), comma separated"
+                              " lists (e.g., 0, 2, 5), ranges (e.g., 0-3), or combinations thereof."
+                              " By default, all parameters are sampled."))
+
+    parser.add_argument("-o","--out",
+                        type=str,
+                        action="store",
+                        default="triangle_plot.png",
+                        help="Output file name. Default: parameter_trace_plot.png")
+
+    parser.add_argument("--no-grids",
+                        action='store_false',
+                        default=True,
+                        help=("Turn off grid lines. Default: True."))
+
+    parser.add_argument("-m","--model",
+                        type=str,
+                        nargs='*',
+                        action='store',
+                        default=None,
+                        help=("Model specification glob. May be a model tag file name or an ccm_mexico+"
+                              " model specification glob. See the vis.image.construct_model_image_from_glob"
+                              " function documentation for format details. If contains a '.' will assume"
+                              " that it is a tagvers-1.0 tag file.  If no argument is given, will search"
+                              " for 'model_image.tag'"))
+
+    parser.add_argument("-deg",
+                        type=str,
+                        nargs='*',
+                        action='store',
+                        default=None,
+                        help=("Converts quantities to the appropriate degree format based on the mean and"
+                              " variance.  Parameter arguments may be specified in the same format as the"
+                              " the -p option for the *original* parameter ordering.  If no format is given"
+                              " it will attempt to identify the relevant parameters from the parameter names"
+                              " by searching for '(rad)'."))
+    
+    parser.add_argument("--usetex",
+                        action='store_true',
+                        default=False,
+                        help=("Turns on using LaTex in the rendering.  Note that this takes MUCH longer,"
+                              " but the result is MUCH better looking."))
+                        
+    parser.add_argument("-v","--verbose",
+                        action='store_true',
+                        default=False,
+                        help=("Provides verbose output about model and plot construction."))
+
+    
+    return parser
+
+
+
+if __name__ == "__main__" :
+
+    # Get command line options
+    args = set_parser().parse_args()
+
+
+    # Use LaTex or not
+    if (args.usetex) :
+        rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
+        rc('text', usetex=True)
+
+    # Flatten the list of filenames
+    chain_file_list = list(flatten(args.chain))
+
+    # Sort out which parameter columns to keep
+    if (args.parameters is None) :
+        plist = None
+    else :
+        plist = ty.chain.parse_parameter_arglist(args.parameters[:])
+
+    # Read in chain samples to plot
+    if (args.samples is None) : 
+        chain = (ty.chain.read_echain(chain_file_list[0],1,burn_fraction=args.burn_fraction,parameter_list=plist))[:,0,:]
+    else :
+        chain = (ty.chain.sample_chain(chain_file_list[0],args.samples,burn_fraction=args.burn_fraction,parameter_list=plist))
+        
+    # If more than one chain file is passed, make an upper chain file
+    if (len(chain_file_list)>1) :
+        if (args.samples is None) : 
+            upper_chain = (ty.chain.read_echain(chain_file_list[1],1,burn_fraction=args.burn_fraction,parameter_list=plist))[:,0,:]
+        else :
+            upper_chain = (ty.chain.sample_chain(chain_file_list[1],args.samples,burn_fraction=args.burn_fraction,parameter_list=plist))
+    else :
+        upper_chain = None
+        
+    # Plot read model if passed
+    if ( args.model is None ) :
+        parameter_names = None
+    else :
+        if (args.model==[]) :
+            print("WARNING: Will look for model_image.tag")
+            args.model = 'model_image.tag'
+        else :
+            args.model=args.model[0]
+            
+        # Construct a model_image from glob
+        if ('.' in args.model) :
+            if (args.verbose):
+                print("Reading tag file %s"%(args.model))
+            model_image = ty.vis.construct_model_image_from_glob(args.model,'tagvers-1.0')
+        else :
+            if (args.verbose):
+                print("Using ccm_mexico glob %s"%(args.model))
+            model_image = ty.vis.construct_model_image_from_glob(args.model,'ccm_mexico+')
+
+        parameter_names = (np.array(model_image.parameter_name_list())[plist]).tolist()
+
+        if (args.verbose) :
+            print(parameter_names)
+
+        # rad-deg/min/sec/mas/uas/nas conversion list
+        if (not (args.deg is None)) :
+
+            # Identify the parameters to try to convert, either from names or from user values
+            if (args.deg==[]) :
+                convert_angle = [ ('(rad)' in n) for n in parameter_names ]
+                convlist = (np.arange(chain.shape[1])[convert_angle]).tolist()
+            else :
+                args.deg = ty.chain.parse_parameter_arglist(args.deg[:])
+                convert_angle = np.array(model_image.size*[False])
+                convert_angle[args.deg] = True
+                convlist = (np.arange(model_image.size)[convert_angle]).tolist()
+
+            # Loop over names and apply conversions
+            for k in convlist :
+                # Get over-all scale in degrees
+                scale = max(abs(np.average(chain[:,k])),np.std(chain[:,k])) * 180./np.pi
+
+                # Check down
+                if (scale > 1.0/60.0) : # Degrees
+                    conv_factor = 180./np.pi
+                    units = '(deg)'
+                elif (scale > 1.0/(3600.0) ): # Arcminutes
+                    conv_factor = 180./np.pi * 60.0
+                    units = '(arcmin)'
+                elif (scale > 1.0/(3600.0) ): # Acrseconds
+                    conv_factor = 180./np.pi * 3600.0
+                    units = '(arcsec)'
+                elif (scale > 1.0e-3/(3600.0) ): # milliacrseconds
+                    conv_factor = 180./np.pi * 3600.0*1e3
+                    units = '(mas)'
+                elif (scale > 1.0e-6/(3600.0) ): # microacrseconds
+                    conv_factor = 180./np.pi * 3600.0*1e6
+                    units = '($\\mu$as)'
+                elif (scale > 1.0e-9/(3600.0) ): # nanoacrseconds
+                    conv_factor = 180./np.pi * 3600.0*1e9
+                    units = '(nas)'
+                elif (scale > 1.0e-12/(3600.0) ): # picoacrseconds
+                    conv_factor = 180./np.pi * 3600.0*1e12
+                    units = '(pas)'
+                else : # femtoacrseconds, redonkulous
+                    conv_factor = 180./np.pi * 3600.0*1e15
+                    units = '(fas)'
+
+                # Apply conversion
+                chain[:,k] = conv_factor * chain[:,k]
+                if (not (upper_chain is None)) :
+                    upper_chain[:,k] = conv_factor * upper_chain[:,k]
+                    
+                if (args.verbose) :
+                    print("  parameter name before:",parameter_names[k])
+                parameter_names[k] = parameter_names[k].replace('(rad)',units)
+                if (args.verbose) :
+                    print("  parameter name after:",parameter_names[k])
+
+        if (args.verbose) :
+            print(parameter_names)
+        
+
+    # Set figure
+    nparams = chain.shape[1]
+    plt.figure(figsize=(2*nparams,2*nparams))
+
+    # Make triangle plot
+    ty.vis.kde_triangle_plot(chain,upper_data_array=upper_chain,labels=parameter_names,filled=True,colormap='Reds',color='r',upper_colormap='Blues',upper_color='b')
+
+    # Save
+    plt.savefig(args.out,dpi=200)
+
+
+
+
+
+
