@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Utils &mdash; ThemisPy 0+untagged.172.g1f43ce4 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.172.g1f43ce4 documentation" href="../../index.html"/>
+        <link rel="up" title="User’s Guide" href="userguide.html"/>
+        <link rel="next" title="themispy_best_sample" href="scripts.html"/>
+        <link rel="prev" title="Vis" href="vis.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> ThemisPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0+untagged.172.g1f43ce4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="userguide.html">User’s Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="userguide.html#structure-and-philosphy">Structure and philosphy</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="userguide.html#packages">Packages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="chain.html">Chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diag.html">Diag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vis.html">Vis</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="userguide.html#command-line-tools">Command line tools</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="devel.html">Developer’s Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ThemisPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="userguide.html">User’s Guide</a> &raquo;</li>
+        
+      <li>Utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/docs/src/utils.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-utils"></span><div class="section" id="utils">
+<span id="id1"></span><h1>Utils<a class="headerlink" href="#utils" title="Permalink to this headline">¶</a></h1>
+<span class="target" id="module-0"></span><dl class="py class">
+<dt id="utils.progress_bar">
+<em class="property">class </em><code class="sig-prename descclassname">utils.</code><code class="sig-name descname">progress_bar</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">preamble</span><span class="o">=</span><span class="default_value">'Progress'</span></em>, <em class="sig-param"><span class="n">char</span><span class="o">=</span><span class="default_value">'='</span></em>, <em class="sig-param"><span class="n">length</span><span class="o">=</span><span class="default_value">10</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/utils.html#progress_bar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.progress_bar" title="Permalink to this definition">¶</a></dt>
+<dd><p>A simple ASCII progress bar to provide confidence that something is happening.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>preamble</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – String to print before the bar. Default: ‘Progress’.</p></li>
+<li><p><strong>char</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Character from which the progress bar is composed. Default: ‘=’.</p></li>
+<li><p><strong>length</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of instances of the character that correspond to 100%. Default: 10.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="utils.progress_bar.finish">
+<code class="sig-name descname">finish</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">epilog</span><span class="o">=</span><span class="default_value">'DONE!'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/utils.html#progress_bar.finish"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.progress_bar.finish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finishes the progress bar and prints an epilog.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>epilog</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Epilog message to print. Default: ‘DONE!’.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="utils.progress_bar.increment">
+<code class="sig-name descname">increment</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">completion_fraction</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/utils.html#progress_bar.increment"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.progress_bar.increment" title="Permalink to this definition">¶</a></dt>
+<dd><p>Increments the progress bar.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>completion_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of the job to indicate complete. Must be between [0,1].</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="utils.progress_bar.start">
+<code class="sig-name descname">start</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/utils.html#progress_bar.start"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#utils.progress_bar.start" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts the progress bar. Alias for increment(0).</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="scripts.html" class="btn btn-neutral float-right" title="themispy_best_sample" accesskey="n">Next →</a>
+      
+      
+        <a href="vis.html" class="btn btn-neutral" title="Vis" accesskey="p">← Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Themis Development Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0+untagged.172.g1f43ce4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            LINK_SUFFIX:'.html', 
+            HAS_SOURCE: 'true'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/language_data.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

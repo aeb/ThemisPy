@@ -1,0 +1,283 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>utils &mdash; ThemisPy 0+untagged.172.g1f43ce4 documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../genindex.html"/>
+        <link rel="search" title="Search" href="../search.html"/>
+    <link rel="top" title="ThemisPy 0+untagged.172.g1f43ce4 documentation" href="../index.html"/>
+        <link rel="up" title="Module code" href="index.html"/> 
+
+  
+  <script src="../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../docs/src/index.html" class="icon icon-home"> ThemisPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0+untagged.172.g1f43ce4
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../docs/src/installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/src/userguide.html">User’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../docs/src/devel.html">Developer’s Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../docs/src/index.html">ThemisPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../docs/src/index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>utils</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for utils</h1><div class="highlight"><pre>
+<span></span><span class="c1">###########################</span>
+<span class="c1">#</span>
+<span class="c1"># Package:</span>
+<span class="c1">#   utils</span>
+<span class="c1">#</span>
+<span class="c1"># Provides:</span>
+<span class="c1">#   Utility functions used generally across ThemisPy</span>
+<span class="c1">#   </span>
+
+
+<span class="c1"># Warnings</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="k">def</span> <span class="nf">_warning_on_one_line</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">category</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">line</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s1">&#39;WARNING: </span><span class="si">%s</span><span class="s1">:</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">lineno</span><span class="p">,</span> <span class="n">category</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">message</span><span class="p">)</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">formatwarning</span> <span class="o">=</span> <span class="n">_warning_on_one_line</span>
+
+
+<span class="c1"># A simple progress bar</span>
+<span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">stderr</span> <span class="k">as</span> <span class="n">pbo</span>
+<div class="viewcode-block" id="progress_bar"><a class="viewcode-back" href="../docs/src/utils.html#utils.progress_bar">[docs]</a><span class="k">class</span> <span class="nc">progress_bar</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A simple ASCII progress bar to provide confidence that something is happening.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      preamble (str): String to print before the bar. Default: &#39;Progress&#39;.</span>
+<span class="sd">      char (str): Character from which the progress bar is composed. Default: &#39;=&#39;.</span>
+<span class="sd">      length (int): Number of instances of the character that correspond to 100%. Default: 10.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">preamble</span><span class="o">=</span><span class="s1">&#39;Progress&#39;</span><span class="p">,</span><span class="n">char</span><span class="o">=</span><span class="s1">&#39;=&#39;</span><span class="p">,</span><span class="n">length</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="p">:</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">preamble</span><span class="o">=</span><span class="n">preamble</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">char</span> <span class="o">=</span> <span class="n">char</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">length</span> <span class="o">=</span> <span class="n">length</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fmt</span> <span class="o">=</span> <span class="n">preamble</span> <span class="o">+</span> <span class="s1">&#39; |&#39;</span> <span class="o">+</span> <span class="s1">&#39;%&#39;</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="si">%i</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;s| </span><span class="si">%3i%%</span><span class="s1">&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">full_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fmt</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="o">*</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">char</span><span class="p">)</span><span class="o">*</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+
+<div class="viewcode-block" id="progress_bar.increment"><a class="viewcode-back" href="../docs/src/utils.html#utils.progress_bar.increment">[docs]</a>    <span class="k">def</span> <span class="nf">increment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">completion_fraction</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Increments the progress bar.</span>
+
+<span class="sd">        Args: </span>
+<span class="sd">          completion_fraction (float): Fraction of the job to indicate complete. Must be between [0,1].</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">ncomp</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">completion_fraction</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="p">)</span>
+        <span class="n">bar</span> <span class="o">=</span> <span class="n">ncomp</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">char</span> <span class="o">+</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">length</span><span class="o">-</span><span class="n">ncomp</span><span class="p">)</span><span class="o">*</span><span class="s1">&#39; &#39;</span>
+        <span class="n">pbo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">full_length</span><span class="o">*</span><span class="s1">&#39;</span><span class="se">\b</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">pbo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fmt</span><span class="o">%</span><span class="p">(</span><span class="n">bar</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">completion_fraction</span><span class="p">)))</span>
+        <span class="n">pbo</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div>
+        
+        
+<div class="viewcode-block" id="progress_bar.start"><a class="viewcode-back" href="../docs/src/utils.html#utils.progress_bar.start">[docs]</a>    <span class="k">def</span> <span class="nf">start</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Starts the progress bar. Alias for increment(0).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="progress_bar.finish"><a class="viewcode-back" href="../docs/src/utils.html#utils.progress_bar.finish">[docs]</a>    <span class="k">def</span> <span class="nf">finish</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epilog</span><span class="o">=</span><span class="s1">&#39;DONE!&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Finishes the progress bar and prints an epilog.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          epilog (str): Epilog message to print. Default: &#39;DONE!&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">pbo</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;  </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">epilog</span><span class="p">))</span>
+        <span class="n">pbo</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span></div></div>
+        
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Themis Development Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../',
+            VERSION:'0+untagged.172.g1f43ce4',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            LINK_SUFFIX:'.html', 
+            HAS_SOURCE: 'true'
+        };
+    </script>
+      <script type="text/javascript" src="../_static/jquery.js"></script>
+      <script type="text/javascript" src="../_static/underscore.js"></script>
+      <script type="text/javascript" src="../_static/doctools.js"></script>
+      <script type="text/javascript" src="../_static/language_data.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
