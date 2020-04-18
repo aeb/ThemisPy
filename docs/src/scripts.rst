@@ -48,6 +48,15 @@ themispy_generate_data
    :nodefault:
 
 
+themispy_image_family
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_image_family
+   :func: set_parser
+   :prog: themispy_image_family
+   :nodefault:
+
+
 themispy_image_fit
 ----------------------------------
 .. argparse::
