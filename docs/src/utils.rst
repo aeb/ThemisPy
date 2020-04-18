@@ -1,6 +1,3 @@
-.. module:: utils
-
-.. _utils:
 
 Utils
 ================

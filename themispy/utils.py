@@ -11,6 +11,9 @@
 # Warnings
 import warnings
 def _warning_on_one_line(message, category, filename, lineno, file=None, line=None):
+    """
+    A one-line warning format.
+    """
     return 'WARNING: %s:%s: %s: %s\n' % (filename, lineno, category.__name__, message)
 warnings.formatwarning = _warning_on_one_line
 
