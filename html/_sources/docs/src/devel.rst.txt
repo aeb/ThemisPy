@@ -10,11 +10,11 @@ ThemisPy uses the git-flow_ extensions to facilitate development.
 
 Scope and goals
 ------------------------------
-ThemisPy seeks to organize and structure postprocessing functions for Themis_ analysis.
+ThemisPy seeks to organize and structure postprocessing functions for Themis_ analyses.
 As such, it is closely related to and dependent on the structure and development of
 the Themis_ analysis framework.  Importantly, it is not intended to produce analyses
 of its own.  If such an analysis is necessary, consider generating a separate script
-and submit it to the Themis_ repository.
+and submit it to the `Themis repository`_.
 
 
 Backward compatibility
@@ -117,7 +117,8 @@ file in docs/src, e.g.,
 
  
 
-.. _Themis: https://github.com/PerimeterInstitute/Themis
+.. _Themis: https://perimeterinstitute.github.io/Themis
+.. _`Themis repository`: https://github.com/PerimeterInstitute/Themis
 .. _ehtim: https://achael.github.io/eht-imaging/array.html      
 .. _`Semantic Versioning 2.0`: https://semver.org/
 .. _git-flow: https://danielkummer.github.io/git-flow-cheatsheet/
