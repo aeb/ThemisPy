@@ -9,9 +9,6 @@ script_files = []
 for sf in script_dir :
     if ( sf[-1]!='~' ) :
         script_files.append(sf)
-
-print("ThemisPy script files:",script_files)
-
         
 setup(name='ThemisPy',
       version=versioneer.get_version(),
