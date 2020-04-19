@@ -11,7 +11,7 @@ ThemisPy is a set of postprocessing tools written in Python_ for Themis_ analyse
 
 
 .. _Python: https://www.python.org/
-.. _Themis: https://github.com/PerimeterInstitute/Themis
+.. _Themis: https://perimeterinstitute.github.io/Themis
 
 
 Contents

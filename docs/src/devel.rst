@@ -5,22 +5,25 @@ Getting the latest version
 ------------------------------
 The latest version of ThemisPy can be obtained from https://github.com/aeb/ThemisPy.
 
+ThemisPy uses the git-flow_ extensions to facilitate development.
+
 
 Scope and goals
 ------------------------------
-ThemisPy seeks to organize and structure postprocessing functions for Themis_ analysis.
+ThemisPy seeks to organize and structure postprocessing functions for Themis_ analyses.
 As such, it is closely related to and dependent on the structure and development of
 the Themis_ analysis framework.  Importantly, it is not intended to produce analyses
 of its own.  If such an analysis is necessary, consider generating a separate script
-and submit it to the Themis_ repository.
+and submit it to the `Themis repository`_.
 
 
 Backward compatibility
 ------------------------------
-Following the first numbered release (i.e., 1.0), ThemisPy must strictly maintain
-backwards compatability.  If you add a feature, remember that you will be responsible
-for ensuring its continued functionality.  Thus, think carefully about the existing
-structure and how to build durable additions.
+ThemisPy follows the `Semantic Versioning 2.0`_ versioning system.  There is no current
+plan to pursue additional major versions after 1.0.0.  Thus, ThemisPy must strictly
+maintain backwards compatability.  If you add a feature, remember that you will be
+responsible for ensuring its continued functionality.  Thus, think carefully about
+the existing structure and how to build durable additions.
 
 
 Portability
@@ -114,5 +117,8 @@ file in docs/src, e.g.,
 
  
 
-.. _Themis: https://github.com/PerimeterInstitute/Themis
+.. _Themis: https://perimeterinstitute.github.io/Themis
+.. _`Themis repository`: https://github.com/PerimeterInstitute/Themis
 .. _ehtim: https://achael.github.io/eht-imaging/array.html      
+.. _`Semantic Versioning 2.0`: https://semver.org/
+.. _git-flow: https://danielkummer.github.io/git-flow-cheatsheet/

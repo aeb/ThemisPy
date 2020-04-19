@@ -18,16 +18,19 @@ See pip help for more information.
 
 Dependencies
 ------------------------------
-ThemisPy requires the following packages:
+ThemisPy requires with the following packages:
 
-* python >=3.3 (https://www.python.org/downloads)
-* scipy (pip3 install scipy)
-* numpy (pip3 install numpy)
-* matplotlib (pip3 install matplotlib)
+* `python <https://www.python.org/downloads>`_ >=3.3
+* `scipy <https://www.scipy.org>`_ (pip install scipy)
+* `numpy <https://numpy.org>`_ (pip install numpy)
+* `matplotlib <https://matplotlib.org>`_ (pip install matplotlib)
 
 Some ThemisPy functionality requires:
 
-* ehtim (https://github.com/achael/eht-imaging)
-* astropy (pip3 install astropy)
+* `ehtim <https://github.com/achael/eht-imaging>`_
+* `astropy <https://www.astropy.org>`_ (pip install astropy)
 
+Generating local version of the documation for ThemisPy requires:
 
+* `Sphinx <https://www.sphinx-doc.org>`_ (pip install sphinx)
+* `Sphinx-argparse <https://sphinx-argparse.readthedocs.io>`_ (pip install sphinx-argparse)
