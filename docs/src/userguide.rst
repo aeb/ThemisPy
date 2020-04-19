@@ -4,17 +4,18 @@ User's Guide
 Structure and philosphy
 ------------------------------
 ThemisPy is a library of utility functions for postprocessing Themis_ analyses.
-These have been organized into four packages:
+These have been organized into five packages:
 
 * chain -- Objects and methods for manipulating MCMC chains.
 * data -- Objects and methods for processing observational data.
-* diag -- Diagnostics.
-* vis -- Visualizations of Themis_ analyses.
-
+* diag -- Diagnostics and diagnostic visualizations.
+* vis -- Visualizations of the results of Themis_ analyses.
+* utils -- Utility functions that do not naturally fit into other categories.
+  
 In addition there two additional top-level directories:
 
 * docs -- Documentation (e.g., what you are reading now).
-* scripts -- Python scripts that make use of ThemisPy library functions.
+* scripts -- General purpose Python scripts that make use of ThemisPy library functions.
 
 
 Packages
@@ -43,5 +44,6 @@ subdirectory.  All are installed system wide during package installation.
    ./scripts
 
    
-.. _Themis: https://github.com/PerimeterInstitute/Themis
+.. _Themis: https://perimeterinstitute.github.io/Themis
+
    
