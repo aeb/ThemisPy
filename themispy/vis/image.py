@@ -44,12 +44,14 @@ class model_image :
       parameters (list): Parameter list for a given model. Default: None.
       size (int): Number of parameters for a given model. Default: None.
       themis_fft_sign (bool): Themis FFT sign convention flag.
+      time (float): Time at which image is to be generated.
     """
     
     def __init__(self, themis_fft_sign=True) :
         self.parameters=None
         self.size=None
         self.themis_fft_sign=themis_fft_sign
+        self.time=0
         
     def generate(self,parameters) :
         """
@@ -67,7 +69,6 @@ class model_image :
         if (len(self.parameters)<self.size) :
             raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
     
-
     def intensity_map(self,x,y,parameters=None,verbosity=0) :
         """
         External access function to the intenesity map.  Child classes should not overwrite 
@@ -99,7 +100,6 @@ class model_image :
             y = -y
         
         return I
-
     
     def generate_intensity_map(self,x,y,verbosity=0) :
         """
@@ -117,7 +117,6 @@ class model_image :
         
         raise NotImplementedError("intensity_map must be defined in children classes of model_image.")
 
-
     def parameter_name_list(self) :
         """
         Hook for returning a list of parameter names.  Currently just returns the list of p0-p(size-1).
@@ -127,6 +126,9 @@ class model_image :
         """
 
         return [ 'p%i'%(j) for j in range(self.size) ]
+    
+    def set_time(self,time) :
+        self.time = time
     
     
 class model_image_symmetric_gaussian(model_image) :
@@ -1110,13 +1112,100 @@ class model_image_sum(model_image) :
         return names
     
 
+class model_image_polynomial_variable(model_image) :
+    """
+    Generates a :class:`model_image` object with parameters that vary polynomially with 
+    time from an initially static :class:`model_image` object.
+
+    Args:
+      image (model_image): Static image from which to generate a dynamic image.
+      orders (list): List of integer orders of the polynomials in time of each parameter.
+      reference_time (list): Reference time that defines the time origin.
+    """    
+    def __init__(self, image, orders, reference_time, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+
+        self.image = image
+        self.orders = orders
+        if (len(self.orders)<self.image.size) :
+            raise RuntimeError("Length of orders list must match number of parameters in static image.")
+        
+        self.reference_time = reference_time
+        self.size = np.sum(orders)+len(orders)
+        
+    def generate(self,parameters) :
+        """
+        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_sum::generate_model`, 
+        a similar a similar function within the :cpp:class:`Themis::model_image_polynomial_variable` class.  
+
+        Args:
+          parameters (list): Parameter list.
+
+        Returns:
+          None        
+        """
+        
+        self.parameters = np.copy(parameters)
+        if (len(self.parameters)<self.size) :
+            raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
+
+        q = np.zeros(self.image.size)
+        j = 0
+        dt = self.time-self.reference_time
+        for k in range(self.image.size) :
+            for order in range(orders[k]) :
+                q[k] = q[k] + parameters[j]*dt**order
+                j += 1
+
+        self.image.generate(q)
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+
+        return self.image.generate_intensity_map(x,y,verbosity=verbosity)
+
+
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        static_names = image.parameter_name_list()
+        names = []
+        for k in range(self.image.size) :
+            names.extend(static_names[k])
+            if (orders[k]>0) :
+                names.extend('$d/dt$ %s'%(static_names[k]))
+            if (orders[k]>1) :
+                for order in range(2,orders[k]) :
+                    names.extend('$d^%i/dt^%i %s'%(order,order,static_names[k]))
+        return names
+    
+    
 class model_image_single_point_statistics(model_image) :
     """
     Generates a :class:`model_image` object that is filed with a desired set of 
     single-point statistics (mean, median, standard deviation, kurtosis, etc.) given
     a specified model_image object and appropriate chain data.
-
     
+    Args:
+      image (model_image): Static image from which to generate a dynamic image.
+      stats_list (list): List of strings of the statistics to generate.  Options are limited to subsets of ['mean','median','stddev','skewness','kurtosis'].
+      median_store_size (int): Number of instances about the middle to save in the construction of the median.  This is bounded from above by half of the number of chain samples.
     """
 
     def __init__(self,image, stats_list=None, median_store_size=16, themis_fft_sign=True) :
@@ -1143,6 +1232,13 @@ class model_image_single_point_statistics(model_image) :
         
             
     def generate(self,chain) :
+        """
+        Sets the chain from which to compute image statistics and the statistic of interest
+        to be returned on the next call to :func:`intensity_map`.
+
+        Args:
+          chain (numpy.ndarray): MCMC chain of parameters ordered [samples,parameters].
+        """
 
         if (np.all(self.chain==chain)) :
             return
