@@ -26,15 +26,16 @@ except:
     astropy_found = False
 
 
-def read_gain_amplitude_correction_file(gainfile) :
+def read_gain_amplitude_correction_file(gainfile,deprecated_timestamp=False) :
     """
     Reads in a gain amplitude correction file and returns an appropriately formatted dictionary.
 
     Warning:
-      If astropy is unavailable, toffset will return the number of seconds since 12am, Jan 1, 2000 instead of an astropy.Time object.
+      If astropy is unavailable, toffset will return the number of seconds since 12UT, Jan 1, 2000 instead of an astropy.Time object.
 
     Args:
       gainfile (str): Name of the file containing the gain correction amplitude data.
+      deprecated_timestamp (bool): If true, assumes time is specified since 0UT, Jan 1, 2000 instead of standard J2000 epoch.
 
     Returns:
       (numpy.ndarray): Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys ['tstart','tend','stations','toffset','nindependent',<station codes>]
@@ -46,6 +47,10 @@ def read_gain_amplitude_correction_file(gainfile) :
     n_ind_gains=int(infile.readline().split()[5])
     station_names=infile.readline().split()[6:]
     infile.close()
+
+    # Check for half-day error
+    if (deprecated_timestamp) :
+        t0 = t0-12*3600
 
     # If possible, generate astropy time object with the offset time
     if (astropy_found) :
@@ -72,7 +77,7 @@ def read_gain_amplitude_correction_file(gainfile) :
     return gain_data
 
 
-def read_complex_gain_file(gainfile) :
+def read_complex_gain_file(gainfile,deprecated_timestamp=False) :
     """
     Reads in a complex gain file and returns an appropriately formatted dictionary.
 
@@ -81,6 +86,7 @@ def read_complex_gain_file(gainfile) :
 
     Args:
       gainfile (str): Name of the file containing the complex gain data.
+      deprecated_timestamp (bool): If true, assumes time is specified since 0UT, Jan 1, 2000 instead of standard J2000 epoch.
 
     Returns:
       (numpy.ndarray): Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys ['tstart','tend','stations','toffset','nindependent',<station codes>]
@@ -95,6 +101,10 @@ def read_complex_gain_file(gainfile) :
         station_names[k] = sn.replace('.real','')
     infile.close()
 
+    # Check for half-day error
+    if (deprecated_timestamp) :
+        t0 = t0-12*3600
+    
     # If possible, generate astropy time object with the offset time
     if (astropy_found) :
         tJ2000 = Time('J2000.0',format='jyear_str').mjd
@@ -120,13 +130,14 @@ def read_complex_gain_file(gainfile) :
     return gain_data
 
 
-def read_gain_file(gainfile) :
+def read_gain_file(gainfile,deprecated_timestamp=False) :
     """
     Reads in a gain file and returns an appropriately formatted dictionary. 
     The file type is determined automatically from the headers.
 
     Args:
       gainfile (str): Name of the file containing the gain data.
+      deprecated_timestamp (bool): If true, assumes time is specified since 0UT, Jan 1, 2000 instead of standard J2000 epoch.
 
     Returns:
       (numpy.ndarray): Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys ['tstart','tend','stations','toffset','nindependent',<station codes>]
@@ -150,9 +161,9 @@ def read_gain_file(gainfile) :
             
     # Read in the data with the appropriate function
     if (nreal==len(station_names)//2 and nimag==len(station_names)//2) :
-        gain_data = read_complex_gain_file(gainfile)
+        gain_data = read_complex_gain_file(gainfile,deprecated_timestamp=deprecated_timestamp)
     else :
-        gain_data = read_gain_amplitude_correction_file(gainfile)
+        gain_data = read_gain_amplitude_correction_file(gainfile,deprecated_timestamp=deprecated_timestamp)
 
     return gain_data
 
