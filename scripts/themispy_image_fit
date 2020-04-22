@@ -24,7 +24,6 @@ import copy
 
 import themispy as ty
 
-
 def set_parser():
 
     # Create a parser object to manage command line options
@@ -103,6 +102,22 @@ def set_parser():
                         default='linear',
                         help=("Set the transfer function ('linear','sqrt','log'). Default: 'linear'"))
 
+    parser.add_argument("--movie",
+                        type=str,
+                        nargs='*',
+                        action='store',
+                        help=("Will treat the model as time variable. Arguments are optional, and may be"
+                              " contain a [start]:[step]:[stop] sequence, containing any combination of start,"
+                              " step, stop times in hours (colons required). Missing values will be set"
+                              " to defaults: if --uvfits is set, the start/stop times will be set to the"
+                              " first and last timesteps therein, otherwise the default start/stop times"
+                              " are 0h and 24h. In both cases, the default time step is 1h."))
+
+    parser.add_argument("--timestamp-file",
+                        action='store_true',
+                        default=False,
+                        help=("If saving multiple frames, will append filename with timestamp instead of index.  Default: frames will be indexed."))
+    
     parser.add_argument("-o","--out",
                         type=str,
                         nargs="+",
@@ -205,7 +220,7 @@ if __name__ == "__main__" :
         if (args.verbose):
             print("Smoothed parameters:",parameters)            
         
-    # Check limits
+    # Check resolution
     if (not (args.N is None) ):
         if (len(args.N)==1) :
             args.N = args.N[0]
@@ -224,43 +239,112 @@ if __name__ == "__main__" :
         else :
             print("ERROR: Either 1 or 4 arguments are expected after --limits.")
             quit()
-    
-        
-    # Start figure particulars
-    plt.figure(figsize=(6,6))
-    plt.axes([0.15,0.15,0.8,0.8])
 
-    # Generate plot
-    h,fig,axs,x,y,I = ty.vis.plot_intensity_map(model_image, parameters, limits=args.limits, shape=args.N, colormap='afmhot', return_intensity_map=True, transfer_function=args.transfer, verbosity=int(args.verbose),Imax=1)
+    # Check time steps
+    if (args.movie is None) :
+        time_list = [0.0]
+    else :
+        time_start = 0.0
+        time_end = 24.0
+        time_step = 1.0
 
-    # Set the proper normalization
-    Imed = np.median(I)
-    Imax = np.max(I)
-    if (args.transfer=='linear') :
-        vmax = (Imed) * 10**( args.norm*np.log10(Imax/Imed) )
-        vmin = 0
-    elif (args.transfer=='sqrt') :
-        vmax = np.sqrt( (Imed) * 10**( args.norm*np.log10(Imax/Imed) ) )
-        vmin = 0
-    elif (args.transfer=='log') :
-        vmax = args.norm*np.log10(Imax/Imed) + np.log10(Imed)
-        vmin = vmax-2
+        if (not (args.uvfits is None)) :
+            obs = ty.vis.image.eh.obsdata.load_uvfits(uvfits_filename)
+            time_start = obs.tstart
+            time_end = obs.tstop
 
-    plt.clim(vmin=vmin,vmax=vmax)
-        
+        if (len(args.movie)>0) :
+            tmp = args.movie[0].split(':')
+            if (len(tmp)<3) :
+                print("ERROR: If time steps are specified, they must be specified in [start]:[step]:[stop].")
+                quit()
+            if (tmp[0]!='') :
+                time_start = float(tmp[0])
+            if (tmp[1]!='') :
+                time_step = float(tmp[1])
+            if (tmp[2]!='') :
+                time_end = float(tmp[2])
+
+        time_list = np.arange(time_start,time_end,time_step,dtype=float)
+
     # Save image as desired
     if (args.out is None) :
         args.out = ['fit.png']
-        
+
+    # Check if we are writing an hdf5 file
+    writing_hdf5=False
+    writing_other=False
     for outfile in flatten(args.out) :
-        if (args.verbose):
-            print("Saving file %s"%(outfile))
         _,ext = os.path.splitext(outfile)
-        if (ext=='.fits' or ext=='.FITS') :
+        writing_hdf5 = writing_hdf5 or (ext=='.hdf5')
+        writing_other = writing_other or (ext!='.hdf5')
+    # If only writing hdf5, only run through first time stamp since the rest will be constructed in the write_hdf5 function.
+    if (writing_other==False) :
+        time_list_hdf5 = copy.copy(time_list)
+        time_list = [time_list[0]]
+        
+    # Loop over time
+    for ti,time in enumerate(time_list) :
+                
+        # Start figure particulars
+        plt.figure(figsize=(6,6))
+        plt.axes([0.15,0.15,0.8,0.8])
+
+        # Set model time
+        model_image.set_time(time)
+        
+        # Generate plot
+        h,fig,axs,x,y,I = ty.vis.plot_intensity_map(model_image, parameters, limits=args.limits, shape=args.N, colormap='afmhot', return_intensity_map=True, transfer_function=args.transfer, verbosity=int(args.verbose),Imax=1)
+
+        # Set the proper normalization
+        if (time==time_list[0]) :
+            Imed = np.median(I)
+            Imax = np.max(I)
+            if (args.transfer=='linear') :
+                vmax = (Imed) * 10**( args.norm*np.log10(Imax/Imed) )
+                vmin = 0
+            elif (args.transfer=='sqrt') :
+                vmax = np.sqrt( (Imed) * 10**( args.norm*np.log10(Imax/Imed) ) )
+                vmin = 0
+            elif (args.transfer=='log') :
+                vmax = args.norm*np.log10(Imax/Imed) + np.log10(Imed)
+                vmin = vmax-2
+        plt.clim(vmin=vmin,vmax=vmax)
+        
+        # Save non-hdf5 files
+        for outfile in flatten(args.out) :
             if (args.verbose):
-                print("  Saving FITS file.")
-            ty.vis.write_fits(x,y,I,outfile,args.uvfits)
-        else :
-            if (args.verbose):
-                print("  Saving non-FITS file.")
-            plt.savefig(outfile,dpi=300)
+                print("Saving file %s"%(outfile))
+            name,ext = os.path.splitext(outfile)
+
+            if (len(time_list)>1) :
+                if (args.timestamp_file) :
+                    name = name + '_%05g'%(time)
+                else :
+                    name = name + '_%05i'%(ti)
+            outname = name + ext
+            
+            if (ext=='.fits' or ext=='.FITS') :
+                if (args.verbose):
+                    print("  Saving FITS file.")
+                ty.vis.write_fits(x,y,I,outname,args.uvfits)
+            elif (ext=='.hdf5') :
+                pass
+            else :
+                if (args.verbose):
+                    print("  Saving non-FITS file.")
+                plt.savefig(outname,dpi=300)
+
+        # Close the current figure
+        plt.close()
+
+
+    # Write hdf5 if requested
+    if (writing_hdf5) :
+        for outfile in flatten(args.out) :
+            _,ext = os.path.splitext(outfile)
+            if (ext=='.hdf5') :
+                if (args.verbose):
+                    print("  Saving FITS file.")
+                    
+                ty.vis.write_hdf5(x,y,time_list_hdf5,model_image,outfile,args.uvfits)
