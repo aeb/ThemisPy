@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.image &mdash; ThemisPy 0.1.1 documentation</title>
+  <title>vis.image &mdash; ThemisPy 0.1.0+10.gf008946 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.1 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+10.gf008946 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.1.0+10.gf008946
               </div>
             
           
@@ -156,6 +156,7 @@
 <span class="c1">#   Provides model image classes and functions.</span>
 <span class="c1">#</span>
 
+<span class="kn">import</span> <span class="nn">themispy</span>
 <span class="kn">from</span> <span class="nn">themispy.utils</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -166,14 +167,14 @@
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
 
-<span class="c1"># Read in ehtim, if possible</span>
+<span class="c1"># Read in h5py, if possible</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">ehtim</span> <span class="k">as</span> <span class="nn">eh</span>
-    <span class="n">ehtim_found</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="kn">import</span> <span class="nn">h5py</span>
+    <span class="n">h5py_found</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="k">except</span><span class="p">:</span>
-    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.&quot;</span><span class="p">,</span> <span class="ne">Warning</span><span class="p">)</span>
-    <span class="n">ehtim_found</span> <span class="o">=</span> <span class="kc">False</span>
-
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Package h5py not found.  Some functionality will not be available.  If this is necessary, please ensure h5py is installed.&quot;</span><span class="p">,</span> <span class="ne">Warning</span><span class="p">)</span>
+    <span class="n">h5py_found</span> <span class="o">=</span> <span class="kc">False</span>
+    
 
 <span class="c1"># Some constants</span>
 <span class="n">rad2uas</span> <span class="o">=</span> <span class="mf">180.0</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">3600</span> <span class="o">*</span> <span class="mf">1e6</span>
@@ -193,12 +194,14 @@
 <span class="sd">      parameters (list): Parameter list for a given model. Default: None.</span>
 <span class="sd">      size (int): Number of parameters for a given model. Default: None.</span>
 <span class="sd">      themis_fft_sign (bool): Themis FFT sign convention flag.</span>
+<span class="sd">      time (float): Time at which image is to be generated.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">=</span><span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">=</span><span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">themis_fft_sign</span><span class="o">=</span><span class="n">themis_fft_sign</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span>
         
 <div class="viewcode-block" id="model_image.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parameters</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -216,7 +219,6 @@
         <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span><span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Parameter list is inconsistent with the number of parameters expected.&quot;</span><span class="p">)</span></div>
     
-
 <div class="viewcode-block" id="model_image.intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image.intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">parameters</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        External access function to the intenesity map.  Child classes should not overwrite </span>
@@ -234,21 +236,24 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># </span>
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">themis_fft_sign</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">themis_fft_sign</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span>
             <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">y</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reflecting through origin to correct themis FFT sign convention&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">parameters</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
 
         <span class="n">I</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">generate_intensity_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">themis_fft_sign</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">themis_fft_sign</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span>
             <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="n">y</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unreflecting through origin to correct themis FFT sign convention&quot;</span><span class="p">)</span>
         
         <span class="k">return</span> <span class="n">I</span></div>
-
     
 <div class="viewcode-block" id="model_image.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -266,7 +271,6 @@
         
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;intensity_map must be defined in children classes of model_image.&quot;</span><span class="p">)</span></div>
 
-
 <div class="viewcode-block" id="model_image.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Hook for returning a list of parameter names.  Currently just returns the list of p0-p(size-1).</span>
@@ -275,7 +279,18 @@
 <span class="sd">          (list) List of strings of variable names.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="k">return</span> <span class="p">[</span> <span class="s1">&#39;p</span><span class="si">%i</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">]</span></div></div>
+        <span class="k">return</span> <span class="p">[</span> <span class="s1">&#39;p</span><span class="si">%i</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">]</span></div>
+    
+    
+<div class="viewcode-block" id="model_image.set_time"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image.set_time">[docs]</a>    <span class="k">def</span> <span class="nf">set_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          time (float): Time in hours.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span></div></div>
     
     
 <div class="viewcode-block" id="model_image_symmetric_gaussian"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_symmetric_gaussian">[docs]</a><span class="k">class</span> <span class="nc">model_image_symmetric_gaussian</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
@@ -366,15 +381,6 @@
 <span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         
-        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">rad2uas</span>
-        <span class="n">I0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">s</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
-
-        <span class="n">I</span> <span class="o">=</span> <span class="n">I0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span><span class="o">/</span><span class="n">s</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span>
-        
-        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Symmetric Gaussian:&quot;</span><span class="p">,</span><span class="n">I0</span><span class="p">,</span><span class="n">s</span><span class="p">)</span>
-
-
         <span class="n">s</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">rad2uas</span>
         <span class="n">A</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="mf">0.99</span><span class="p">),</span><span class="mf">0.0</span><span class="p">)</span>
         <span class="n">sm</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="n">A</span><span class="p">)</span>
@@ -1092,7 +1098,8 @@
         <span class="n">px</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">py</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="n">I</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">intensity_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">parameters</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate_intensity_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
         <span class="n">Ism</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fftconvolve</span><span class="p">(</span><span class="n">I</span><span class="o">*</span><span class="n">px</span><span class="o">*</span><span class="n">py</span><span class="p">,</span><span class="n">K</span><span class="o">*</span><span class="n">px</span><span class="o">*</span><span class="n">py</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">))</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
@@ -1113,7 +1120,19 @@
         <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\sigma_s$ (rad)&#39;</span><span class="p">)</span>
         <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$A_s$&#39;</span><span class="p">)</span>
         <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\phi_s$ (rad)&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">names</span></div></div>
+        <span class="k">return</span> <span class="n">names</span></div>
+
+    
+<div class="viewcode-block" id="model_image_smooth.set_time"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_smooth.set_time">[docs]</a>    <span class="k">def</span> <span class="nf">set_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          time (float): Time in hours.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="n">time</span><span class="p">)</span></div></div>
 
     
     
@@ -1234,7 +1253,7 @@
             <span class="n">q</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[(</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">2</span><span class="p">):]</span>
 
             <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   --&gt; Sum shift:&quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;   --&gt; Sum shift:&quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
             
         <span class="k">return</span> <span class="n">I</span></div>
 
@@ -1256,16 +1275,137 @@
             <span class="k">elif</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_coordinates</span><span class="o">==</span><span class="s1">&#39;polar&#39;</span><span class="p">)</span> <span class="p">:</span>
                 <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\Delta r$ (rad)&#39;</span><span class="p">)</span>
                 <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\Delta \theta$ (rad)&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">names</span></div></div>
+        <span class="k">return</span> <span class="n">names</span></div>
+
+    
+<div class="viewcode-block" id="model_image_sum.set_time"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_sum.set_time">[docs]</a>    <span class="k">def</span> <span class="nf">set_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          time (float): Time in hours.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+        
+        <span class="k">for</span> <span class="n">image</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_list</span> <span class="p">:</span>
+            <span class="n">image</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="n">time</span><span class="p">)</span></div></div>
+
     
 
+<div class="viewcode-block" id="model_image_polynomial_variable"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_polynomial_variable">[docs]</a><span class="k">class</span> <span class="nc">model_image_polynomial_variable</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a :class:`model_image` object with parameters that vary polynomially with </span>
+<span class="sd">    time from an initially static :class:`model_image` object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      image (model_image): Static image from which to generate a dynamic image.</span>
+<span class="sd">      orders (list): List of integer orders of the polynomials in time of each parameter.</span>
+<span class="sd">      reference_time (list): Reference time that defines the time origin.</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">orders</span><span class="p">,</span> <span class="n">reference_time</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">themis_fft_sign</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">orders</span> <span class="o">=</span> <span class="n">orders</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orders</span><span class="p">)</span><span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Length of orders list must match number of parameters in static image.&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_time</span> <span class="o">=</span> <span class="n">reference_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">orders</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">orders</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="model_image_polynomial_variable.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_polynomial_variable.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parameters</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_sum::generate_model`, </span>
+<span class="sd">        a similar a similar function within the :cpp:class:`Themis::model_image_polynomial_variable` class.  </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          parameters (list): Parameter list.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          None        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span><span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Parameter list is inconsistent with the number of parameters expected.&quot;</span><span class="p">)</span>
+
+        <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_time</span><span class="p">)</span><span class="o">*</span><span class="mf">3600.0</span> <span class="c1"># hr to s</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orders</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">q</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">dt</span><span class="o">**</span><span class="n">order</span><span class="p">)</span>
+                <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">q</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="model_image_polynomial_variable.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_polynomial_variable.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PolynomialVariable:&quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_time</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">parameters</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate_intensity_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="model_image_polynomial_variable.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_polynomial_variable.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producess a lists parameter names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">static_names</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">parameter_name_list</span><span class="p">()</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">static_names</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">orders</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="s1">&#39;$d/dt$ </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">static_names</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">orders</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+                <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">orders</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="p">:</span>
+                    <span class="n">names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="s1">&#39;$d^</span><span class="si">%i</span><span class="s1">/dt^</span><span class="si">%i</span><span class="s1"> </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">order</span><span class="p">,</span><span class="n">order</span><span class="p">,</span><span class="n">static_names</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">names</span></div>
+
+
+<div class="viewcode-block" id="model_image_polynomial_variable.set_time"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_polynomial_variable.set_time">[docs]</a>    <span class="k">def</span> <span class="nf">set_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          time (float): Time in hours.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+        
+    
 <div class="viewcode-block" id="model_image_single_point_statistics"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_single_point_statistics">[docs]</a><span class="k">class</span> <span class="nc">model_image_single_point_statistics</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generates a :class:`model_image` object that is filed with a desired set of </span>
 <span class="sd">    single-point statistics (mean, median, standard deviation, kurtosis, etc.) given</span>
 <span class="sd">    a specified model_image object and appropriate chain data.</span>
-
 <span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">      image (model_image): Static image from which to generate a dynamic image.</span>
+<span class="sd">      stats_list (list): List of strings of the statistics to generate.  Options are limited to subsets of [&#39;mean&#39;,&#39;median&#39;,&#39;stddev&#39;,&#39;skewness&#39;,&#39;kurtosis&#39;].</span>
+<span class="sd">      median_store_size (int): Number of instances about the middle to save in the construction of the median.  This is bounded from above by half of the number of chain samples.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">image</span><span class="p">,</span> <span class="n">stats_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">median_store_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
@@ -1292,6 +1432,13 @@
         
             
 <div class="viewcode-block" id="model_image_single_point_statistics.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_single_point_statistics.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">chain</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the chain from which to compute image statistics and the statistic of interest</span>
+<span class="sd">        to be returned on the next call to :func:`intensity_map`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          chain (numpy.ndarray): MCMC chain of parameters ordered [samples,parameters].</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain</span><span class="o">==</span><span class="n">chain</span><span class="p">))</span> <span class="p">:</span>
             <span class="k">return</span>
@@ -1445,12 +1592,24 @@
             
         <span class="c1"># Return desired quantities</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Idict</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">default_stat</span><span class="p">]</span></div>
-            
-            
+
     
 <div class="viewcode-block" id="model_image_single_point_statistics.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_single_point_statistics.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">parameter_name_list</span><span class="p">()</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">parameter_name_list</span><span class="p">()</span></div>
+
     
+<div class="viewcode-block" id="model_image_single_point_statistics.set_time"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_single_point_statistics.set_time">[docs]</a>    <span class="k">def</span> <span class="nf">set_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          time (float): Time in hours.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="n">time</span><span class="p">)</span></div></div>
+
+        
     
 <div class="viewcode-block" id="expand_model_glob_ccm_mexico"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.expand_model_glob_ccm_mexico">[docs]</a><span class="k">def</span> <span class="nf">expand_model_glob_ccm_mexico</span><span class="p">(</span><span class="n">model_glob</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -1796,6 +1955,12 @@
             <span class="n">subimage</span><span class="p">,</span><span class="n">subtag</span> <span class="o">=</span> <span class="n">construct_model_image_from_tagv1</span><span class="p">(</span><span class="n">subtag</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
             <span class="n">image_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subimage</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">model_image_sum</span><span class="p">(</span><span class="n">image_list</span><span class="p">,</span><span class="n">offset_coordinates</span><span class="o">=</span><span class="n">offset_coordinates</span><span class="p">),</span><span class="n">tag</span><span class="p">[</span><span class="n">len_subtag</span><span class="o">+</span><span class="mi">3</span><span class="p">:]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_polynomial_variable&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">reference_time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">orders</span> <span class="o">=</span> <span class="p">[</span> <span class="nb">int</span><span class="p">(</span><span class="n">order</span><span class="p">)</span> <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">:]]</span>
+        <span class="n">subtag</span> <span class="o">=</span> <span class="n">tagv1_find_subtag</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="n">subimage</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">construct_model_image_from_tagv1</span><span class="p">(</span><span class="n">subtag</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model_image_polynomial_variable</span><span class="p">(</span><span class="n">subimage</span><span class="p">,</span><span class="n">orders</span><span class="p">,</span><span class="n">reference_time</span><span class="p">),</span><span class="n">tag</span><span class="p">[(</span><span class="nb">len</span><span class="p">(</span><span class="n">subtag</span><span class="p">)</span><span class="o">+</span><span class="mi">3</span><span class="p">):]</span>
     <span class="k">else</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unrecognized model tag </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span></div>
 
@@ -1980,8 +2145,7 @@
         <span class="k">return</span> <span class="n">h</span><span class="p">,</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span></div>
     
 
-
-<div class="viewcode-block" id="write_fits"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.write_fits">[docs]</a><span class="k">def</span> <span class="nf">write_fits</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">I</span><span class="p">,</span><span class="n">fits_filename</span><span class="p">,</span><span class="n">uvfits_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="write_fits"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.write_fits">[docs]</a><span class="k">def</span> <span class="nf">write_fits</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">img</span><span class="p">,</span><span class="n">fits_filename</span><span class="p">,</span><span class="n">uvfits_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">time</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes a FITS format image file given 2D image data.  </span>
 
@@ -1993,7 +2157,7 @@
 <span class="sd">    Args:</span>
 <span class="sd">      x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).</span>
 <span class="sd">      y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).</span>
-<span class="sd">      I (numpy.ndarray): Array of intensity values in (Jy/uas^2)</span>
+<span class="sd">      I (numpy.ndarray,model_image): Either an array of intensity values in (Jy/uas^2) or a :class:`model_image` object.</span>
 <span class="sd">      fits_filename (str): Name of output FITS file.</span>
 <span class="sd">      uvfits_filename (str): Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.</span>
 <span class="sd">      time (float): Time in hr on the relevant observation day (set by uvfits file) represented by image data.</span>
@@ -2003,6 +2167,18 @@
     <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;ERROR: write_fits requires ehtim to be installed.&quot;</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">model_image</span><span class="p">))</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">time</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">intensity_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">img</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;ERROR: Requies either an image or numpy.ndarray of values.&quot;</span><span class="p">)</span>
+
+    
     <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shapes&quot;</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">I</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
@@ -2049,6 +2225,132 @@
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     
     <span class="n">image</span><span class="o">.</span><span class="n">save_fits</span><span class="p">(</span><span class="n">fits_filename</span><span class="p">)</span></div>
+    
+
+
+<div class="viewcode-block" id="write_hdf5"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.write_hdf5">[docs]</a><span class="k">def</span> <span class="nf">write_hdf5</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">mov</span><span class="p">,</span><span class="n">hdf5_filename</span><span class="p">,</span><span class="n">uvfits_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">time_offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;ehtim&#39;</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Writes an HDF5 format movie file given a sequence of 2D image data</span>
+
+<span class="sd">    Warning: </span>
+
+<span class="sd">      * Requires ehtim or h5py to be installed.  Raises a NotImplementedError if neither are unavailable</span>
+<span class="sd">      * If these will be read in by ehtim later, only *square* images are permitted.  Raises a runtime warning if non-square images are requested.</span>
+<span class="sd">      </span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">      y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">      t (list): Array of times of frames</span>
+<span class="sd">      mov (list,model_image): Either a list of arrays of intensity values in (Jy/uas^2) computed at the times in t or a :class:`model_image` object.</span>
+<span class="sd">      fits_filename (str): Name of output FITS file.</span>
+<span class="sd">      uvfits_filename (str): Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.</span>
+<span class="sd">      time_offset (float): Time offset in hr on the relevant observation day (set by uvfits file) represented by image data.</span>
+<span class="sd">      method (str): Method to use to construct and format hdf5 file.  Options are &#39;ehtim&#39; or &#39;h5py&#39;, which make use of the ehtim functions or provide a separate hdf5 format, respectively. Default: &#39;ehtim&#39;.</span>
+<span class="sd">      verbosity (int): Verbosity parameter. If 0, no information is printed.  If &gt;=1, prints information about sizes and values.  If &gt;=2, generates debugging plots.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span><span class="o">==</span><span class="kc">False</span> <span class="ow">and</span> <span class="n">h5py_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;ERROR: write_hdf5 requires ehtim or h5py to be installed.&quot;</span><span class="p">)</span>
+
+    <span class="n">time_list</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">img_list</span><span class="o">=</span><span class="p">[]</span>
+
+    <span class="n">pb</span> <span class="o">=</span> <span class="n">progress_bar</span><span class="p">(</span><span class="s2">&quot;Writing hdf5&quot;</span><span class="p">,</span><span class="n">length</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+    <span class="n">pb</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="c1"># Add check for time step uniformity</span>
+    
+    
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">mov</span><span class="p">,</span><span class="n">model_image</span><span class="p">))</span> <span class="p">:</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">time</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">pb</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="n">k</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)))</span>
+            <span class="n">mov</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+            <span class="n">I</span> <span class="o">=</span> <span class="n">mov</span><span class="o">.</span><span class="n">intensity_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+            <span class="n">time_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+            <span class="n">img_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">I</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">mov</span><span class="p">,</span><span class="nb">list</span><span class="p">))</span> <span class="p">:</span>
+        <span class="n">time_list</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="n">img_list</span> <span class="o">=</span> <span class="n">mov</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;ERROR: Requies either an image or list of numpy.ndarray of values.&quot;</span><span class="p">)</span>
+
+    <span class="n">pb</span><span class="o">.</span><span class="n">finish</span><span class="p">(</span><span class="s2">&quot;--&gt; </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">hdf5_filename</span><span class="p">))</span>
+
+    <span class="c1"># Run over and fix units</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">time_list</span><span class="p">))</span> <span class="p">:</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">time_offset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
+            <span class="n">time_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">time_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="n">time_offset</span>
+
+        
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shapes&quot;</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">I</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">img_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">!=</span><span class="n">img_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;ehtim cannot handle non-square images. Your image had shape [</span><span class="si">%i</span><span class="s2">,</span><span class="si">%i</span><span class="s2">]&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">img_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">img_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="ne">Warning</span><span class="p">)</span>
+    
+        <span class="n">uas2rad</span> <span class="o">=</span> <span class="mf">1e-6</span> <span class="o">/</span> <span class="mf">3600.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.0</span>
+        <span class="n">pixel_size</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">uas2rad</span>
+        <span class="n">Ippx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">img_list</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">Ippx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">Ippx</span><span class="p">)</span>
+        <span class="n">img_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ippx</span>
+
+    <span class="c1"># Check for uvfits files</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">uvfits_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No uvfits file has been specified. This will probably result in an nonfunctional FITS header.&quot;</span><span class="p">,</span> <span class="ne">Warning</span><span class="p">)</span>
+        <span class="n">ra</span><span class="o">=</span><span class="mf">0.0</span>
+        <span class="n">dec</span><span class="o">=</span><span class="mf">0.0</span>
+        <span class="n">rf</span><span class="o">=</span><span class="mf">230e9</span>
+        <span class="n">src</span><span class="o">=</span><span class="s1">&#39;NA&#39;</span>
+        <span class="n">mjd</span><span class="o">=</span><span class="mi">58583</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">eh</span><span class="o">.</span><span class="n">obsdata</span><span class="o">.</span><span class="n">load_uvfits</span><span class="p">(</span><span class="n">uvfits_filename</span><span class="p">)</span>
+        <span class="n">ra</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">ra</span>
+        <span class="n">dec</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">dec</span>
+        <span class="n">rf</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">rf</span>
+        <span class="n">src</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">source</span>
+        <span class="n">mjd</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">mjd</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;pixel size:&#39;</span><span class="p">,</span><span class="n">pixel_size</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;ra:&#39;</span><span class="p">,</span><span class="n">ra</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;dec:&#39;</span><span class="p">,</span><span class="n">ra</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;rf:&#39;</span><span class="p">,</span><span class="n">ra</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;src:&#39;</span><span class="p">,</span><span class="n">ra</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;mjd:&#39;</span><span class="p">,</span><span class="n">ra</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">method</span><span class="o">==</span><span class="s1">&#39;ehtim&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="c1"># Create movie object</span>
+        <span class="n">movie</span> <span class="o">=</span> <span class="n">eh</span><span class="o">.</span><span class="n">movie</span><span class="o">.</span><span class="n">Movie</span><span class="p">(</span><span class="n">img_list</span><span class="p">,</span><span class="n">time_list</span><span class="p">,</span><span class="n">pixel_size</span><span class="p">,</span><span class="n">ra</span><span class="p">,</span><span class="n">dec</span><span class="p">,</span><span class="n">rf</span><span class="o">=</span><span class="n">rf</span><span class="p">,</span><span class="n">source</span><span class="o">=</span><span class="n">src</span><span class="p">,</span><span class="n">mjd</span><span class="o">=</span><span class="n">mjd</span><span class="p">,</span><span class="n">pulse</span><span class="o">=</span><span class="n">eh</span><span class="o">.</span><span class="n">observing</span><span class="o">.</span><span class="n">pulses</span><span class="o">.</span><span class="n">deltaPulse2D</span><span class="p">,</span><span class="n">polrep</span><span class="o">=</span><span class="s1">&#39;stokes&#39;</span><span class="p">)</span>
+        <span class="c1"># Save hdf5 file</span>
+        <span class="n">movie</span><span class="o">.</span><span class="n">save_hdf5</span><span class="p">(</span><span class="n">hdf5_filename</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="p">(</span><span class="n">method</span><span class="o">==</span><span class="s1">&#39;h5py&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="c1"># Open hdf5 file</span>
+        <span class="n">hdf5out</span> <span class="o">=</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">hdf5_filename</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Output some standard info in a header</span>
+        <span class="n">hdf5out</span><span class="p">[</span><span class="s1">&#39;pixel_size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pixel_size</span>
+        <span class="n">hdf5out</span><span class="p">[</span><span class="s1">&#39;ra&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ra</span>
+        <span class="n">hdf5out</span><span class="p">[</span><span class="s1">&#39;dec&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dec</span>
+        <span class="n">hdf5out</span><span class="p">[</span><span class="s1">&#39;rf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rf</span>
+        <span class="n">hdf5out</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">src</span>
+        <span class="n">hdf5out</span><span class="p">[</span><span class="s1">&#39;mjd&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mjd</span>
+        <span class="n">hdf5out</span><span class="p">[</span><span class="s1">&#39;polrep&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;stokes&#39;</span>
+
+        <span class="c1"># Output the images and time stamps</span>
+        <span class="n">hdf5out</span><span class="p">[</span><span class="s1">&#39;times&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">time_list</span><span class="p">)</span>
+        <span class="n">hdf5out</span><span class="p">[</span><span class="s1">&#39;frames&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">img_list</span><span class="p">)</span>
+
+        <span class="c1"># Output some specific headers</span>
+        <span class="n">hdf5out</span><span class="p">[</span><span class="s1">&#39;aspect&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;square&#39;</span>
+        <span class="n">hdf5out</span><span class="p">[</span><span class="s1">&#39;pixel size units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;rad&#39;</span>
+        <span class="n">hdf5out</span><span class="p">[</span><span class="s1">&#39;intensity units&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Jy/px&#39;</span>
+        <span class="n">hdf5out</span><span class="p">[</span><span class="s1">&#39;origin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;ThemisPy </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">themispy</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+        
+        <span class="c1"># Close</span>
+        <span class="n">hdf5out</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 </pre></div>
 
            </div>
@@ -2082,7 +2384,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.1',
+            VERSION:'0.1.0+10.gf008946',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

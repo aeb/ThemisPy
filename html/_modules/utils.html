@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>utils &mdash; ThemisPy 0.1.1 documentation</title>
+  <title>utils &mdash; ThemisPy 0.1.0+10.gf008946 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../genindex.html"/>
         <link rel="search" title="Search" href="../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.1 documentation" href="../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+10.gf008946 documentation" href="../index.html"/>
         <link rel="up" title="Module code" href="index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.1.0+10.gf008946
               </div>
             
           
@@ -167,6 +167,19 @@
 <span class="n">warnings</span><span class="o">.</span><span class="n">formatwarning</span> <span class="o">=</span> <span class="n">_warning_on_one_line</span>
 
 
+<span class="c1"># Read in ehtim, if possible</span>
+<span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">redirect_stdout</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">trap</span><span class="o">=</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">redirect_stdout</span><span class="p">(</span><span class="n">trap</span><span class="p">)</span> <span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">ehtim</span> <span class="k">as</span> <span class="nn">eh</span>
+    <span class="n">ehtim_found</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.&quot;</span><span class="p">,</span> <span class="ne">Warning</span><span class="p">)</span>
+    <span class="n">ehtim_found</span> <span class="o">=</span> <span class="kc">False</span>
+
+    
 <span class="c1"># A simple progress bar</span>
 <span class="kn">from</span> <span class="nn">sys</span> <span class="kn">import</span> <span class="n">stderr</span> <span class="k">as</span> <span class="n">pbo</span>
 <div class="viewcode-block" id="progress_bar"><a class="viewcode-back" href="../docs/src/utils.html#utils.progress_bar">[docs]</a><span class="k">class</span> <span class="nc">progress_bar</span> <span class="p">:</span>
@@ -253,7 +266,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../',
-            VERSION:'0.1.1',
+            VERSION:'0.1.0+10.gf008946',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

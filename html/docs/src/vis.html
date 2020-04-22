@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vis &mdash; ThemisPy 0.1.1 documentation</title>
+  <title>Vis &mdash; ThemisPy 0.1.0+10.gf008946 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.1 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+10.gf008946 documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Utils" href="utils.html"/>
         <link rel="prev" title="Diag" href="diag.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.1
+                0.1.0+10.gf008946
               </div>
             
           
@@ -594,6 +594,17 @@ explicit visualizations of the output of <a class="reference external" href="htt
 </dl>
 </dd></dl>
 
+<dl class="py attribute">
+<dt id="vis.image.model_image.time">
+<code class="sig-name descname">time</code><a class="headerlink" href="#vis.image.model_image.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time at which image is to be generated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt id="vis.image.model_image.generate">
 <code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image.generate" title="Permalink to this definition">¶</a></dt>
@@ -657,6 +668,17 @@ convention.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>(list) List of strings of variable names.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image.set_time">
+<code class="sig-name descname">set_time</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image.set_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image.set_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time in hours.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -870,23 +892,99 @@ Has parameters:</p>
 </dd></dl>
 
 <dl class="py class">
-<dt id="vis.image.model_image_single_point_statistics">
-<em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_single_point_statistics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">stats_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">median_store_size</span><span class="o">=</span><span class="default_value">16</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_single_point_statistics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_single_point_statistics" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generates a <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object that is filed with a desired set of
-single-point statistics (mean, median, standard deviation, kurtosis, etc.) given
-a specified model_image object and appropriate chain data.</p>
+<dt id="vis.image.model_image_polynomial_variable">
+<em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_polynomial_variable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">orders</span></em>, <em class="sig-param"><span class="n">reference_time</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_polynomial_variable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_polynomial_variable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object with parameters that vary polynomially with
+time from an initially static <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><em>model_image</em></a>) – Static image from which to generate a dynamic image.</p></li>
+<li><p><strong>orders</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of integer orders of the polynomials in time of each parameter.</p></li>
+<li><p><strong>reference_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Reference time that defines the time origin.</p></li>
+</ul>
+</dd>
+</dl>
 <dl class="py method">
-<dt id="vis.image.model_image_single_point_statistics.generate">
-<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chain</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_single_point_statistics.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_single_point_statistics.generate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the model parameter list.  Mirrors <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00047.html#a7945f9c4716ebe7f1026b999467d9c32" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image::generate_model</span></code></a>,
-a similar a similar function within the <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00047.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image</span></code></a> class.  Effectively
-simply copies the parameters into the local list with some additional run-time checking.</p>
+<dt id="vis.image.model_image_polynomial_variable.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_polynomial_variable.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_polynomial_variable.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the model parameter list.  Mirrors <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">:model_image_sum::generate_model</span></code>,
+a similar a similar function within the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_polynomial_variable</span></code> class.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Parameter list.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>None.</p>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_polynomial_variable.generate_intensity_map">
+<code class="sig-name descname">generate_intensity_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_polynomial_variable.generate_intensity_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_polynomial_variable.generate_intensity_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal generation of the intensity map. In practice you almost certainly want to call <a class="reference internal" href="#vis.image.model_image.intensity_map" title="vis.image.model_image.intensity_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_image.intensity_map()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(numpy.ndarray) Array of intensity values at positions (x,y) in <span class="math notranslate nohighlight">\(Jy/\mu as^2\)</span>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_polynomial_variable.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_polynomial_variable.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_polynomial_variable.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Producess a lists parameter names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_polynomial_variable.set_time">
+<code class="sig-name descname">set_time</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_polynomial_variable.set_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_polynomial_variable.set_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time in hours.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="vis.image.model_image_single_point_statistics">
+<em class="property">class </em><code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">model_image_single_point_statistics</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">stats_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">median_store_size</span><span class="o">=</span><span class="default_value">16</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_single_point_statistics"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_single_point_statistics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object that is filed with a desired set of
+single-point statistics (mean, median, standard deviation, kurtosis, etc.) given
+a specified model_image object and appropriate chain data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><em>model_image</em></a>) – Static image from which to generate a dynamic image.</p></li>
+<li><p><strong>stats_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of strings of the statistics to generate.  Options are limited to subsets of [‘mean’,’median’,’stddev’,’skewness’,’kurtosis’].</p></li>
+<li><p><strong>median_store_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of instances about the middle to save in the construction of the median.  This is bounded from above by half of the number of chain samples.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="vis.image.model_image_single_point_statistics.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chain</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_single_point_statistics.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_single_point_statistics.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the chain from which to compute image statistics and the statistic of interest
+to be returned on the next call to <code class="xref py py-func docutils literal notranslate"><span class="pre">intensity_map()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>chain</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – MCMC chain of parameters ordered [samples,parameters].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -941,6 +1039,17 @@ system memory constraints.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>median_store_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of images to store.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_single_point_statistics.set_time">
+<code class="sig-name descname">set_time</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_single_point_statistics.set_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_single_point_statistics.set_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time in hours.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1024,6 +1133,17 @@ simply copies the parameters into the local list with some additional run-time c
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>(list) List of strings of variable names.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.image.model_image_smooth.set_time">
+<code class="sig-name descname">set_time</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_smooth.set_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_smooth.set_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time in hours.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1270,6 +1390,17 @@ and copies the shift vector (x0,y0) for each model_image object, and performs so
 </dl>
 </dd></dl>
 
+<dl class="py method">
+<dt id="vis.image.model_image_sum.set_time">
+<code class="sig-name descname">set_time</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#model_image_sum.set_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.model_image_sum.set_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time in hours.</p>
+</dd>
+</dl>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="py class">
@@ -1473,7 +1604,7 @@ SUBTAG FINISH.</p>
 
 <dl class="py function">
 <dt id="vis.image.write_fits">
-<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">write_fits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">I</span></em>, <em class="sig-param"><span class="n">fits_filename</span></em>, <em class="sig-param"><span class="n">uvfits_filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">time</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#write_fits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.write_fits" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">write_fits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">img</span></em>, <em class="sig-param"><span class="n">fits_filename</span></em>, <em class="sig-param"><span class="n">uvfits_filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#write_fits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.write_fits" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes a FITS format image file given 2D image data.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -1487,10 +1618,38 @@ SUBTAG FINISH.</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>I</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of intensity values in (Jy/uas^2)</p></li>
+<li><p><strong>I</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a><em>,</em><a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><em>model_image</em></a>) – Either an array of intensity values in (Jy/uas^2) or a <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object.</p></li>
 <li><p><strong>fits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of output FITS file.</p></li>
 <li><p><strong>uvfits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.</p></li>
 <li><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time in hr on the relevant observation day (set by uvfits file) represented by image data.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If 0, no information is printed.  If &gt;=1, prints information about sizes and values.  If &gt;=2, generates debugging plots.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.image.write_hdf5">
+<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">write_hdf5</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">mov</span></em>, <em class="sig-param"><span class="n">hdf5_filename</span></em>, <em class="sig-param"><span class="n">uvfits_filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">time_offset</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'ehtim'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#write_hdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.write_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes an HDF5 format movie file given a sequence of 2D image data</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>Requires ehtim or h5py to be installed.  Raises a NotImplementedError if neither are unavailable</p></li>
+<li><p>If these will be read in by ehtim later, only <em>square</em> images are permitted.  Raises a runtime warning if non-square images are requested.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Array of times of frames</p></li>
+<li><p><strong>mov</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>,</em><a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><em>model_image</em></a>) – Either a list of arrays of intensity values in (Jy/uas^2) computed at the times in t or a <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object.</p></li>
+<li><p><strong>fits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of output FITS file.</p></li>
+<li><p><strong>uvfits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.</p></li>
+<li><p><strong>time_offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time offset in hr on the relevant observation day (set by uvfits file) represented by image data.</p></li>
+<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Method to use to construct and format hdf5 file.  Options are ‘ehtim’ or ‘h5py’, which make use of the ehtim functions or provide a separate hdf5 format, respectively. Default: ‘ehtim’.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If 0, no information is printed.  If &gt;=1, prints information about sizes and values.  If &gt;=2, generates debugging plots.</p></li>
 </ul>
 </dd>
@@ -1703,7 +1862,7 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.1',
+            VERSION:'0.1.0+10.gf008946',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
