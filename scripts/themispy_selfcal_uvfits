@@ -18,8 +18,15 @@ from matplotlib.cbook import flatten
 import sys
 import themispy as ty
 
-import ehtim as eh
+# Read in ehtim, if possible
+try:
+    import ehtim as eh
+    ehtim_found = True
+except:
+    warnings.warn("Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.", Warning)
+    ehtim_found = False
 
+    
 def set_parser() :
     # Create a parser object to manage command line options
     parser = ap.ArgumentParser(prog='themispy_gain_plots',description=__doc__)
