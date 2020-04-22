@@ -2078,13 +2078,13 @@ def write_fits(x,y,img,fits_filename,uvfits_filename=None,time=None,verbosity=0)
     
 
 
-def write_hdf5(x,y,t,mov,hdf5_filename,uvfits_filename=None,time_offset=None,verbosity=0) :
+def write_hdf5(x,y,t,mov,hdf5_filename,uvfits_filename=None,time_offset=None,method='ehtim',verbosity=0) :
     """
     Writes an HDF5 format movie file given a sequence of 2D image data
 
     Warning: 
 
-      * Requires h5py to be installed.  Raises a NotImplementedError if h5py is unavailable
+      * Requires ehtim or h5py to be installed.  Raises a NotImplementedError if neither are unavailable
       * If these will be read in by ehtim later, only *square* images are permitted.  Raises a runtime warning if non-square images are requested.
       
 
@@ -2095,12 +2095,13 @@ def write_hdf5(x,y,t,mov,hdf5_filename,uvfits_filename=None,time_offset=None,ver
       mov (list,model_image): Either a list of arrays of intensity values in (Jy/uas^2) computed at the times in t or a :class:`model_image` object.
       fits_filename (str): Name of output FITS file.
       uvfits_filename (str): Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.
-      time (float): Time in hr on the relevant observation day (set by uvfits file) represented by image data.
+      time_offset (float): Time offset in hr on the relevant observation day (set by uvfits file) represented by image data.
+      method (str): Method to use to construct and format hdf5 file.  Options are 'ehtim' or 'h5py', which make use of the ehtim functions or provide a separate hdf5 format, respectively. Default: 'ehtim'.
       verbosity (int): Verbosity parameter. If 0, no information is printed.  If >=1, prints information about sizes and values.  If >=2, generates debugging plots.
     """
 
-    if (h5py_found==False) :
-        raise NotImplementedError("ERROR: write_fits requires h5py to be installed.")
+    if (ehtim_found==False and h5py_found==False) :
+        raise NotImplementedError("ERROR: write_hdf5 requires ehtim or h5py to be installed.")
 
     time_list=[]
     img_list=[]
@@ -2169,35 +2170,35 @@ def write_hdf5(x,y,t,mov,hdf5_filename,uvfits_filename=None,time_offset=None,ver
         print('src:',ra)
         print('mjd:',ra)
 
-    # Create movie object
-    dt = (time_list[1]-time_list[0])*3600.
-    #movie = eh.movie.Movie(img_list,dt,pixel_size,ra,dec,rf=rf,source=src,mjd=mjd,pulse=eh.observing.pulses.deltaPulse2D,polrep='stokes')
+    if (method=='ehtim') :
+        # Create movie object
+        movie = eh.movie.Movie(img_list,time_list,pixel_size,ra,dec,rf=rf,source=src,mjd=mjd,pulse=eh.observing.pulses.deltaPulse2D,polrep='stokes')
+        # Save hdf5 file
+        movie.save_hdf5(hdf5_filename)
 
-    # Save hdf5 file
-    #movie.save_hdf5(hdf5_filename)
-    
-    # Open hdf5 file
-    hdf5out = h5py.File(hdf5_filename,'w')
+    elif (method=='h5py') :
+        # Open hdf5 file
+        hdf5out = h5py.File(hdf5_filename,'w')
 
-    # Output some standard info in a header
-    hdf5out['pixel_size'] = pixel_size
-    hdf5out['ra'] = ra
-    hdf5out['dec'] = dec
-    hdf5out['rf'] = rf
-    hdf5out['source'] = src
-    hdf5out['mjd'] = mjd
-    hdf5out['polrep'] = 'stokes'
+        # Output some standard info in a header
+        hdf5out['pixel_size'] = pixel_size
+        hdf5out['ra'] = ra
+        hdf5out['dec'] = dec
+        hdf5out['rf'] = rf
+        hdf5out['source'] = src
+        hdf5out['mjd'] = mjd
+        hdf5out['polrep'] = 'stokes'
 
-    # Output the images and time stamps
-    hdf5out['times'] = np.array(time_list)
-    hdf5out['frames'] = np.array(img_list)
+        # Output the images and time stamps
+        hdf5out['times'] = np.array(time_list)
+        hdf5out['frames'] = np.array(img_list)
 
-    # Output some specific headers
-    hdf5out['aspect'] = 'square'
-    hdf5out['pixel size units'] = 'rad'
-    hdf5out['intensity units'] = 'Jy/px'
-    hdf5out['origin'] = 'ThemisPy %s'%(themispy_version)
-    
-    # Close
-    hdf5out.close()
+        # Output some specific headers
+        hdf5out['aspect'] = 'square'
+        hdf5out['pixel size units'] = 'rad'
+        hdf5out['intensity units'] = 'Jy/px'
+        hdf5out['origin'] = 'ThemisPy %s'%(themispy_version)
+        
+        # Close
+        hdf5out.close()
 
