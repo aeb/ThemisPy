@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>themispy_best_sample &mdash; ThemisPy 0.1.0+10.gf008946 documentation</title>
+  <title>themispy_best_sample &mdash; ThemisPy 0.1.0+12.g40e5966.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+10.gf008946 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+12.g40e5966.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Developer’s Guide" href="devel.html"/>
         <link rel="prev" title="Utils" href="utils.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+10.gf008946
+                0.1.0+12.g40e5966.dirty
               </div>
             
           
@@ -127,6 +127,10 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#themispy-resample">themispy_resample</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#themispy-selfcal-uvfits">themispy_selfcal_uvfits</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
 </ul>
 </li>
@@ -685,6 +689,37 @@ $ themispy_resample -c Chain.dat -l Lklhd.dat -s 1000 -bf 0.5</p>
 </dl>
 </div>
 </div>
+<div class="section" id="themispy-selfcal-uvfits">
+<h1>themispy_selfcal_uvfits<a class="headerlink" href="#themispy-selfcal-uvfits" title="Permalink to this headline">¶</a></h1>
+<p><p>Reads in a Themis gain file of any type and the matching uvfits data file and
+writes the self-calibrated data file.</p>
+<p>Example:
+$ themispy_selfcal_uvfits -g gain_corrections.d -d data.uvfits</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_selfcal_uvfits</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">g</span> <span class="n">G</span> <span class="o">-</span><span class="n">d</span> <span class="n">UVFITS</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">avg</span><span class="o">-</span><span class="n">time</span> <span class="n">AVG_TIME</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>-g</kbd></dt>
+<dd><p>&lt;Required&gt; Name of gain file to read.</p>
+</dd>
+<dt><kbd>-d, --uvfits</kbd></dt>
+<dd><p>&lt;Required&gt; Name of uvfits data file.</p>
+</dd>
+<dt><kbd>-s, --scan-avg</kbd></dt>
+<dd><p>Produce scan averaged data.</p>
+</dd>
+<dt><kbd>--avg-time</kbd></dt>
+<dd><p>Timescale over which to average the data in seconds. Superseded by -s,–scan-avg. Default: None.</p>
+</dd>
+<dt><kbd>-o, --out</kbd></dt>
+<dd><p>Output file name. Default: gain_plot.png</p>
+</dd>
+</dl>
+</div>
+</div>
 <div class="section" id="themispy-trace-plots">
 <h1>themispy_trace_plots<a class="headerlink" href="#themispy-trace-plots" title="Permalink to this headline">¶</a></h1>
 <p><p>Reads a Themis ensemble chain file, and optionally a likelihood file, and
@@ -838,7 +873,7 @@ $ themispy_triangle_plot -c Chain.dat -p 0-5</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+10.gf008946',
+            VERSION:'0.1.0+12.g40e5966.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
