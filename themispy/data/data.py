@@ -625,6 +625,9 @@ def write_polarization_fractions(obs,outname) :
     raise NotImplementedError
 
 
+
+import matplotlib.pyplot as plt
+
 def write_uvfits(obs, outname, gain_data=None, dterm_data=None, verbosity=0) :
     """
     Writes uvfits file given an :class:`ehtim.obsdata.Obsdata` object.  Potentially applies gains and/or dterms from a Themis analysis 
@@ -645,7 +648,8 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, verbosity=0) :
     """
 
     # Flip gains from corrections to the model to adjust data, i.e., G -> 1/G
-    gain_station_names = gain_data.keys()[2:] # First two are tstart
+    #gain_station_names = gain_data.keys()[2:] # First two are tstart
+    gain_station_names = gain_data['stations']
     for sn in gain_station_names :
         gain_data[sn] = 1.0/gain_data[sn]
 
@@ -656,28 +660,30 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, verbosity=0) :
         od_time_list.append(tmp[0])
 
     # Check for consistency, if they are not consistent warn
-    if (len(od_time_list)!=len(ts)) :
+    if (len(od_time_list)!=len(gain_data['tstart'])) :
         warnings.warn("gain_data and observation data are not the same size! Will try to apply gains nonetheless ...",Warning)
         if ( (od_time_list[-1]-od_time_list[0]) > (gain_data['tend'][-1]-gain_data['tstart'][0]) ) :
             raise RuntimeError("gain_data does not cover the observation times.  Cowardly refusing to continue.")
 
     # Generate Caltable object
     if (verbosity>0) :
-        print("Sites:",station_names)
+        print("Sites:",gain_station_names)
         print("Times:",od_time_list)
     datatables = {}
-    for k in range(len(station_names)):
+    #for k in range(len(gain_station_names)):
+    for station in gain_station_names :
         datatable = []
         for j in range(len(od_time_list)):
-            datatable.append(np.array((od_time_list[j], gains[j,k], gains[j,k]), dtype=eh.DTCAL))
-        datatables[station_names[k]] = np.array(datatable)
+            #datatable.append(np.array((od_time_list[j], gains[j,k], gains[j,k]), dtype=eh.DTCAL))
+            datatable.append(np.array((od_time_list[j], gain_data[station][j], gain_data[station][j]), dtype=eh.DTCAL))
+        datatables[station] = np.array(datatable)
     cal=eh.caltable.Caltable(obs.ra, obs.dec, obs.rf, obs.bw, datatables, obs.tarr, source=obs.source, mjd=obs.mjd, timetype=obs.timetype)
 
     # Calibrate the observation data (Yikes!!)
     obs_cal = cal.applycal(obs)
 
     # Write out new uvfits file
-    obs_cal.save_uvfits(cal_uvfits_file_name)
+    obs_cal.save_uvfits(outname)
 
     # Make calibrated data plots if desired
     if (verbosity>2) :
