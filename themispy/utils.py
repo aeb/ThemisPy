@@ -17,7 +17,25 @@ def _warning_on_one_line(message, category, filename, lineno, file=None, line=No
     return 'WARNING: %s:%s: %s: %s\n' % (filename, lineno, category.__name__, message)
 warnings.formatwarning = _warning_on_one_line
 
+# Get a global version
+from ._version import get_versions
+themispy_version = get_versions()['version']
+del get_versions
 
+
+# Read in ehtim, if possible
+import io
+from contextlib import redirect_stdout
+try:
+    trap=io.StringIO()
+    with redirect_stdout(trap) :
+        import ehtim as eh
+    ehtim_found = True
+except:
+    warnings.warn("Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.", Warning)
+    ehtim_found = False
+
+    
 # A simple progress bar
 from sys import stderr as pbo
 class progress_bar :
