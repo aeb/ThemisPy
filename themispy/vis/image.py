@@ -7,6 +7,7 @@
 #   Provides model image classes and functions.
 #
 
+import themispy
 from themispy.utils import *
 
 import numpy as np
@@ -2197,8 +2198,7 @@ def write_hdf5(x,y,t,mov,hdf5_filename,uvfits_filename=None,time_offset=None,met
         hdf5out['aspect'] = 'square'
         hdf5out['pixel size units'] = 'rad'
         hdf5out['intensity units'] = 'Jy/px'
-        hdf5out['origin'] = 'ThemisPy %s'%(themispy_version)
+        hdf5out['origin'] = 'ThemisPy %s'%(themispy.__version__)
         
         # Close
         hdf5out.close()
-

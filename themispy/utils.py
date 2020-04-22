@@ -17,11 +17,6 @@ def _warning_on_one_line(message, category, filename, lineno, file=None, line=No
     return 'WARNING: %s:%s: %s: %s\n' % (filename, lineno, category.__name__, message)
 warnings.formatwarning = _warning_on_one_line
 
-# Get a global version
-from ._version import get_versions
-themispy_version = get_versions()['version']
-del get_versions
-
 
 # Read in ehtim, if possible
 import io
