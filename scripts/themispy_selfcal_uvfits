@@ -51,12 +51,26 @@ def set_parser() :
     parser.add_argument("--avg-time",
                         type=float,
                         action='store',
-                        help=("Timescale over which to average the data in seconds. Superseded by -s,--scan-avg. Default: None."))
+                        help=("Timescale over which to average the data in seconds. Superseded"
+                              " by -s,--scan-avg. Default: None."))
 
+    parser.add_argument("-r","--relative-timestamps",
+                        action="store_true",
+                        default=False,
+                        help=("Will ignore the absolute time offset in the gain file.  Requires"
+                              " that the number of data points in the uvfits file match the number"
+                              " of gain reconstruction epochs."))
+    
     parser.add_argument("-o","--out",
                         type=str,
                         action="store",
                         help="Output file name. Default: gain_plot.png")
+
+    parser.add_argument("-v","--verbose",
+                        type=int,
+                        default=0,
+                        action="store",
+                        help="Sets verbosity level in :fun:`write_uvfits`. Level 1 outputs values, level 4 generates multiple plots.")
 
     return parser
 
@@ -85,4 +99,4 @@ if __name__ == "__main__" :
         args.out = 'selfcal_'+args.uvfits.split('/')[-1]
     
     # Apply the gains and write the calibrated uvfits file
-    ty.data.write_uvfits(obs,args.out,gain_data)
+    ty.data.write_uvfits(obs,args.out,gain_data,relative_timestamps=args.relative_timestamps,verbosity=args.verbose)

@@ -628,7 +628,7 @@ def write_polarization_fractions(obs,outname) :
 
 import matplotlib.pyplot as plt
 
-def write_uvfits(obs, outname, gain_data=None, dterm_data=None, verbosity=0) :
+def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timestamps=False, verbosity=0) :
     """
     Writes uvfits file given an :class:`ehtim.obsdata.Obsdata` object.  Potentially applies gains and/or dterms from a Themis analysis 
 
@@ -641,18 +641,21 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, verbosity=0) :
       outname (str): Name of the output file to which to write data.
       gains (dictionary): Station gains organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
       dterms (dictionary): Station D terms organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
+      relative_timestamps (bool): If True, will assume that the times in the calibration files apply to the given data set and apply in order. Requires that the number of gains must match the number of time slices in the data set. Exists prirmarily to address poor absolute time specification of earlier gain files. In almost all new Themis analyses after Apr 22, 2020, should be False.
       verbosity (int): Degree of verbosity.  0 only prints warnings and errors. 1 provides more granular output. 2 generates calibrated data plots. 3 generates cal table gain plots.  
 
     Returns:
       None.
     """
 
+    ## TODO: Fix it to figure out the relative start/stop times and apply the gains in the stated time bins.
+    ##
+
     # Flip gains from corrections to the model to adjust data, i.e., G -> 1/G
-    #gain_station_names = gain_data.keys()[2:] # First two are tstart
     gain_station_names = gain_data['stations']
     for sn in gain_station_names :
         gain_data[sn] = 1.0/gain_data[sn]
-
+        
     # Get the unique times
     od_time = np.unique(obs.unpack('time'))
     od_time_list = []
@@ -660,11 +663,25 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, verbosity=0) :
         od_time_list.append(tmp[0])
 
     # Check for consistency, if they are not consistent warn
-    if (len(od_time_list)!=len(gain_data['tstart'])) :
-        warnings.warn("gain_data and observation data are not the same size! Will try to apply gains nonetheless ...",Warning)
+    if (relative_timestamps) :
+        gain_time_list = od_time_list
+        if (len(od_time_list)!=len(gain_data['tstart'])) :
+            raise RuntimeError("When relative_timestamps=True, number of gain epochs (%i) must match number of observation epochs (%i)."%(len(gain_data['tstart']),len(od_time_list)))
         if ( (od_time_list[-1]-od_time_list[0]) > (gain_data['tend'][-1]-gain_data['tstart'][0]) ) :
             raise RuntimeError("gain_data does not cover the observation times.  Cowardly refusing to continue.")
+    else :
+        # Get the absolute times
+        if (len(od_time_list)!=len(gain_data['tstart'])) :
+            warnings.warn("gain_data and observation data are not the same size! Will try to apply gains nonetheless ...",Warning)
+        if ( int(gain_data['toffset'].mjd) != obs.mjd ) :
+            raise RuntimeError("Observation and gain reconstruction dates differ (mjd %i vs %i). Cowardly refusing to continue."%(obs.mjd,int(gain_data['toffset'].mjd)))
+        gain_time_offset_hour = 24.0 * (gain_data['toffset'].mjd%1)
+        gain_time_list = gain_data['tstart'] + gain_time_offset_hour
+        time_precision_slop = 1e-3/3600.0 # Permit a slop of 1 ms in the time comparisons
+        if ( od_time_list[0]<gain_data['tstart'][0]+gain_time_offset_hour-time_precision_slop or od_time_list[-1]>gain_data['tend'][-1]+gain_time_offset_hour+time_precision_slop ) :
+            raise RuntimeError("gain_data does not cover the observation times. Cowardly refusing to continue.")
 
+        
     # Generate Caltable object
     if (verbosity>0) :
         print("Sites:",gain_station_names)
@@ -674,7 +691,6 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, verbosity=0) :
     for station in gain_station_names :
         datatable = []
         for j in range(len(od_time_list)):
-            #datatable.append(np.array((od_time_list[j], gains[j,k], gains[j,k]), dtype=eh.DTCAL))
             datatable.append(np.array((od_time_list[j], gain_data[station][j], gain_data[station][j]), dtype=eh.DTCAL))
         datatables[station] = np.array(datatable)
     cal=eh.caltable.Caltable(obs.ra, obs.dec, obs.rf, obs.bw, datatables, obs.tarr, source=obs.source, mjd=obs.mjd, timetype=obs.timetype)
