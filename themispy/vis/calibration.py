@@ -203,7 +203,7 @@ def annotate_gain_data(gain_data) :
     # Identify if gains were set
     is_gain_set = np.zeros((len(station_names),len(gain_data['tstart'])))
     for k,sn in enumerate(station_names) :
-        is_gain_set[k,:] = (np.abs(gain_data[sn])-1>1e-10)+(np.abs(np.angle(gain_data[sn]))>1e-10)
+        is_gain_set[k,:] = (np.abs(np.abs(gain_data[sn])-1)>1e-10)+(np.abs(np.angle(gain_data[sn]))>1e-10)
     is_gain_degenerate = (np.sum(is_gain_set,axis=0)<=2)
 
     # Add annotation
@@ -241,12 +241,13 @@ def plot_station_gain_amplitudes(gain_data, invert=False, add_station_labels=Tru
     # Get the times at which to plot points
     if (absolute_time) :
         time_offset = annotated_gain_data['toffset']
-        hour_offset = int(time_offset.yday.split(':')[2]) + int(time_offset.yday.split(':')[3])/60.0 + float(time_offset.yday.split(':')[4])/3600.0 # In hrs
+        #hour_offset = int(time_offset.yday.split(':')[2]) + int(time_offset.yday.split(':')[3])/60.0 + float(time_offset.yday.split(':')[4])/3600.0 # In hrs
+        hour_offset = 24.0*(time_offset.mjd%1) # In hrs
     else :
         hour_offset = 0.0
     tc = 0.5*(annotated_gain_data['tend']+annotated_gain_data['tstart']) + hour_offset # In hrs
     tw = 0.5*(annotated_gain_data['tend']-annotated_gain_data['tstart']) # In hrs
-
+    
     # Get colors
     number_of_stations = len(annotated_gain_data['stations'])
 
@@ -288,7 +289,7 @@ def plot_station_gain_amplitudes(gain_data, invert=False, add_station_labels=Tru
         # Plot degenerate, defined gains
         use = (annotated_gain_data[sn+'.status']==1)
         plt.errorbar(tc[use],np.abs(g[use])-1+k,xerr=tw[use],color=[0.5,0.5,0.5],marker='.',capthick=0,linewidth=2,linestyle='none')
-
+        
         # Add station name
         if (add_station_labels) :
             plt.text(tc[-1]+tw[-1]+0.25 + 0.02*(tc[-1]-tc[0]+0.5),k,'%s'%sn,color=color,va='center')
@@ -347,7 +348,8 @@ def plot_station_gain_phases(gain_data, invert=False, add_station_labels=True,  
     # Get the times at which to plot points
     if (absolute_time) :
         time_offset = annotated_gain_data['toffset']
-        hour_offset = int(time_offset.yday.split(':')[2]) + int(time_offset.yday.split(':')[3])/60.0 + float(time_offset.yday.split(':')[4])/3600.0 # In hrs
+        #hour_offset = int(time_offset.yday.split(':')[2]) + int(time_offset.yday.split(':')[3])/60.0 + float(time_offset.yday.split(':')[4])/3600.0 # In hrs
+        hour_offset = 24.0*(time_offset.mjd%1) # In hrs
     else :
         hour_offset = 0.0
     tc = 0.5*(annotated_gain_data['tend']+annotated_gain_data['tstart']) + hour_offset # In hrs
