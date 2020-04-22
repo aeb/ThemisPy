@@ -20,13 +20,13 @@ except:
     warnings.warn("Package astropy not found.  Some functionality will not be available.  If this is necessary, please ensure astropy is installed.", Warning)
     astropy_found = False
 
-# Read in ehtim, if possible
-try:
-    import ehtim as eh
-    ehtim_found = True
-except:
-    warnings.warn("Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.", Warning)
-    ehtim_found = False
+# # Read in ehtim, if possible
+# try:
+#     import ehtim as eh
+#     ehtim_found = True
+# except:
+#     warnings.warn("Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.", Warning)
+#     ehtim_found = False
 
 
 def closure_phase_covariance_ordering(obs, snrcut=0, verbosity=0) :
@@ -625,7 +625,7 @@ def write_polarization_fractions(obs,outname) :
     raise NotImplementedError
 
 
-def write_uvfits(obs, outname, gains_data=None, dterm_data=None, verbosity=0) :
+def write_uvfits(obs, outname, gain_data=None, dterm_data=None, verbosity=0) :
     """
     Writes uvfits file given an :class:`ehtim.obsdata.Obsdata` object.  Potentially applies gains and/or dterms from a Themis analysis 
 

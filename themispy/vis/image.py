@@ -17,14 +17,14 @@ from scipy.signal import fftconvolve
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
-# Read in ehtim, if possible
+# Read in h5py, if possible
 try:
-    import ehtim as eh
-    ehtim_found = True
+    import h5py
+    h5py_found = True
 except:
-    warnings.warn("Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.", Warning)
-    ehtim_found = False
-
+    warnings.warn("Package h5py not found.  Some functionality will not be available.  If this is necessary, please ensure h5py is installed.", Warning)
+    h5py_found = False
+    
 
 # Some constants
 rad2uas = 180.0/np.pi * 3600 * 1e6
@@ -44,12 +44,14 @@ class model_image :
       parameters (list): Parameter list for a given model. Default: None.
       size (int): Number of parameters for a given model. Default: None.
       themis_fft_sign (bool): Themis FFT sign convention flag.
+      time (float): Time at which image is to be generated.
     """
     
     def __init__(self, themis_fft_sign=True) :
         self.parameters=None
         self.size=None
         self.themis_fft_sign=themis_fft_sign
+        self.time=0
         
     def generate(self,parameters) :
         """
@@ -67,7 +69,6 @@ class model_image :
         if (len(self.parameters)<self.size) :
             raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
     
-
     def intensity_map(self,x,y,parameters=None,verbosity=0) :
         """
         External access function to the intenesity map.  Child classes should not overwrite 
@@ -85,21 +86,24 @@ class model_image :
         """
 
         # 
-        if (self.themis_fft_sign) :
+        if (self.themis_fft_sign==True) :
             x = -x
             y = -y
+            if (verbosity>0) :
+                print("Reflecting through origin to correct themis FFT sign convention")
 
         if (not parameters is None) :
             self.generate(parameters)
 
         I = self.generate_intensity_map(x,y,verbosity=verbosity)
 
-        if (self.themis_fft_sign) :
+        if (self.themis_fft_sign==True) :
             x = -x
             y = -y
+            if (verbosity>0) :
+                print("Unreflecting through origin to correct themis FFT sign convention")
         
         return I
-
     
     def generate_intensity_map(self,x,y,verbosity=0) :
         """
@@ -117,7 +121,6 @@ class model_image :
         
         raise NotImplementedError("intensity_map must be defined in children classes of model_image.")
 
-
     def parameter_name_list(self) :
         """
         Hook for returning a list of parameter names.  Currently just returns the list of p0-p(size-1).
@@ -127,6 +130,17 @@ class model_image :
         """
 
         return [ 'p%i'%(j) for j in range(self.size) ]
+    
+    
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
     
     
 class model_image_symmetric_gaussian(model_image) :
@@ -217,15 +231,6 @@ class model_image_asymmetric_gaussian(model_image) :
           (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
         
-        s = self.parameters[1] * rad2uas
-        I0 = self.parameters[0] / (2.*np.pi*s**2)
-
-        I = I0 * np.exp( - 0.5*( x**2 + y**2 )/s**2 )
-        
-        if (verbosity>0) :
-            print("Symmetric Gaussian:",I0,s)
-
-
         s = abs(self.parameters[1]) * rad2uas
         A = max(min(self.parameters[2],0.99),0.0)
         sm = s/np.sqrt(1.+A)
@@ -943,7 +948,8 @@ class model_image_smooth(model_image):
         px = x[1,1]-x[0,0]
         py = y[1,1]-y[0,0]
 
-        I = self.image.intensity_map(x,y,parameters=self.parameters[:-3],verbosity=verbosity)
+        self.image.generate(self.parameters[:-3])
+        I = self.image.generate_intensity_map(x,y,verbosity=verbosity)
         Ism = np.abs(fftconvolve(I*px*py,K*px*py, mode='same'))
 
         if (verbosity>0) :
@@ -965,6 +971,18 @@ class model_image_smooth(model_image):
         names.append(r'$A_s$')
         names.append(r'$\phi_s$ (rad)')
         return names
+
+    
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
+        self.image.set_time(time)
 
     
     
@@ -1085,7 +1103,7 @@ class model_image_sum(model_image) :
             q=self.parameters[(image.size+2):]
 
             if (verbosity>0) :
-                print("   --> Sum shift:",self.shift_list[k],self.shift_list[k])
+                print("   --> Sum shift:",self.shift_list[k])
             
         return I
 
@@ -1108,15 +1126,136 @@ class model_image_sum(model_image) :
                 names.append(r'$\Delta r$ (rad)')
                 names.append(r'$\Delta \theta$ (rad)')
         return names
+
+    
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
+        
+        for image in self.image_list :
+            image.set_time(time)
+
     
 
+class model_image_polynomial_variable(model_image) :
+    """
+    Generates a :class:`model_image` object with parameters that vary polynomially with 
+    time from an initially static :class:`model_image` object.
+
+    Args:
+      image (model_image): Static image from which to generate a dynamic image.
+      orders (list): List of integer orders of the polynomials in time of each parameter.
+      reference_time (list): Reference time that defines the time origin.
+    """    
+    def __init__(self, image, orders, reference_time, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+
+        self.image = image
+        self.orders = orders
+        if (len(self.orders)<self.image.size) :
+            raise RuntimeError("Length of orders list must match number of parameters in static image.")
+        
+        self.reference_time = reference_time
+        self.size = np.sum(orders)+len(orders)
+        
+    def generate(self,parameters) :
+        """
+        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_sum::generate_model`, 
+        a similar a similar function within the :cpp:class:`Themis::model_image_polynomial_variable` class.  
+
+        Args:
+          parameters (list): Parameter list.
+
+        Returns:
+          None        
+        """
+        
+            
+        self.parameters = np.copy(parameters)
+        if (len(self.parameters)<self.size) :
+            raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
+
+        q = np.zeros(self.image.size)
+        j = 0
+        dt = (self.time-self.reference_time)*3600.0 # hr to s
+        for k in range(self.image.size) :
+            for order in range(self.orders[k]+1) :
+                q[k] = q[k] + self.parameters[j] * (dt**order)
+                j += 1
+
+        self.image.generate(q)
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+
+        if (verbosity>0) :
+            print("PolynomialVariable:",self.time,self.reference_time,self.image.parameters[:3])
+        
+        return self.image.generate_intensity_map(x,y,verbosity=verbosity)
+
+
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        static_names = image.parameter_name_list()
+        names = []
+        for k in range(self.image.size) :
+            names.extend(static_names[k])
+            if (orders[k]>0) :
+                names.extend('$d/dt$ %s'%(static_names[k]))
+            if (orders[k]>1) :
+                for order in range(2,orders[k]) :
+                    names.extend('$d^%i/dt^%i %s'%(order,order,static_names[k]))
+        return names
+
+
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
+
+        self.image.set_time(time)
+
+        self.parameters = None
+        
+    
 class model_image_single_point_statistics(model_image) :
     """
     Generates a :class:`model_image` object that is filed with a desired set of 
     single-point statistics (mean, median, standard deviation, kurtosis, etc.) given
     a specified model_image object and appropriate chain data.
-
     
+    Args:
+      image (model_image): Static image from which to generate a dynamic image.
+      stats_list (list): List of strings of the statistics to generate.  Options are limited to subsets of ['mean','median','stddev','skewness','kurtosis'].
+      median_store_size (int): Number of instances about the middle to save in the construction of the median.  This is bounded from above by half of the number of chain samples.
     """
 
     def __init__(self,image, stats_list=None, median_store_size=16, themis_fft_sign=True) :
@@ -1143,6 +1282,13 @@ class model_image_single_point_statistics(model_image) :
         
             
     def generate(self,chain) :
+        """
+        Sets the chain from which to compute image statistics and the statistic of interest
+        to be returned on the next call to :func:`intensity_map`.
+
+        Args:
+          chain (numpy.ndarray): MCMC chain of parameters ordered [samples,parameters].
+        """
 
         if (np.all(self.chain==chain)) :
             return
@@ -1296,12 +1442,24 @@ class model_image_single_point_statistics(model_image) :
             
         # Return desired quantities
         return self.Idict[self.default_stat]
-            
-            
+
     
     def parameter_name_list(self) :
         return self.image.parameter_name_list()
+
     
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
+        self.image.set_time(time)
+
+        
     
 def expand_model_glob_ccm_mexico(model_glob) :
     """
@@ -1647,6 +1805,12 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
             subimage,subtag = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
             image_list.append(subimage)
         return model_image_sum(image_list,offset_coordinates=offset_coordinates),tag[len_subtag+3:]
+    elif (tag[0].split()[0]=='model_image_polynomial_variable') :
+        reference_time = float(tag[0].split()[1])
+        orders = [ int(order) for order in tag[0].split()[2:]]
+        subtag = tagv1_find_subtag(tag[1:])
+        subimage,_ = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
+        return model_image_polynomial_variable(subimage,orders,reference_time),tag[(len(subtag)+3):]
     else :
         raise RuntimeError("Unrecognized model tag %s"%(tag[0]))
 
@@ -1831,8 +1995,7 @@ def plot_intensity_map(model_image, parameters, limits=None, shape=None, colorma
         return h,plt.gca(),plt.gcf()
     
 
-
-def write_fits(x,y,I,fits_filename,uvfits_filename=None,time=0,verbosity=0) :
+def write_fits(x,y,img,fits_filename,uvfits_filename=None,time=None,verbosity=0) :
     """
     Writes a FITS format image file given 2D image data.  
 
@@ -1844,7 +2007,7 @@ def write_fits(x,y,I,fits_filename,uvfits_filename=None,time=0,verbosity=0) :
     Args:
       x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
       y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
-      I (numpy.ndarray): Array of intensity values in (Jy/uas^2)
+      I (numpy.ndarray,model_image): Either an array of intensity values in (Jy/uas^2) or a :class:`model_image` object.
       fits_filename (str): Name of output FITS file.
       uvfits_filename (str): Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.
       time (float): Time in hr on the relevant observation day (set by uvfits file) represented by image data.
@@ -1854,6 +2017,18 @@ def write_fits(x,y,I,fits_filename,uvfits_filename=None,time=0,verbosity=0) :
     if (ehtim_found==False) :
         raise NotImplementedError("ERROR: write_fits requires ehtim to be installed.")
 
+    if (isinstance(img,model_image)) :
+        if (time is None) :
+            time = image.time
+        I = img.intensity_map(x,y,verbosity=verbosity)
+    elif (isinstance(img,np.ndarray)) :
+        if (time is None) :
+            time = 0
+        I = img
+    else :
+        raise NotImplementedError("ERROR: Requies either an image or numpy.ndarray of values.")
+
+    
     if (verbosity>0) :
         print("Shapes",x.shape,y.shape,I.shape)
 
@@ -1900,3 +2075,129 @@ def write_fits(x,y,I,fits_filename,uvfits_filename=None,time=0,verbosity=0) :
         plt.show()
     
     image.save_fits(fits_filename)
+    
+
+
+def write_hdf5(x,y,t,mov,hdf5_filename,uvfits_filename=None,time_offset=None,verbosity=0) :
+    """
+    Writes an HDF5 format movie file given a sequence of 2D image data
+
+    Warning: 
+
+      * Requires h5py to be installed.  Raises a NotImplementedError if h5py is unavailable
+      * If these will be read in by ehtim later, only *square* images are permitted.  Raises a runtime warning if non-square images are requested.
+      
+
+    Args:
+      x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+      y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+      t (list): Array of times of frames
+      mov (list,model_image): Either a list of arrays of intensity values in (Jy/uas^2) computed at the times in t or a :class:`model_image` object.
+      fits_filename (str): Name of output FITS file.
+      uvfits_filename (str): Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.
+      time (float): Time in hr on the relevant observation day (set by uvfits file) represented by image data.
+      verbosity (int): Verbosity parameter. If 0, no information is printed.  If >=1, prints information about sizes and values.  If >=2, generates debugging plots.
+    """
+
+    if (h5py_found==False) :
+        raise NotImplementedError("ERROR: write_fits requires h5py to be installed.")
+
+    time_list=[]
+    img_list=[]
+
+    pb = progress_bar("Writing hdf5",length=40)
+    pb.start()
+
+    # Add check for time step uniformity
+    
+    
+    if (isinstance(mov,model_image)) :
+        for k,time in enumerate(t) :
+            pb.increment(k/float(len(t)))
+            mov.set_time(time)
+            I = mov.intensity_map(x,y,verbosity=verbosity)
+            time_list.append(time)
+            img_list.append(I)
+    elif (isinstance(mov,list)) :
+        time_list = t
+        img_list = mov
+    else :
+        raise NotImplementedError("ERROR: Requies either an image or list of numpy.ndarray of values.")
+
+    pb.finish("--> %s"%(hdf5_filename))
+
+    # Run over and fix units
+    for k in range(len(time_list)) :
+
+        if (not (time_offset is None) ) :
+            time_list[k] = time_list[k] + time_offset
+
+        
+        if (verbosity>0) :
+            print("Shapes",x.shape,y.shape,I.shape)
+
+        if (img_list[k].shape[0]!=img_list[k].shape[1]) :
+            raise warnings.warn("ehtim cannot handle non-square images. Your image had shape [%i,%i]"%(img_list[k].shape[0],img_list[k].shape[1]), Warning)
+    
+        uas2rad = 1e-6 / 3600.0 * np.pi/180.0
+        pixel_size = abs(x[1,1]-x[0,0])*uas2rad
+        Ippx = np.transpose(img_list[k]) * abs((x[1,1]-x[0,0])*(y[1,1]-y[0,0]))
+        Ippx = np.flipud(Ippx)
+        img_list[k] = Ippx
+
+    # Check for uvfits files
+    if (uvfits_filename is None) :
+        warnings.warn("No uvfits file has been specified. This will probably result in an nonfunctional FITS header.", Warning)
+        ra=0.0
+        dec=0.0
+        rf=230e9
+        src='NA'
+        mjd=58583
+    else :
+        obs = eh.obsdata.load_uvfits(uvfits_filename)
+        ra=obs.ra
+        dec=obs.dec
+        rf=obs.rf
+        src=obs.source
+        mjd=obs.mjd
+
+    if (verbosity>0) :
+        print('pixel size:',pixel_size)
+        print('ra:',ra)
+        print('dec:',ra)
+        print('rf:',ra)
+        print('src:',ra)
+        print('mjd:',ra)
+
+    # Create movie object
+    dt = (time_list[1]-time_list[0])*3600.
+    #movie = eh.movie.Movie(img_list,dt,pixel_size,ra,dec,rf=rf,source=src,mjd=mjd,pulse=eh.observing.pulses.deltaPulse2D,polrep='stokes')
+
+    # Save hdf5 file
+    #movie.save_hdf5(hdf5_filename)
+    
+    # Open hdf5 file
+    hdf5out = h5py.File(hdf5_filename,'w')
+
+    # Output some standard info in a header
+    hdf5out['pixel_size'] = pixel_size
+    hdf5out['ra'] = ra
+    hdf5out['dec'] = dec
+    hdf5out['rf'] = rf
+    hdf5out['source'] = src
+    hdf5out['mjd'] = mjd
+    hdf5out['polrep'] = 'stokes'
+
+    # Output the images and time stamps
+    hdf5out['times'] = np.array(time_list)
+    hdf5out['frames'] = np.array(img_list)
+
+    # Output some specific headers
+    hdf5out['aspect'] = 'square'
+    hdf5out['pixel size units'] = 'rad'
+    hdf5out['intensity units'] = 'Jy/px'
+    hdf5out['origin'] = 'ThemisPy %s'%(themispy_version)
+    
+    # Close
+    hdf5out.close()
+
