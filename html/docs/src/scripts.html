@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>themispy_best_sample &mdash; ThemisPy 0.1.0+12.g40e5966.dirty documentation</title>
+  <title>themispy_best_sample &mdash; ThemisPy 0.1.0+15.g1bd1995.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+12.g40e5966.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+15.g1bd1995.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Developer’s Guide" href="devel.html"/>
         <link rel="prev" title="Utils" href="utils.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+12.g40e5966.dirty
+                0.1.0+15.g1bd1995.dirty
               </div>
             
           
@@ -349,7 +349,7 @@ be provided.</p>
 <p>Example:
 $ themispy_gain_plots gain_corrections.d -i -o gplot.png –usetex</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_gain_plots</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">dt</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">ns</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">gp</span> <span class="n">GAIN_PLOTS</span> <span class="p">[</span><span class="n">GAIN_PLOTS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">grid</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">usetex</span><span class="p">]</span> <span class="n">gain_file</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_gain_plots</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">dt</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">ns</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">gp</span> <span class="n">GAIN_PLOTS</span> <span class="p">[</span><span class="n">GAIN_PLOTS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">dts</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">grid</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">usetex</span><span class="p">]</span> <span class="n">gain_file</span>
 </pre></div>
 </div>
 <div class="section" id="Positional Arguments">
@@ -374,6 +374,9 @@ $ themispy_gain_plots gain_corrections.d -i -o gplot.png –usetex</p>
 </dd>
 <dt><kbd>-gp, --gain-plots</kbd></dt>
 <dd><p>Sets the list of gain plots to generate.  Takes a combination of the letters ‘a’ (amplitudes), ‘p’ (phases), which may be specified in any order and in any number of option calls.  The appropriate plots will be made in the order ap.</p>
+</dd>
+<dt><kbd>-dts, --deprecated-timestamp</kbd></dt>
+<dd><p>Flags the gain file as having a deprecated timestamp (seconds from 00UT, Jan 1, 2000 instead of J2000)</p>
 </dd>
 <dt><kbd>-o, --out</kbd></dt>
 <dd><p>Output file name. Default: gain_plot.png</p>
@@ -696,7 +699,7 @@ writes the self-calibrated data file.</p>
 <p>Example:
 $ themispy_selfcal_uvfits -g gain_corrections.d -d data.uvfits</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_selfcal_uvfits</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">g</span> <span class="n">G</span> <span class="o">-</span><span class="n">d</span> <span class="n">UVFITS</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">avg</span><span class="o">-</span><span class="n">time</span> <span class="n">AVG_TIME</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_selfcal_uvfits</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">g</span> <span class="n">G</span> <span class="o">-</span><span class="n">d</span> <span class="n">UVFITS</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">avg</span><span class="o">-</span><span class="n">time</span> <span class="n">AVG_TIME</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span> <span class="n">VERBOSE</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="section" id="Named Arguments">
@@ -714,8 +717,14 @@ $ themispy_selfcal_uvfits -g gain_corrections.d -d data.uvfits</p>
 <dt><kbd>--avg-time</kbd></dt>
 <dd><p>Timescale over which to average the data in seconds. Superseded by -s,–scan-avg. Default: None.</p>
 </dd>
+<dt><kbd>-r, --relative-timestamps</kbd></dt>
+<dd><p>Will ignore the absolute time offset in the gain file.  Requires that the number of data points in the uvfits file match the number of gain reconstruction epochs.</p>
+</dd>
 <dt><kbd>-o, --out</kbd></dt>
 <dd><p>Output file name. Default: gain_plot.png</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Sets verbosity level in <a href="#id1"><span class="problematic" id="id2">:fun:`write_uvfits`</span></a>. Level 1 outputs values, level 4 generates multiple plots.</p>
 </dd>
 </dl>
 </div>
@@ -873,7 +882,7 @@ $ themispy_triangle_plot -c Chain.dat -p 0-5</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+12.g40e5966.dirty',
+            VERSION:'0.1.0+15.g1bd1995.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

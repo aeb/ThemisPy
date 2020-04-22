@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.calibration &mdash; ThemisPy 0.1.0+12.g40e5966.dirty documentation</title>
+  <title>vis.calibration &mdash; ThemisPy 0.1.0+15.g1bd1995.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+12.g40e5966.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+15.g1bd1995.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.0+12.g40e5966.dirty
+                0.1.0+15.g1bd1995.dirty
               </div>
             
           
@@ -175,15 +175,16 @@
     <span class="n">astropy_found</span> <span class="o">=</span> <span class="kc">False</span>
 
 
-<div class="viewcode-block" id="read_gain_amplitude_correction_file"><a class="viewcode-back" href="../../docs/src/vis.html#vis.calibration.read_gain_amplitude_correction_file">[docs]</a><span class="k">def</span> <span class="nf">read_gain_amplitude_correction_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="read_gain_amplitude_correction_file"><a class="viewcode-back" href="../../docs/src/vis.html#vis.calibration.read_gain_amplitude_correction_file">[docs]</a><span class="k">def</span> <span class="nf">read_gain_amplitude_correction_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">,</span><span class="n">deprecated_timestamp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads in a gain amplitude correction file and returns an appropriately formatted dictionary.</span>
 
 <span class="sd">    Warning:</span>
-<span class="sd">      If astropy is unavailable, toffset will return the number of seconds since 12am, Jan 1, 2000 instead of an astropy.Time object.</span>
+<span class="sd">      If astropy is unavailable, toffset will return the number of seconds since 12UT, Jan 1, 2000 instead of an astropy.Time object.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      gainfile (str): Name of the file containing the gain correction amplitude data.</span>
+<span class="sd">      deprecated_timestamp (bool): If true, assumes time is specified since 0UT, Jan 1, 2000 instead of standard J2000 epoch.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">      (numpy.ndarray): Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys [&#39;tstart&#39;,&#39;tend&#39;,&#39;stations&#39;,&#39;toffset&#39;,&#39;nindependent&#39;,&lt;station codes&gt;]</span>
@@ -195,6 +196,10 @@
     <span class="n">n_ind_gains</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">infile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">5</span><span class="p">])</span>
     <span class="n">station_names</span><span class="o">=</span><span class="n">infile</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">6</span><span class="p">:]</span>
     <span class="n">infile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="c1"># Check for half-day error</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">deprecated_timestamp</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">t0</span> <span class="o">=</span> <span class="n">t0</span><span class="o">-</span><span class="mi">12</span><span class="o">*</span><span class="mi">3600</span>
 
     <span class="c1"># If possible, generate astropy time object with the offset time</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">astropy_found</span><span class="p">)</span> <span class="p">:</span>
@@ -221,7 +226,7 @@
     <span class="k">return</span> <span class="n">gain_data</span></div>
 
 
-<div class="viewcode-block" id="read_complex_gain_file"><a class="viewcode-back" href="../../docs/src/vis.html#vis.calibration.read_complex_gain_file">[docs]</a><span class="k">def</span> <span class="nf">read_complex_gain_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="read_complex_gain_file"><a class="viewcode-back" href="../../docs/src/vis.html#vis.calibration.read_complex_gain_file">[docs]</a><span class="k">def</span> <span class="nf">read_complex_gain_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">,</span><span class="n">deprecated_timestamp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads in a complex gain file and returns an appropriately formatted dictionary.</span>
 
@@ -230,6 +235,7 @@
 
 <span class="sd">    Args:</span>
 <span class="sd">      gainfile (str): Name of the file containing the complex gain data.</span>
+<span class="sd">      deprecated_timestamp (bool): If true, assumes time is specified since 0UT, Jan 1, 2000 instead of standard J2000 epoch.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">      (numpy.ndarray): Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys [&#39;tstart&#39;,&#39;tend&#39;,&#39;stations&#39;,&#39;toffset&#39;,&#39;nindependent&#39;,&lt;station codes&gt;]</span>
@@ -244,6 +250,10 @@
         <span class="n">station_names</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">sn</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.real&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
     <span class="n">infile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
+    <span class="c1"># Check for half-day error</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">deprecated_timestamp</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">t0</span> <span class="o">=</span> <span class="n">t0</span><span class="o">-</span><span class="mi">12</span><span class="o">*</span><span class="mi">3600</span>
+    
     <span class="c1"># If possible, generate astropy time object with the offset time</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">astropy_found</span><span class="p">)</span> <span class="p">:</span>
         <span class="n">tJ2000</span> <span class="o">=</span> <span class="n">Time</span><span class="p">(</span><span class="s1">&#39;J2000.0&#39;</span><span class="p">,</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;jyear_str&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">mjd</span>
@@ -269,13 +279,14 @@
     <span class="k">return</span> <span class="n">gain_data</span></div>
 
 
-<div class="viewcode-block" id="read_gain_file"><a class="viewcode-back" href="../../docs/src/vis.html#vis.calibration.read_gain_file">[docs]</a><span class="k">def</span> <span class="nf">read_gain_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="read_gain_file"><a class="viewcode-back" href="../../docs/src/vis.html#vis.calibration.read_gain_file">[docs]</a><span class="k">def</span> <span class="nf">read_gain_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">,</span><span class="n">deprecated_timestamp</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Reads in a gain file and returns an appropriately formatted dictionary. </span>
 <span class="sd">    The file type is determined automatically from the headers.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      gainfile (str): Name of the file containing the gain data.</span>
+<span class="sd">      deprecated_timestamp (bool): If true, assumes time is specified since 0UT, Jan 1, 2000 instead of standard J2000 epoch.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">      (numpy.ndarray): Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys [&#39;tstart&#39;,&#39;tend&#39;,&#39;stations&#39;,&#39;toffset&#39;,&#39;nindependent&#39;,&lt;station codes&gt;]</span>
@@ -299,9 +310,9 @@
             
     <span class="c1"># Read in the data with the appropriate function</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">nreal</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="n">station_names</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span> <span class="ow">and</span> <span class="n">nimag</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="n">station_names</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">)</span> <span class="p">:</span>
-        <span class="n">gain_data</span> <span class="o">=</span> <span class="n">read_complex_gain_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">)</span>
+        <span class="n">gain_data</span> <span class="o">=</span> <span class="n">read_complex_gain_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">,</span><span class="n">deprecated_timestamp</span><span class="o">=</span><span class="n">deprecated_timestamp</span><span class="p">)</span>
     <span class="k">else</span> <span class="p">:</span>
-        <span class="n">gain_data</span> <span class="o">=</span> <span class="n">read_gain_amplitude_correction_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">)</span>
+        <span class="n">gain_data</span> <span class="o">=</span> <span class="n">read_gain_amplitude_correction_file</span><span class="p">(</span><span class="n">gainfile</span><span class="p">,</span><span class="n">deprecated_timestamp</span><span class="o">=</span><span class="n">deprecated_timestamp</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">gain_data</span></div>
 
@@ -341,7 +352,7 @@
     <span class="c1"># Identify if gains were set</span>
     <span class="n">is_gain_set</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">station_names</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;tstart&#39;</span><span class="p">])))</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">sn</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">station_names</span><span class="p">)</span> <span class="p">:</span>
-        <span class="n">is_gain_set</span><span class="p">[</span><span class="n">k</span><span class="p">,:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">gain_data</span><span class="p">[</span><span class="n">sn</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="o">&gt;</span><span class="mf">1e-10</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">gain_data</span><span class="p">[</span><span class="n">sn</span><span class="p">]))</span><span class="o">&gt;</span><span class="mf">1e-10</span><span class="p">)</span>
+        <span class="n">is_gain_set</span><span class="p">[</span><span class="n">k</span><span class="p">,:]</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">gain_data</span><span class="p">[</span><span class="n">sn</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span><span class="mf">1e-10</span><span class="p">)</span><span class="o">+</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">angle</span><span class="p">(</span><span class="n">gain_data</span><span class="p">[</span><span class="n">sn</span><span class="p">]))</span><span class="o">&gt;</span><span class="mf">1e-10</span><span class="p">)</span>
     <span class="n">is_gain_degenerate</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">is_gain_set</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">&lt;=</span><span class="mi">2</span><span class="p">)</span>
 
     <span class="c1"># Add annotation</span>
@@ -379,12 +390,13 @@
     <span class="c1"># Get the times at which to plot points</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">absolute_time</span><span class="p">)</span> <span class="p">:</span>
         <span class="n">time_offset</span> <span class="o">=</span> <span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;toffset&#39;</span><span class="p">]</span>
-        <span class="n">hour_offset</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time_offset</span><span class="o">.</span><span class="n">yday</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">time_offset</span><span class="o">.</span><span class="n">yday</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">])</span><span class="o">/</span><span class="mf">60.0</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">time_offset</span><span class="o">.</span><span class="n">yday</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">4</span><span class="p">])</span><span class="o">/</span><span class="mf">3600.0</span> <span class="c1"># In hrs</span>
+        <span class="c1">#hour_offset = int(time_offset.yday.split(&#39;:&#39;)[2]) + int(time_offset.yday.split(&#39;:&#39;)[3])/60.0 + float(time_offset.yday.split(&#39;:&#39;)[4])/3600.0 # In hrs</span>
+        <span class="n">hour_offset</span> <span class="o">=</span> <span class="mf">24.0</span><span class="o">*</span><span class="p">(</span><span class="n">time_offset</span><span class="o">.</span><span class="n">mjd</span><span class="o">%</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># In hrs</span>
     <span class="k">else</span> <span class="p">:</span>
         <span class="n">hour_offset</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">tc</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;tend&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;tstart&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">hour_offset</span> <span class="c1"># In hrs</span>
     <span class="n">tw</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;tend&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;tstart&#39;</span><span class="p">])</span> <span class="c1"># In hrs</span>
-
+    
     <span class="c1"># Get colors</span>
     <span class="n">number_of_stations</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;stations&#39;</span><span class="p">])</span>
 
@@ -426,7 +438,7 @@
         <span class="c1"># Plot degenerate, defined gains</span>
         <span class="n">use</span> <span class="o">=</span> <span class="p">(</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="n">sn</span><span class="o">+</span><span class="s1">&#39;.status&#39;</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">errorbar</span><span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="n">use</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="n">use</span><span class="p">])</span><span class="o">-</span><span class="mi">1</span><span class="o">+</span><span class="n">k</span><span class="p">,</span><span class="n">xerr</span><span class="o">=</span><span class="n">tw</span><span class="p">[</span><span class="n">use</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">],</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">capthick</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">)</span>
-
+        
         <span class="c1"># Add station name</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">add_station_labels</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">tw</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mf">0.25</span> <span class="o">+</span> <span class="mf">0.02</span><span class="o">*</span><span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">tc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="mf">0.5</span><span class="p">),</span><span class="n">k</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="n">sn</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span><span class="n">va</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">)</span>
@@ -485,7 +497,8 @@
     <span class="c1"># Get the times at which to plot points</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">absolute_time</span><span class="p">)</span> <span class="p">:</span>
         <span class="n">time_offset</span> <span class="o">=</span> <span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;toffset&#39;</span><span class="p">]</span>
-        <span class="n">hour_offset</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">time_offset</span><span class="o">.</span><span class="n">yday</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="nb">int</span><span class="p">(</span><span class="n">time_offset</span><span class="o">.</span><span class="n">yday</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">3</span><span class="p">])</span><span class="o">/</span><span class="mf">60.0</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">time_offset</span><span class="o">.</span><span class="n">yday</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">4</span><span class="p">])</span><span class="o">/</span><span class="mf">3600.0</span> <span class="c1"># In hrs</span>
+        <span class="c1">#hour_offset = int(time_offset.yday.split(&#39;:&#39;)[2]) + int(time_offset.yday.split(&#39;:&#39;)[3])/60.0 + float(time_offset.yday.split(&#39;:&#39;)[4])/3600.0 # In hrs</span>
+        <span class="n">hour_offset</span> <span class="o">=</span> <span class="mf">24.0</span><span class="o">*</span><span class="p">(</span><span class="n">time_offset</span><span class="o">.</span><span class="n">mjd</span><span class="o">%</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># In hrs</span>
     <span class="k">else</span> <span class="p">:</span>
         <span class="n">hour_offset</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">tc</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;tend&#39;</span><span class="p">]</span><span class="o">+</span><span class="n">annotated_gain_data</span><span class="p">[</span><span class="s1">&#39;tstart&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">hour_offset</span> <span class="c1"># In hrs</span>
@@ -581,7 +594,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+12.g40e5966.dirty',
+            VERSION:'0.1.0+15.g1bd1995.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

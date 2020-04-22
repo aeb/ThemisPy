@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vis &mdash; ThemisPy 0.1.0+12.g40e5966.dirty documentation</title>
+  <title>Vis &mdash; ThemisPy 0.1.0+15.g1bd1995.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+12.g40e5966.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+15.g1bd1995.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Utils" href="utils.html"/>
         <link rel="prev" title="Diag" href="diag.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+12.g40e5966.dirty
+                0.1.0+15.g1bd1995.dirty
               </div>
             
           
@@ -247,7 +247,7 @@ zero), and are therefore susceptable to rare instances of confusion.</p>
 
 <dl class="py function">
 <dt id="vis.calibration.read_complex_gain_file">
-<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">read_complex_gain_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gainfile</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#read_complex_gain_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.read_complex_gain_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">read_complex_gain_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gainfile</span></em>, <em class="sig-param"><span class="n">deprecated_timestamp</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#read_complex_gain_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.read_complex_gain_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in a complex gain file and returns an appropriately formatted dictionary.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
@@ -255,7 +255,10 @@ zero), and are therefore susceptable to rare instances of confusion.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>gainfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the file containing the complex gain data.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gainfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the file containing the complex gain data.</p></li>
+<li><p><strong>deprecated_timestamp</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, assumes time is specified since 0UT, Jan 1, 2000 instead of standard J2000 epoch.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys [‘tstart’,’tend’,’stations’,’toffset’,’nindependent’,&lt;station codes&gt;]</p>
@@ -268,15 +271,18 @@ zero), and are therefore susceptable to rare instances of confusion.</p>
 
 <dl class="py function">
 <dt id="vis.calibration.read_gain_amplitude_correction_file">
-<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">read_gain_amplitude_correction_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gainfile</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#read_gain_amplitude_correction_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.read_gain_amplitude_correction_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">read_gain_amplitude_correction_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gainfile</span></em>, <em class="sig-param"><span class="n">deprecated_timestamp</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#read_gain_amplitude_correction_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.read_gain_amplitude_correction_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in a gain amplitude correction file and returns an appropriately formatted dictionary.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>If astropy is unavailable, toffset will return the number of seconds since 12am, Jan 1, 2000 instead of an astropy.Time object.</p>
+<p>If astropy is unavailable, toffset will return the number of seconds since 12UT, Jan 1, 2000 instead of an astropy.Time object.</p>
 </div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>gainfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the file containing the gain correction amplitude data.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gainfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the file containing the gain correction amplitude data.</p></li>
+<li><p><strong>deprecated_timestamp</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, assumes time is specified since 0UT, Jan 1, 2000 instead of standard J2000 epoch.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys [‘tstart’,’tend’,’stations’,’toffset’,’nindependent’,&lt;station codes&gt;]</p>
@@ -289,12 +295,15 @@ zero), and are therefore susceptable to rare instances of confusion.</p>
 
 <dl class="py function">
 <dt id="vis.calibration.read_gain_file">
-<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">read_gain_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gainfile</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#read_gain_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.read_gain_file" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.calibration.</code><code class="sig-name descname">read_gain_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">gainfile</span></em>, <em class="sig-param"><span class="n">deprecated_timestamp</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/calibration.html#read_gain_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.calibration.read_gain_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in a gain file and returns an appropriately formatted dictionary.
 The file type is determined automatically from the headers.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>gainfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the file containing the gain data.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gainfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the file containing the gain data.</p></li>
+<li><p><strong>deprecated_timestamp</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true, assumes time is specified since 0UT, Jan 1, 2000 instead of standard J2000 epoch.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys [‘tstart’,’tend’,’stations’,’toffset’,’nindependent’,&lt;station codes&gt;]</p>
@@ -1862,7 +1871,7 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+12.g40e5966.dirty',
+            VERSION:'0.1.0+15.g1bd1995.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
