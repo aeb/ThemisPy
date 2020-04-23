@@ -204,8 +204,9 @@ def kde_plot_2d(x, y, plevels=None, limits=None, colormap='Purples', alpha=1.0, 
     levels = []
     for p in plevels:
         target = p*norm
-        levels.append(bisect(_cdf,points.min(),points.max(), args=(points,dX,dY,target)))
-
+        #levels.append(bisect(_cdf,points.min(),points.max(), args=(points,dX,dY,target)))
+        levels.append(bisect(_cdf,points.min()*dX*dY,points.max()*dX*dY, args=(points*dX*dY,1.0,1.0,target))/(dX*dY))
+        
     h = plt.contourf(X,Y,np.log10(Z),np.log10(levels),vmin=np.log10(levels[0]/4.0),cmap=colormap,extend='max',alpha=alpha) 
 
     return h
