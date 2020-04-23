@@ -655,6 +655,10 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
     gain_station_names = gain_data['stations']
     for sn in gain_station_names :
         gain_data[sn] = 1.0/gain_data[sn]
+
+
+    if (verbosity>0) :
+        print("Gain data:",gain_data)
         
     # Get the unique times
     od_time = np.unique(obs.unpack('time'))
@@ -690,8 +694,8 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
     #for k in range(len(gain_station_names)):
     for station in gain_station_names :
         datatable = []
-        for j in range(len(od_time_list)):
-            datatable.append(np.array((od_time_list[j], gain_data[station][j], gain_data[station][j]), dtype=eh.DTCAL))
+        for j in range(len(gain_time_list)):
+            datatable.append(np.array((gain_time_list[j], gain_data[station][j], gain_data[station][j]), dtype=eh.DTCAL))
         datatables[station] = np.array(datatable)
     cal=eh.caltable.Caltable(obs.ra, obs.dec, obs.rf, obs.bw, datatables, obs.tarr, source=obs.source, mjd=obs.mjd, timetype=obs.timetype)
 
