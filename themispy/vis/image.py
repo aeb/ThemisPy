@@ -1068,7 +1068,7 @@ class model_image_sum(model_image) :
 
         q = self.parameters
         for k,image in enumerate(self.image_list) :
-            image.generate(q)
+            image.generate(q[:image.size])
 
             if (self.offset_coordinates=='Cartesian') :
                 self.shift_list[k][0] = q[image.size] * rad2uas
