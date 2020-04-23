@@ -48,7 +48,7 @@ def autocorr_func_1d(x, norm=True):
       norm (bool): If true normalizes the autocorrelation by the variance. Otherwise the zero-lag component of the autocorrelation function is the variance. Default: True.
 
     Returns:
-      (numpy.ndarra): Autocorrlation function appropriately normalized.
+      (numpy.ndarray): Autocorrlation function appropriately normalized.
     """
     x = np.atleast_1d(x)
     if len(x.shape) != 1:
