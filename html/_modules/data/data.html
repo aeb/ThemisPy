@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>data.data &mdash; ThemisPy 0.1.0+15.g1bd1995.dirty documentation</title>
+  <title>data.data &mdash; ThemisPy 0.1.0+21.g3257ef2.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+15.g1bd1995.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+21.g3257ef2.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.0+15.g1bd1995.dirty
+                0.1.0+21.g3257ef2.dirty
               </div>
             
           
@@ -804,6 +804,10 @@
     <span class="n">gain_station_names</span> <span class="o">=</span> <span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;stations&#39;</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">sn</span> <span class="ow">in</span> <span class="n">gain_station_names</span> <span class="p">:</span>
         <span class="n">gain_data</span><span class="p">[</span><span class="n">sn</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">gain_data</span><span class="p">[</span><span class="n">sn</span><span class="p">]</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Gain data:&quot;</span><span class="p">,</span><span class="n">gain_data</span><span class="p">)</span>
         
     <span class="c1"># Get the unique times</span>
     <span class="n">od_time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s1">&#39;time&#39;</span><span class="p">))</span>
@@ -839,8 +843,8 @@
     <span class="c1">#for k in range(len(gain_station_names)):</span>
     <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">gain_station_names</span> <span class="p">:</span>
         <span class="n">datatable</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">od_time_list</span><span class="p">)):</span>
-            <span class="n">datatable</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">od_time_list</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">gain_data</span><span class="p">[</span><span class="n">station</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">gain_data</span><span class="p">[</span><span class="n">station</span><span class="p">][</span><span class="n">j</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">eh</span><span class="o">.</span><span class="n">DTCAL</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gain_time_list</span><span class="p">)):</span>
+            <span class="n">datatable</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="n">gain_time_list</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">gain_data</span><span class="p">[</span><span class="n">station</span><span class="p">][</span><span class="n">j</span><span class="p">],</span> <span class="n">gain_data</span><span class="p">[</span><span class="n">station</span><span class="p">][</span><span class="n">j</span><span class="p">]),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">eh</span><span class="o">.</span><span class="n">DTCAL</span><span class="p">))</span>
         <span class="n">datatables</span><span class="p">[</span><span class="n">station</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">datatable</span><span class="p">)</span>
     <span class="n">cal</span><span class="o">=</span><span class="n">eh</span><span class="o">.</span><span class="n">caltable</span><span class="o">.</span><span class="n">Caltable</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">ra</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">dec</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">rf</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">bw</span><span class="p">,</span> <span class="n">datatables</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">tarr</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">mjd</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">mjd</span><span class="p">,</span> <span class="n">timetype</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">timetype</span><span class="p">)</span>
 
@@ -896,7 +900,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+15.g1bd1995.dirty',
+            VERSION:'0.1.0+21.g3257ef2.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
