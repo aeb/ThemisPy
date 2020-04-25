@@ -811,10 +811,13 @@ class model_image_adaptive_splined_raster(model_image) :
         """
 
         f = np.transpose(np.exp(np.array(self.parameters[:-3]).reshape([self.Nx,self.Ny])))
-
+        #f = np.fliplr(f)
+        f = np.flipud(f)
+        
         fovx = self.parameters[-3]*rad2uas
         fovy = self.parameters[-2]*rad2uas
         PA = -self.parameters[-1]
+        #PA = self.parameters[-1]
 
         xtmp = np.linspace(-0.5*fovx,0.5*fovx,self.Nx)
         ytmp = np.linspace(-0.5*fovy,0.5*fovy,self.Ny)
