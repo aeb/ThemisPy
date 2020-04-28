@@ -57,7 +57,7 @@ class model_image :
     def generate(self,parameters) :
         """
         Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image::generate_model`, 
-        a similar a similar function within the :cpp:class:`Themis::model_image` class.  Effectively 
+        a similar function within the :cpp:class:`Themis::model_image` class.  Effectively 
         simply copies the parameters into the local list with some additional run-time checking.
 
         Args:
@@ -901,7 +901,7 @@ class model_image_smooth(model_image):
     def generate(self,parameters) :
         """
         Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_smooth::generate_model`, 
-        a similar a similar function within the :cpp:class:`Themis::model_image_smooth` class.  Effectively 
+        a similar function within the :cpp:class:`Themis::model_image_smooth` class.  Effectively 
         simply copies the parameters into the local list with some additional run-time checking.
 
         Args:
@@ -1002,15 +1002,16 @@ class model_image_sum(model_image) :
     Args:
       image_list (list): List of :class:`model_image` objects. If None, must be set prior to calling :func:`intensity_map`. Default: None.
       offset_coordinates (str): Coordinates in which to specify component shifts.  Options are 'Cartesian' and 'polar'. Default: 'Cartesian'.
+      reference_component (int): Index of component to define as reference. If None, will not set any component to be the reference. Default: None.
       themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
-
+    
     Attributes:
       image_list (list): List of :class:`model_image` objects that are to be summed.
       shift_list (list): List of shifts transformed to Cartesian coordinates.
       offset_coordinates (str): Coordinates in which to specify component shifts.
     """
 
-    def __init__(self,image_list=None, offset_coordinates='Cartesian', themis_fft_sign=True) :
+    def __init__(self,image_list=None, offset_coordinates='Cartesian', reference_component=None, themis_fft_sign=True) :
         super().__init__(themis_fft_sign)
 
         self.image_list=[]
@@ -1025,7 +1026,8 @@ class model_image_sum(model_image) :
             self.shift_list.append([0.0, 0.0])
 
         self.offset_coordinates = offset_coordinates
-
+        self.reference_component = reference_component
+        
             
     def add(self,image) :
         """
@@ -1050,11 +1052,14 @@ class model_image_sum(model_image) :
             self.size += image.size+2
             self.shift_list.append([0.0,0.0])
 
-        
+    def set_reference_component(self,reference_component) :
+        self.reference_component = reference_component
+
+            
     def generate(self,parameters) :
         """
         Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_sum::generate_model`, 
-        a similar a similar function within the :cpp:class:`Themis::model_image_sum` class.  
+        a similar function within the :cpp:class:`Themis::model_image_sum` class.  
         Effectively simply copies the parameters into the local list, transforms
         and copies the shift vector (x0,y0) for each model_image object, and performs some run-time checking.
 
@@ -1081,6 +1086,16 @@ class model_image_sum(model_image) :
                 self.shift_list[k][1] = q[image.size]*np.sin(q[image.size+1]) * rad2uas
                 
             q = q[(image.size+2):]
+
+
+        if (not (self.reference_component is None)) :
+            if (self.reference_component>len(self.image_list)) :
+                raise RuntimeError("Reference component %i is not in the list of images, which numbers only %i."%(self.reference_component,len(self.image_list)))
+            x0 = self.shift_list[self.reference_component][0]
+            y0 = self.shift_list[self.reference_component][1]
+            for k in range(len(self.image_list)) :
+                self.shift_list[k][0] = self.shift_list[k][0]-x0
+                self.shift_list[k][1] = self.shift_list[k][1]-y0
 
             
     def generate_intensity_map(self,x,y,verbosity=0) :
@@ -1170,8 +1185,8 @@ class model_image_polynomial_variable(model_image) :
         
     def generate(self,parameters) :
         """
-        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_sum::generate_model`, 
-        a similar a similar function within the :cpp:class:`Themis::model_image_polynomial_variable` class.  
+        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_polynomial_variable::generate_model`, 
+        a similar function within the :cpp:class:`Themis::model_image_polynomial_variable` class.  
 
         Args:
           parameters (list): Parameter list.
@@ -1380,9 +1395,11 @@ class model_image_single_point_statistics(model_image) :
                     print("  On frame k = %i"%(k))
                 else :
                     pb.increment(k/float(flattened_chain.shape[0]))
-                    
-                    
-                I = self.image.intensity_map(x,y,flattened_chain[k,:],verbosity=verbosity)
+                
+                #I = self.image.intensity_map(x,y,flattened_chain[k,:],verbosity=verbosity)
+
+                self.image.generate(flattened_chain[k,:])
+                I = self.image.generate_intensity_map(x,y,verbosity=verbosity)
                 
                 if ( compute_mean ) :
                     self.Idict['mean'] = self.Idict['mean'] + I

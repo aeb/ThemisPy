@@ -27,7 +27,7 @@ import themispy as ty
 def set_parser():
 
     # Create a parser object to manage command line options
-    parser = ap.ArgumentParser(prog="themispy_image_fit",description=__doc__)
+    parser = ap.ArgumentParser(prog="themispy_image_stats",description=__doc__)
 
     parser.add_argument("-c","--chain",
                         type=str,
@@ -59,6 +59,15 @@ def set_parser():
                               " function documentation for format details. If contains a '.' will assume"
                               " that it is a tagvers-1.0 tag file."
                               " Default: model_image.tag"))
+
+    parser.add_argument("-r","--reference",
+                        type=int,
+                        nargs="*",
+                        action='store',
+                        default=None,
+                        help=("If the model type is a :class:`model_image_sum`, will fix the image origin of"
+                              " the specified component. If no components are specified, will choose the first."
+                              " Default: no component will be fixed to the origin."))
 
     parser.add_argument("-bf","--burn-fraction",
                         type=float,
@@ -160,6 +169,17 @@ if __name__ == "__main__" :
         if (args.verbose):
             print("Using ccm_mexico glob %s"%(args.model))
         model_image = ty.vis.construct_model_image_from_glob(args.model,'ccm_mexico+')
+
+    # Set the reference component if desired
+    if (not (args.reference is None)) :
+        if (isinstance(model_image,ty.vis.model_image_sum)) :
+            if (args.reference==[]) :
+                args.reference=0
+            else :
+                args.reference=args.reference[0]
+            model_image.set_reference_component(args.reference)
+        else :
+            print("WARNING: -r,--reference only have an effect when the model is a model_image_sum.")
         
     if (args.verbose):
         print("Model type and size:",type(model_image),model_image.size)
