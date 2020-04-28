@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.image &mdash; ThemisPy 0.1.0+21.g3257ef2.dirty documentation</title>
+  <title>vis.image &mdash; ThemisPy 0.1.0+30.gad180be documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+21.g3257ef2.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+30.gad180be documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.0+21.g3257ef2.dirty
+                0.1.0+30.gad180be
               </div>
             
           
@@ -206,7 +206,7 @@
 <div class="viewcode-block" id="model_image.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parameters</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image::generate_model`, </span>
-<span class="sd">        a similar a similar function within the :cpp:class:`Themis::model_image` class.  Effectively </span>
+<span class="sd">        a similar function within the :cpp:class:`Themis::model_image` class.  Effectively </span>
 <span class="sd">        simply copies the parameters into the local list with some additional run-time checking.</span>
 
 <span class="sd">        Args:</span>
@@ -960,10 +960,13 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">Nx</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Ny</span><span class="p">])))</span>
-
+        <span class="c1">#f = np.fliplr(f)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        
         <span class="n">fovx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">*</span><span class="n">rad2uas</span>
         <span class="n">fovy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">rad2uas</span>
         <span class="n">PA</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1">#PA = self.parameters[-1]</span>
 
         <span class="n">xtmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">fovx</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">fovx</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Nx</span><span class="p">)</span>
         <span class="n">ytmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">fovy</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="n">fovy</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Ny</span><span class="p">)</span>
@@ -1047,7 +1050,7 @@
 <div class="viewcode-block" id="model_image_smooth.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_smooth.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parameters</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_smooth::generate_model`, </span>
-<span class="sd">        a similar a similar function within the :cpp:class:`Themis::model_image_smooth` class.  Effectively </span>
+<span class="sd">        a similar function within the :cpp:class:`Themis::model_image_smooth` class.  Effectively </span>
 <span class="sd">        simply copies the parameters into the local list with some additional run-time checking.</span>
 
 <span class="sd">        Args:</span>
@@ -1148,15 +1151,16 @@
 <span class="sd">    Args:</span>
 <span class="sd">      image_list (list): List of :class:`model_image` objects. If None, must be set prior to calling :func:`intensity_map`. Default: None.</span>
 <span class="sd">      offset_coordinates (str): Coordinates in which to specify component shifts.  Options are &#39;Cartesian&#39; and &#39;polar&#39;. Default: &#39;Cartesian&#39;.</span>
+<span class="sd">      reference_component (int): Index of component to define as reference. If None, will not set any component to be the reference. Default: None.</span>
 <span class="sd">      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</span>
-
+<span class="sd">    </span>
 <span class="sd">    Attributes:</span>
 <span class="sd">      image_list (list): List of :class:`model_image` objects that are to be summed.</span>
 <span class="sd">      shift_list (list): List of shifts transformed to Cartesian coordinates.</span>
 <span class="sd">      offset_coordinates (str): Coordinates in which to specify component shifts.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">image_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">offset_coordinates</span><span class="o">=</span><span class="s1">&#39;Cartesian&#39;</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">image_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">offset_coordinates</span><span class="o">=</span><span class="s1">&#39;Cartesian&#39;</span><span class="p">,</span> <span class="n">reference_component</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">themis_fft_sign</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">image_list</span><span class="o">=</span><span class="p">[]</span>
@@ -1171,7 +1175,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">offset_coordinates</span> <span class="o">=</span> <span class="n">offset_coordinates</span>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_component</span> <span class="o">=</span> <span class="n">reference_component</span>
+        
             
 <div class="viewcode-block" id="model_image_sum.add"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_sum.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">image</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1196,11 +1201,14 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">+=</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">2</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">])</span></div>
 
-        
+    <span class="k">def</span> <span class="nf">set_reference_component</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">reference_component</span><span class="p">)</span> <span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_component</span> <span class="o">=</span> <span class="n">reference_component</span>
+
+            
 <div class="viewcode-block" id="model_image_sum.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_sum.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parameters</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_sum::generate_model`, </span>
-<span class="sd">        a similar a similar function within the :cpp:class:`Themis::model_image_sum` class.  </span>
+<span class="sd">        a similar function within the :cpp:class:`Themis::model_image_sum` class.  </span>
 <span class="sd">        Effectively simply copies the parameters into the local list, transforms</span>
 <span class="sd">        and copies the shift vector (x0,y0) for each model_image object, and performs some run-time checking.</span>
 
@@ -1226,7 +1234,17 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">rad2uas</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">rad2uas</span>
                 
-            <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[(</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">2</span><span class="p">):]</span></div>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[(</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">2</span><span class="p">):]</span>
+
+
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_component</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">))</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_component</span><span class="o">&gt;</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_list</span><span class="p">))</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Reference component </span><span class="si">%i</span><span class="s2"> is not in the list of images, which numbers only </span><span class="si">%i</span><span class="s2">.&quot;</span><span class="o">%</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_component</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_list</span><span class="p">)))</span>
+            <span class="n">x0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_component</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">y0</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_component</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_list</span><span class="p">))</span> <span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">x0</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">shift_list</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y0</span></div>
 
             
 <div class="viewcode-block" id="model_image_sum.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_sum.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
@@ -1316,8 +1334,8 @@
         
 <div class="viewcode-block" id="model_image_polynomial_variable.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_polynomial_variable.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parameters</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_sum::generate_model`, </span>
-<span class="sd">        a similar a similar function within the :cpp:class:`Themis::model_image_polynomial_variable` class.  </span>
+<span class="sd">        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_polynomial_variable::generate_model`, </span>
+<span class="sd">        a similar function within the :cpp:class:`Themis::model_image_polynomial_variable` class.  </span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          parameters (list): Parameter list.</span>
@@ -2384,7 +2402,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+21.g3257ef2.dirty',
+            VERSION:'0.1.0+30.gad180be',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

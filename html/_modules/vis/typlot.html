@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.typlot &mdash; ThemisPy 0.1.0+21.g3257ef2.dirty documentation</title>
+  <title>vis.typlot &mdash; ThemisPy 0.1.0+30.gad180be documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+21.g3257ef2.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+30.gad180be documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.0+21.g3257ef2.dirty
+                0.1.0+30.gad180be
               </div>
             
           
@@ -353,8 +353,8 @@
     <span class="n">levels</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">plevels</span><span class="p">:</span>
         <span class="n">target</span> <span class="o">=</span> <span class="n">p</span><span class="o">*</span><span class="n">norm</span>
-        <span class="n">levels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bisect</span><span class="p">(</span><span class="n">_cdf</span><span class="p">,</span><span class="n">points</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span><span class="n">points</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">points</span><span class="p">,</span><span class="n">dX</span><span class="p">,</span><span class="n">dY</span><span class="p">,</span><span class="n">target</span><span class="p">)))</span>
-
+        <span class="n">levels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bisect</span><span class="p">(</span><span class="n">_cdf</span><span class="p">,</span><span class="n">points</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span><span class="n">points</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">points</span><span class="p">,</span><span class="n">dX</span><span class="p">,</span><span class="n">dY</span><span class="p">,</span><span class="n">target</span><span class="p">),</span> <span class="n">xtol</span><span class="o">=</span><span class="n">points</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="mf">1e-10</span><span class="p">))</span>
+        
     <span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">Z</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">levels</span><span class="p">),</span><span class="n">vmin</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">levels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">4.0</span><span class="p">),</span><span class="n">cmap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span><span class="n">extend</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span> 
 
     <span class="k">return</span> <span class="n">h</span></div>
@@ -663,7 +663,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+21.g3257ef2.dirty',
+            VERSION:'0.1.0+30.gad180be',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
