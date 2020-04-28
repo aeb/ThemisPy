@@ -69,6 +69,15 @@ def set_parser():
                               " function documentation for format details. If contains a '.' will assume"
                               " that it is a tagvers-1.0 tag file."
                               " Default: model_image.tag"))
+
+    parser.add_argument("-r","--reference",
+                        type=int,
+                        nargs="*",
+                        action='store',
+                        default=None,
+                        help=("If the model type is a :class:`model_image_sum`, will fix the image origin of"
+                              " the specified component. If no components are specified, will choose the first."
+                              " Default: no component will be fixed to the origin."))
     
     parser.add_argument("-N",
                         type=int,
@@ -142,15 +151,6 @@ def set_parser():
                         default=None,
                         help=("If passed, will smooth the image with a symmetric Gaussian filter with"
                               " FWHM given in microarcseconds."))
-
-    parser.add_argument("-r","--reference",
-                        type=int,
-                        nargs="*",
-                        action='store',
-                        default=None,
-                        help=("If the model type is a :class:`model_image_sum`, will fix the image origin of"
-                              " the specified component. If no components are specified, will choose the first."
-                              " Default: no component will be fixed to the origin."))
     
     parser.add_argument("--usetex",
                         action='store_true',
