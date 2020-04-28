@@ -57,7 +57,7 @@ class model_image :
     def generate(self,parameters) :
         """
         Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image::generate_model`, 
-        a similar a similar function within the :cpp:class:`Themis::model_image` class.  Effectively 
+        a similar function within the :cpp:class:`Themis::model_image` class.  Effectively 
         simply copies the parameters into the local list with some additional run-time checking.
 
         Args:
@@ -901,7 +901,7 @@ class model_image_smooth(model_image):
     def generate(self,parameters) :
         """
         Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_smooth::generate_model`, 
-        a similar a similar function within the :cpp:class:`Themis::model_image_smooth` class.  Effectively 
+        a similar function within the :cpp:class:`Themis::model_image_smooth` class.  Effectively 
         simply copies the parameters into the local list with some additional run-time checking.
 
         Args:
@@ -1059,7 +1059,7 @@ class model_image_sum(model_image) :
     def generate(self,parameters) :
         """
         Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_sum::generate_model`, 
-        a similar a similar function within the :cpp:class:`Themis::model_image_sum` class.  
+        a similar function within the :cpp:class:`Themis::model_image_sum` class.  
         Effectively simply copies the parameters into the local list, transforms
         and copies the shift vector (x0,y0) for each model_image object, and performs some run-time checking.
 
@@ -1186,7 +1186,7 @@ class model_image_polynomial_variable(model_image) :
     def generate(self,parameters) :
         """
         Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_polynomial_variable::generate_model`, 
-        a similar a similar function within the :cpp:class:`Themis::model_image_polynomial_variable` class.  
+        a similar function within the :cpp:class:`Themis::model_image_polynomial_variable` class.  
 
         Args:
           parameters (list): Parameter list.
