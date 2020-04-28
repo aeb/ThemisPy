@@ -768,7 +768,7 @@ def plot_deo_rejection_rate(annealing_summary_data,color='b') :
     return plt.gcf(), plt.gca()
 
 
-def plot_deo_lambda(annealing_summary_data,annealing_data,colormap='b') :
+def plot_deo_lambda(annealing_summary_data,annealing_data,colormap='b', axis_scales=None) :
     """
     Plots the rejection rate evolution with round for DEO tempered samplers in Themis.
 
@@ -776,6 +776,7 @@ def plot_deo_lambda(annealing_summary_data,annealing_data,colormap='b') :
       annealing_summary_data (numpy.ndarray): Array of annealing run summary data as read by :func:`chain.mcmc_chain.load_deo_summary`.
       annealing_data (dict): Dictionary containing :math:`\\beta` and :math:`R` values indexed by [round,tempering level] and accessed by keys 'Beta' and 'R', respectively, as read by :func:`chain.mcmc_chain.load_deo_summary`.
       colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm` or acceptable color type as specified in :mod:`matplotlib.colors`. Default: 'b'.
+      axis_scales (tuple): Tuple with the scales for x an y axis scales. If none uses ('logit','log') scale. 
     
     Returns:
       (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.
@@ -788,22 +789,36 @@ def plot_deo_lambda(annealing_summary_data,annealing_data,colormap='b') :
     if ( not is_color_like(colormap) ) :
         cmap = cm.get_cmap(colormap)
 
+    if (axis_scales is None):
+        yscale = 'log'
+        xscale = 'logit'
+
+    else:
+        yscale = axis_scales[1]
+        xscale = axis_scales[0]
+
+
     lines = []
     nrounds = annealing_summary_data.shape[0]
     for i in range(nrounds):
         beta_r = beta[i,::-1]
         Lambda_r = np.cumsum(R[i,::-1])
         fLambda = mcubic(beta_r[1:], Lambda_r[1:])
-        b = np.linspace(beta_r[1],1.0,500)
+        bE = np.max((0.9999,beta_r[-2]))
+        lb = np.linspace(np.log(beta_r[1]/(1-beta_r[1])),np.log(0.9999/(1-0.9999)),500)
+        b = 1.0/(1+np.exp(-lb))
+        print(b)
         if ( is_color_like(colormap) ) :
             color = list(to_rgba(colormap))
             color[3] = 0.05+0.95*i/(nrounds-1.0)
         else :
             color = cmap(i/(nrounds-1.0))
-        im = plt.gca().semilogy(b, fLambda(b,nu=1), label="%d"%(i), color=color, linewidth=2)
+        im = plt.gca().plot(b, fLambda(b,nu=1), label="%d"%(i), color=color, linewidth=2)
         lines.append(im)
     #plt.gca().set_ylim(top=1e5,auto=True)
-    plt.gca().set_xticks(np.arange(0.0,1.01,0.25))
+    plt.gca().set_xscale(xscale)
+    plt.gca().set_yscale(yscale)
+    #plt.gca().set_xticks(np.arange(1e-4,1-1e-4,0.25))
     plt.gca().set_xlabel(r"$\beta$")
     plt.gca().set_ylabel(r"$\lambda(\beta)$")
     plt.gca().text(0.95,0.95, r"$\hat{\tau}_{\rm{opt, %d}} = %.4f$"%(nrounds-1,annealing_summary_data["rt_opt"][-1]),
@@ -818,7 +833,6 @@ def plot_deo_lambda(annealing_summary_data,annealing_data,colormap='b') :
     
     
     return plt.gcf(), plt.gca()
-
 
 
 def plot_energy_dist(state,nbins=40,alpha=0.5):
