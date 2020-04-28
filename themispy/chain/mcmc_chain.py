@@ -249,10 +249,7 @@ def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=No
     Coherently loads a Themis chain and likelihood pair from an ensemble sampler.
     Optionally, a stride, burn-in fraction, number of *ensemble samples* to skip, 
     or a set of parameters may be provided.  If set, the burn-in fraction is 
-    computed for the *shorter* of the two files.
-
-    Args:
-      chain_filename (str): Filename in which chain data will be found (e.g., `Chain.dat`)
+    computed for the *shorter* of the two fileswith columns likelihood, accept, divergence, energy(str): Filename in which chain data will be found (e.g., `Chain.dat`)
       lklhd_filename (str): Filename in which likelihood data will be found (e.g., `Lklhd.dat`)
       stride (int): Integer factor by which to step through samples *coherently* among walkers.  Default: 1.
       burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.
@@ -350,6 +347,193 @@ def sample_erun(chain_filename, lklhd_filename, samples, burn_fraction=0, skip=N
     
     return echain,elklhd
 
+
+def read_stanstate(filename, stride=1, burn_fraction=0, skip=None, auto_warmup=False):
+    """
+    Reads in a Themis state file from a Stan sampler.  Optionally, a 
+    stride, burn-in fraction, auto_warmup detection, or number of *Stan samples* to skip may be set.
+    Returns an IndexError if fewer samples exist in the chain file than skip.
+
+    Args:
+      filename (str): Filename in which state data will be found (e.g., `State.dat`)
+      stride (int): Integer factor by which to step through samples *coherently* among walkers.  Default: 1.
+      burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.
+      auto_warmup (bool): If true it will automatically sense the Stan warmup period and cut it. `burn_fraction` then applies to the state file with warmup already removed.
+      skip (int): Number of initial *ensemble samples* to skip.  Overrides burn_fraction unless set to None. Default: None.
+
+    Returns:
+      (numpy.ndarray, int): Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride; Number of samples skipped including warmup if auto_warmup is true.
+    """
+
+    # Find the number of independent samples
+    nsamp,nhead = file_length(filename,header_string='#')
+    
+    warmup_index = 0 
+    if (auto_warmup):
+        with open(filename,"r") as f: 
+             head = f.readline() 
+             head = head.split()[1:] 
+             i = head.index("stepsize__") 
+             step = f.readline().split()[i] 
+             for l in f: 
+                 sstep = l.split()[i] 
+                 if (sstep == step): 
+                     break 
+                 warmup_index+=1 
+                 step = sstep
+
+    # Set the number of lines to skip
+    nskip = 0
+    if (skip is None) :
+        nskip = int(nsamp*burn_fraction)+warmup_index
+    else :
+        nskip = skip + warmup_index
+
+    # If there are too few lines in the state file, raise IndexError
+    if (nskip>nsamp) :
+        raise IndexError
+
+    # Number of samples to store
+    nstor = (nsamp-nskip)//stride
+    state = np.zeros((nstor,7))    
+    print(state.shape)
+    # Add in the header
+    nskip += nhead
+    
+    # Loop over the lines from the file
+    j=0
+    for k,l in enumerate(open(filename,'r')) :
+    
+        # Skip the burn-in period
+        if (k<nskip) :
+            continue
+        
+        # If this is inconsistent with the thin stride skip
+        if ((k-nskip)%stride!=0) :
+            continue
+
+        # If past the end, stop
+        if (j>=nstor) :
+            break
+
+        # If this is consistent with the thin strid keep
+        #lklhd[j,:] = np.array(l.split()).astype(float)
+        tokens = l.split()
+        state[j,:] = np.array([float(tok) for tok in tokens]) #l.split()).astype(float)
+        j += 1
+
+    return state,nskip
+            
+
+def read_stanchain(filename, stride=1, burn_fraction=0, skip=None, parameter_list=None):
+    """
+    Reads in a Themis chain file from an stan sampler.  The number of walkers 
+    must be supplied.  Optionally, a stride, burn-in fraction, number of *ensemble
+    samples* to skip, or a set of parameters may be provided.  Returns an IndexError 
+    if fewer samples exist in the chain file than skip.
+    
+    Args:
+      filename (str): Filename in which chain data will be found (e.g., `Chain.dat`)
+      stride (int): Integer factor by which to step through samples *coherently* among walkers.  Default: 1.
+      burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.
+      skip (int): Number of initial *ensemble samples* to skip. Default: 0.
+      parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
+ 
+    Returns:
+      (numpy.ndarray): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride.
+    """
+
+
+    # Determine if a full step has been output and remove partial outputs
+    nsamp,nhead = file_length(filename,header_string='#')
+
+    # Set the number of lines to skip
+    if (skip is None) :
+        nskip = int(nsamp*burn_fraction)
+    else :
+        nskip = skip
+
+    
+    # If there are too few lines in the chain file, raise IndexError
+    if (nskip>nsamp) :
+        raise IndexError
+
+    # Read in, parse and save
+    nstor = (nsamp-nskip)//(stride)
+
+    # Add in the header
+    nskip += nhead
+
+    # Loop over the lines from the file
+    j=0
+    for k,l in enumerate(open(filename,'r')) :
+
+        # Skip the burn-in period
+        if (k<nskip) :
+            continue
+
+        # If this is inconsistent with the thin stride skip
+        if ((k-nskip)%stride!=0) :
+            continue
+
+        # If past the end, stop
+        if (j>=nstor) :
+            break
+
+        
+        # If this is the first step, allocate space for the likelihood
+        if (j==0) :
+            if (parameter_list is None) :
+                parameter_list = list(range(len(l.split())))
+            chain = np.zeros((nstor,len(parameter_list)))
+        
+        tokens = l.split()
+        chain[j,:] = np.array([float(tokens[p]) for p in parameter_list])
+        j += 1
+
+    return chain
+
+
+def load_stanrun(chain_filename, state_filename, stride=1, burn_fraction=0, auto_warmup=True, skip=None, parameter_list=None):
+    """
+    Coherently loads a Themis chain and likelihood pair from an Stan Themis run.
+    Optionally, a stride, burn-in fraction, number of *samples* to skip, 
+    or a set of parameters may be provided.  If set, the burn-in fraction is 
+    computed for the *shorter* of the two files.
+
+    Args:
+      chain_filename (str): Filename in which chain data will be found (e.g., `Chain.dat`)
+      state_filename (str): Filename in which state data will be found (e.g., `State.dat`)
+      stride (int): Integer factor by which to step through samples *coherently* among chains.  Default: 1.
+      burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.
+      auto_warmup (bool): If true it will automatically sense the Stan warmup period and cut it.
+      skip (int): Number of initial *ensemble samples* to skip. Default: 0.
+      parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
+
+    Returns:
+      (numpy.ndarray, numpy.ndarray): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride; State data arranged as 2D array with columns likelihood, accept, stepsize, treedepth, nleapfrog, divergence, energy *after* excluding the burn in period specified and applied the specified stride.
+    """
+
+    # Find the lengths of the chain and likelihood files
+    nsamp,nhead = file_length(chain_filename,header_string='#')
+    state,_ = read_stanstate(state_filename, stride=stride, skip=skip,burn_fraction=burn_fraction, auto_warmup=auto_warmup)
+    
+    # Determine the number of walkers, and set the burn-in relative to the shorter
+    nsamp = min(state.shape[0],nsamp//(stride))
+    if (skip is None) :
+        skip = int(burn_fraction*nsamp)
+        
+    # Restrict the likelihoods
+    state = state[0:nsamp,:]
+
+    # Read and restrict the chain
+    chain = read_stanchain(chain_filename, stride=stride, skip=skip, parameter_list=parameter_list)[:nsamp,:]
+
+    #If warmup is removed count the number of divergences in the samples
+    if (auto_warmup):
+        print("The number of divergent transitions in %s = %d."%(state_filename,np.sum(state[:,-2])))
+    
+    return chain,state
 
 def sample_chain(chain_filename, samples, burn_fraction=0, skip=None, parameter_list=None):
     """
@@ -510,6 +694,9 @@ def join_echains(echains):
     for i in range(len(echains)):
         jechains[i,:,:,:] = echains[i][-max_length:,:,:]
     return jechains
+
+
+
     
     
 

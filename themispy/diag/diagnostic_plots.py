@@ -821,4 +821,41 @@ def plot_deo_lambda(annealing_summary_data,annealing_data,colormap='b') :
 
 
 
+def plot_energy_dist(state,nbins=40,alpha=0.5):
+    """
+    Plots the energy transition density and marginal energy density.
+    When the distributions are similar it means HMC should give be `robust`.
+    Additionally we computed the empirical Bayesian fraction of missing information E-BFMI 
+    of the state. Typically if this is less than 0.3, HMC may have issues exploring the tails
+    of the distribution.
+    Args:
+      state (numpy.ndarray): The state array of a Themis run using the Stan sampler. *Warmup must be removed*.
+      nbins (int): The number of bins to use for the histogram.
+      alpha (float): The alpha parameter for the histogram opacity.
+    
+    Returns:  
+      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.
+    """
+    #Get the energy distributins
+    energy = state[:,-1]
+    energydiff = energy[1:] - energy[:-1]
+    mean_energy = np.mean(energy)
+
+    #Get a consistent binning between the two quantities
+    bins=np.histogram(np.hstack((energydiff,energy-mean_energy)), bins=nbins)[1]
+    
+    #Now get the Estiamted Bayesian fractin of missing information
+    est_bi = np.sum(energydiff**2)/np.sum((energy-mean_energy)**2)
+    cax = plt.gca()
+    cax.hist(energy-mean_energy, bins=bins, density=True, label=r"$\pi(E|q)$",alpha=alpha)
+    cax.hist(energydiff, bins=bins, density=True, label=r"$\pi(E)$",alpha=alpha)
+    cax.legend(frameon=False)
+    cax.set_xlabel("$E - \\bar{E}$")
+    cax.set_yticks([])
+    cax.text(0.025,0.9,r"E-BFMI = %.3f"%(est_bi),transform=cax.transAxes)
+
+    return plt.gcf(), cax
+    
+
+
 
