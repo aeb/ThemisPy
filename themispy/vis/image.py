@@ -1395,9 +1395,11 @@ class model_image_single_point_statistics(model_image) :
                     print("  On frame k = %i"%(k))
                 else :
                     pb.increment(k/float(flattened_chain.shape[0]))
-                    
-                    
-                I = self.image.intensity_map(x,y,flattened_chain[k,:],verbosity=verbosity)
+                
+                #I = self.image.intensity_map(x,y,flattened_chain[k,:],verbosity=verbosity)
+
+                self.image.generate(flattened_chain[k,:])
+                I = self.image.generate_intensity_map(x,y,verbosity=verbosity)
                 
                 if ( compute_mean ) :
                     self.Idict['mean'] = self.Idict['mean'] + I
