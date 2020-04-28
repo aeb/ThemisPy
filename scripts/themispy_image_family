@@ -25,7 +25,7 @@ import themispy as ty
 def set_parser():
 
     # Create a parser object to manage command line options
-    parser = ap.ArgumentParser(prog="themispy_image_fit",description=__doc__)
+    parser = ap.ArgumentParser(prog="themispy_image_family",description=__doc__)
 
     parser.add_argument("-c","--chain",
                         type=str,
