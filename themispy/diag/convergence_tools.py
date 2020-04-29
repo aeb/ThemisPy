@@ -67,11 +67,38 @@ def _geyer_iact(autocorr):
     return -1 + 2*np.sum(pos_autocorr)
 
 
-def _single_iact(chain):
-    ac = autocov(chain)
-    return _geyer_iact(ac/ac[0])
+def _sokal_iact(autocorr, c=5.0):
+    """
+    Automatic windowing procedure following `emcee <https://emcee.readthedocs.io/en/stable/tutorials/autocorr>`_, which follows `Sokal (1989) <https://pdfs.semanticscholar.org/0bfe/9e3db30605fe2d4d26e1a288a5e2997e7225.pdf>`_.
+    Args:
+      taus (numpy.ndarray): Estimates of the integrated autocorrelation time (IACT).
+      c (float): Sokal factor, with an optimal value approximately of 5.0.  Default: 5.0.
+    Returns:
+      (int): Index of minimum window for computing the autocorrelation time?
+    """
+    taus = 2.0 * np.cumsum(autocorr) - 1.0
+    print(len(taus))
+    m = np.arange(len(taus)) < c * taus
+    if np.any(m):
+        window =  np.argmin(m)
+    else:
+        window =  len(taus) - 1
 
-def _multi_iact(chains):
+    iac = taus[window]
+    return iac
+
+
+def _single_iact(chain, method="geyer"):
+    ac = autocov(chain)
+    if method=="geyer":
+        return _geyer_iact(ac/ac[0])
+    elif method=="sokal":
+        return _sokal_iact(ac/ac[0])
+    else:
+        print("Please choose from method, 'geyer'  or 'sokal'")
+        return np.nan
+
+def _multi_iact(chains, method="geyer"):
     M,N = chains.shape[0:2]
     #Average over each chain, so we have the average for each chain
     avg_n = np.mean(chains,axis=1)
@@ -87,11 +114,17 @@ def _multi_iact(chains):
 
     ac = np.array([autocov(chains[i,:]) for i in range(M)])
     ac = 1 - (W - 1.0/M*np.sum(ac,axis=0))/marginal_var
+    
+    if method=="geyer":
+        return _geyer_iact(ac)
+    elif method=="sokal":
+        return _sokal_iact(ac)
+    else:
+        print("Please choose from method, 'geyer'  or 'sokal'")
+        return np.nan
 
-    return geyer_iact(ac)
 
-
-def integrated_autocorr(chains):
+def integrated_autocorr(chains, method='geyer'):
     """
     Finds the integrated autocorrelation time for a set of chains.
     If the `chains` has dimension equal 1 one, we use the standard
@@ -104,14 +137,14 @@ def integrated_autocorr(chains):
     """
 
     if (chains.ndim == 1):
-        return _single_iact(chains)
+        return _single_iact(chains, method)
     elif (chains.ndim == 2):
-        return _multi_iact(chains)
+        return _multi_iact(chains, method)
     else:
         raise(IndexError)
 
     
-def ess(chains):
+def ess(chains, method='geyer'):
     """
     Finds the mean effective sample size for a set of chains.
     If the `chains` has dimension equal 1 one, we use the standard
@@ -124,13 +157,13 @@ def ess(chains):
     """
 
     if (chains.ndim == 1):
-        return chains.shape[0]/_single_iact(chains)
+        return chains.shape[0]/_single_iact(chains, method)
     elif (chains.ndim == 2):
-        return chains.shape[0]*chains.shape[1]/_multi_iact(chains)
+        return chains.shape[0]*chains.shape[1]/_multi_iact(chains,method)
     else:
         raise(IndexError)
 
-def ensemble_autocorr(param_chain):
+def ensemble_autocorr(param_chain, method='geyer'):
     """
     Computes the integrated autocorrelation time for the chain, following `emcee <https://emcee.readthedocs.io/en/stable/tutorials/autocorr>`_,
     but using the formula and truncation scheme from `Vehtari (2019) <https://ui.adsabs.harvard.edu/abs/2019arXiv190308008V/abstract>`_.
@@ -146,7 +179,7 @@ def ensemble_autocorr(param_chain):
         ac = autocov(yy)
         f += ac/ac[0]
     f /= len(param_chain)
-    iac = integrated_autocorr(ac)
+    iac = integrated_autocorr(ac, method)
     if (iac*20 > param_chain.shape[1]):
         print("WARNING: In order to get decent estimate of the integrated autocorrelation time (IAC), IAC*20 < number of steps. You should really run the chain longer!")
     return iac
