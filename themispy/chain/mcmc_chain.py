@@ -249,7 +249,10 @@ def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=No
     Coherently loads a Themis chain and likelihood pair from an ensemble sampler.
     Optionally, a stride, burn-in fraction, number of *ensemble samples* to skip, 
     or a set of parameters may be provided.  If set, the burn-in fraction is 
-    computed for the *shorter* of the two fileswith columns likelihood, accept, divergence, energy(str): Filename in which chain data will be found (e.g., `Chain.dat`)
+    computed for the *shorter* of the two files.
+
+    Args:
+      chain_filename (str): Filename in which chain data will be found (e.g., `Chain.dat`)
       lklhd_filename (str): Filename in which likelihood data will be found (e.g., `Lklhd.dat`)
       stride (int): Integer factor by which to step through samples *coherently* among walkers.  Default: 1.
       burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.
