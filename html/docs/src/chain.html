@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Chain &mdash; ThemisPy 0.1.0+30.gad180be documentation</title>
+  <title>Chain &mdash; ThemisPy 0.1.0+40.gc289d3c documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+30.gad180be documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+40.gc289d3c documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Data" href="data.html"/>
         <link rel="prev" title="User’s Guide" href="userguide.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+30.gad180be
+                0.1.0+40.gc289d3c
               </div>
             
           
@@ -258,6 +258,34 @@ computed for the <em>shorter</em> of the two files.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="chain.mcmc_chain.load_stanrun">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">load_stanrun</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chain_filename</span></em>, <em class="sig-param"><span class="n">state_filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">auto_warmup</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#load_stanrun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.load_stanrun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coherently loads a Themis chain and likelihood pair from an Stan Themis run.
+Optionally, a stride, burn-in fraction, number of <em>samples</em> to skip,
+or a set of parameters may be provided.  If set, the burn-in fraction is
+computed for the <em>shorter</em> of the two files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chain_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which chain data will be found (e.g., <cite>Chain.dat</cite>)</p></li>
+<li><p><strong>state_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which state data will be found (e.g., <cite>State.dat</cite>)</p></li>
+<li><p><strong>stride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Integer factor by which to step through samples <em>coherently</em> among chains.  Default: 1.</p></li>
+<li><p><strong>burn_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of the total number of lines to exclude from the beginning.  Default: 0.</p></li>
+<li><p><strong>auto_warmup</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true it will automatically sense the Stan warmup period and cut it.</p></li>
+<li><p><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of initial <em>ensemble samples</em> to skip. Default: 0.</p></li>
+<li><p><strong>parameter_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Chain data arranged as 2D array indexed by [sample, parameter] <em>after</em> excluding the skipped lines and applying the specified stride; State data arranged as 2D array with columns likelihood, accept, stepsize, treedepth, nleapfrog, divergence, energy <em>after</em> excluding the burn in period specified and applied the specified stride.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>, <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="chain.mcmc_chain.most_likely_erun">
 <code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">most_likely_erun</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chain_filename</span></em>, <em class="sig-param"><span class="n">lklhd_filename</span></em>, <em class="sig-param"><span class="n">samples</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#most_likely_erun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.most_likely_erun" title="Permalink to this definition">¶</a></dt>
 <dd><p>Coherently loads and returns optimal samples from a Themis chain and likelihood pair
@@ -350,6 +378,57 @@ Returns an IndexError if fewer ensemble samples exist in the chain file than ski
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Likelihood data arranged as 2D array indexed by [sample, walker] <em>after</em> excluding the burn in period specified and applied the specified stride; Number of samples skipped.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="chain.mcmc_chain.read_stanchain">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_stanchain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_stanchain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_stanchain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in a Themis chain file from an stan sampler.  The number of walkers
+must be supplied.  Optionally, a stride, burn-in fraction, number of <em>ensemble
+samples</em> to skip, or a set of parameters may be provided.  Returns an IndexError
+if fewer samples exist in the chain file than skip.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which chain data will be found (e.g., <cite>Chain.dat</cite>)</p></li>
+<li><p><strong>stride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Integer factor by which to step through samples <em>coherently</em> among walkers.  Default: 1.</p></li>
+<li><p><strong>burn_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of the total number of lines to exclude from the beginning.  Default: 0.</p></li>
+<li><p><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of initial <em>ensemble samples</em> to skip. Default: 0.</p></li>
+<li><p><strong>parameter_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Chain data arranged as 2D array indexed by [sample, parameter] <em>after</em> excluding the skipped lines and applying the specified stride.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="chain.mcmc_chain.read_stanstate">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_stanstate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">auto_warmup</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_stanstate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_stanstate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in a Themis state file from a Stan sampler.  Optionally, a
+stride, burn-in fraction, auto_warmup detection, or number of <em>Stan samples</em> to skip may be set.
+Returns an IndexError if fewer samples exist in the chain file than skip.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which state data will be found (e.g., <cite>State.dat</cite>)</p></li>
+<li><p><strong>stride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Integer factor by which to step through samples <em>coherently</em> among walkers.  Default: 1.</p></li>
+<li><p><strong>burn_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of the total number of lines to exclude from the beginning.  Default: 0.</p></li>
+<li><p><strong>auto_warmup</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true it will automatically sense the Stan warmup period and cut it. <cite>burn_fraction</cite> then applies to the state file with warmup already removed.</p></li>
+<li><p><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of initial <em>ensemble samples</em> to skip.  Overrides burn_fraction unless set to None. Default: None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Likelihood data arranged as 2D array indexed by [sample, walker] <em>after</em> excluding the burn in period specified and applied the specified stride; Number of samples skipped including warmup if auto_warmup is true.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
@@ -454,7 +533,7 @@ than load_erun and subsequently subsampling for large chains</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+30.gad180be',
+            VERSION:'0.1.0+40.gc289d3c',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

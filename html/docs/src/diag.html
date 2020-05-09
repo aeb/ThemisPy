@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Diag &mdash; ThemisPy 0.1.0+30.gad180be documentation</title>
+  <title>Diag &mdash; ThemisPy 0.1.0+40.gc289d3c documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+30.gad180be documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+40.gc289d3c documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Vis" href="vis.html"/>
         <link rel="prev" title="Data" href="data.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+30.gad180be
+                0.1.0+40.gc289d3c
               </div>
             
           
@@ -171,43 +171,19 @@
 <div class="section" id="module-diag.convergence_tools">
 <span id="convergence-tools"></span><h2>Convergence Tools<a class="headerlink" href="#module-diag.convergence_tools" title="Permalink to this headline">¶</a></h2>
 <dl class="py function">
-<dt id="diag.convergence_tools.auto_window">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">auto_window</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">taus</span></em>, <em class="sig-param"><span class="n">c</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#auto_window"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.auto_window" title="Permalink to this definition">¶</a></dt>
-<dd><p>Automatic windowing procedure following <a class="reference external" href="https://emcee.readthedocs.io/en/stable/tutorials/autocorr">emcee</a>, which follows <a class="reference external" href="https://pdfs.semanticscholar.org/0bfe/9e3db30605fe2d4d26e1a288a5e2997e7225.pdf">Sokal (1989)</a>.</p>
+<dt id="diag.convergence_tools.autocov">
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">autocov</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chain</span></em>, <em class="sig-param"><span class="n">axis</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#autocov"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.autocov" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the autocovariance of a MCMC chain, by-product of a chain.
+It uses the biased denominator for the chain <cite>N</cite> not the unbiased <cite>N-t</cite>
+to lower the variance of the estimator, following <a class="reference external" href="https://projecteuclid.org/euclid.ss/1177011137">Geyer (1992)</a>.
+:param chain: Single dimension array containing an MCMC chain.
+:type chain: numpy.ndarray</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>taus</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Estimates of the integrated autocorrelation time (IACT).</p></li>
-<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Sokal factor, with an optimal value approximately of 5.0.  Default: 5.0.</p></li>
-</ul>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The autocovariance of the chain.</p>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Index of minimum window for computing the autocorrelation time?</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="diag.convergence_tools.autocorr_func_1d">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">autocorr_func_1d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">norm</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#autocorr_func_1d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.autocorr_func_1d" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the 1D autocorrelation function of a sequences, following
-<a class="reference external" href="https://emcee.readthedocs.io/en/stable/tutorials/autocorr">emcee</a>.
-This is done via FFT, and thus assumes that the sequences is stationary.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – A sequence of values.</p></li>
-<li><p><strong>norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true normalizes the autocorrelation by the variance. Otherwise the zero-lag component of the autocorrelation function is the variance. Default: True.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Autocorrlation function appropriately normalized.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -233,20 +209,35 @@ maximum of the folded <span class="math notranslate nohighlight">\(\hat{R}\)</sp
 
 <dl class="py function">
 <dt id="diag.convergence_tools.ensemble_autocorr">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">ensemble_autocorr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">param_chain</span></em>, <em class="sig-param"><span class="n">c</span><span class="o">=</span><span class="default_value">5.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#ensemble_autocorr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.ensemble_autocorr" title="Permalink to this definition">¶</a></dt>
-<dd><p>Computes the integrated autocorrelation time for the chain, following <a class="reference external" href="https://emcee.readthedocs.io/en/stable/tutorials/autocorr">emcee</a>.</p>
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">ensemble_autocorr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">param_chain</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'geyer'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#ensemble_autocorr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.ensemble_autocorr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes the integrated autocorrelation time for the chain, following <a class="reference external" href="https://emcee.readthedocs.io/en/stable/tutorials/autocorr">emcee</a>,
+but using the formula and truncation scheme from <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2019arXiv190308008V/abstract">Vehtari (2019)</a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>param_chain</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Ensemble MCMC chain for a single parameters, arranged as walkers,steps.</p></li>
-<li><p><strong>c</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Sokal factor, with an optimal value approximately of 5.0.  Default: 5.0.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>param_chain</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Ensemble MCMC chain for a single parameters, arranged as walkers,steps.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Integrated autocorrelation time (IACT).</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="diag.convergence_tools.ess">
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">ess</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chains</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'geyer'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#ess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.ess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the mean effective sample size for a set of chains.
+If the <cite>chains</cite> has dimension equal 1 one, we use the standard
+Geyer 1992 formula. If there are multiple chains we use the estimator
+from <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2019arXiv190308008V/abstract">Vehtari (2019)</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chains</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Either a single chain for a parameter or a set of chains from multiple runs,</p></li>
+<li><p><strong>split in half. This allows us to get a better estimate of the combined autocorrelation time.</strong> (<em>or</em>) – </p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -290,6 +281,23 @@ This helps with measuring <span class="math notranslate nohighlight">\(\hat{R}\)
 </dd></dl>
 
 <dl class="py function">
+<dt id="diag.convergence_tools.integrated_autocorr">
+<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">integrated_autocorr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chains</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'geyer'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#integrated_autocorr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.integrated_autocorr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds the integrated autocorrelation time for a set of chains.
+If the <cite>chains</cite> has dimension equal 1 one, we use the standard
+Geyer 1992 formula. If there are multiple chains we use the estimator
+from <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2019arXiv190308008V/abstract">Vehtari (2019)</a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>chains</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Either a single chain for a parameter or a set of chains from multiple runs,</p></li>
+<li><p><strong>split in half. This allows us to get a better estimate of the combined autocorrelation time.</strong> (<em>or</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="diag.convergence_tools.mean_echain">
 <code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">mean_echain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">echain</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#mean_echain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.mean_echain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Computes the average of the ensemble chain for each step. That is,
@@ -304,42 +312,6 @@ single particle chain of the average.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="diag.convergence_tools.mean_ess">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">mean_ess</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">c</span><span class="o">=</span><span class="default_value">5.0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#mean_ess"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.mean_ess" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculates the average ESS across chains by dividing the number of steps by the IAC.
-Note the actual ESS of the entire chain and walkers is greater than this, but likely isn’t
-the number of walkers * mean_ess since the chains are correlated.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Ensemble MCMC chain for a single parameters, arranged as walkers,steps.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Average number of ensemble samples across chains.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a>)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="diag.convergence_tools.next_pow_two">
-<code class="sig-prename descclassname">diag.convergence_tools.</code><code class="sig-name descname">next_pow_two</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">n</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/convergence_tools.html#next_pow_two"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.convergence_tools.next_pow_two" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the value of 2**n, following <a class="reference external" href="https://emcee.readthedocs.io/en/stable/tutorials/autocorr">emcee</a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>n</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Power of 2</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Value of 2**n</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -502,7 +474,7 @@ regions are.</p>
 
 <dl class="py function">
 <dt id="diag.diagnostic_plots.plot_deo_lambda">
-<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_deo_lambda</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">annealing_summary_data</span></em>, <em class="sig-param"><span class="n">annealing_data</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'b'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_deo_lambda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_deo_lambda" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_deo_lambda</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">annealing_summary_data</span></em>, <em class="sig-param"><span class="n">annealing_data</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'b'</span></em>, <em class="sig-param"><span class="n">axis_scales</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_deo_lambda"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_deo_lambda" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots the rejection rate evolution with round for DEO tempered samplers in Themis.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -510,6 +482,7 @@ regions are.</p>
 <li><p><strong>annealing_summary_data</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of annealing run summary data as read by <a class="reference internal" href="chain.html#chain.mcmc_chain.load_deo_summary" title="chain.mcmc_chain.load_deo_summary"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain.mcmc_chain.load_deo_summary()</span></code></a>.</p></li>
 <li><p><strong>annealing_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Dictionary containing <span class="math notranslate nohighlight">\(\beta\)</span> and <span class="math notranslate nohighlight">\(R\)</span> values indexed by [round,tempering level] and accessed by keys ‘Beta’ and ‘R’, respectively, as read by <a class="reference internal" href="chain.html#chain.mcmc_chain.load_deo_summary" title="chain.mcmc_chain.load_deo_summary"><code class="xref py py-func docutils literal notranslate"><span class="pre">chain.mcmc_chain.load_deo_summary()</span></code></a>.</p></li>
 <li><p><strong>colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.2.1)"><em>matplotlib.colors.Colormap</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a> or acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>. Default: ‘b’.</p></li>
+<li><p><strong>axis_scales</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.8)"><em>tuple</em></a>) – Tuple with the scales for x an y axis scales. If none uses (‘logit’,’log’) scale.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -559,6 +532,30 @@ regions are.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)">matplotlib.figure.Figure</a>, <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)">matplotlib.axes.Axes</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="diag.diagnostic_plots.plot_energy_dist">
+<code class="sig-prename descclassname">diag.diagnostic_plots.</code><code class="sig-name descname">plot_energy_dist</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span></em>, <em class="sig-param"><span class="n">nbins</span><span class="o">=</span><span class="default_value">40</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.5</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/diag/diagnostic_plots.html#plot_energy_dist"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#diag.diagnostic_plots.plot_energy_dist" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the energy transition density and marginal energy density.
+When the distributions are similar it means HMC should give be <cite>robust</cite>.
+Additionally we computed the empirical Bayesian fraction of missing information E-BFMI
+of the state. Typically if this is less than 0.3, HMC may have issues exploring the tails
+of the distribution.
+:param state: The state array of a Themis run using the Stan sampler. <em>Warmup must be removed</em>.
+:type state: numpy.ndarray
+:param nbins: The number of bins to use for the histogram.
+:type nbins: int
+:param alpha: The alpha parameter for the histogram opacity.
+:type alpha: float</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Handles to the figure and array of axes objects in the plot.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.figure.Figure.html#matplotlib.figure.Figure" title="(in Matplotlib v3.2.1)">matplotlib.figure.Figure</a>, <a class="reference external" href="https://matplotlib.org/api/axes_api.html#matplotlib.axes.Axes" title="(in Matplotlib v3.2.1)">matplotlib.axes.Axes</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -740,7 +737,7 @@ will be biased.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+30.gad180be',
+            VERSION:'0.1.0+40.gc289d3c',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

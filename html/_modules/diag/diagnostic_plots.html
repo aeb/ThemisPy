@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>diag.diagnostic_plots &mdash; ThemisPy 0.1.0+30.gad180be documentation</title>
+  <title>diag.diagnostic_plots &mdash; ThemisPy 0.1.0+40.gc289d3c documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+30.gad180be documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+40.gc289d3c documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.0+30.gad180be
+                0.1.0+40.gc289d3c
               </div>
             
           
@@ -265,7 +265,7 @@
     <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span>
         
     <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">:</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain_step</span><span class="p">,</span><span class="n">elklhd</span><span class="p">[:,</span><span class="n">w</span><span class="p">],</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">cmap</span><span class="p">(</span><span class="n">w</span><span class="o">/</span><span class="p">(</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)),</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chain_step</span><span class="p">,</span><span class="n">elklhd</span><span class="p">[:,</span><span class="n">w</span><span class="p">],</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">cmap</span><span class="p">(</span><span class="n">w</span><span class="o">/</span><span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">elklhd</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)),</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="p">:</span>
         <span class="n">xtmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">chain_step</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">chain_step</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
@@ -917,7 +917,7 @@
     <span class="k">return</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="plot_deo_lambda"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_deo_lambda">[docs]</a><span class="k">def</span> <span class="nf">plot_deo_lambda</span><span class="p">(</span><span class="n">annealing_summary_data</span><span class="p">,</span><span class="n">annealing_data</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="plot_deo_lambda"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_deo_lambda">[docs]</a><span class="k">def</span> <span class="nf">plot_deo_lambda</span><span class="p">(</span><span class="n">annealing_summary_data</span><span class="p">,</span><span class="n">annealing_data</span><span class="p">,</span><span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">,</span> <span class="n">axis_scales</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots the rejection rate evolution with round for DEO tempered samplers in Themis.</span>
 
@@ -925,6 +925,7 @@
 <span class="sd">      annealing_summary_data (numpy.ndarray): Array of annealing run summary data as read by :func:`chain.mcmc_chain.load_deo_summary`.</span>
 <span class="sd">      annealing_data (dict): Dictionary containing :math:`\\beta` and :math:`R` values indexed by [round,tempering level] and accessed by keys &#39;Beta&#39; and &#39;R&#39;, respectively, as read by :func:`chain.mcmc_chain.load_deo_summary`.</span>
 <span class="sd">      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm` or acceptable color type as specified in :mod:`matplotlib.colors`. Default: &#39;b&#39;.</span>
+<span class="sd">      axis_scales (tuple): Tuple with the scales for x an y axis scales. If none uses (&#39;logit&#39;,&#39;log&#39;) scale. </span>
 <span class="sd">    </span>
 <span class="sd">    Returns:</span>
 <span class="sd">      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.</span>
@@ -937,22 +938,36 @@
     <span class="k">if</span> <span class="p">(</span> <span class="ow">not</span> <span class="n">is_color_like</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
         <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="p">(</span><span class="n">axis_scales</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="n">yscale</span> <span class="o">=</span> <span class="s1">&#39;log&#39;</span>
+        <span class="n">xscale</span> <span class="o">=</span> <span class="s1">&#39;logit&#39;</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">yscale</span> <span class="o">=</span> <span class="n">axis_scales</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">xscale</span> <span class="o">=</span> <span class="n">axis_scales</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
     <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">nrounds</span> <span class="o">=</span> <span class="n">annealing_summary_data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">nrounds</span><span class="p">):</span>
         <span class="n">beta_r</span> <span class="o">=</span> <span class="n">beta</span><span class="p">[</span><span class="n">i</span><span class="p">,::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">Lambda_r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="n">i</span><span class="p">,::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">fLambda</span> <span class="o">=</span> <span class="n">mcubic</span><span class="p">(</span><span class="n">beta_r</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">Lambda_r</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">beta_r</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mf">1.0</span><span class="p">,</span><span class="mi">500</span><span class="p">)</span>
+        <span class="n">bE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">((</span><span class="mf">0.9999</span><span class="p">,</span><span class="n">beta_r</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">lb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">beta_r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">beta_r</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.9999</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mf">0.9999</span><span class="p">)),</span><span class="mi">500</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">lb</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span> <span class="n">is_color_like</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
             <span class="n">color</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">to_rgba</span><span class="p">(</span><span class="n">colormap</span><span class="p">))</span>
             <span class="n">color</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.05</span><span class="o">+</span><span class="mf">0.95</span><span class="o">*</span><span class="n">i</span><span class="o">/</span><span class="p">(</span><span class="n">nrounds</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)</span>
         <span class="k">else</span> <span class="p">:</span>
             <span class="n">color</span> <span class="o">=</span> <span class="n">cmap</span><span class="p">(</span><span class="n">i</span><span class="o">/</span><span class="p">(</span><span class="n">nrounds</span><span class="o">-</span><span class="mf">1.0</span><span class="p">))</span>
-        <span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">semilogy</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">fLambda</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">nu</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">fLambda</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">nu</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
     <span class="c1">#plt.gca().set_ylim(top=1e5,auto=True)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.01</span><span class="p">,</span><span class="mf">0.25</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="n">xscale</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="n">yscale</span><span class="p">)</span>
+    <span class="c1">#plt.gca().set_xticks(np.arange(1e-4,1-1e-4,0.25))</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\beta$&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;$\lambda(\beta)$&quot;</span><span class="p">)</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span><span class="mf">0.95</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;$\hat{\tau}_{\rm{opt, </span><span class="si">%d</span><span class="s2">}} = </span><span class="si">%.4f</span><span class="s2">$&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">nrounds</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">annealing_summary_data</span><span class="p">[</span><span class="s2">&quot;rt_opt&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
@@ -968,6 +983,42 @@
     
     <span class="k">return</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span></div>
 
+
+<div class="viewcode-block" id="plot_energy_dist"><a class="viewcode-back" href="../../docs/src/diag.html#diag.diagnostic_plots.plot_energy_dist">[docs]</a><span class="k">def</span> <span class="nf">plot_energy_dist</span><span class="p">(</span><span class="n">state</span><span class="p">,</span><span class="n">nbins</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots the energy transition density and marginal energy density.</span>
+<span class="sd">    When the distributions are similar it means HMC should give be `robust`.</span>
+<span class="sd">    Additionally we computed the empirical Bayesian fraction of missing information E-BFMI </span>
+<span class="sd">    of the state. Typically if this is less than 0.3, HMC may have issues exploring the tails</span>
+<span class="sd">    of the distribution.</span>
+<span class="sd">    Args:</span>
+<span class="sd">      state (numpy.ndarray): The state array of a Themis run using the Stan sampler. *Warmup must be removed*.</span>
+<span class="sd">      nbins (int): The number of bins to use for the histogram.</span>
+<span class="sd">      alpha (float): The alpha parameter for the histogram opacity.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:  </span>
+<span class="sd">      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#Get the energy distributins</span>
+    <span class="n">energy</span> <span class="o">=</span> <span class="n">state</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">energydiff</span> <span class="o">=</span> <span class="n">energy</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">energy</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">mean_energy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">energy</span><span class="p">)</span>
+
+    <span class="c1">#Get a consistent binning between the two quantities</span>
+    <span class="n">bins</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">histogram</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">((</span><span class="n">energydiff</span><span class="p">,</span><span class="n">energy</span><span class="o">-</span><span class="n">mean_energy</span><span class="p">)),</span> <span class="n">bins</span><span class="o">=</span><span class="n">nbins</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="c1">#Now get the Estiamted Bayesian fractin of missing information</span>
+    <span class="n">est_bi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">energydiff</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">energy</span><span class="o">-</span><span class="n">mean_energy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">cax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+    <span class="n">cax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">energy</span><span class="o">-</span><span class="n">mean_energy</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\pi(E|q)$&quot;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="n">cax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">energydiff</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">&quot;$\pi(E)$&quot;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="n">cax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">cax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;$E - </span><span class="se">\\</span><span class="s2">bar</span><span class="si">{E}</span><span class="s2">$&quot;</span><span class="p">)</span>
+    <span class="n">cax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([])</span>
+    <span class="n">cax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.025</span><span class="p">,</span><span class="mf">0.9</span><span class="p">,</span><span class="sa">r</span><span class="s2">&quot;E-BFMI = </span><span class="si">%.3f</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">est_bi</span><span class="p">),</span><span class="n">transform</span><span class="o">=</span><span class="n">cax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span> <span class="n">cax</span></div>
+    
 
 
 
@@ -1004,7 +1055,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+30.gad180be',
+            VERSION:'0.1.0+40.gc289d3c',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

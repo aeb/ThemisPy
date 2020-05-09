@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vis &mdash; ThemisPy 0.1.0+30.gad180be documentation</title>
+  <title>Vis &mdash; ThemisPy 0.1.0+40.gc289d3c documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+30.gad180be documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+40.gc289d3c documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Utils" href="utils.html"/>
         <link rel="prev" title="Diag" href="diag.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+30.gad180be
+                0.1.0+40.gc289d3c
               </div>
             
           
@@ -97,6 +97,8 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">Vis</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#module-vis.calibration">Calibration</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-vis.image">Image Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-vis.polimage">Polarized Image Models</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#module-vis.io">Construciton and I/O</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#module-vis.typlot">Plotting Functions</a></li>
 </ul>
 </li>
@@ -364,33 +366,6 @@ must be provided as a dictionary:</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>A corresponding model image object.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image">model_image</a>)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="vis.image.construct_model_image_from_glob">
-<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">construct_model_image_from_glob</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_glob</span></em>, <em class="sig-param"><span class="n">glob_version</span></em>, <em class="sig-param"><span class="n">hyperparameters</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#construct_model_image_from_glob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.construct_model_image_from_glob" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object given an appropriate model specification glob.
-Currently accepted globs include:</p>
-<ul class="simple">
-<li><p>ccm_mexico+ model specification string. These are an extended set of the strings used by the ccm_m87_mexico drivers.  For example, sXaagG.  For raster model types, hyperparameters must be supplied.  See <a class="reference internal" href="#vis.image.expand_model_glob_ccm_mexico" title="vis.image.expand_model_glob_ccm_mexico"><code class="xref py py-func docutils literal notranslate"><span class="pre">expand_model_glob_ccm_mexico()</span></code></a> for details regarding the required form.</p></li>
-<li><p>model tag file name. These can be output by Themis directly and encompass a wider set of possible models.</p></li>
-</ul>
-<p>The appropriate associated glob version must be specified. For some specifications an additional set of hyperparameters may need to be supplied.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>model_glob</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Glob defining model image. Examples are ‘sXaagG’ or ‘model_image.tag’</p></li>
-<li><p><strong>tagversion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Version of tag system. Currently only tagvers-1.0 is implemented. Default ‘tagvers-1.0’.</p></li>
-<li><p><strong>hyperparameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Dictionary of hyperparameters if needed by the specification.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object of the corresponding model.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>(<a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image">model_image</a>)</p>
@@ -1613,60 +1588,6 @@ SUBTAG FINISH.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="vis.image.write_fits">
-<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">write_fits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">img</span></em>, <em class="sig-param"><span class="n">fits_filename</span></em>, <em class="sig-param"><span class="n">uvfits_filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#write_fits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.write_fits" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes a FITS format image file given 2D image data.</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<ul class="simple">
-<li><p>This makes extensive use of ehtim and will not be available if ehtim is not installed.  Raises a NotImplementedError if ehtim is unavailable.</p></li>
-<li><p>Due to ehtim, only <em>square</em> images are supported at this time.</p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>I</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a><em>,</em><a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><em>model_image</em></a>) – Either an array of intensity values in (Jy/uas^2) or a <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object.</p></li>
-<li><p><strong>fits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of output FITS file.</p></li>
-<li><p><strong>uvfits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.</p></li>
-<li><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time in hr on the relevant observation day (set by uvfits file) represented by image data.</p></li>
-<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If 0, no information is printed.  If &gt;=1, prints information about sizes and values.  If &gt;=2, generates debugging plots.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt id="vis.image.write_hdf5">
-<code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">write_hdf5</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">mov</span></em>, <em class="sig-param"><span class="n">hdf5_filename</span></em>, <em class="sig-param"><span class="n">uvfits_filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">time_offset</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'ehtim'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#write_hdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.write_hdf5" title="Permalink to this definition">¶</a></dt>
-<dd><p>Writes an HDF5 format movie file given a sequence of 2D image data</p>
-<div class="admonition warning">
-<p class="admonition-title">Warning</p>
-<ul class="simple">
-<li><p>Requires ehtim or h5py to be installed.  Raises a NotImplementedError if neither are unavailable</p></li>
-<li><p>If these will be read in by ehtim later, only <em>square</em> images are permitted.  Raises a runtime warning if non-square images are requested.</p></li>
-</ul>
-</div>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Array of times of frames</p></li>
-<li><p><strong>mov</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>,</em><a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><em>model_image</em></a>) – Either a list of arrays of intensity values in (Jy/uas^2) computed at the times in t or a <a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code></a> object.</p></li>
-<li><p><strong>fits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of output FITS file.</p></li>
-<li><p><strong>uvfits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.</p></li>
-<li><p><strong>time_offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time offset in hr on the relevant observation day (set by uvfits file) represented by image data.</p></li>
-<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Method to use to construct and format hdf5 file.  Options are ‘ehtim’ or ‘h5py’, which make use of the ehtim functions or provide a separate hdf5 format, respectively. Default: ‘ehtim’.</p></li>
-<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If 0, no information is printed.  If &gt;=1, prints information about sizes and values.  If &gt;=2, generates debugging plots.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt id="vis.image.write_model_tag_file_from_ccm_mexico">
 <code class="sig-prename descclassname">vis.image.</code><code class="sig-name descname">write_model_tag_file_from_ccm_mexico</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_glob</span></em>, <em class="sig-param"><span class="n">hyperparameters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tag_file_name</span><span class="o">=</span><span class="default_value">'model_image.tag'</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/image.html#write_model_tag_file_from_ccm_mexico"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.image.write_model_tag_file_from_ccm_mexico" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads a model glob as produced by the ccm_mexico driver and writes a
@@ -1686,6 +1607,693 @@ must be provided as a dictionary:</p>
 <li><p><strong>model_glob</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Model glob string.</p></li>
 <li><p><strong>hyper_parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Optional set of hyperparameters for image models that require them.  Where they are not provided for required arguments a RuntimeError will be raised.</p></li>
 <li><p><strong>tag_file_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of tag file to be written. Default: ‘model_image.tag’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-vis.polimage">
+<span id="polarized-image-models"></span><h2>Polarized Image Models<a class="headerlink" href="#module-vis.polimage" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="vis.polimage.construct_model_polarized_image_from_tag_file">
+<code class="sig-prename descclassname">vis.polimage.</code><code class="sig-name descname">construct_model_polarized_image_from_tag_file</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tag_file_name</span><span class="o">=</span><span class="default_value">'model_image.tag'</span></em>, <em class="sig-param"><span class="n">tagversion</span><span class="o">=</span><span class="default_value">'tagvers-1.0'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#construct_model_polarized_image_from_tag_file"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.construct_model_polarized_image_from_tag_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads tag file produced by the <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">:model_polarized_image::write_model_tag_file</span></code>
+function and returns an appropriate model polarized image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag_file_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of the tag_file. Default: ‘model_image.tag’</p></li>
+<li><p><strong>tagversion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Version of tag system. Currently only tagvers-1.0 is implemented. Default ‘tagvers-1.0’.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity level. 0 prints nothing. 1 prints tag information.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><a class="reference internal" href="#vis.polimage.model_polarized_image" title="vis.polimage.model_polarized_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_polarized_image</span></code></a> object of the corresponding model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference internal" href="#vis.polimage.model_polarized_image" title="vis.polimage.model_polarized_image">model_polarized_image</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.polimage.construct_model_polarized_image_from_tagv1">
+<code class="sig-prename descclassname">vis.polimage.</code><code class="sig-name descname">construct_model_polarized_image_from_tagv1</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">tag</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#construct_model_polarized_image_from_tagv1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.construct_model_polarized_image_from_tagv1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses a tagvers-1.0 Themis tag and recursively constructs a model polarized image.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>tag</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of tags, arranged as str on separate lines.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity level. 0 prints nothing. 1 prints tag information.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The first <a class="reference internal" href="#vis.polimage.model_polarized_image" title="vis.polimage.model_polarized_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_polarized_image</span></code></a> object fully described within the tag; the remaining tag lines.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image">model_image</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt id="vis.polimage.model_polarized_image">
+<em class="property">class </em><code class="sig-prename descclassname">vis.polimage.</code><code class="sig-name descname">model_polarized_image</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">station_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base class for Themis polarized image models.
+This base class is intended to mirror the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_polarized_image</span></code> base class,
+providing explicit visualizations of the output of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_polarized_image</span></code>-derived
+model analyses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>station_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of strings corresponding to station names for which D terms are being reconstructed. Default: None.</p></li>
+<li><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image.parameters">
+<code class="sig-name descname">parameters</code><a class="headerlink" href="#vis.polimage.model_polarized_image.parameters" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parameter list for a given model. Default: None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image.size">
+<code class="sig-name descname">size</code><a class="headerlink" href="#vis.polimage.model_polarized_image.size" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of parameters for a given model. Default: None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image.number_of_dterms">
+<code class="sig-name descname">number_of_dterms</code><a class="headerlink" href="#vis.polimage.model_polarized_image.number_of_dterms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of D terms. If D terms are not included, set to 0. Default: 0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image.dterm_dict">
+<code class="sig-name descname">dterm_dict</code><a class="headerlink" href="#vis.polimage.model_polarized_image.dterm_dict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dictionary of D terms with keys ‘station_names’ and each station name.  Default: {}.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p>dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image.themis_fft_sign">
+<code class="sig-name descname">themis_fft_sign</code><a class="headerlink" href="#vis.polimage.model_polarized_image.themis_fft_sign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Themis FFT sign convention flag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image.time">
+<code class="sig-name descname">time</code><a class="headerlink" href="#vis.polimage.model_polarized_image.time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time at which image is to be generated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image.dterms">
+<code class="sig-name descname">dterms</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image.dterms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image.dterms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides access to D terms and station names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Station D terms organized as a dictionary indexed by the station codes in <code class="xref py py-class docutils literal notranslate"><span class="pre">ehtim.obsdata.tarr</span></code>.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>(dictionary)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the model parameter list.  Mirrors <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00047.html#a7945f9c4716ebe7f1026b999467d9c32" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image::generate_model</span></code></a>,
+a similar function within the <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00047.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image</span></code></a> class.  Effectively
+simply copies the parameters into the local list with some additional run-time checking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Parameter list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image.generate_intensity_map">
+<code class="sig-name descname">generate_intensity_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image.generate_intensity_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image.generate_intensity_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specific hook for generating Stokes I map in child classes.  Assumes that the parameters
+list has been set.  This should never be called externally.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(numpy.ndarray) Array of desired Stokes I brightness values at positions (x,y) in <span class="math notranslate nohighlight">\(Jy/\mu as^2\)</span>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image.generate_stokes_map">
+<code class="sig-name descname">generate_stokes_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">kind</span><span class="o">=</span><span class="default_value">'all'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image.generate_stokes_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image.generate_stokes_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook for the intensity map function in child classes.  Assumes that the parameters
+list has been set.  This should never be called externally.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Stokes parameter to generate map for. Accepted values are ‘I’, ‘Q’, ‘U’, ‘V’, and combinations or ‘all’. Default: ‘all’.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(list) List of arrays of desired Stokes parameter values at positions (x,y) in <span class="math notranslate nohighlight">\(Jy/\mu as^2\)</span>. Always returned in the order IQUV.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook for returning a list of parameter names.  Currently just returns the list of p0-p(size-1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image.set_dterms">
+<code class="sig-name descname">set_dterms</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dterm_parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image.set_dterms"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image.set_dterms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the D terms from a list of parameters as specified directly from a
+<code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">model_polarized_image</span></code> object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>dterm_parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of float values that is twice as long as the number of stations names.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image.set_time">
+<code class="sig-name descname">set_time</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image.set_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image.set_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time in hours.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image.stokes_map">
+<code class="sig-name descname">stokes_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">parameters</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">kind</span><span class="o">=</span><span class="default_value">'I'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image.stokes_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image.stokes_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>External access function to the intenesity map.  Child classes should not overwrite
+this function.  This implements some parameter assessment and checks the FFT sign
+convention.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Parameter list. If none is provided, uses the current set of parameters. Default: None.</p></li>
+<li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Stokes parameter to generate map for. Accepted values are ‘I’, ‘Q’, ‘U’, ‘V’, and combinations or ‘all’. Default: ‘I’.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(list) List of arrays of desired Stokes parameter values at positions (x,y) in <span class="math notranslate nohighlight">\(Jy/\mu as^2\)</span>. Always returned in the order IQUV.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="vis.polimage.model_polarized_image_adaptive_splined_raster">
+<em class="property">class </em><code class="sig-prename descclassname">vis.polimage.</code><code class="sig-name descname">model_polarized_image_adaptive_splined_raster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Nx</span></em>, <em class="sig-param"><span class="n">Ny</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">- 0.5</span></em>, <em class="sig-param"><span class="n">spline_method</span><span class="o">=</span><span class="default_value">'fft'</span></em>, <em class="sig-param"><span class="n">station_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_adaptive_splined_raster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_adaptive_splined_raster" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adaptive splined raster image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_polarized_image_adaptive_splined_raster</span></code>.
+Has parameters:</p>
+<ul class="simple">
+<li><p>parameters[0] ……….. Logarithm of the Stokes I brightness at control point 0,0 (Jy/sr)</p></li>
+<li><p>parameters[1] ……….. Logarithm of the Stokes I brightness at control point 1,0 (Jy/sr)</p></li>
+</ul>
+<p>…</p>
+<ul class="simple">
+<li><p>parameters[Nx*Ny-1] ….. Logarithm of the Stokes I brightness at control point Nx-1,Ny-1 (Jy/sr)</p></li>
+<li><p>parameters[Nx*Ny] ……. Logarithm of the polarization fraction (<span class="math notranslate nohighlight">\(\sqrt{Q^2+U^2+V^2}/I\)</span>) at control point 0,0</p></li>
+</ul>
+<p>…</p>
+<ul class="simple">
+<li><p>parameters[2*Nx*Ny-1] … Logarithm of the polarization fraction (<span class="math notranslate nohighlight">\(\sqrt{Q^2+U^2+V^2}/I\)</span>) at control point Nx-1,Ny-1</p></li>
+<li><p>parameters[2*Nx*Ny] ….. Electric field polarization angle of the linear polarization (<span class="math notranslate nohighlight">\((1/2) \arctan(U/Q)\)</span> in rad) at control point 0,0</p></li>
+</ul>
+<p>…</p>
+<ul class="simple">
+<li><p>parameters[3*Nx*Ny-1] … Electric field polarization angle of the linear polarization (<span class="math notranslate nohighlight">\((1/2) \arctan(U/Q)\)</span> in rad) at control point Nx-1,Ny-1</p></li>
+<li><p>parameters[2*Nx*Ny] ….. Circular polarization fraction (<span class="math notranslate nohighlight">\(V/I\)</span>) at control point 0,0</p></li>
+</ul>
+<p>…</p>
+<ul class="simple">
+<li><p>parameters[4*Nx*Ny-1] … Circular polarization fraction (<span class="math notranslate nohighlight">\(V/I\)</span>) at control point Nx-1,Ny-1</p></li>
+<li><p>parameters[4*Nx*Ny] …. Field of view in the x direction (rad)</p></li>
+<li><p>parameters[4*Nx*Ny+1] .. Field of view in the y direction (rad)</p></li>
+<li><p>parameters[4*Nx*Ny+2] .. Orientation of the x direction (rad)</p></li>
+</ul>
+<p>and size=4*Nx*Ny+3.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Nx</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of control points in the -RA direction.</p></li>
+<li><p><strong>Ny</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of control points in the Dec direction.</p></li>
+<li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Spline control factor. Default: -0.5.</p></li>
+<li><p><strong>spline_method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Spline method. Accepted values are ‘fft’ and ‘direct’.  Default: ‘fft’.</p></li>
+<li><p><strong>station_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of strings corresponding to station names for which D terms are being reconstructed. Default: None.</p></li>
+<li><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image_adaptive_splined_raster.Nx">
+<code class="sig-name descname">Nx</code><a class="headerlink" href="#vis.polimage.model_polarized_image_adaptive_splined_raster.Nx" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of control points in the -RA direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image_adaptive_splined_raster.Ny">
+<code class="sig-name descname">Ny</code><a class="headerlink" href="#vis.polimage.model_polarized_image_adaptive_splined_raster.Ny" title="Permalink to this definition">¶</a></dt>
+<dd><p>Number of control points in the Dec direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image_adaptive_splined_raster.a">
+<code class="sig-name descname">a</code><a class="headerlink" href="#vis.polimage.model_polarized_image_adaptive_splined_raster.a" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spline control factor. Default: -0.5.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image_adaptive_splined_raster.spline_method">
+<code class="sig-name descname">spline_method</code><a class="headerlink" href="#vis.polimage.model_polarized_image_adaptive_splined_raster.spline_method" title="Permalink to this definition">¶</a></dt>
+<dd><p>Spline method. Accepted values are ‘fft’ and ‘direct’.  Default: ‘fft’.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_adaptive_splined_raster.generate_stokes_map">
+<code class="sig-name descname">generate_stokes_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">kind</span><span class="o">=</span><span class="default_value">'all'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_adaptive_splined_raster.generate_stokes_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_adaptive_splined_raster.generate_stokes_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal generation of the Stokes map. In practice you almost certainly want to call <a class="reference internal" href="#vis.polimage.model_polarized_image.stokes_map" title="vis.polimage.model_polarized_image.stokes_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_polarized_image.stokes_map()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Stokes parameter to generate map for. Accepted values are ‘I’, ‘Q’, ‘U’, ‘V’, and combinations or ‘all’. Default: ‘all’.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(list) List of arrays of desired Stokes parameter values at positions (x,y) in <span class="math notranslate nohighlight">\(Jy/\mu as^2\)</span>. Always returned in the order IQUV.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_adaptive_splined_raster.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_adaptive_splined_raster.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_adaptive_splined_raster.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Producess a lists parameter names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="vis.polimage.model_polarized_image_constant_polarization">
+<em class="property">class </em><code class="sig-prename descclassname">vis.polimage.</code><code class="sig-name descname">model_polarized_image_constant_polarization</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">station_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_constant_polarization"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_constant_polarization" title="Permalink to this definition">¶</a></dt>
+<dd><p>Polarized image class built on top of a model_image object.  Mirrors
+<code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_polarized_image_constant_polarization</span></code>.</p>
+<ul class="simple">
+<li><p>parameters[0] ………….. First parameter of the Stokes I image.</p></li>
+</ul>
+<p>…</p>
+<ul class="simple">
+<li><p>parameters[image.size-1] … Last parameter of the image.</p></li>
+<li><p>parameters[image.size] ….. Polarization fraction <span class="math notranslate nohighlight">\(\sqrt{Q^2+U^2+V^2}/I\)</span></p></li>
+<li><p>parameters[image.size+1] … Electric field polarization position angle <span class="math notranslate nohighlight">\((1/2) \arctan(U/Q)\)</span> (rad).</p></li>
+<li><p>parameters[image.size+2] … Circular polarization fraction <span class="math notranslate nohighlight">\(V/I\)</span>.</p></li>
+</ul>
+<p>and size=image.size+2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><em>model_image</em></a>) – Model image for the underlying intensity map.</p></li>
+<li><p><strong>station_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of strings corresponding to station names for which D terms are being reconstructed. Default: None.</p></li>
+<li><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_constant_polarization.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_constant_polarization.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_constant_polarization.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the model parameter list.  Mirrors <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">:model_polarized_image_constant_polarization::generate_model</span></code>,
+a similar function within the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_polarized_image_constant_polarization</span></code> class.  Effectively
+simply copies the parameters into the local list with some additional run-time checking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Parameter list.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_constant_polarization.generate_stokes_map">
+<code class="sig-name descname">generate_stokes_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">kind</span><span class="o">=</span><span class="default_value">'all'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_constant_polarization.generate_stokes_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_constant_polarization.generate_stokes_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal generation of the Stokes map. In practice you almost certainly want to call <a class="reference internal" href="#vis.polimage.model_polarized_image.stokes_map" title="vis.polimage.model_polarized_image.stokes_map"><code class="xref py py-func docutils literal notranslate"><span class="pre">model_polarized_image.stokes_map()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Stokes parameter to generate map for. Accepted values are ‘I’, ‘Q’, ‘U’, ‘V’, and combinations or ‘all’. Default: ‘all’.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(list) List of arrays of desired Stokes parameter values at positions (x,y) in <span class="math notranslate nohighlight">\(Jy/\mu as^2\)</span>. Always returned in the order IQUV.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_constant_polarization.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_constant_polarization.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_constant_polarization.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Hook for returning a list of parameter names.  Currently just returns the list of p0-p(size-1).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="vis.polimage.model_polarized_image_sum">
+<em class="property">class </em><code class="sig-prename descclassname">vis.polimage.</code><code class="sig-name descname">model_polarized_image_sum</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">offset_coordinates</span><span class="o">=</span><span class="default_value">'Cartesian'</span></em>, <em class="sig-param"><span class="n">reference_component</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">station_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_sum"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_sum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Summed image class that is a mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_polarized_image_sum</span></code>. Generates images by summing
+other images supplemented with some offset. The parameters list is expanded by 2 for each
+image, corresponding to the absolute positions. These may be specified either in Cartesian
+or polar coordinates; this selection must be made at construction and applies uniformly to
+all components (i.e., all component positions must be specified in the same coordinates).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>polarized_image_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code> objects. If None, must be set prior to calling <code class="xref py py-func docutils literal notranslate"><span class="pre">stokes_map()</span></code>. Default: None.</p></li>
+<li><p><strong>offset_coordinates</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Coordinates in which to specify component shifts.  Options are ‘Cartesian’ and ‘polar’. Default: ‘Cartesian’.</p></li>
+<li><p><strong>reference_component</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Index of component to define as reference. If None, will not set any component to be the reference. Default: None.</p></li>
+<li><p><strong>station_names</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of strings corresponding to station names for which D terms are being reconstructed. Default: None.</p></li>
+<li><p><strong>themis_fft_sign</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image_sum.image_list">
+<code class="sig-name descname">image_list</code><a class="headerlink" href="#vis.polimage.model_polarized_image_sum.image_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code> objects that are to be summed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image_sum.shift_list">
+<code class="sig-name descname">shift_list</code><a class="headerlink" href="#vis.polimage.model_polarized_image_sum.shift_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of shifts transformed to Cartesian coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image_sum.offset_coordinates">
+<code class="sig-name descname">offset_coordinates</code><a class="headerlink" href="#vis.polimage.model_polarized_image_sum.offset_coordinates" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coordinates in which to specify component shifts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)">str</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_sum.add">
+<code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_sum.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_sum.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds an model_image object or list of model_image objects to the sum.  The size is recomputed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>image</strong> (<a class="reference internal" href="#vis.polimage.model_polarized_image" title="vis.polimage.model_polarized_image"><em>model_polarized_image</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – A single model_image object or list of model_polarized_image objects to be added.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_sum.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_sum.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_sum.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the model parameter list.  Mirrors <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">:model_image_sum::generate_model</span></code>,
+a similar function within the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_image_sum</span></code> class.
+Effectively simply copies the parameters into the local list, transforms
+and copies the shift vector (x0,y0) for each model_image object, and performs some run-time checking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Parameter list.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_sum.generate_stokes_map">
+<code class="sig-name descname">generate_stokes_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">kind</span><span class="o">=</span><span class="default_value">'all'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_sum.generate_stokes_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_sum.generate_stokes_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal generation of the intensity map. In practice you almost certainly want to call <code class="xref py py-func docutils literal notranslate"><span class="pre">model_image.intensity_map()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Stokes parameter to generate map for. Accepted values are ‘I’, ‘Q’, ‘U’, ‘V’, and combinations or ‘all’. Default: ‘all’.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(list) List of arrays of desired Stokes parameter values at positions (x,y) in <span class="math notranslate nohighlight">\(Jy/\mu as^2\)</span>. Always returned in the order IQUV.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_sum.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_sum.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_sum.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Producess a lists parameter names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_sum.set_time">
+<code class="sig-name descname">set_time</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_sum.set_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_sum.set_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time in hours.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.polimage.plot_linear_polarization_map">
+<code class="sig-prename descclassname">vis.polimage.</code><code class="sig-name descname">plot_linear_polarization_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">polarized_image</span></em>, <em class="sig-param"><span class="n">parameters</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">shape</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tick_shape</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'plasma'</span></em>, <em class="sig-param"><span class="n">tick_color</span><span class="o">=</span><span class="default_value">'w'</span></em>, <em class="sig-param"><span class="n">Lmin</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">Lmax</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">mscale</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">in_radec</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">xlabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ylabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">return_stokes_map</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">transfer_function</span><span class="o">=</span><span class="default_value">'linear'</span></em>, <em class="sig-param"><span class="n">intensity_contours</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">intensity_colors</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#plot_linear_polarization_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.plot_linear_polarization_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots linear polarization fraction and polarization ticks associated with a given
+<code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code> object evaluated at a specified set of parameters. A number of additional
+practical options may be passed. Access to a matplotlib pcolor object, the figure handle and axes
+handles are returned. Optionally, the Stokes map is returned.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>polarized_image</strong> (<a class="reference internal" href="#vis.polimage.model_polarized_image" title="vis.polimage.model_polarized_image"><em>model_polarized_image</em></a>) – <a class="reference internal" href="#vis.polimage.model_polarized_image" title="vis.polimage.model_polarized_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_polarized_image</span></code></a> object to plot.</p></li>
+<li><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameters that define model_image intensity map.</p></li>
+<li><p><strong>limits</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Limits in uas on image size. If a single float is given, the limits are uniformly set. If a list is given, it must be in the form [xmin,xmax,ymin,ymax]. Default: 75.</p></li>
+<li><p><strong>shape</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Number of pixels. If a single int is given, the number of pixels are uniformly set in both directions.  If a list is given, it must be in the form [Nx,Ny]. Default: 256.</p></li>
+<li><p><strong>tick_shape</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Number of ticks to plot. If a single int is given, the number of ticks are uniformly set in both directions.  If a list is given, it must be in the form [Mx,My]. Default: 16.</p></li>
+<li><p><strong>colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.2.1)"><em>matplotlib.colors.Colormap</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. Default: ‘afmhot’.</p></li>
+<li><p><strong>tick_color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>.</p></li>
+<li><p><strong>Lmin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Minimum intensity for colormap. Default: 0 (though see transfer_function).</p></li>
+<li><p><strong>Lmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Maximum intensity for colormap. Default: maximum intensity.</p></li>
+<li><p><strong>mscale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Polarization fraction scale for polarization ticks. If None, set by maximum polarization fraction where the polarized flux is above 1% of the maximum polarized flux. Default: None.</p></li>
+<li><p><strong>in_radec</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True, plots in <span class="math notranslate nohighlight">\(\Delta RA\)</span> and <span class="math notranslate nohighlight">\(\Delta Dec\)</span>.  If False, plots in sky-right Cartesian coordinates. Default: True.</p></li>
+<li><p><strong>xlabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Label for xaxis. Default: ‘<span class="math notranslate nohighlight">\(\Delta RA (\mu as)\)</span> if in_radec is True, <span class="math notranslate nohighlight">\(\Delta x (\mu as)\)</span> if in_radec is False.</p></li>
+<li><p><strong>ylabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Label for yaxis. Default: ‘<span class="math notranslate nohighlight">\(\Delta Dec (\mu as)\)</span> if in_radec is True, <span class="math notranslate nohighlight">\(\Delta y (\mu as)\)</span> if in_radec is False.</p></li>
+<li><p><strong>return_stokes_map</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True returns the intensity map in addition to standard return items.</p></li>
+<li><p><strong>transfer_function</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Transfer function to plot.  Options are ‘linear’,’sqrt’,’log’.  If ‘log’, if Imin=0 it will be set to Imax/1000.0 by default, else if Imin&lt;0 it will be assumed to be a dynamic range and Imin = Imax * 10**(Imin).</p></li>
+<li><p><strong>intensity_contours</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – May either be True, an integer, or a list of contour level values. Default: False. If True, sets 8 linearly spaced contour levels.</p></li>
+<li><p><strong>intensity_colors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – A list composed of any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity level. 0 prints nothing. 1 prints various elements of the plotting process. Passed to <code class="xref py py-func docutils literal notranslate"><span class="pre">model_image.generate_intensity_map()</span></code>. Default: 0.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Returns :</dt><dd><p>(matplotlib.pyplot.image,matplotlib.pyplot.axes,matplotlib.pyplot.fig,[numpy.ndarray,numpy.ndarray,numpy.ndarray]): Image handle; Figure object; Axes object; Optionally intensity map (x,y,S).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="module-vis.io">
+<span id="construciton-and-i-o"></span><h2>Construciton and I/O<a class="headerlink" href="#module-vis.io" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt id="vis.io.construct_model_image_from_glob">
+<code class="sig-prename descclassname">vis.io.</code><code class="sig-name descname">construct_model_image_from_glob</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">model_glob</span></em>, <em class="sig-param"><span class="n">glob_version</span></em>, <em class="sig-param"><span class="n">hyperparameters</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/io.html#construct_model_image_from_glob"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.io.construct_model_image_from_glob" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code> object given an appropriate model specification glob.
+Currently accepted globs include:</p>
+<ul class="simple">
+<li><p>ccm_mexico+ model specification string. These are an extended set of the strings used by the ccm_m87_mexico drivers.  For example, sXaagG.  For raster model types, hyperparameters must be supplied.  See <code class="xref py py-func docutils literal notranslate"><span class="pre">expand_model_glob_ccm_mexico()</span></code> for details regarding the required form.</p></li>
+<li><p>model tag file name. These can be output by Themis directly and encompass a wider set of possible models.</p></li>
+</ul>
+<p>The appropriate associated glob version must be specified. For some specifications an additional set of hyperparameters may need to be supplied.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model_glob</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Glob defining model image. Examples are ‘sXaagG’ or ‘model_image.tag’</p></li>
+<li><p><strong>tagversion</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Version of tag system. Currently only tagvers-1.0 is implemented. Default ‘tagvers-1.0’.</p></li>
+<li><p><strong>hyperparameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Dictionary of hyperparameters if needed by the specification.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code> object of the corresponding model.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image">model_image</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.io.write_fits">
+<code class="sig-prename descclassname">vis.io.</code><code class="sig-name descname">write_fits</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">img</span></em>, <em class="sig-param"><span class="n">fits_filename</span></em>, <em class="sig-param"><span class="n">uvfits_filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">time</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/io.html#write_fits"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.io.write_fits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes a FITS format image file given 2D image data.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>This makes extensive use of ehtim and will not be available if ehtim is not installed.  Raises a NotImplementedError if ehtim is unavailable.</p></li>
+<li><p>Due to ehtim, only <em>square</em> images are supported at this time.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>I</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a><em>,</em><a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><em>model_image</em></a>) – Either an array of intensity values in (Jy/uas^2) or a <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code> object.</p></li>
+<li><p><strong>fits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of output FITS file.</p></li>
+<li><p><strong>uvfits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.</p></li>
+<li><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time in hr on the relevant observation day (set by uvfits file) represented by image data.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If 0, no information is printed.  If &gt;=1, prints information about sizes and values.  If &gt;=2, generates debugging plots.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="vis.io.write_hdf5">
+<code class="sig-prename descclassname">vis.io.</code><code class="sig-name descname">write_hdf5</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">t</span></em>, <em class="sig-param"><span class="n">mov</span></em>, <em class="sig-param"><span class="n">hdf5_filename</span></em>, <em class="sig-param"><span class="n">uvfits_filename</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">time_offset</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'ehtim'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/io.html#write_hdf5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.io.write_hdf5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes an HDF5 format movie file given a sequence of 2D image data</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>Requires ehtim or h5py to be installed.  Raises a NotImplementedError if neither are unavailable</p></li>
+<li><p>If these will be read in by ehtim later, only <em>square</em> images are permitted.  Raises a runtime warning if non-square images are requested.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Array of times of frames</p></li>
+<li><p><strong>mov</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>,</em><a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><em>model_image</em></a>) – Either a list of arrays of intensity values in (Jy/uas^2) computed at the times in t or a <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code> object.</p></li>
+<li><p><strong>fits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of output FITS file.</p></li>
+<li><p><strong>uvfits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.</p></li>
+<li><p><strong>time_offset</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time offset in hr on the relevant observation day (set by uvfits file) represented by image data.</p></li>
+<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Method to use to construct and format hdf5 file.  Options are ‘ehtim’ or ‘h5py’, which make use of the ehtim functions or provide a separate hdf5 format, respectively. Default: ‘ehtim’.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If 0, no information is printed.  If &gt;=1, prints information about sizes and values.  If &gt;=2, generates debugging plots.</p></li>
 </ul>
 </dd>
 </dl>
@@ -1872,7 +2480,7 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+30.gad180be',
+            VERSION:'0.1.0+40.gc289d3c',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
