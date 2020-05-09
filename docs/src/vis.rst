@@ -20,7 +20,7 @@ Polarized Image Models
 .. automodule:: vis.polimage
    :members:
 
-Construciton and I/O
+Construction and I/O
 ------------------------------
 .. automodule:: vis.io
    :members:
