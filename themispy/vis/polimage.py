@@ -48,7 +48,8 @@ class model_polarized_image(model_image) :
     def __init__(self, station_names=None, themis_fft_sign=True) :
         super().__init__(themis_fft_sign)
         self.parameters=None
-        self.size=None
+        self.size=0
+        self.image_size=0
         self.themis_fft_sign=themis_fft_sign
         self.time=0
 
@@ -61,7 +62,9 @@ class model_polarized_image(model_image) :
             for station in station_names :
                 self.dterm_dict[station]=[1.0+0.0j,1.0+0.0j]
             self.number_of_dterms=4*len(station_names)
-            
+
+        self.size = self.image_size+self.number_of_dterms
+        
             
     def set_dterms(self,dterm_parameters) :
         """
@@ -100,9 +103,9 @@ class model_polarized_image(model_image) :
           parameters (list): Parameter list.
         """
         self.parameters = np.copy(parameters)
-        if (len(self.parameters)+self.number_of_dterms<self.size) :
+        if (len(self.parameters)<self.size) :
             raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
-        self.set_dterms(parameters[self.size:])
+        self.set_dterms(parameters[self.image_size:])
         
         
     def stokes_map(self,x,y,parameters=None,kind='I',verbosity=0) :
@@ -185,7 +188,7 @@ class model_polarized_image(model_image) :
           (list) List of strings of variable names.
         """
 
-        return [ 'p%i'%(j) for j in range(self.size) ] + self.dterm_dict['station_names']
+        return [ 'p%i'%(j) for j in range(self.image_size) ] + self.dterm_dict['station_names']
     
     
     def set_time(self,time) :
@@ -211,10 +214,10 @@ class model_polarized_image_constant_polarization(model_polarized_image) :
 
     * parameters[image.size-1] ... Last parameter of the image.
     * parameters[image.size] ..... Polarization fraction :math:`\\sqrt{Q^2+U^2+V^2}/I`
-    * parameters[image.size+1] ... Electric field polarization position angle :math:`0.5\\arctan(U/Q)`(rad).
+    * parameters[image.size+1] ... Electric field polarization position angle :math:`(1/2) \\arctan(U/Q)` (rad).
     * parameters[image.size+2] ... Circular polarization fraction :math:`V/I`.
 
-    and size=N+2.
+    and size=image.size+2.
 
     Args:
       image (model_image): Model image for the underlying intensity map.
@@ -224,8 +227,9 @@ class model_polarized_image_constant_polarization(model_polarized_image) :
 
     def __init__(self, image, station_names=None, themis_fft_sign=True) :
         super().__init__(station_names,themis_fft_sign)
-        self.size=image.size+3
+        self.image_size = image.size+3
         self.image = image
+        self.size = self.image_size + self.number_of_dterms
     
         
     def generate(self,parameters) :
@@ -239,7 +243,7 @@ class model_polarized_image_constant_polarization(model_polarized_image) :
         """
         
         self.parameters = np.copy(parameters)
-        if (len(self.parameters)+self.number_of_dterms<self.size) :
+        if (len(self.parameters)<self.size) :
             raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
 
         self.image.generate(parameters[:self.image.size])
@@ -312,11 +316,11 @@ class model_polarized_image_adaptive_splined_raster(model_polarized_image) :
     ...
 
     * parameters[2*Nx*Ny-1] ... Logarithm of the polarization fraction (:math:`\\sqrt{Q^2+U^2+V^2}/I`) at control point Nx-1,Ny-1
-    * parameters[2*Nx*Ny] ..... Electric field polarization angle of the linear polarization (:math:`0.5\\arctan(U/Q)`) at control point 0,0
+    * parameters[2*Nx*Ny] ..... Electric field polarization angle of the linear polarization (:math:`(1/2) \\arctan(U/Q)` in rad) at control point 0,0
  
     ...
 
-    * parameters[3*Nx*Ny-1] ... Electric field polarization angle of the linear polarization (:math:`0.5\\arctan(U/Q)`) at control point Nx-1,Ny-1
+    * parameters[3*Nx*Ny-1] ... Electric field polarization angle of the linear polarization (:math:`(1/2) \\arctan(U/Q)` in rad) at control point Nx-1,Ny-1
     * parameters[2*Nx*Ny] ..... Circular polarization fraction (:math:`V/I`) at control point 0,0
  
     ...
@@ -345,12 +349,12 @@ class model_polarized_image_adaptive_splined_raster(model_polarized_image) :
 
     def __init__(self, Nx, Ny, a=-0.5, spline_method='fft', station_names=None, themis_fft_sign=True) :
         super().__init__(station_names,themis_fft_sign)
-        self.size=4*Nx*Ny+3
-
+        self.image_size = 4*Nx*Ny+3
         self.Nx = Nx
         self.Ny = Ny
         self.a = a
         self.spline_method = spline_method
+        self.size = self.image_size+self.number_of_dterms
         
         
     def generate_stokes_map(self,x,y,kind='all',verbosity=0) :
@@ -488,13 +492,16 @@ class model_polarized_image_sum(model_polarized_image) :
         if (not image_list is None) :
             self.image_list = copy.copy(image_list) # This is a SHALLOW copy
 
-        self.size=0
+        self.image_size=0
         for image in image_list :
-            self.size += image.size+2
+            self.image_size += image.size+2
             self.shift_list.append([0.0, 0.0])
 
         self.offset_coordinates = offset_coordinates
         self.reference_component = reference_component
+
+        self.size = self.image_size+self.number_of_dterms
+
         
             
     def add(self,image) :
@@ -514,10 +521,10 @@ class model_polarized_image_sum(model_polarized_image) :
         else :
             self.image_list.append(image)
         # Get new size and shift list
-        self.size=0
+        self.image_size=0
         self.shift_list = []
         for image in image_list :
-            self.size += image.size+2
+            self.image_size += image.size+2
             self.shift_list.append([0.0,0.0])
 
     def set_reference_component(self,reference_component) :
@@ -539,7 +546,7 @@ class model_polarized_image_sum(model_polarized_image) :
         """
         
         self.parameters = np.copy(parameters)
-        if (len(self.parameters)<self.size) :
+        if (len(self.parameters)<self.image_size) :
             raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
 
         q = self.parameters
@@ -893,38 +900,6 @@ def construct_model_polarized_image_from_tagv1(tag,verbosity=0) :
 def construct_model_polarized_image_from_tag_file(tag_file_name='model_image.tag', tagversion='tagvers-1.0',verbosity=0) :
     """
     Reads tag file produced by the :cpp:func:`Themis::model_polarized_image::write_model_tag_file`
-    function and returns an appropriate model polarized image.
-
-    Args:
-      tag_file_name (str): Name of the tag_file. Default: 'model_image.tag'
-      tagversion (str): Version of tag system. Currently only tagvers-1.0 is implemented. Default 'tagvers-1.0'.
-      verbosity (int): Verbosity level. 0 prints nothing. 1 prints tag information.
-
-    Returns:
-      (model_polarized_image): :class:`model_polarized_image` object of the corresponding model.
-    """
-
-
-    tagin = open(tag_file_name,'r')
-    tag = tagin.readlines()
-    tagin.close()
-    
-    tag = [l.strip('\n\r') for l in tag]
-    tagversion_file = tag[0]
-    tag = tag[1:]
-
-    if (tagversion_file==tagversion) :
-        image,tag = construct_model_polarized_image_from_tagv1(tag,verbosity=verbosity)
-        if (len(tag)>0) :
-            raise RuntimeError(("Remaining tag lines:"+len(tag)*("   %s\n"))%tuple(tag))
-        return image
-    else:
-        raise RuntimeError("Tag versions other than tagvers-1.0 are not supported at this time.")
-
-
-def construct_model_polarized_image_from_tag_file(tag_file_name='model_image.tag', tagversion='tagvers-1.0',verbosity=0) :
-    """
-    Reads tag file produced by the :cpp:func:`Themis::model_polarized_image::write_model_tag_file` 
     function and returns an appropriate model polarized image.
 
     Args:

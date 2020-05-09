@@ -4,7 +4,7 @@ Data manipulation tools.
 
 __author__="Themis Development Team"
 
-__all__ = ['calibration', 'typlot', 'image', 'polimage']
+__all__ = ['calibration', 'typlot', 'image', 'polimage', 'io']
 
 # Import all modules
 from . import *
@@ -14,3 +14,4 @@ from .calibration import *
 from .typlot import *
 from .image import *
 from .polimage import *
+from .io import *
