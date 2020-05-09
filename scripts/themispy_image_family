@@ -62,7 +62,7 @@ def set_parser():
                         nargs="*",
                         action='store',
                         default=None,
-                        help=("If the model type is a :class:`model_image_sum`, will fix the image origin of"
+                        help=("If the model type is a :class:`model_image_sum` or :class:`model_polarized_image_sum`, will fix the image origin of"
                               " the specified component. If no components are specified, will choose the first."
                               " Default: no component will be fixed to the origin."))
 
@@ -177,14 +177,14 @@ if __name__ == "__main__" :
 
     # Set the reference component if desired
     if (not (args.reference is None)) :
-        if (isinstance(model_image,ty.vis.model_image_sum)) :
+        if (isinstance(model_image,ty.vis.model_image_sum) or isinstance(model_image,ty.vis.model_polarized_image_sum)) :
             if (args.reference==[]) :
                 args.reference=0
             else :
                 args.reference=args.reference[0]
             model_image.set_reference_component(args.reference)
         else :
-            print("WARNING: -r,--reference only have an effect when the model is a model_image_sum.")
+            print("WARNING: -r,--reference only have an effect when the model is a model_image_sum or model_polarized_image_sum.")
         
     if (args.verbose):
         print("Model type and size:",type(model_image),model_image.size)

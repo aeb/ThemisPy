@@ -75,7 +75,7 @@ def set_parser():
                         nargs="*",
                         action='store',
                         default=None,
-                        help=("If the model type is a :class:`model_image_sum`, will fix the image origin of"
+                        help=("If the model type is a :class:`model_image_sum` or :class:`model_polarized_image_sum`, will fix the image origin of"
                               " the specified component. If no components are specified, will choose the first."
                               " Default: no component will be fixed to the origin."))
     
