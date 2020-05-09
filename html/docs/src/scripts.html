@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>themispy_best_sample &mdash; ThemisPy 0.1.0+40.gc289d3c documentation</title>
+  <title>themispy_best_sample &mdash; ThemisPy 0.1.0+40.gc289d3c.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+40.gc289d3c documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+40.gc289d3c.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Developer’s Guide" href="devel.html"/>
         <link rel="prev" title="Utils" href="utils.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+40.gc289d3c
+                0.1.0+40.gc289d3c.dirty
               </div>
             
           
@@ -493,7 +493,7 @@ $ themispy_image_family -c Chain.dat -l Lklhd.dat –samples 9</p>
 <dd><p>Model specification glob. May be a model tag file name or an ccm_mexico+ model specification glob. See the vis.image.construct_model_image_from_glob function documentation for format details. If contains a ‘.’ will assume that it is a tagvers-1.0 tag file. Default: model_image.tag</p>
 </dd>
 <dt><kbd>-r, --reference</kbd></dt>
-<dd><p>If the model type is a <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_sum</span></code>, will fix the image origin of the specified component. If no components are specified, will choose the first. Default: no component will be fixed to the origin.</p>
+<dd><p>If the model type is a <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_sum</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">model_polarized_image_sum</span></code>, will fix the image origin of the specified component. If no components are specified, will choose the first. Default: no component will be fixed to the origin.</p>
 </dd>
 <dt><kbd>-bf, --burn-fraction</kbd></dt>
 <dd><p>Fraction of chain to excise as burn in. Default: 0.5</p>
@@ -564,7 +564,7 @@ $ themispy_image_fit -c Chain.dat -l Lklhd.dat</p>
 <dd><p>Model specification glob. May be a model tag file name or an ccm_mexico+ model specification glob. See the vis.image.construct_model_image_from_glob function documentation for format details. If contains a ‘.’ will assume that it is a tagvers-1.0 tag file. Default: model_image.tag</p>
 </dd>
 <dt><kbd>-r, --reference</kbd></dt>
-<dd><p>If the model type is a <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_sum</span></code>, will fix the image origin of the specified component. If no components are specified, will choose the first. Default: no component will be fixed to the origin.</p>
+<dd><p>If the model type is a <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_sum</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">model_polarized_image_sum</span></code>, will fix the image origin of the specified component. If no components are specified, will choose the first. Default: no component will be fixed to the origin.</p>
 </dd>
 <dt><kbd>-N</kbd></dt>
 <dd><p>Number of pixels in image. May be a single integer (square image) or two integers (non-square image). If None uses the default in vis.image.plot_model_image function. Default: None.</p>
@@ -631,7 +631,7 @@ $ themispy_image_stats -c Chain.dat –samples 10</p>
 <dd><p>Model specification glob. May be a model tag file name or an ccm_mexico+ model specification glob. See the vis.image.construct_model_image_from_glob function documentation for format details. If contains a ‘.’ will assume that it is a tagvers-1.0 tag file. Default: model_image.tag</p>
 </dd>
 <dt><kbd>-r, --reference</kbd></dt>
-<dd><p>If the model type is a <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_sum</span></code>, will fix the image origin of the specified component. If no components are specified, will choose the first. Default: no component will be fixed to the origin.</p>
+<dd><p>If the model type is a <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_sum</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">model_polarized_image_sum</span></code>, will fix the image origin of the specified component. If no components are specified, will choose the first. Default: no component will be fixed to the origin.</p>
 </dd>
 <dt><kbd>-bf, --burn-fraction</kbd></dt>
 <dd><p>Fraction of chain to excise as burn in. Default: 0.5</p>
@@ -891,7 +891,7 @@ $ themispy_triangle_plot -c Chain.dat -p 0-5</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+40.gc289d3c',
+            VERSION:'0.1.0+40.gc289d3c.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
