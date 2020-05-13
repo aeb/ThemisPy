@@ -165,7 +165,7 @@ def plot_likelihood_trace_list(elklhd_list, colormap='plasma', step_norm=1000, g
         cmap = cm.get_cmap(colormap)
         
         for w in range(elklhd.shape[1]) :
-            plt.plot(chain_step,elklhd[:,w],'-',color=cmap(w/(elklhd.shape[1]-1.0)),alpha=alpha)
+            plt.plot(chain_step,elklhd[:,w],'-',color=cmap(w/max(1,elklhd.shape[1]-1.0)),alpha=alpha)
 
         if (means) :
             xtmp = np.array([chain_step[0], chain_step[-1]])
