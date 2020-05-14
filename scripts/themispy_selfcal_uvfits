@@ -61,6 +61,29 @@ def set_parser() :
                               " that the number of data points in the uvfits file match the number"
                               " of gain reconstruction epochs."))
     
+    parser.add_argument("-f","--fractional-systematic-error",
+                        type=float,
+                        action='store',
+                        help=("Fractional systematic error to add IN PERCENT. Default: None."))
+    parser.add_argument("-t","--threshold-systematic-error",
+                        type=float,
+                        action='store',
+                        help=("Constant systematic error threshold to add in mJy. Default: None."))
+    parser.add_argument("-b","--minimum-baseline",
+                        type=float,
+                        action='store',
+                        help=("Minimum baseline, below which data are excluded from ALL data generation."
+                              " Default: None."))
+    parser.add_argument("-x","--exclude-station",
+                        type=str,
+                        nargs='+',
+                        action='append',
+                        help=("List of stations to flag.  Stations must be specified with the same"
+                              " station codes appearing in the uvfits file.  E.g., the 2017 code list."
+                              " Default: None."))
+
+    
+
     parser.add_argument("-o","--out",
                         type=str,
                         action="store",
@@ -84,13 +107,33 @@ if __name__ == "__main__" :
     # load in the data
     obs = eh.obsdata.load_uvfits(args.uvfits)
 
+    # exclude stations
+    if (not args.exclude_station is None) :
+        obs = obs.flag_sites(list(flatten(args.exclude_station)))
+
     # (scan) average the data
     if (args.scan_avg) :
         obs.add_scans()
         obs = obs.avg_coherent(0.0, scan_avg=True)
     elif (not args.avg_time is None) :
         obs = obs.avg_coherent(args.avg_time)
-    
+
+    # add systematic noise
+    if (not args.fractional_systematic_error is None) :
+        obs = obs.add_fractional_noise(args.fractional_systematic_error/100.0)
+
+    # add threshold
+    if (not args.threshold_systematic_error is None):
+        if (obs.polrep=='stokes') :
+            obs.data['sigma'] = np.sqrt(obs.data['sigma']**2 + (args.threshold_systematic_error/1.0e3)**2)
+        else :
+            for sigtype in ['rrsigma','llsigma','rlsigma','lrsigma'] :
+                obs.data[sigtype] = np.sqrt(obs.data[sigtype]**2 + (args.threshold_systematic_error/1.0e3)**2)
+
+    # remove baselines below cutoff
+    if (not args.minimum_baseline is None) :
+        obs.flag_uvdist(args.minimum_baseline)
+
     # Read in the gain file
     gain_data = ty.vis.read_gain_file(args.g)
 
