@@ -107,7 +107,45 @@ def file_length(filename, header_string=None, comment_string=None) :
         return length, nhead, ncomm
 
 
-def read_elklhd(filename, stride=1, burn_fraction=0, skip=None):
+def read_elklhd(filename, stride=1, burn_fraction=0, skip=None, auto_warmup=False, sampler_type=None):
+    """
+    Reads in a Themis likelihood file. Optionally, a stride, burn-in fraction, or number of 
+    *ensemble samples* to skip may be set. Returns an IndexError if fewer ensemble samples 
+    exist in the chain file than skip.
+
+    Args:
+      filename (str): Filename in which likelihood data will be found (e.g., `Lklhd.dat`)
+      stride (int): Integer factor by which to step through samples *coherently* among walkers.  Default: 1.
+      burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.
+      auto_warmup (bool): If true it will automatically sense the Stan warmup period for Stan state files and cut it. `burn_fraction` then applies to the state file with warmup already removed.
+      skip (int): Number of initial *ensemble samples* to skip.  Overrides burn_fraction unless set to None. Default: None.
+      sampler_type (str): Likelihood file format specifier.  If None, looks for a format at the top of the likelihood file; if not found, defaults to 'ensemble'.  Default: None.
+
+    Returns:
+      (numpy.ndarray, int): Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride; Number of samples skipped.
+    """
+
+    if (sampler_type is None) :
+        # Read first line and look for sampler tag
+        with open(filename) as f:
+            first_line = f.readline()
+        if ( "lklhdfmt" in first_line.lower() ) :
+            sampler_type=first_line.split()[1]
+        else :
+            sampler_type='ensemble'
+
+    if (sampler_type=='ensemble') :
+        return read_ensemble_lklhd(filename,stride=stride,burn_fraction=burn_fraction,skip=skip)
+    elif (sampler_type=='stan') :
+        state,nskip = read_stan_state(filename,stride=stride,burn_fraction=burn_fraction,skip=skip,auto_warmup=auto_warmup)
+        eL = np.zeros([state.shape[0],1])
+        eL[:,0] = state[:,0]
+        return eL,nskip
+    else :
+        raise RuntimeError("Unrecognized lklhdfmt type, %s."%(sampler_type))
+
+    
+def read_ensemble_lklhd(filename, stride=1, burn_fraction=0, skip=None):
     """
     Reads in a Themis likelihood file from an ensemble sampler.  Optionally, a 
     stride, burn-in fraction, or number of *ensemble samples* to skip may be set.
@@ -171,9 +209,49 @@ def read_elklhd(filename, stride=1, burn_fraction=0, skip=None):
         j += 1
 
     return lklhd,nskip
-            
 
-def read_echain(filename, walkers, stride=1, burn_fraction=0, skip=None, parameter_list=None):
+
+def read_echain(filename, walkers=1, stride=1, burn_fraction=0, skip=None, parameter_list=None, sampler_type=None):
+    """
+    Reads in a Themis chain file.  The number of walkers must be supplied.  Optionally, 
+    a stride, burn-in fraction, number of *ensemble samples* to skip, or a set of 
+    parameters may be provided.  Returns an IndexError if fewer ensemble samples exist 
+    in the chain file than skip.
+    
+    Args:
+      filename (str): Filename in which chain data will be found (e.g., `Chain.dat`)
+      walkers (int): Number of independent walkers in the ensemble. Default: 1.
+      stride (int): Integer factor by which to step through samples *coherently* among walkers.  Default: 1.
+      burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.
+      skip (int): Number of initial *ensemble samples* to skip. Default: 0.
+      parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
+      sampler_type (str): Likelihood file format specifier.  If None, looks for a format at the top of the likelihood file; if not found, defaults to 'ensemble'.  Default: None.
+ 
+    Returns:
+      (numpy.ndarray): Chain data arranged as 3D array indexed by [sample, walker, parameter] *after* excluding the skipped lines and applying the specified stride.
+    """
+
+    if (sampler_type is None) :
+        # Read first line and look for sampler tag
+        with open(filename) as f:
+            first_line = f.readline()
+        if ( "chainfmt" in first_line.lower() ) :
+            sampler_type=first_line.split()[1]
+        else :
+            sampler_type='ensemble'
+
+    if (sampler_type=='ensemble') :
+        return read_ensemble_chain(filename,walkers=walkers,stride=stride,burn_fraction=burn_fraction,skip=skip,parameter_list=parameter_list)
+    elif (sampler_type=='stan') :
+        chain = read_stan_chain(filename,stride=stride,burn_fraction=burn_fraction,skip=skip,parameter_list=parameter_list)
+        echain = np.zeros([chain.shape[0],1,chain.shape[1]])
+        echain[:,0,:] = chain[:,:]
+        return echain
+    else :
+        raise RuntimeError("Unrecognized chainfmt type, %s."%(sampler_type))
+
+
+def read_ensemble_chain(filename, walkers, stride=1, burn_fraction=0, skip=None, parameter_list=None):
     """
     Reads in a Themis chain file from an ensemble sampler.  The number of walkers 
     must be supplied.  Optionally, a stride, burn-in fraction, number of *ensemble
@@ -244,9 +322,9 @@ def read_echain(filename, walkers, stride=1, burn_fraction=0, skip=None, paramet
     return chain.reshape([nstor,walkers,-1])
 
 
-def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=None, parameter_list=None):
+def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=None, auto_warmup=False, parameter_list=None,sampler_type=None):
     """
-    Coherently loads a Themis chain and likelihood pair from an ensemble sampler.
+    Coherently loads a Themis chain and likelihood pair.
     Optionally, a stride, burn-in fraction, number of *ensemble samples* to skip, 
     or a set of parameters may be provided.  If set, the burn-in fraction is 
     computed for the *shorter* of the two files.
@@ -256,8 +334,10 @@ def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=No
       lklhd_filename (str): Filename in which likelihood data will be found (e.g., `Lklhd.dat`)
       stride (int): Integer factor by which to step through samples *coherently* among walkers.  Default: 1.
       burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.
+      auto_warmup (bool): If true it will automatically sense the Stan warmup period for Stan state files and cut it. `burn_fraction` then applies to the state file with warmup already removed.
       skip (int): Number of initial *ensemble samples* to skip. Default: 0.
       parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
+      sampler_type (str): Likelihood file format specifier.  If None, looks for a format at the top of the likelihood file; if not found, defaults to 'ensemble'.  Default: None.
 
     Returns:
       (numpy.ndarray, numpy.ndarray): Chain data arranged as 3D array indexed by [sample, walker, parameter] *after* excluding the skipped lines and applying the specified stride; Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride.
@@ -265,7 +345,7 @@ def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=No
 
     # Find the lengths of the chain and likelihood files
     chain_nsamp,nhead = file_length(chain_filename,header_string='#')
-    elklhd,_ = read_elklhd(lklhd_filename, stride=stride, skip=skip)
+    elklhd,_ = read_elklhd(lklhd_filename, stride=stride, skip=skip, auto_warmup=auto_warmup, sampler_type=sampler_type)
     
     # Determine the number of walkers, and set the burn-in relative to the shorter
     walkers = elklhd.shape[1]
@@ -281,7 +361,6 @@ def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=No
     
     return echain,elklhd
     
-
 def sample_erun(chain_filename, lklhd_filename, samples, burn_fraction=0, skip=None, parameter_list=None):
     """
     Coherently loads and generates samples from a Themis chain and likelihood pair from
@@ -351,7 +430,7 @@ def sample_erun(chain_filename, lklhd_filename, samples, burn_fraction=0, skip=N
     return echain,elklhd
 
 
-def read_stanstate(filename, stride=1, burn_fraction=0, skip=None, auto_warmup=False):
+def read_stan_state(filename, stride=1, burn_fraction=0, skip=None, auto_warmup=False):
     """
     Reads in a Themis state file from a Stan sampler.  Optionally, a 
     stride, burn-in fraction, auto_warmup detection, or number of *Stan samples* to skip may be set.
@@ -399,7 +478,7 @@ def read_stanstate(filename, stride=1, burn_fraction=0, skip=None, auto_warmup=F
     # Number of samples to store
     nstor = (nsamp-nskip)//stride
     state = np.zeros((nstor,7))    
-    print(state.shape)
+
     # Add in the header
     nskip += nhead
     
@@ -428,7 +507,7 @@ def read_stanstate(filename, stride=1, burn_fraction=0, skip=None, auto_warmup=F
     return state,nskip
             
 
-def read_stanchain(filename, stride=1, burn_fraction=0, skip=None, parameter_list=None):
+def read_stan_chain(filename, stride=1, burn_fraction=0, skip=None, parameter_list=None):
     """
     Reads in a Themis chain file from an stan sampler.  The number of walkers 
     must be supplied.  Optionally, a stride, burn-in fraction, number of *ensemble
@@ -497,7 +576,7 @@ def read_stanchain(filename, stride=1, burn_fraction=0, skip=None, parameter_lis
     return chain
 
 
-def load_stanrun(chain_filename, state_filename, stride=1, burn_fraction=0, auto_warmup=True, skip=None, parameter_list=None):
+def load_stan_run(chain_filename, state_filename, stride=1, burn_fraction=0, auto_warmup=True, skip=None, parameter_list=None):
     """
     Coherently loads a Themis chain and likelihood pair from an Stan Themis run.
     Optionally, a stride, burn-in fraction, number of *samples* to skip, 
@@ -519,7 +598,7 @@ def load_stanrun(chain_filename, state_filename, stride=1, burn_fraction=0, auto
 
     # Find the lengths of the chain and likelihood files
     nsamp,nhead = file_length(chain_filename,header_string='#')
-    state,_ = read_stanstate(state_filename, stride=stride, skip=skip,burn_fraction=burn_fraction, auto_warmup=auto_warmup)
+    state,_ = read_stan_state(state_filename, stride=stride, skip=skip,burn_fraction=burn_fraction, auto_warmup=auto_warmup)
     
     # Determine the number of walkers, and set the burn-in relative to the shorter
     nsamp = min(state.shape[0],nsamp//(stride))
@@ -530,13 +609,14 @@ def load_stanrun(chain_filename, state_filename, stride=1, burn_fraction=0, auto
     state = state[0:nsamp,:]
 
     # Read and restrict the chain
-    chain = read_stanchain(chain_filename, stride=stride, skip=skip, parameter_list=parameter_list)[:nsamp,:]
+    chain = read_stan_chain(chain_filename, stride=stride, skip=skip, parameter_list=parameter_list)[:nsamp,:]
 
     #If warmup is removed count the number of divergences in the samples
     if (auto_warmup):
         print("The number of divergent transitions in %s = %d."%(state_filename,np.sum(state[:,-2])))
     
     return chain,state
+
 
 def sample_chain(chain_filename, samples, burn_fraction=0, skip=None, parameter_list=None):
     """
