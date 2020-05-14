@@ -130,7 +130,7 @@ def read_elklhd(filename, stride=1, burn_fraction=0, skip=None, auto_warmup=Fals
         with open(filename) as f:
             first_line = f.readline()
         if ( "lklhdfmt" in first_line.lower() ) :
-            sampler_type=first_line.split()[1:]
+            sampler_type=first_line.split()[1]
         else :
             sampler_type='ensemble'
 
@@ -236,7 +236,7 @@ def read_echain(filename, walkers=1, stride=1, burn_fraction=0, skip=None, param
         with open(filename) as f:
             first_line = f.readline()
         if ( "chainfmt" in first_line.lower() ) :
-            sampler_type=first_line.split()[1:]
+            sampler_type=first_line.split()[1]
         else :
             sampler_type='ensemble'
 
@@ -244,9 +244,9 @@ def read_echain(filename, walkers=1, stride=1, burn_fraction=0, skip=None, param
         return read_ensemble_chain(filename,walkers=walkers,stride=stride,burn_fraction=burn_fraction,skip=skip,parameter_list=parameter_list)
     elif (sampler_type=='stan') :
         chain = read_stan_chain(filename,stride=stride,burn_fraction=burn_fraction,skip=skip,parameter_list=parameter_list)
-        echain = np.zeros([chain.shape[0],chain.shape[1],1])
-        echain[:,:,0] = chain[:,:,0]
-        return echain,nskip
+        echain = np.zeros([chain.shape[0],1,chain.shape[1]])
+        echain[:,0,:] = chain[:,:]
+        return echain
     else :
         raise RuntimeError("Unrecognized chainfmt type, %s."%(sampler_type))
 
@@ -322,7 +322,7 @@ def read_ensemble_chain(filename, walkers, stride=1, burn_fraction=0, skip=None,
     return chain.reshape([nstor,walkers,-1])
 
 
-def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=None, parameter_list=None):
+def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=None, auto_warmup=False, parameter_list=None,sampler_type=None):
     """
     Coherently loads a Themis chain and likelihood pair.
     Optionally, a stride, burn-in fraction, number of *ensemble samples* to skip, 
@@ -334,8 +334,10 @@ def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=No
       lklhd_filename (str): Filename in which likelihood data will be found (e.g., `Lklhd.dat`)
       stride (int): Integer factor by which to step through samples *coherently* among walkers.  Default: 1.
       burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.
+      auto_warmup (bool): If true it will automatically sense the Stan warmup period for Stan state files and cut it. `burn_fraction` then applies to the state file with warmup already removed.
       skip (int): Number of initial *ensemble samples* to skip. Default: 0.
       parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
+      sampler_type (str): Likelihood file format specifier.  If None, looks for a format at the top of the likelihood file; if not found, defaults to 'ensemble'.  Default: None.
 
     Returns:
       (numpy.ndarray, numpy.ndarray): Chain data arranged as 3D array indexed by [sample, walker, parameter] *after* excluding the skipped lines and applying the specified stride; Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride.
@@ -343,7 +345,7 @@ def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=No
 
     # Find the lengths of the chain and likelihood files
     chain_nsamp,nhead = file_length(chain_filename,header_string='#')
-    elklhd,_ = read_elklhd(lklhd_filename, stride=stride, skip=skip)
+    elklhd,_ = read_elklhd(lklhd_filename, stride=stride, skip=skip, auto_warmup=auto_warmup, sampler_type=sampler_type)
     
     # Determine the number of walkers, and set the burn-in relative to the shorter
     walkers = elklhd.shape[1]
@@ -476,7 +478,7 @@ def read_stan_state(filename, stride=1, burn_fraction=0, skip=None, auto_warmup=
     # Number of samples to store
     nstor = (nsamp-nskip)//stride
     state = np.zeros((nstor,7))    
-    print(state.shape)
+
     # Add in the header
     nskip += nhead
     

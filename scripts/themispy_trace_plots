@@ -147,7 +147,7 @@ if __name__ == "__main__" :
             echain,elklhd = ty.chain.load_erun(chain_file_list[k],lklhd_file_list[k],stride=args.stride,burn_fraction=args.burn_fraction,parameter_list=plist)
             chain_data_list.append(echain)
             lklhd_data_list.append(elklhd)
-
+            
         if (len(chain_data_list)>1) :
             fpt,apt = ty.diag.plot_annotated_parameter_trace_list(chain_data_list,lklhd_data_list,means=args.means,colormap='plasma',use_global_likelihoods=args.Global,grid=args.no_grids,one_column=args.one_column,add_likelihood_trace=args.parameters_only)
             plt.figure()
@@ -166,7 +166,7 @@ if __name__ == "__main__" :
         for k in range(len(chain_file_list)) :
             echain = ty.chain.read_echain(chain_file_list[k],args.walkers,stride=args.stride,burn_fraction=args.burn_fraction,parameter_list=plist)
             chain_data_list.append(echain)
-
+            
         if (len(chain_data_list)>1) :
             fpt,apt = ty.diag.plot_parameter_trace_list(chain_data_list,means=args.means,grid=args.no_grids,one_column=args.one_column)
         else :
