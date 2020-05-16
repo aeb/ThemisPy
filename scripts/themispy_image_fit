@@ -272,8 +272,8 @@ if __name__ == "__main__" :
 
         if (not (args.uvfits is None)) :
             obs = ty.vis.image.eh.obsdata.load_uvfits(args.uvfits)
-            time_start = obs.tstart
-            time_end = obs.tstop
+            time_start = obs.tstart + 24.0*obs.mjd
+            time_end = obs.tstop + 24.0*obs.mjd
 
         if (len(args.movie)>0) :
             tmp = args.movie[0].split(':')
