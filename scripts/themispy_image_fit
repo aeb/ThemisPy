@@ -272,9 +272,8 @@ if __name__ == "__main__" :
 
         if (not (args.uvfits is None)) :
             obs = ty.vis.image.eh.obsdata.load_uvfits(args.uvfits)
-            time_start = obs.tstart + 24.0*obs.mjd
-            time_end = obs.tstop + 24.0*obs.mjd
-            print("FOO:",time_start,time_end)
+            time_start = obs.tstart + 24.0*(obs.mjd-51544.5)
+            time_end = obs.tstop + 24.0*(obs.mjd-51544.5)
             
         if (len(args.movie)>0) :
             tmp = args.movie[0].split(':')

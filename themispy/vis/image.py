@@ -1171,7 +1171,7 @@ class model_image_polynomial_variable(model_image) :
         if (len(self.orders)<self.image.size) :
             raise RuntimeError("Length of orders list must match number of parameters in static image.")
         
-        self.reference_time = reference_time
+        self.reference_time = reference_time/3600.0 # Reference time in hr, but provided in s
         self.size = np.sum(orders)+len(orders)
         
     def generate(self,parameters) :
