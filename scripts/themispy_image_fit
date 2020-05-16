@@ -271,7 +271,7 @@ if __name__ == "__main__" :
         time_step = 1.0
 
         if (not (args.uvfits is None)) :
-            obs = ty.vis.image.eh.obsdata.load_uvfits(uvfits_filename)
+            obs = ty.vis.image.eh.obsdata.load_uvfits(args.uvfits)
             time_start = obs.tstart
             time_end = obs.tstop
 
