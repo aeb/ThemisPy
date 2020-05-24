@@ -180,7 +180,7 @@ def read_residuals(resfile_name, datafile_list=None, datafile=None, verbosity=0)
             if (len(resdata['residual'])!=len(data['source'])) :
                 raise RuntimeError("Number of points in data file does not match number of points in residual file.  Expected %i, found %i."%(len(resdata['residual']),len(data['source'])))
 
-            for key in ['source','year','day','time','baseline'] :
+            for key in ['source','year','day','time','triangle'] :
                 resdata[key] = data[key]
 
     elif (restype=='likelihood_closure_amplitude') :
@@ -238,16 +238,33 @@ def _station_codes_from_baseline(baseline) :
     snl = len(baseline)//2
     return baseline[:snl],baseline[snl:]
 
-def plot_amplitude_residuals(resdata, plot_type='uvamp', gain_data=None, station_list=None, residuals=True, datafmt='o', datacolor='b', modelfmt='.', modelcolor='r', grid=True, xscale='linear', yscale='linear') :
+
+def _station_codes_from_triangle(triangle) :
+    """
+    Returns station names from triangle glob.
+
+    Args:
+      baseline (str): Name of baseline (e.g., 'AAAP')
+    
+    Returns:
+      (str,str): 
+    """
+
+    snl = len(triangle)//3
+    return triangle[:snl],triangle[snl:2*snl],triangle[2*snl:]
+
+
+def plot_amplitude_residuals(resdata, plot_type='uvamp', gain_data=None, station_list=None, residuals=True, resdist=2, datafmt='o', datacolor='b', modelfmt='.', modelcolor='r', grid=True, xscale='linear', yscale='linear') :
     """
     Plots comparison between the visibility amplitudes from the data and model in a variety of possible formats.
 
     Args:
       resdata (dict): Dictionary object containing the residual data as generated, e.g., by :func:`read_residuals`.
-      plot_type (str): Type of residual plot to generate. Options are 'uvamp', 'u', 'v', 'time', 'amplitude'. Default: 'uvamp'.
+      plot_type (str): Type of residual plot to generate. Options are 'uvamp', 'u', 'v', 'time', 'amplitude', 'snr'. Default: 'uvamp'.
       gain_data (dict): Gain data object as generated, e.g., by :func:`read_gain_file`. If provided, data will be calibrated prior to residuals being plotted. Default: None.
       station_list (list,str): Station or list of stations to either exclude or restrict the residual plot to. Requires resdata to contain a key 'baselines'.  Station names prepended with '!' will be excluded.  If any station names without '!' are given, will show *only* those stations. Default: None.
       residuals (bool): If True produces a sub-panel with the error-weighted residuals plotted underneath the comparison plot. Default: True.
+      resdist (int): If not None, produces a sub-panel with the distribution of residuals compared to a unit-variance Gaussian. If an int value is passed, it will set the number of bins per unit standard deviation. Default: 2.
       datafmt (str): Format specifier for the data points. Default: 'o'.
       datacolor (str,list): Color of the data points in acceptable color type as specified in :mod:`matplotlib.colors`. Default: 'b'.
       modelfmt (str): Format specifier for the model points. Default: '.'.
@@ -319,7 +336,7 @@ def plot_amplitude_residuals(resdata, plot_type='uvamp', gain_data=None, station
             
     
 
-    # Select ordinate
+    # Select coordinate
     if (plot_type=='uvamp') :
         x=np.sqrt(resdata_local['u']**2+resdata_local['v']**2)
         xlbl=r'$|u|$ (G$\lambda$)'
@@ -335,20 +352,46 @@ def plot_amplitude_residuals(resdata, plot_type='uvamp', gain_data=None, station
         x=resdata_local['time']
         xlbl=r'$t$ (UTC)'
     elif (plot_type=='amplitude') :
-        x=np.abs(resdata_local['model'])
+        x=np.abs(resdata_local['data'])
         xlbl=r'$V$ (Jy)'
+    elif (plot_type=='snr') :
+        x=np.abs(resdata_local['data']/resdata_local['error'])
+        xlbl=r'$S/N$'
     else :
         raise RuntimeError("Unrecognized plot type %s"%(plot_type))
 
+    # Check if a residual distribution is desired and set defaults
+    if (resdist is None) :
+        resdist_numbins=2
+        resdist = False
+    else :
+        resdist_numbins=resdist
+        resdist = True
     
     # Create figure and axes objects
-    fig = plt.figure(figsize=[6.,5.])
     if (residuals) :
-        axs_res = plt.axes([0.13,0.10,0.83,0.25])
-        axs_comp = plt.axes([0.13,0.38,0.83,0.57])
+        if (not resdist) :
+            fig = plt.figure(figsize=[6.,5.])
+            axs_res = plt.axes([0.15,0.10,0.83,0.25])
+            axs_comp = plt.axes([0.15,0.38,0.83,0.57])
+        else :
+            fig = plt.figure(figsize=[6.5,5.])
+            axs_res = plt.axes([0.1385,0.10,0.7662,0.25])
+            axs_comp = plt.axes([0.1385,0.38,0.7662,0.57])
+            axs_resdist = plt.axes([0.915,0.10,0.07,0.25])
+            
     else :
+        fig = plt.figure(figsize=[6.,5.])
         axs_res = None
-        axs_comp = plt.axes([0.13, 0.10, 0.83, 0.83])
+        axs_comp = plt.axes([0.15, 0.10, 0.83, 0.83])
+    
+    # fig = plt.figure(figsize=[6.,5.])
+    # if (residuals) :
+    #     axs_res = plt.axes([0.13,0.10,0.83,0.25])
+    #     axs_comp = plt.axes([0.13,0.38,0.83,0.57])
+    # else :
+    #     axs_res = None
+    #     axs_comp = plt.axes([0.13, 0.10, 0.83, 0.83])
 
 
     # Plot the data comparision
@@ -374,23 +417,222 @@ def plot_amplitude_residuals(resdata, plot_type='uvamp', gain_data=None, station
         plt.grid(grid)
         axs_res.set_xscale(xscale)
 
+        if (resdist) :
+            rr = resdata_local['residual']/resdata_local['error']
+            ylim = axs_res.get_ylim()
+            plt.sca(axs_resdist)
+            xtmp = np.linspace(ylim[0],ylim[1],256)
+            ytmp = np.exp(-xtmp**2/2.0)/np.sqrt(2*np.pi)
+            plt.plot(ytmp,xtmp,'-r',alpha=0.5)
+            var = np.var(rr)
+            mean = np.average(rr)
+            ytmp = np.exp(-(xtmp-mean)**2/(2.0*var))/np.sqrt(2*np.pi*var)
+            plt.plot(ytmp,xtmp,':g',alpha=0.5)
+            bins=np.arange(int(np.floor(ylim[0]*resdist_numbins)),int(np.ceil(ylim[1]*resdist_numbins)))/resdist_numbins
+            plt.hist(rr,bins=bins,density=True,orientation="horizontal",color=datacolor,alpha=0.5)
+            plt.ylim(ylim)
+            plt.gca().yaxis.set_ticklabels([])
+            plt.gca().xaxis.set_ticklabels([])            
+            plt.grid(grid)
+            plt.sca(axs_res)
+        
     # Add the xlabels
     plt.xlabel(xlbl)
 
     return plt.gcf(),axs_comp,axs_res
 
 
+def plot_closure_phase_residuals(resdata, plot_type='perimeter', gain_data=None, station_list=None, residuals=True, resdist=2, resdist_numbins=2, datafmt='o', datacolor='b', modelfmt='.', modelcolor='r', grid=True, xscale='linear', yscale='linear') :
+    """
+    Plots comparison between the closure phases from the data and model in a variety of possible formats.
 
-def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None, station_list=None, residuals=True, datafmt='o', datacolor='b', modelfmt='.', modelcolor='r', grid=True, xscale='linear', yscale='linear', alpha=0.5) :
+    Args:
+      resdata (dict): Dictionary object containing the residual data as generated, e.g., by :func:`read_residuals`.
+      plot_type (str): Type of residual plot to generate. Options are 'uvamp', 'u', 'v', 'time', 'amplitude'. Default: 'uvamp'.
+      station_list (list,str): Station or list of stations to either exclude or restrict the residual plot to. Requires resdata to contain a key 'baselines'.  Station names prepended with '!' will be excluded.  If any station names without '!' are given, will show *only* those stations. Default: None.
+      residuals (bool): If True produces a sub-panel with the error-weighted residuals plotted underneath the comparison plot. Default: True.
+      resdist (int): If not None, produces a sub-panel with the distribution of residuals compared to a unit-variance Gaussian. If an int value is passed, it will set the number of bins per unit standard deviation. Default: 2.
+      datafmt (str): Format specifier for the data points. Default: 'o'.
+      datacolor (str,list): Color of the data points in acceptable color type as specified in :mod:`matplotlib.colors`. Default: 'b'.
+      modelfmt (str): Format specifier for the model points. Default: '.'.
+      modelcolor (str,list): Color of the model points in acceptable color type as specified in :mod:`matplotlib.colors`. Default: 'r'.
+      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.    
+      xscale (str): The x-axis scaling. May be specified via any value accepted by :func:`matplotlib.axes.Axes.set_xscale`.  Default: 'linear'.
+      yscale (str): The y-axis scaling. May be specified via any value accepted by :func:`matplotlib.axes.Axes.set_xscale`.  Default: 'linear'.
+
+    Returns:
+      (matplotlib.figure.Figure, matplotlib.axes.Axes, matplotlib.axes.Axes): Figure and axes handles.
+
+    """
+
+    # Create local copy so that we can modify it
+    resdata_local = copy.deepcopy(resdata)
+    
+    
+    # Apply station list flagging
+    if (not station_list is None) :
+        if (not 'triangle' in resdata_local.keys()) :
+            raise RuntimeError("Residual data does not include triangles")
+        if (not isinstance(station_list,list)) :
+            station_list = [station_list]
+
+        station_include_list = []
+        station_exclude_list = []
+        for station in station_list :
+            if (station[0]=='!') :
+                station_exclude_list.append(station[1:])
+            else :
+                station_include_list.append(station)
+
+
+        keep = np.array([False]*len(resdata_local['triangle']))
+
+        for j in range(len(resdata_local['triangle'])) :
+            station1,station2,station3 = _station_codes_from_triangle(resdata_local['triangle'])
+            
+            if (len(station_include_list)==0) :
+                keep[j] = True
+            else :
+                keep[j] = ((station1 in station_include_list) or (station2 in station_include_list) or (station3 in station_include_list))
+
+            if (len(station_exclude_list)>0) :
+                keep[j] = keep[j] and not ((station1 in station_exclude_list) or (station2 in station_exclude_list) or (station3 in station_exclude_list))
+
+        for key in ['time','u','v','data','model','residual','error'] :
+            resdata_local[key] = resdata_local[key][keep]
+            
+    
+
+    # Select coordinate
+    if (plot_type=='perimeter') :
+        x=np.sqrt(resdata_local['u1']**2+resdata_local['v1']**2+resdata_local['u2']**2+resdata_local['v2']**2+resdata_local['u3']**2+resdata_local['v3']**2)
+        xlbl=r'Perimeter (G$\lambda$)'
+    elif (plot_type=='area') :
+        u1amp = np.sqrt(resdata_local['u1']**2+resdata_local['v1']**2)
+        u2amp = np.sqrt(resdata_local['u2']**2+resdata_local['v2']**2)
+        u1du2 = resdata_local['u1']*resdata_local['u2']+resdata_local['v1']*resdata_local['v2']
+        x = 0.5*np.sqrt( (u1amp*u2amp)**2 - u1du2**2 )
+        xlbl=r'Area (G$\lambda^2$)'
+    elif (plot_type=='uvmax') :
+        u1amp = np.sqrt(resdata_local['u1']**2+resdata_local['v1']**2)
+        u2amp = np.sqrt(resdata_local['u2']**2+resdata_local['v2']**2)
+        u3amp = np.sqrt(resdata_local['u3']**2+resdata_local['v3']**2)
+        x = np.maximum(u1amp,np.maximum(u2amp,u3amp))
+        xlbl=r'$|u|_{max}$ (G$\lambda$)'
+    elif (plot_type=='uvmin') :
+        u1amp = np.sqrt(resdata_local['u1']**2+resdata_local['v1']**2)
+        u2amp = np.sqrt(resdata_local['u2']**2+resdata_local['v2']**2)
+        u3amp = np.sqrt(resdata_local['u3']**2+resdata_local['v3']**2)
+        x = np.minimum(u1amp,np.minimum(u2amp,u3amp))
+        xlbl=r'$|u|_{min}$ (G$\lambda$)'
+    elif (plot_type=='umax') :
+        x=np.maximum(resdata_local['u1'],np.maximum(resdata_local['u2'],resdata_local['u3']))
+        xlbl=r'$u_{max}$ (G$\lambda$)'
+    elif (plot_type=='umin') :
+        x=np.minimum(resdata_local['u1'],np.minimum(resdata_local['u2'],resdata_local['u3']))
+        xlbl=r'$u_{min}$ (G$\lambda$)'
+    elif (plot_type=='vmax') :
+        x=np.maximum(resdata_local['v1'],np.maximum(resdata_local['v2'],resdata_local['v3']))
+        xlbl=r'$v_{max}$ (G$\lambda$)'
+    elif (plot_type=='vmin') :
+        x=np.minimum(resdata_local['v1'],np.minimum(resdata_local['v2'],resdata_local['v3']))
+        xlbl=r'$v_{min}$ (G$\lambda$)'
+    elif (plot_type=='time') :
+        if (not 'time' in resdata_local.keys()) :
+            raise RuntimeError("Residual data does not include time")
+        x=resdata_local['time']
+        xlbl=r'$t$ (UTC)'
+    elif (plot_type=='snr') :
+        x=np.abs(resdata_local['model']/resdata_local['error'])
+        xlbl=r'$S/N$'
+    else :
+        raise RuntimeError("Unrecognized plot type %s"%(plot_type))
+
+    # Check if a residual distribution is desired and set defaults
+    if (resdist is None) :
+        resdist_numbins=2
+        resdist = False
+    else :
+        resdist_numbins=resdist
+        resdist = True
+    
+    # Create figure and axes objects
+    if (residuals) :
+        if (not resdist) :
+            fig = plt.figure(figsize=[6.,5.])
+            axs_res = plt.axes([0.15,0.10,0.83,0.25])
+            axs_comp = plt.axes([0.15,0.38,0.83,0.57])
+        else :
+            fig = plt.figure(figsize=[6.5,5.])
+            axs_res = plt.axes([0.1385,0.10,0.7662,0.25])
+            axs_comp = plt.axes([0.1385,0.38,0.7662,0.57])
+            axs_resdist = plt.axes([0.915,0.10,0.07,0.25])
+            
+    else :
+        fig = plt.figure(figsize=[6.,5.])
+        axs_res = None
+        axs_comp = plt.axes([0.15, 0.10, 0.83, 0.83])
+
+
+    # Plot the data comparision
+    plt.sca(axs_comp)
+    plt.errorbar(x,resdata_local['data'],yerr=resdata_local['error'],fmt=datafmt,color=datacolor,markersize=4,zorder=10)
+    plt.plot(x,resdata_local['model'],modelfmt,color=modelcolor,markersize=2,zorder=20)
+    plt.ylabel(r'Closure Phase (deg)')
+    plt.grid(grid)
+    axs_comp.set_xscale(xscale)
+    axs_comp.set_yscale(yscale)
+
+    # Plot the residuals if desired
+    if (residuals) :
+        axs_comp.xaxis.set_ticklabels([])
+        plt.sca(axs_res)
+        # Sigma guides
+        plt.axhline(0,linestyle='-',color='r')
+        plt.axhline(1.0,linestyle=':',color='r')
+        plt.axhline(-1.0,linestyle=':',color='r')
+        # plot the markers
+        plt.plot(x,resdata_local['residual']/resdata_local['error'],datafmt,color=datacolor,markersize=4)
+        plt.ylabel(r'Res.')
+        plt.grid(grid)
+        axs_res.set_xscale(xscale)
+
+        if (resdist) :
+            rr = resdata_local['residual']/resdata_local['error']
+            ylim = axs_res.get_ylim()
+            plt.sca(axs_resdist)
+            xtmp = np.linspace(ylim[0],ylim[1],256)
+            ytmp = np.exp(-xtmp**2/2.0)/np.sqrt(2*np.pi)
+            plt.plot(ytmp,xtmp,'-r',alpha=0.5)
+            var = np.var(rr)
+            mean = np.average(rr)
+            ytmp = np.exp(-(xtmp-mean)**2/(2.0*var))/np.sqrt(2*np.pi*var)
+            plt.plot(ytmp,xtmp,':g',alpha=0.5)
+            bins=np.arange(int(np.floor(ylim[0]*resdist_numbins)),int(np.ceil(ylim[1]*resdist_numbins)))/resdist_numbins
+            plt.hist(rr,bins=bins,density=True,orientation="horizontal",color=datacolor,alpha=0.5)
+            plt.ylim(ylim)
+            plt.gca().yaxis.set_ticklabels([])
+            plt.gca().xaxis.set_ticklabels([])            
+            plt.grid(grid)
+            plt.sca(axs_res)
+            
+    # Add the xlabels
+    plt.xlabel(xlbl)
+
+    return plt.gcf(),axs_comp,axs_res
+
+
+def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None, station_list=None, residuals=True, resdist=2, datafmt='o', datacolor='b', modelfmt='.', modelcolor='r', grid=True, xscale='linear', yscale='linear', alpha=0.5) :
     """
     Plots comparison between the visibility amplitudes from the data and model in a variety of possible formats.
 
     Args:
       resdata (dict): Dictionary object containing the residual data as generated, e.g., by :func:`read_residuals`.
-      plot_type (str): Type of residual plot to generate specified via 'xtype|ytype'. Options are xtype are 'uvamp', 'u', 'v', 'time', 'amplitude'. Options for ytype are 'complex', 'amplitude', 'phase'. If only one type specifier is given, will attempt to intelligently interpret it, breaking ties by assigning it to the ytype. Default: 'uvamp|complex'.
+      plot_type (str): Type of residual plot to generate specified via 'xtype|ytype'. Options are xtype are 'uvamp', 'u', 'v', 'time', 'amplitude', 'snr'. Options for ytype are 'complex', 'amplitude', 'phase'. If only one type specifier is given, will attempt to intelligently interpret it, breaking ties by assigning it to the ytype. Default: 'uvamp|complex'.
       gain_data (dict): Gain data object as generated, e.g., by :func:`read_gain_file`. If provided, data will be calibrated prior to residuals being plotted. Default: None.
       station_list (list,str): Station or list of stations to either exclude or restrict the residual plot to. Requires resdata to contain a key 'baselines'.  Station names prepended with '!' will be excluded.  If any station names without '!' are given, will show *only* those stations. Default: None.
       residuals (bool): If True produces a sub-panel with the error-weighted residuals plotted underneath the comparison plot. Default: True.
+      resdist (int): If not None, produces a sub-panel with the distribution of residuals compared to a unit-variance Gaussian. If an int value is passed, it will set the number of bins per unit standard deviation. Default: 2.
       datafmt (str): Format specifier for the data points. Default: 'o'.
       datacolor (str,list): Color of the data points in acceptable color type as specified in :mod:`matplotlib.colors`. Default: 'b'.
       modelfmt (str): Format specifier for the model points. Default: '.'.
@@ -475,7 +717,7 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
         plot_type_y = 'complex'
             
             
-    # Select ordinate
+    # Select coordinate
     if (plot_type_x=='uvamp') :
         x=np.sqrt(resdata_local['u']**2+resdata_local['v']**2)
         xlbl=r'$|u|$ (G$\lambda$)'
@@ -493,18 +735,45 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
     elif (plot_type_x=='amplitude') :
         x=np.abs(resdata_local['model'])
         xlbl=r'$|V|$ (Jy)'
+    elif (plot_type_x=='snr') :
+        x=np.abs(resdata_local['data']/resdata_local['error'])
+        xlbl=r'$S/N$'        
     else :
         raise RuntimeError("Unrecognized plot type %s"%(plot_type_x))
 
-    
-    # Create figure and axes objects
-    fig = plt.figure(figsize=[6.,5.])
-    if (residuals) :
-        axs_res = plt.axes([0.15,0.10,0.83,0.25])
-        axs_comp = plt.axes([0.15,0.38,0.83,0.57])
+    # Check if a residual distribution is desired and set defaults
+    if (resdist is None) :
+        resdist_numbins=2
+        resdist = False
     else :
+        resdist_numbins=resdist
+        resdist = True
+
+    # Create figure and axes objects
+    if (residuals) :
+        if (not resdist) :
+            fig = plt.figure(figsize=[6.,5.])
+            axs_res = plt.axes([0.15,0.10,0.83,0.25])
+            axs_comp = plt.axes([0.15,0.38,0.83,0.57])
+        else :
+            fig = plt.figure(figsize=[6.5,5.])
+            axs_res = plt.axes([0.1385,0.10,0.7662,0.25])
+            axs_comp = plt.axes([0.1385,0.38,0.7662,0.57])
+            axs_resdist = plt.axes([0.915,0.10,0.07,0.25])
+            
+    else :
+        fig = plt.figure(figsize=[6.,5.])
         axs_res = None
         axs_comp = plt.axes([0.15, 0.10, 0.83, 0.83])
+    
+    # # Create figure and axes objects
+    # fig = plt.figure(figsize=[6.,5.])
+    # if (residuals) :
+    #     axs_res = plt.axes([0.15,0.10,0.83,0.25])
+    #     axs_comp = plt.axes([0.15,0.38,0.83,0.57])
+    # else :
+    #     axs_res = None
+    #     axs_comp = plt.axes([0.15, 0.10, 0.83, 0.83])
 
 
     # Plot the data comparision
@@ -544,6 +813,7 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
         plt.axhline(-1.0,linestyle=':',color='r')
         # plot the markers
         if (plot_type_y=='complex') :
+            res = np.append(resdata_local['residual'].real/resdata_local['error'].real,resdata_local['residual'].imag/resdata_local['error'].imag)
             plt.plot(x,resdata_local['residual'].real/resdata_local['error'].real,datafmt,color=datacolor,markersize=4,alpha=alpha)
             plt.plot(x,resdata_local['residual'].imag/resdata_local['error'].imag,datafmt,color=datacolor,markersize=4,alpha=alpha,fillstyle='none')
         elif (plot_type_y=='amplitude') :
@@ -556,6 +826,27 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
         plt.grid(grid)
         axs_res.set_xscale(xscale)
 
+
+        if (resdist) :
+            rr = res
+            ylim = axs_res.get_ylim()
+            plt.sca(axs_resdist)
+            xtmp = np.linspace(ylim[0],ylim[1],256)
+            ytmp = np.exp(-xtmp**2/2.0)/np.sqrt(2*np.pi)
+            plt.plot(ytmp,xtmp,'-r',alpha=0.5)
+            var = np.var(rr)
+            mean = np.average(rr)
+            ytmp = np.exp(-(xtmp-mean)**2/(2.0*var))/np.sqrt(2*np.pi*var)
+            plt.plot(ytmp,xtmp,':g',alpha=0.5)
+            bins=np.arange(int(np.floor(ylim[0]*resdist_numbins)),int(np.ceil(ylim[1]*resdist_numbins)))/resdist_numbins
+            plt.hist(rr,bins=bins,density=True,orientation="horizontal",color=datacolor,alpha=0.5)
+            plt.ylim(ylim)
+            plt.gca().yaxis.set_ticklabels([])
+            plt.gca().xaxis.set_ticklabels([])            
+            plt.grid(grid)
+            plt.sca(axs_res)
+
+        
     # Add the xlabels
     plt.xlabel(xlbl)
 
@@ -563,7 +854,7 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
 
 
 
-def plot_crosshand_residuals(resdata, plot_type='uvamp|complex', crosshand='all', gain_data=None, dterms=None, station_list=None, residuals=True, datafmt='o', datacolor='b', modelfmt='.', modelcolor='r', grid=True, xscale='linear', yscale='linear', alpha=0.5) :
+def plot_crosshand_residuals(resdata, plot_type='uvamp|complex', crosshand='all', gain_data=None, dterms=None, station_list=None, residuals=True, resdist=2, datafmt='o', datacolor='b', modelfmt='.', modelcolor='r', grid=True, xscale='linear', yscale='linear', alpha=0.5) :
     """
     Plots comparison between the visibility amplitudes from the data and model in a variety of possible formats.
 
@@ -575,6 +866,7 @@ def plot_crosshand_residuals(resdata, plot_type='uvamp|complex', crosshand='all'
       dterms (dict): List of D terms as returned from :func:`dterms` in :class:`model_polarized_image`.
       station_list (list,str): Station or list of stations to either exclude or restrict the residual plot to. Requires resdata to contain a key 'baselines'.  Station names prepended with '!' will be excluded.  If any station names without '!' are given, will show *only* those stations. Default: None.
       residuals (bool): If True produces a sub-panel with the error-weighted residuals plotted underneath the comparison plot. Default: True.
+      resdist (int): If not None, produces a sub-panel with the distribution of residuals compared to a unit-variance Gaussian. If an int value is passed, it will set the number of bins per unit standard deviation. Default: 2.
       datafmt (str): Format specifier for the data points. Default: 'o'.
       datacolor (str,list): Color of the data points in acceptable color type as specified in :mod:`matplotlib.colors`. Default: 'b'.
       modelfmt (str): Format specifier for the model points. Default: '.'.
@@ -636,38 +928,26 @@ def plot_crosshand_residuals(resdata, plot_type='uvamp|complex', crosshand='all'
             for i in [0,1] :
                 for k in [0,1] :
                     var[i,k] = (var[i,k].real)**2 + 1.0j*(var[i,k].imag)**2
-            varnew = np.matrix([[0.0,0.0],[0.0,0.0]])
-            X = np.matrix([[0.0,0.0],[0.0,0.0]])
+            varnew = np.matrix([[0.0j,0.0j],[0.0j,0.0j]])
+            X = np.matrix([[0.0j,0.0j],[0.0j,0.0j]])
             for i in [0,1] :
                 for k in [0,1] :
                     X[i,k] = 1.0
                     Xnew =iDA*X*(iDB.H)
-                    varnew[i,k] = varnew[i,k] + (Xnew[i,k].real)**2*var[i,k].real + (Xnew[i,k].imag)**2*var[i,k].imag
+                    varnew[i,k] = varnew[i,k] \
+                                  + (Xnew[i,k].real)**2*var[i,k].real + (Xnew[i,k].imag)**2*var[i,k].imag \
+                                  + ((Xnew[i,k].real)**2*var[i,k].imag + (Xnew[i,k].imag)**2*var[i,k].real)*1.0j
                     X[i,k] = 0.0
-
-                    # if (j<4) :
-                    #     print("Xnew:",i,k,varnew[i,k],var[i,k],Xnew[i,k])
-
                     
             for i in [0,1] :
                 for k in [0,1] :
                     varnew[i,k] = np.sqrt(varnew[i,k].real) + 1.0j*np.sqrt(varnew[i,k].imag)
-
-                    # if (j<4) :
-                    #     print("varnew:",i,k,varnew[i,k])
-
-                    
                     
             resdata_local['error']['RR'][j] = varnew[0,0]
             resdata_local['error']['RL'][j] = varnew[0,1]
             resdata_local['error']['LR'][j] = varnew[1,0]
             resdata_local['error']['LL'][j] = varnew[1,1]
-                
-            # if (j<4) :
-            #     print("error:",resdata_local['error']['RR'][j],resdata_local['error']['RL'][j],resdata_local['error']['LR'][j],resdata_local['error']['LL'][j])
 
-                
-                    
     # Generate Stokes I,Q,U,V if requested
     if (not set(['I','Q','U','V']).isdisjoint(set(crosshand))) :
         for key in ['data','model','residual'] :
@@ -685,12 +965,6 @@ def plot_crosshand_residuals(resdata, plot_type='uvamp|complex', crosshand='all'
         resdata_local['error']['V'] = np.sqrt( (resdata_local['error']['RR'].real)**2 + (resdata_local['error']['LL'].real)**2 ) \
                                + 1.0j*np.sqrt( (resdata_local['error']['RR'].imag)**2 + (resdata_local['error']['LL'].imag)**2 )
 
-
-
-    # print(resdata_local.keys())
-    # print(resdata_local['error'].keys())
-    # print(resdata_local['error']['I'])
-
         
     # Create copy for plotting visibilities
     resdata_vis = {}
@@ -705,6 +979,6 @@ def plot_crosshand_residuals(resdata, plot_type='uvamp|complex', crosshand='all'
         for key in keylist2 :
             resdata_vis[key]=np.append(resdata_vis[key],resdata_local[key][q])
 
-    return plot_visibility_residuals(resdata_vis,plot_type=plot_type, gain_data=gain_data, station_list=station_list, residuals=residuals, datafmt=datafmt, datacolor=datacolor, modelfmt=modelfmt, modelcolor=modelcolor, grid=grid, xscale=xscale, yscale=yscale, alpha=alpha)
+    return plot_visibility_residuals(resdata_vis,plot_type=plot_type, gain_data=gain_data, station_list=station_list, residuals=residuals, resdist=resdist, datafmt=datafmt, datacolor=datacolor, modelfmt=modelfmt, modelcolor=modelcolor, grid=grid, xscale=xscale, yscale=yscale, alpha=alpha)
     
 
