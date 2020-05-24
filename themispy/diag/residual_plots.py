@@ -569,7 +569,7 @@ def plot_crosshand_residuals(resdata, plot_type='uvamp|complex', crosshand='all'
 
     Args:
       resdata (dict): Dictionary object containing the residual data as generated, e.g., by :func:`read_residuals`.
-      crosshand (str,list): Quantity or list of quantities to plot.  Recognized options are 'RR', 'LL', 'RL', 'LR', or a list of combinations thereof; 'I', 'Q', 'U', 'V', or a list of combinations thereof; 'all' which is a synonym for ['RR', 'LL', 'RL', 'LR']; or 'stokes' which is a synonym for ['I', 'Q', 'U', 'V']. Default: 'all'.
+      crosshand (str,list): Quantity or list of quantities to plot.  Recognized options are 'RR', 'LL', 'RL', 'LR', or a list of combinations thereof; 'I', 'Q', 'U', 'V', or a list of combinations thereof; 'all' which is a synonym for ['RR', 'LL', 'RL', 'LR']; or 'Stokes' which is a synonym for ['I', 'Q', 'U', 'V']. Default: 'all'.
       plot_type (str): Type of residual plot to generate specified via 'xtype|ytype'. Options are xtype are 'uvamp', 'u', 'v', 'time', 'amplitude'. Options for ytype are 'complex', 'amplitude', 'phase'. If only one type specifier is given, will attempt to intelligently interpret it, breaking ties by assigning it to the ytype. Default: 'uvamp|complex'.
       gain_data (dict): Gain data object as generated, e.g., by :func:`read_gain_file`. If provided, data will be calibrated prior to residuals being plotted. Default: None.
       dterms (dict): List of D terms as returned from :func:`dterms` in :class:`model_polarized_image`.
@@ -595,7 +595,7 @@ def plot_crosshand_residuals(resdata, plot_type='uvamp|complex', crosshand='all'
     if (not isinstance(crosshand,list)) :
         if (crosshand=='all') :
             crosshand = ['RR','LL','RL','LR']
-        elif (crosshand=='stokes') :
+        elif (crosshand=='Stokes') :
             crosshand = ['I', 'Q', 'U', 'V']
         else :
             crosshand = [crosshand]
