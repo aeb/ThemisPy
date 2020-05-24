@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 #from matplotlib import cm
 #from matplotlib.colors import is_color_like, to_rgba
 import copy
+import cmath
 
 from themispy import data as tydata
 
@@ -562,16 +563,16 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
 
 
 
-def plot_crosshand_residuals(resdata, plot_type='uvamp|complex', crosshand='all', gain_data=None, Dterms=None, station_list=None, residuals=True, datafmt='o', datacolor='b', modelfmt='.', modelcolor='r', grid=True, xscale='linear', yscale='linear', alpha=0.5) :
+def plot_crosshand_residuals(resdata, plot_type='uvamp|complex', crosshand='all', gain_data=None, dterms=None, station_list=None, residuals=True, datafmt='o', datacolor='b', modelfmt='.', modelcolor='r', grid=True, xscale='linear', yscale='linear', alpha=0.5) :
     """
     Plots comparison between the visibility amplitudes from the data and model in a variety of possible formats.
 
     Args:
       resdata (dict): Dictionary object containing the residual data as generated, e.g., by :func:`read_residuals`.
-      crosshand (str,list): Quantity or list of quantities to plot.  Recognized options are 'RR', 'LL', 'RL', 'LR', or a list of combinations thereof; 'I', 'Q', 'U', 'V', or a list of combinations thereof; or 'all' which is a synonym for ['RR', 'LL', 'RL', 'LR']. Default: 'all'.
+      crosshand (str,list): Quantity or list of quantities to plot.  Recognized options are 'RR', 'LL', 'RL', 'LR', or a list of combinations thereof; 'I', 'Q', 'U', 'V', or a list of combinations thereof; 'all' which is a synonym for ['RR', 'LL', 'RL', 'LR']; or 'stokes' which is a synonym for ['I', 'Q', 'U', 'V']. Default: 'all'.
       plot_type (str): Type of residual plot to generate specified via 'xtype|ytype'. Options are xtype are 'uvamp', 'u', 'v', 'time', 'amplitude'. Options for ytype are 'complex', 'amplitude', 'phase'. If only one type specifier is given, will attempt to intelligently interpret it, breaking ties by assigning it to the ytype. Default: 'uvamp|complex'.
       gain_data (dict): Gain data object as generated, e.g., by :func:`read_gain_file`. If provided, data will be calibrated prior to residuals being plotted. Default: None.
-      Dterms (dict): List of D-terms TBD
+      dterms (dict): List of D terms as returned from :func:`dterms` in :class:`model_polarized_image`.
       station_list (list,str): Station or list of stations to either exclude or restrict the residual plot to. Requires resdata to contain a key 'baselines'.  Station names prepended with '!' will be excluded.  If any station names without '!' are given, will show *only* those stations. Default: None.
       residuals (bool): If True produces a sub-panel with the error-weighted residuals plotted underneath the comparison plot. Default: True.
       datafmt (str): Format specifier for the data points. Default: 'o'.
@@ -594,38 +595,103 @@ def plot_crosshand_residuals(resdata, plot_type='uvamp|complex', crosshand='all'
     if (not isinstance(crosshand,list)) :
         if (crosshand=='all') :
             crosshand = ['RR','LL','RL','LR']
+        elif (crosshand=='stokes') :
+            crosshand = ['I', 'Q', 'U', 'V']
         else :
             crosshand = [crosshand]
 
     # Apply D terms if provided
-    if (not Dterms is None) :
-        for j in range(resdata['u'].size()) :
+    if (not dterms is None) :
+        for j in range(resdata_local['u'].size) :
             stationA,stationB = _station_codes_from_baseline(resdata_local['baseline'][j])
-            for key in ['data','model','error','residual'] :
+
+            # Construct inverse D-term matrix for station A
+            DAR = dterms[stationA][0]*np.exp(2.0j*resdata_local['field rotation 1'][j])
+            DAL = dterms[stationA][1]*np.exp(-2.0j*resdata_local['field rotation 1'][j])
+            iDA = np.matrix([[ 1.0+0.0j, -DAR ], [ -DAL, 1.0+0.0j ]]) / (1.0-DAR*DAL)
+            
+            # Construct inverse D-term matrix for station B
+            DBR = dterms[stationB][0]*np.exp(2.0j*resdata_local['field rotation 2'][j])
+            DBL = dterms[stationB][1]*np.exp(-2.0j*resdata_local['field rotation 2'][j])
+            iDB = np.matrix([[ 1.0+0.0j, -DBR ], [ -DBL, 1.0+0.0j ]]) / (1.0-DBR*DBL)
+
+            for key in ['data','model','residual'] :
+
                 # Package as Jones matrix
-                XAB = np.matrix([resdata_local[key]['RR'][j], resdata_local[key]['RL'][j]], \
-                              [resdata_local[key]['LR'][j], resdata_local[key]['LL'][j]])
-                # Apply D terms
-                DA = np.matrix([1.0+0.0j, Dterms[stationA]['R']], \
-                               [Dterms[stationA]['L'], 1.0+0.0j])
-                DB = np.matrix([1.0+0.0j, Dterms[stationB]['R']], \
-                               [Dterms[stationB]['L'], 1.0+0.0j])
-                XAB = DA*XAB*(DB.H)
+                XAB = np.matrix([[ resdata_local[key]['RR'][j], resdata_local[key]['RL'][j] ], \
+                                 [ resdata_local[key]['LR'][j], resdata_local[key]['LL'][j] ]])
+
+                # Apply inverse D-terms
+                XAB = iDA*XAB*(iDB.H)
+
                 # Unpack back to crosshand elements
                 resdata_local[key]['RR'][j] = XAB[0,0]
                 resdata_local[key]['RL'][j] = XAB[0,1]
                 resdata_local[key]['LR'][j] = XAB[1,0]
                 resdata_local[key]['LL'][j] = XAB[1,1]
+
+            # Generate new error estimates
+            var = np.matrix([[ resdata_local['error']['RR'][j], resdata_local['error']['RL'][j] ], \
+                             [ resdata_local['error']['LR'][j], resdata_local['error']['LL'][j] ]])
+            for i in [0,1] :
+                for k in [0,1] :
+                    var[i,k] = (var[i,k].real)**2 + 1.0j*(var[i,k].imag)**2
+            varnew = np.matrix([[0.0,0.0],[0.0,0.0]])
+            X = np.matrix([[0.0,0.0],[0.0,0.0]])
+            for i in [0,1] :
+                for k in [0,1] :
+                    X[i,k] = 1.0
+                    Xnew =iDA*X*(iDB.H)
+                    varnew[i,k] = varnew[i,k] + (Xnew[i,k].real)**2*var[i,k].real + (Xnew[i,k].imag)**2*var[i,k].imag
+                    X[i,k] = 0.0
+
+                    # if (j<4) :
+                    #     print("Xnew:",i,k,varnew[i,k],var[i,k],Xnew[i,k])
+
+                    
+            for i in [0,1] :
+                for k in [0,1] :
+                    varnew[i,k] = np.sqrt(varnew[i,k].real) + 1.0j*np.sqrt(varnew[i,k].imag)
+
+                    # if (j<4) :
+                    #     print("varnew:",i,k,varnew[i,k])
+
+                    
+                    
+            resdata_local['error']['RR'][j] = varnew[0,0]
+            resdata_local['error']['RL'][j] = varnew[0,1]
+            resdata_local['error']['LR'][j] = varnew[1,0]
+            resdata_local['error']['LL'][j] = varnew[1,1]
                 
-        
+            # if (j<4) :
+            #     print("error:",resdata_local['error']['RR'][j],resdata_local['error']['RL'][j],resdata_local['error']['LR'][j],resdata_local['error']['LL'][j])
+
+                
+                    
     # Generate Stokes I,Q,U,V if requested
     if (not set(['I','Q','U','V']).isdisjoint(set(crosshand))) :
-        for key in ['data','model','error','residual'] :
+        for key in ['data','model','residual'] :
             resdata_local[key]['I'] = resdata_local[key]['RR']+resdata_local[key]['LL']
             resdata_local[key]['Q'] = resdata_local[key]['RL']+resdata_local[key]['LR']
             resdata_local[key]['U'] = (resdata_local[key]['RL']-resdata_local[key]['LR'])/1.0j
             resdata_local[key]['V'] = resdata_local[key]['RR']-resdata_local[key]['LL']
 
+        resdata_local['error']['I'] = np.sqrt( (resdata_local['error']['RR'].real)**2 + (resdata_local['error']['LL'].real)**2 ) \
+                               + 1.0j*np.sqrt( (resdata_local['error']['RR'].imag)**2 + (resdata_local['error']['LL'].imag)**2 )
+        resdata_local['error']['Q'] = np.sqrt( (resdata_local['error']['RL'].real)**2 + (resdata_local['error']['LR'].real)**2 ) \
+                               + 1.0j*np.sqrt( (resdata_local['error']['RL'].imag)**2 + (resdata_local['error']['LR'].imag)**2 )
+        resdata_local['error']['U'] = np.sqrt( (resdata_local['error']['RL'].imag)**2 + (resdata_local['error']['LR'].imag)**2 ) \
+                               + 1.0j*np.sqrt( (resdata_local['error']['RL'].real)**2 + (resdata_local['error']['LR'].real)**2 )
+        resdata_local['error']['V'] = np.sqrt( (resdata_local['error']['RR'].real)**2 + (resdata_local['error']['LL'].real)**2 ) \
+                               + 1.0j*np.sqrt( (resdata_local['error']['RR'].imag)**2 + (resdata_local['error']['LL'].imag)**2 )
+
+
+
+    # print(resdata_local.keys())
+    # print(resdata_local['error'].keys())
+    # print(resdata_local['error']['I'])
+
+        
     # Create copy for plotting visibilities
     resdata_vis = {}
     resdata_vis['type']='visibilities'
