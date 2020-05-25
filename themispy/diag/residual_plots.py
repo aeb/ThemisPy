@@ -94,7 +94,7 @@ def read_residuals(resfile_name, datafile_list=None, datafile=None, verbosity=0)
 
     elif (restype=='likelihood_crosshand_visibilities') :
         d = np.loadtxt(resfile_name)
-        resdata['type']='visibility'
+        resdata['type']='crosshand'
         resdata['u']=d[:,0]
         resdata['v']=d[:,1]
         resdata['field rotation 1']=d[:,2]
@@ -975,7 +975,8 @@ def plot_crosshand_residuals(resdata, plot_type='uvamp|complex', crosshand='all'
         resdata_vis[key]=np.array([])
     for q in crosshand :
         for key in keylist1 :
-            resdata_vis[key]=np.append(resdata_vis[key],resdata_local[key])
+            if (key in resdata_local.keys()) :
+                resdata_vis[key]=np.append(resdata_vis[key],resdata_local[key])
         for key in keylist2 :
             resdata_vis[key]=np.append(resdata_vis[key],resdata_local[key][q])
 
