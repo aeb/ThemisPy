@@ -1,0 +1,273 @@
+#!/usr/bin/env python3
+
+"""
+Reads in a Themis residual file of any type and generates plots of the residuals.
+A gain file may be provided and used to "calibrate" the data, though this requires
+a Themis-style data file to be provided.  For polarized models, D terms may be 
+applied to the data.  A single residual file must be provided.
+
+Example:
+$ themispy_residual_plots residuals.d --plot-type uvamp|amplitude -o residuals.png --usetex
+"""
+
+
+from matplotlib import use,rc
+use('Agg')
+
+import numpy as np
+import argparse as ap
+import warnings
+from matplotlib.cbook import flatten
+import matplotlib.pyplot as plt
+import os
+
+
+# We don't need ehtim, so don't import it
+import sys
+sys.modules['ehtim'] = None
+import themispy as ty
+
+
+def set_parser() :
+    # Create a parser object to manage command line options
+    parser = ap.ArgumentParser(prog='themispy_residual_plots',description=__doc__)
+
+    parser.add_argument("residual_file",
+                        type=str,
+                        action='append',
+                        help=("<Required> Name of residual file to read."))
+
+    parser.add_argument("-g","--gainfile",
+                        type=str,
+                        action='store',
+                        help=("Name of Themis gain file to read.  This will be applied to *all* of the residuals."))
+
+    parser.add_argument("-d","--datafile",
+                        type=str,
+                        action='store',
+                        help=("Name of Themis data file to read.  This will be applied to *all* of the residuals."))
+    
+    parser.add_argument("-s","--station-list",
+                        type=str,
+                        nargs='+',
+                        action='append',
+                        help=("Name of stations to include or exclude.  The station codes should be specified"
+                              "as used in the data file.  Station codes prepended by '!' will be excluded."))
+
+    parser.add_argument("-pt","--plot-type",
+                        type=str,
+                        action='store',
+                        help=("Plot type to generate (see ThemisPy documentation for residual-type-specific options."
+                              "This will be applied to all residual plots and thus may be fragile if too specific. If"
+                              "a pipe is included in the specification, e.g., 'time|amplitude', the argument should"
+                              "be past with quotes."))
+
+    parser.add_argument("--crosshand",
+                        type=str,
+                        nargs='+',
+                        action='store',
+                        help="If residuals are being plotted for polarized image data, define which crosshands to plot.")
+
+    parser.add_argument("-o","--out",
+                        type=str,
+                        action="store",
+                        default="residual_plots.png",
+                        help="Output file name. Default: gain_plot.png")
+
+    parser.add_argument("--no-grid",
+                        action='store_false',
+                        default=True,
+                        help=("Turn off grid lines. Default: True."))
+
+    parser.add_argument("--no-res",
+                        action='store_false',
+                        default=True,
+                        help=("Turn off residual plot. Default: residuals are plotted."))                    
+                        
+    parser.add_argument("--no-resdist",
+                        action='store_false',
+                        help=("Turn off residual distribution plot. Default: residual distribution is plotted.  Only"
+                              "relevant if residuals are plotted."))
+                        
+    parser.add_argument("--usetex",
+                        action='store_true',
+                        default=False,
+                        help=("Turns on using LaTex in the rendering.  Note that this takes longer,"
+                              " but the result is MUCH better looking."))
+    
+    parser.add_argument("-D","--Dterms",
+                        action='store_true',
+                        default=False,
+                        help=("If this is a polarized model, apply fitted D terms."))
+
+    parser.add_argument("-c","--chainfile",
+                        type=str,
+                        action='store',
+                        help=("Name of Themis chain file to read.  Necessary if applying D terms."))
+
+    parser.add_argument("-l","--lklhdfile",
+                        type=str,
+                        action='store',
+                        help=("Name of Themis lklhd file to read.  Necessary if applying D terms."))
+
+    parser.add_argument("-f","--fsfile",
+                        type=str,
+                        action='store',
+                        default=None,
+                        help=("Name of fit summaries file to read.  If given, will plot records listed"
+                              " within.  If an index is given with -i,--index will plot the corresponding"
+                              " line; otherwise plots the first line."
+                              " Default: fit_summaries.txt"))
+
+    parser.add_argument("-i","--index",
+                        type=int,
+                        action='store',
+                        default=0,
+                        help=("Name of fit summaries file to read.  If given, will plot records listed"
+                              " within.  If an index is given with -i,--index will plot the corresponding"
+                              " line; otherwise plots the first line."))
+
+    parser.add_argument("-m","--model",
+                        type=str,
+                        action='store',
+                        default="model_image.tag",
+                        help=("Model specification glob. May be a model tag file name or an ccm_mexico+"
+                              " model specification glob. See the vis.image.construct_model_image_from_glob"
+                              " function documentation for format details. If contains a '.' will assume"
+                              " that it is a tagvers-1.0 tag file."
+                              " Default: model_image.tag"))
+                        
+    parser.add_argument("-v","--verbose",
+                        action='store_true',
+                        default=False,
+                        help=("Provides verbose output about model and plot construction."))
+
+    return parser
+
+
+if __name__ == "__main__" :
+
+
+    # Get command line options
+    args = set_parser().parse_args()
+
+
+    # Use LaTex or not
+    if (args.usetex) :
+        rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
+        rc('text', usetex=True)
+
+
+    # Read in gain file if passed
+    if (args.gainfile is None) :
+        gain_data = None
+    else :
+        gain_data = ty.vis.read_gain_file(args.gainfile)
+
+
+    # Read in D terms if requested
+    if (args.Dterms) :
+        # Construct a model_image from glob
+        if ('.' in args.model) :
+            if (args.verbose):
+                print("Reading tag file %s"%(args.model))
+            model_image = ty.vis.construct_model_image_from_glob(args.model,'tagvers-1.0')
+        else :
+            if (args.verbose):
+                print("Using ccm_mexico glob %s"%(args.model))
+            model_image = ty.vis.construct_model_image_from_glob(args.model,'ccm_mexico+')
+        if (args.verbose):
+            print("Model type and size:",type(model_image),model_image.size)
+    
+        # Run through checkdown for different ways of specifying parameters
+        if (not (args.fsfile is None) ) :
+            # An fit_summaries file has been passed:
+            if (args.verbose):
+                print("Reading fit_summaries file %s"%(args.fsfile))
+            parameters = np.loadtxt(args.fsfile,skiprows=(1+args.index),max_rows=1,usecols=np.arange(1,model_image.size+1))
+        elif (not (args.chainfile is None) ) :
+            if (args.lklhdfile is None) :
+                # Picking a single index
+                if (args.verbose):
+                    print("Reading sample %i from chain file %s"%(args.index,args.chainfile))
+                parameters = np.loadtxt(args.chainfile,skiprows=(1+args.index),max_rows=1,usecols=np.arange(0,model_image.size))
+            else :
+                # Picking the maximum likelihood
+                if (args.verbose):
+                    print("Reading highest likelihood sample from lklhd file %s and chain file %s"%(args.lklhdfile,args.chainfile))
+                parameters,_ = ty.chain.most_likely_erun(args.chainfile,args.lklhdfile)
+                parameters = parameters[0][:model_image.size]
+        else :
+            # No acceptable method has been indicated
+            print("ERROR: Some method of specifying parameters must be set to use D terms.")
+            quit()
+
+        model_image.generate(parameters)
+        dterms = model_image.dterms()
+        if (args.verbose):
+            print("D terms:",dterms)        
+    else :
+        dterms = None
+        
+
+    # Residual distribution defaults
+    if (args.no_resdist) :
+        args.no_resdist=4
+
+    # Sort out name
+    outname,ext = os.path.splitext(args.out)    
+    index={}
+    for restype in ['amplitude','closure_phase','visibility','crosshand'] :
+        index[restype]=0
+
+
+    # Sort out data file
+    if (not args.datafile is None) :
+        args.datafile = list(flatten([args.datafile]))
+
+    # Sort out station list
+    if (not args.station_list is None) :
+        args.station_list = list(flatten([args.station_list]))
+        
+    # Sort out crosshands
+    if (not args.crosshand is None) :
+        args.crosshand = list(flatten([args.crosshand]))
+    else :
+        args.crosshand = 'all'
+        
+        
+    # Loop over residual files
+    for resfile in flatten(args.residual_file) :
+
+        resdata = ty.diag.read_residuals(resfile, datafile_list=args.datafile, verbosity=args.verbose)
+
+        if (resdata['type']=='amplitude') :
+            if (args.plot_type is None) :
+                args.plot_type='uvamp'
+            ty.diag.plot_amplitude_residuals(resdata,gain_data=gain_data,plot_type=args.plot_type,station_list=args.station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
+        elif (resdata['type']=='closure_phase') : 
+            if (args.plot_type is None) :
+                args.plot_type='perimeter'
+            ty.diag.plot_closure_phase_residuals(resdata,plot_type=args.plot_type,station_list=args.station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
+        elif (resdata['type']=='visibility') : 
+            if (args.plot_type is None) :
+                args.plot_type='uvamp'
+            ty.diag.plot_visibility_residuals(resdata,gain_data=gain_data,plot_type=args.plot_type,station_list=args.station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
+        elif (resdata['type']=='crosshand') : 
+            if (args.plot_type is None) :
+                args.plot_type='uvamp'
+            ty.diag.plot_crosshand_residuals(resdata,gain_data=gain_data,dterms=dterms,crosshand=args.crosshand,plot_type=args.plot_type)
+        else :
+            # Not a type of data that we know how to plot yet
+            print("ERROR: Not an implemented data type for residual plots.  Currently acceptable data typesa are visibility amplitudes, closure phases, visibility, and crosshand.")
+            quit()
+
+        index[resdata['type']] += 1
+            
+        # Save figure
+        if (index[resdata['type']]<2) :
+            outfile = resdata['type']+'_'+outname+ext
+        else :
+            outfile = resdata['type']+'_'+outname+'_%i'%(index[resdata['type']])+ext
+            
+        plt.savefig(outfile,dpi=300)
