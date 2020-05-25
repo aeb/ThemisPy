@@ -703,7 +703,6 @@ def most_likely_erun(chain_filename, lklhd_filename, samples=1, burn_fraction=0,
     chain_nsamp,nhead = file_length(chain_filename,header_string='#')
     elklhd,tmp = read_elklhd(lklhd_filename, skip=skip)
 
-
     # Determine the number of walkers, and set the burn-in relative to the shorter
     walkers = elklhd.shape[1]
     nsamp = min(elklhd.shape[0]*elklhd.shape[1],chain_nsamp)
@@ -731,8 +730,8 @@ def most_likely_erun(chain_filename, lklhd_filename, samples=1, burn_fraction=0,
         # Skip the burn-in period
         if (k<nskip) :
             continue
-                
-        while (j<samples and k==sample_list[j]) :
+        
+        while (j<samples and k-nhead==sample_list[j]) :
             if (j==0) :
                 if (parameter_list is None) :
                     parameter_list = list(range(len(l.split())))

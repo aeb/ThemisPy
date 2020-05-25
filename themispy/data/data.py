@@ -626,6 +626,250 @@ def write_polarization_fractions(obs,outname) :
 
 
 
+def read_crosshand_visibilities(filename, verbosity=0) :
+    """
+    Reads a themis-style amplitude data file and returns a dictionary object.
+
+    Args:
+      filename (str) :  Name of the file containing Themis-style data.
+      verbosity (int) : Verbosity level. Default: 0.
+
+    Returns:
+      (dict) : Dictionary containing data with additional information.
+    """
+    
+    datadict={}
+    datadict['source']=[]
+    datadict['year']=[]
+    datadict['day']=[]
+    datadict['time']=[]
+    datadict['baseline']=[]
+    datadict['u']=[]
+    datadict['v']=[]
+    datadict['field rotation 1']=[]
+    datadict['field rotation 2']=[]
+    datadict['RR']=[]
+    datadict['RR error']=[]
+    datadict['LL']=[]
+    datadict['LL error']=[]
+    datadict['RL']=[]
+    datadict['RL error']=[]
+    datadict['LR']=[]
+    datadict['LR error']=[]
+    for l in open(filename,'r') :
+        # Skip headers/comment/flagged lines
+        if (l[0]=='#') :
+            continue
+        toks=l.split()
+        datadict['source'].append(toks[0])
+        datadict['year'].append(int(toks[1]))
+        datadict['day'].append(int(toks[2]))
+        datadict['time'].append(float(toks[3]))
+        datadict['baseline'].append(toks[4])
+        datadict['u'].append(float(toks[5])*1e6)
+        datadict['v'].append(float(toks[6])*1e6)
+        datadict['field rotation 1'].append(float(toks[7]))
+        datadict['field rotation 2'].append(float(toks[8]))
+        datadict['RR'].append(float(toks[9])+1.0j*float(toks[11]))
+        datadict['RR error'].append(float(toks[10])+1.0j*float(toks[12]))
+        datadict['LL'].append(float(toks[13])+1.0j*float(toks[15]))
+        datadict['LL error'].append(float(toks[14])+1.0j*float(toks[16]))
+        datadict['RL'].append(float(toks[17])+1.0j*float(toks[19]))
+        datadict['RL error'].append(float(toks[18])+1.0j*float(toks[20]))
+        datadict['LR'].append(float(toks[21])+1.0j*float(toks[23]))
+        datadict['LR error'].append(float(toks[22])+1.0j*float(toks[24]))
+
+    for key in datadict.keys() :
+        datadict[key] = np.array(datadict[key])
+
+    if (verbosity>0) :
+        for key in datadict.keys() :
+            print(("%15s : ")%(key),datadict[key][:5])
+        
+    return datadict
+        
+
+def read_visibilities(filename, verbosity=0) :
+    """
+    Reads a themis-style amplitude data file and returns a dictionary object.
+
+    Args:
+      filename (str) :  Name of the file containing Themis-style data.
+      verbosity (int) : Verbosity level. Default: 0.
+
+    Returns:
+      (dict) : Dictionary containing data with additional information.
+    """
+    
+    datadict={}
+    datadict['source']=[]
+    datadict['year']=[]
+    datadict['day']=[]
+    datadict['time']=[]
+    datadict['baseline']=[]
+    datadict['u']=[]
+    datadict['v']=[]
+    datadict['visibility']=[]
+    datadict['error']=[]
+    for l in open(filename,'r') :
+        # Skip headers/comment/flagged lines
+        if (l[0]=='#') :
+            continue
+        toks=l.split()
+        datadict['source'].append(toks[0])
+        datadict['year'].append(int(toks[1]))
+        datadict['day'].append(int(toks[2]))
+        datadict['time'].append(float(toks[3]))
+        datadict['baseline'].append(toks[4])
+        datadict['u'].append(float(toks[5])*1e6)
+        datadict['v'].append(float(toks[6])*1e6)
+        datadict['visibility'].append(float(toks[7])+1.0j*float(toks[9]))
+        datadict['error'].append(float(toks[8])+1.0j*float(toks[10]))
+
+    for key in datadict.keys() :
+        datadict[key] = np.array(datadict[key])
+
+    if (verbosity>0) :
+        for key in datadict.keys() :
+            print(("%15s : ")%(key),datadict[key][:5])
+
+    return datadict
+        
+
+def read_amplitudes(filename, verbosity=0) :
+    """
+    Reads a themis-style amplitude data file and returns a dictionary object.
+
+    Args:
+      filename (str) :  Name of the file containing Themis-style data.
+      verbosity (int) : Verbosity level. Default: 0.
+
+    Returns:
+      (dict) : Dictionary containing data with additional information.
+    """
+    
+    datadict={}
+    datadict['source']=[]
+    datadict['year']=[]
+    datadict['day']=[]
+    datadict['time']=[]
+    datadict['baseline']=[]
+    datadict['u']=[]
+    datadict['v']=[]
+    datadict['amplitude']=[]
+    datadict['error']=[]
+    for l in open(filename,'r') :
+        # Skip headers/comment/flagged lines
+        if (l[0]=='#') :
+            continue
+        toks=l.split()
+        datadict['source'].append(toks[0])
+        datadict['year'].append(int(toks[1]))
+        datadict['day'].append(int(toks[2]))
+        datadict['time'].append(float(toks[3]))
+        datadict['baseline'].append(toks[4])
+        datadict['u'].append(float(toks[5])*1e6)
+        datadict['v'].append(float(toks[6])*1e6)
+        datadict['amplitude'].append(float(toks[7]))
+        datadict['error'].append(float(toks[8]))
+
+    for key in datadict.keys() :
+        datadict[key] = np.array(datadict[key])
+
+    if (verbosity>0) :
+        for key in datadict.keys() :
+            print(("%15s : ")%(key),datadict[key][:5])
+            
+    return datadict
+
+
+def read_closure_phases(filename, verbosity=0) :
+    """
+    Reads a themis-style closure phase data file and returns a dictionary object.
+
+    Args:
+      filename (str) :  Name of the file containing Themis-style data.
+      verbosity (int) : Verbosity level. Default: 0.
+
+    Returns:
+      (dict) : Dictionary containing data with additional information.
+    """
+    
+    datadict={}
+    datadict['source']=[]
+    datadict['year']=[]
+    datadict['day']=[]
+    datadict['time']=[]
+    datadict['triangle']=[]
+    datadict['u1']=[]
+    datadict['v1']=[]
+    datadict['u2']=[]
+    datadict['v2']=[]
+    datadict['u3']=[]
+    datadict['v3']=[]
+    datadict['closure phase']=[]
+    datadict['error']=[]
+    for l in open(filename,'r') :
+        # Skip headers/comment/flagged lines
+        if (l[0]=='#') :
+            continue
+        toks=l.split()
+        datadict['source'].append(toks[0])
+        datadict['year'].append(int(toks[1]))
+        datadict['day'].append(int(toks[2]))
+        datadict['time'].append(float(toks[3]))
+        datadict['triangle'].append(toks[4])
+        datadict['u1'].append(float(toks[5])*1e6)
+        datadict['v1'].append(float(toks[6])*1e6)
+        datadict['u2'].append(float(toks[7])*1e6)
+        datadict['v2'].append(float(toks[8])*1e6)
+        datadict['closure phase'].append(float(toks[9]))
+        datadict['error'].append(float(toks[10]))
+
+    for key in datadict.keys() :
+        datadict[key] = np.array(datadict[key])
+    
+    datadict['u3'] = -datadict['u1']-datadict['u2']
+    datadict['v3'] = -datadict['v1']-datadict['v2']
+
+    if (verbosity>0) :
+        for key in datadict.keys() :
+            print(("%15s : ")%(key),datadict[key][:5])
+    
+    return datadict
+
+
+
+def read_closure_amplitudes(filename, verbosity=0) :
+    """
+    Reads a themis-style closure amplitude data file and returns a dictionary object.
+
+    Args:
+      filename (str) :  Name of the file containing Themis-style data.
+      verbosity (int) : Verbosity level. Default: 0.
+
+    Returns:
+      (dict) : Dictionary containing data with additional information.
+    """
+
+    raise NotImplementedError
+
+
+def read_polarization_fractions(filename, verbosity=0) :
+    """
+    Reads a themis-style closure amplitude data file and returns a dictionary object.
+
+    Args:
+      filename (str) :  Name of the file containing Themis-style data.
+      verbosity (int) : Verbosity level. Default: 0.
+
+    Returns:
+      (dict) : Dictionary containing data with additional information.
+    """
+
+    raise NotImplementedError
+
+
 import matplotlib.pyplot as plt
 
 def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timestamps=False, verbosity=0) :

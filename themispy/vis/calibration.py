@@ -320,6 +320,8 @@ def plot_station_gain_amplitudes(gain_data, invert=False, add_station_labels=Tru
 
     plt.gca().grid(grid)
 
+    return plt.gcf(),plt.gca()
+
     
 def plot_station_gain_phases(gain_data, invert=False, add_station_labels=True,  absolute_time=True, colormap='jet', grid=True) :
     """
@@ -412,3 +414,4 @@ def plot_station_gain_phases(gain_data, invert=False, add_station_labels=True,  
 
     plt.gca().grid(grid)
 
+    return plt.gcf(),plt.gca()

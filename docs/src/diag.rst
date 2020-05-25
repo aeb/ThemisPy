@@ -15,3 +15,5 @@ Plotting Tools
 .. automodule:: diag.diagnostic_plots
    :members:
       
+.. automodule:: diag.residual_plots
+   :members:
