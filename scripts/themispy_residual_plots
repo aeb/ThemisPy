@@ -47,13 +47,20 @@ def set_parser() :
                         action='store',
                         help=("Name of Themis data file to read.  This will be applied to *all* of the residuals."))
     
-    parser.add_argument("-s","--station-list",
+    parser.add_argument("-rs","--restrict-station-list",
                         type=str,
                         nargs='+',
                         action='append',
-                        help=("Name of stations to include or exclude.  The station codes should be specified"
-                              "as used in the data file.  Station codes prepended by '!' will be excluded."))
+                        help=("Name of stations to which to restrict the residual plot.  The station codes should"
+                              "be specified as used in the data file."))
 
+    parser.add_argument("-xs","--exclude-station-list",
+                        type=str,
+                        nargs='+',
+                        action='append',
+                        help=("Name of stations to exclude from residual plot.  The station codes should be specified"
+                              "as used in the data file."))
+    
     parser.add_argument("-pt","--plot-type",
                         type=str,
                         action='store',
@@ -226,8 +233,17 @@ if __name__ == "__main__" :
         args.datafile = list(flatten([args.datafile]))
 
     # Sort out station list
-    if (not args.station_list is None) :
-        args.station_list = list(flatten([args.station_list]))
+    station_list = None
+    if (not args.restrict_station_list is None) :
+        station_list = list(flatten([args.restrict_station_list]))
+    if (not args.exclude_station_list is None) :
+        if (station_list is None) :
+            station_list = []
+        args.exclude_station_list = list(flatten([args.exclude_station_list]))
+        for station in args.exclude_station_list :
+            station_list.append('!'+station)
+    if (args.verbose) :
+        print("station list:",station_list)
         
     # Sort out crosshands
     if (not args.crosshand is None) :
@@ -244,19 +260,19 @@ if __name__ == "__main__" :
         if (resdata['type']=='amplitude') :
             if (args.plot_type is None) :
                 args.plot_type='uvamp'
-            ty.diag.plot_amplitude_residuals(resdata,gain_data=gain_data,plot_type=args.plot_type,station_list=args.station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
+            ty.diag.plot_amplitude_residuals(resdata,gain_data=gain_data,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
         elif (resdata['type']=='closure_phase') : 
             if (args.plot_type is None) :
                 args.plot_type='perimeter'
-            ty.diag.plot_closure_phase_residuals(resdata,plot_type=args.plot_type,station_list=args.station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
+            ty.diag.plot_closure_phase_residuals(resdata,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
         elif (resdata['type']=='visibility') : 
             if (args.plot_type is None) :
                 args.plot_type='uvamp'
-            ty.diag.plot_visibility_residuals(resdata,gain_data=gain_data,plot_type=args.plot_type,station_list=args.station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
+            ty.diag.plot_visibility_residuals(resdata,gain_data=gain_data,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
         elif (resdata['type']=='crosshand') : 
             if (args.plot_type is None) :
                 args.plot_type='uvamp'
-            ty.diag.plot_crosshand_residuals(resdata,gain_data=gain_data,dterms=dterms,crosshand=args.crosshand,plot_type=args.plot_type)
+            ty.diag.plot_crosshand_residuals(resdata,gain_data=gain_data,dterms=dterms,crosshand=args.crosshand,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
         else :
             # Not a type of data that we know how to plot yet
             print("ERROR: Not an implemented data type for residual plots.  Currently acceptable data typesa are visibility amplitudes, closure phases, visibility, and crosshand.")

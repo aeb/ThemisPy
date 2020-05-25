@@ -274,7 +274,7 @@ def plot_amplitude_residuals(resdata, plot_type='uvamp', gain_data=None, station
       yscale (str): The y-axis scaling. May be specified via any value accepted by :func:`matplotlib.axes.Axes.set_xscale`.  Default: 'linear'.
 
     Returns:
-      (matplotlib.figure.Figure, matplotlib.axes.Axes, matplotlib.axes.Axes): Figure and axes handles.
+      (matplotlib.figure.Figure, list): Figure and list of axes handles.
 
     """
 
@@ -321,7 +321,7 @@ def plot_amplitude_residuals(resdata, plot_type='uvamp', gain_data=None, station
         keep = np.array([False]*len(resdata_local['baseline']))
 
         for j in range(len(resdata_local['baseline'])) :
-            station1,station2 = _station_codes_from_baseline(resdata_local['baseline'])
+            station1,station2 = _station_codes_from_baseline(resdata_local['baseline'][j])
             
             if (len(station_include_list)==0) :
                 keep[j] = True
@@ -333,8 +333,6 @@ def plot_amplitude_residuals(resdata, plot_type='uvamp', gain_data=None, station
 
         for key in ['time','u','v','data','model','residual','error'] :
             resdata_local[key] = resdata_local[key][keep]
-            
-    
 
     # Select coordinate
     if (plot_type=='uvamp') :
@@ -374,25 +372,18 @@ def plot_amplitude_residuals(resdata, plot_type='uvamp', gain_data=None, station
             fig = plt.figure(figsize=[6.,5.])
             axs_res = plt.axes([0.15,0.10,0.83,0.25])
             axs_comp = plt.axes([0.15,0.38,0.83,0.57])
+            axs_list = [axs_comp,axs_res]
         else :
             fig = plt.figure(figsize=[6.5,5.])
             axs_res = plt.axes([0.1385,0.10,0.7662,0.25])
             axs_comp = plt.axes([0.1385,0.38,0.7662,0.57])
             axs_resdist = plt.axes([0.915,0.10,0.07,0.25])
+            axs_list = [axs_comp,axs_res,axs_resdist]
             
     else :
         fig = plt.figure(figsize=[6.,5.])
-        axs_res = None
         axs_comp = plt.axes([0.15, 0.10, 0.83, 0.83])
-    
-    # fig = plt.figure(figsize=[6.,5.])
-    # if (residuals) :
-    #     axs_res = plt.axes([0.13,0.10,0.83,0.25])
-    #     axs_comp = plt.axes([0.13,0.38,0.83,0.57])
-    # else :
-    #     axs_res = None
-    #     axs_comp = plt.axes([0.13, 0.10, 0.83, 0.83])
-
+        axs_list = [axs_comp]
 
     # Plot the data comparision
     plt.sca(axs_comp)
@@ -439,7 +430,7 @@ def plot_amplitude_residuals(resdata, plot_type='uvamp', gain_data=None, station
     # Add the xlabels
     plt.xlabel(xlbl)
 
-    return plt.gcf(),axs_comp,axs_res
+    return plt.gcf(),axs_list
 
 
 def plot_closure_phase_residuals(resdata, plot_type='perimeter', gain_data=None, station_list=None, residuals=True, resdist=2, resdist_numbins=2, datafmt='o', datacolor='b', modelfmt='.', modelcolor='r', grid=True, xscale='linear', yscale='linear') :
@@ -461,7 +452,7 @@ def plot_closure_phase_residuals(resdata, plot_type='perimeter', gain_data=None,
       yscale (str): The y-axis scaling. May be specified via any value accepted by :func:`matplotlib.axes.Axes.set_xscale`.  Default: 'linear'.
 
     Returns:
-      (matplotlib.figure.Figure, matplotlib.axes.Axes, matplotlib.axes.Axes): Figure and axes handles.
+      (matplotlib.figure.Figure, list): Figure and list of axes handles.
 
     """
 
@@ -488,7 +479,7 @@ def plot_closure_phase_residuals(resdata, plot_type='perimeter', gain_data=None,
         keep = np.array([False]*len(resdata_local['triangle']))
 
         for j in range(len(resdata_local['triangle'])) :
-            station1,station2,station3 = _station_codes_from_triangle(resdata_local['triangle'])
+            station1,station2,station3 = _station_codes_from_triangle(resdata_local['triangle'][j])
             
             if (len(station_include_list)==0) :
                 keep[j] = True
@@ -500,8 +491,6 @@ def plot_closure_phase_residuals(resdata, plot_type='perimeter', gain_data=None,
 
         for key in ['time','u','v','data','model','residual','error'] :
             resdata_local[key] = resdata_local[key][keep]
-            
-    
 
     # Select coordinate
     if (plot_type=='perimeter') :
@@ -562,17 +551,18 @@ def plot_closure_phase_residuals(resdata, plot_type='perimeter', gain_data=None,
             fig = plt.figure(figsize=[6.,5.])
             axs_res = plt.axes([0.15,0.10,0.83,0.25])
             axs_comp = plt.axes([0.15,0.38,0.83,0.57])
+            axs_list = [axs_comp,axs_res]
         else :
             fig = plt.figure(figsize=[6.5,5.])
             axs_res = plt.axes([0.1385,0.10,0.7662,0.25])
             axs_comp = plt.axes([0.1385,0.38,0.7662,0.57])
             axs_resdist = plt.axes([0.915,0.10,0.07,0.25])
+            axs_list = [axs_comp,axs_res,axs_resdist]
             
     else :
         fig = plt.figure(figsize=[6.,5.])
-        axs_res = None
         axs_comp = plt.axes([0.15, 0.10, 0.83, 0.83])
-
+        axs_list = [axs_comp]
 
     # Plot the data comparision
     plt.sca(axs_comp)
@@ -619,7 +609,7 @@ def plot_closure_phase_residuals(resdata, plot_type='perimeter', gain_data=None,
     # Add the xlabels
     plt.xlabel(xlbl)
 
-    return plt.gcf(),axs_comp,axs_res
+    return plt.gcf(),axs_list
 
 
 def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None, station_list=None, residuals=True, resdist=2, datafmt='o', datacolor='b', modelfmt='.', modelcolor='r', grid=True, xscale='linear', yscale='linear', alpha=0.5) :
@@ -643,7 +633,7 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
       alpha (float): Alpha value for points. Default: 0.5.
 
     Returns:
-      (matplotlib.figure.Figure, matplotlib.axes.Axes, matplotlib.axes.Axes): Figure and axes handles.
+      (matplotlib.figure.Figure, list): Figure and list of axes handles.
 
     """
 
@@ -686,11 +676,9 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
             else :
                 station_include_list.append(station)
 
-
         keep = np.array([False]*len(resdata_local['baseline']))
-
         for j in range(len(resdata_local['baseline'])) :
-            station1,station2 = _station_codes_from_baseline(resdata_local['baseline'])
+            station1,station2 = _station_codes_from_baseline(resdata_local['baseline'][j])
             
             if (len(station_include_list)==0) :
                 keep[j] = True
@@ -700,6 +688,7 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
             if (len(station_exclude_list)>0) :
                 keep[j] = keep[j] and not ((station1 in station_exclude_list) or (station2 in station_exclude_list))
 
+                
         for key in ['time','u','v','data','model','residual','error'] :
             resdata_local[key] = resdata_local[key][keep]
             
@@ -748,33 +737,25 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
     else :
         resdist_numbins=resdist
         resdist = True
-
+    
     # Create figure and axes objects
     if (residuals) :
         if (not resdist) :
             fig = plt.figure(figsize=[6.,5.])
             axs_res = plt.axes([0.15,0.10,0.83,0.25])
             axs_comp = plt.axes([0.15,0.38,0.83,0.57])
+            axs_list = [axs_comp,axs_res]
         else :
             fig = plt.figure(figsize=[6.5,5.])
             axs_res = plt.axes([0.1385,0.10,0.7662,0.25])
             axs_comp = plt.axes([0.1385,0.38,0.7662,0.57])
             axs_resdist = plt.axes([0.915,0.10,0.07,0.25])
+            axs_list = [axs_comp,axs_res,axs_resdist]
             
     else :
         fig = plt.figure(figsize=[6.,5.])
-        axs_res = None
         axs_comp = plt.axes([0.15, 0.10, 0.83, 0.83])
-    
-    # # Create figure and axes objects
-    # fig = plt.figure(figsize=[6.,5.])
-    # if (residuals) :
-    #     axs_res = plt.axes([0.15,0.10,0.83,0.25])
-    #     axs_comp = plt.axes([0.15,0.38,0.83,0.57])
-    # else :
-    #     axs_res = None
-    #     axs_comp = plt.axes([0.15, 0.10, 0.83, 0.83])
-
+        axs_list = [axs_comp]
 
     # Plot the data comparision
     plt.sca(axs_comp)
@@ -850,7 +831,7 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
     # Add the xlabels
     plt.xlabel(xlbl)
 
-    return plt.gcf(),axs_comp,axs_res
+    return plt.gcf(),axs_list
 
 
 
@@ -877,7 +858,7 @@ def plot_crosshand_residuals(resdata, plot_type='uvamp|complex', crosshand='all'
       alpha (float): Alpha value for points. Default: 0.5.
 
     Returns:
-      (matplotlib.figure.Figure, matplotlib.axes.Axes, matplotlib.axes.Axes): Figure and axes handles.
+      (matplotlib.figure.Figure, list): Figure and list of axes handles.
 
     """
 
