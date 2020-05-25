@@ -101,9 +101,9 @@ def set_parser():
     parser.add_argument("-n","--norm",
                         type=float,
                         action='store',
-                        default=0.0,
+                        default=1.0,
                         help=("Logarithmic normalization relative to to the median and maximum brightness."
-                              " A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum."))
+                              " A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum. Default: 1.0."))
 
     parser.add_argument("-t","--transfer",
                         type=str,
