@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Chain &mdash; ThemisPy 0.1.0+40.gc289d3c.dirty documentation</title>
+  <title>Chain &mdash; ThemisPy 0.1.0+67.g19dc434 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+40.gc289d3c.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+67.g19dc434 documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Data" href="data.html"/>
         <link rel="prev" title="User’s Guide" href="userguide.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+40.gc289d3c.dirty
+                0.1.0+67.g19dc434
               </div>
             
           
@@ -204,7 +204,7 @@ number of steps then the largest even common size is used to join them.</p>
 <dd class="field-even"><p>Combined ensemble chain.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -225,15 +225,15 @@ evolution, optimization, and performance for DEO annealing schemes.</p>
 <dd class="field-even"><p>Array of annealing summary information containing Lambda, rt_opt, E, rt_est, AvgR, StdR corresponding to …, indexed by round; schedule of annealing <span class="math notranslate nohighlight">\(\beta\)</span>; <span class="math notranslate nohighlight">\(R\)</span> for each tempering level and round indexed by [round,tempering level] and labelled by ‘Beta’ and ‘R’, respectively.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>,<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>,<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="chain.mcmc_chain.load_erun">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">load_erun</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chain_filename</span></em>, <em class="sig-param"><span class="n">lklhd_filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#load_erun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.load_erun" title="Permalink to this definition">¶</a></dt>
-<dd><p>Coherently loads a Themis chain and likelihood pair from an ensemble sampler.
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">load_erun</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chain_filename</span></em>, <em class="sig-param"><span class="n">lklhd_filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">auto_warmup</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sampler_type</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#load_erun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.load_erun" title="Permalink to this definition">¶</a></dt>
+<dd><p>Coherently loads a Themis chain and likelihood pair.
 Optionally, a stride, burn-in fraction, number of <em>ensemble samples</em> to skip,
 or a set of parameters may be provided.  If set, the burn-in fraction is
 computed for the <em>shorter</em> of the two files.</p>
@@ -244,22 +244,24 @@ computed for the <em>shorter</em> of the two files.</p>
 <li><p><strong>lklhd_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which likelihood data will be found (e.g., <cite>Lklhd.dat</cite>)</p></li>
 <li><p><strong>stride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Integer factor by which to step through samples <em>coherently</em> among walkers.  Default: 1.</p></li>
 <li><p><strong>burn_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of the total number of lines to exclude from the beginning.  Default: 0.</p></li>
+<li><p><strong>auto_warmup</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true it will automatically sense the Stan warmup period for Stan state files and cut it. <cite>burn_fraction</cite> then applies to the state file with warmup already removed.</p></li>
 <li><p><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of initial <em>ensemble samples</em> to skip. Default: 0.</p></li>
 <li><p><strong>parameter_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.</p></li>
+<li><p><strong>sampler_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Likelihood file format specifier.  If None, looks for a format at the top of the likelihood file; if not found, defaults to ‘ensemble’.  Default: None.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Chain data arranged as 3D array indexed by [sample, walker, parameter] <em>after</em> excluding the skipped lines and applying the specified stride; Likelihood data arranged as 2D array indexed by [sample, walker] <em>after</em> excluding the burn in period specified and applied the specified stride.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>, <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="chain.mcmc_chain.load_stanrun">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">load_stanrun</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chain_filename</span></em>, <em class="sig-param"><span class="n">state_filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">auto_warmup</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#load_stanrun"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.load_stanrun" title="Permalink to this definition">¶</a></dt>
+<dt id="chain.mcmc_chain.load_stan_run">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">load_stan_run</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">chain_filename</span></em>, <em class="sig-param"><span class="n">state_filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">auto_warmup</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#load_stan_run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.load_stan_run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Coherently loads a Themis chain and likelihood pair from an Stan Themis run.
 Optionally, a stride, burn-in fraction, number of <em>samples</em> to skip,
 or a set of parameters may be provided.  If set, the burn-in fraction is
@@ -280,7 +282,7 @@ computed for the <em>shorter</em> of the two files.</p>
 <dd class="field-even"><p>Chain data arranged as 2D array indexed by [sample, parameter] <em>after</em> excluding the skipped lines and applying the specified stride; State data arranged as 2D array with columns likelihood, accept, stepsize, treedepth, nleapfrog, divergence, energy <em>after</em> excluding the burn in period specified and applied the specified stride.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>, <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -308,7 +310,7 @@ than load_erun and subsequently subsampling for large chains</p>
 <dd class="field-even"><p>Chain data arranged as 2D array indexed by [sample, parameter] <em>after</em> excluding the skipped lines and applying the specified stride; Likelihood data arranged as 1D array indexed by [sample] <em>after</em> excluding the burn in period specified and applied the specified stride.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>, <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -335,8 +337,86 @@ values arises naturally from ArgumentParser append, e.g., from
 </dd></dl>
 
 <dl class="py function">
+<dt id="chain.mcmc_chain.read_afss_state">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_afss_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">auto_warmup</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_afss_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_afss_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in a Themis state file from the automated factor slice sampler.  Optionally, a
+stride, burn-in fraction, or number of <em>Stan samples</em> to skip may be set.
+Returns an IndexError if fewer samples exist in the chain file than skip.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which state data will be found (e.g., <cite>State.dat</cite>)</p></li>
+<li><p><strong>stride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Integer factor by which to step through samples <em>coherently</em> among walkers.  Default: 1.</p></li>
+<li><p><strong>burn_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of the total number of lines to exclude from the beginning.  Default: 0.</p></li>
+<li><p><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of initial <em>ensemble samples</em> to skip.  Overrides burn_fraction unless set to None. Default: None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Likelihood data arranged as 2D array indexed by [sample, walker] <em>after</em> excluding the burn in period specified and applied the specified stride; Number of samples skipped.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="chain.mcmc_chain.read_echain">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_echain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">walkers</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_echain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_echain" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_echain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">walkers</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">sampler_type</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_echain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_echain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in a Themis chain file.  The number of walkers must be supplied.  Optionally,
+a stride, burn-in fraction, number of <em>ensemble samples</em> to skip, or a set of
+parameters may be provided.  Returns an IndexError if fewer ensemble samples exist
+in the chain file than skip.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which chain data will be found (e.g., <cite>Chain.dat</cite>)</p></li>
+<li><p><strong>walkers</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of independent walkers in the ensemble. Default: 1.</p></li>
+<li><p><strong>stride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Integer factor by which to step through samples <em>coherently</em> among walkers.  Default: 1.</p></li>
+<li><p><strong>burn_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of the total number of lines to exclude from the beginning.  Default: 0.</p></li>
+<li><p><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of initial <em>ensemble samples</em> to skip. Default: 0.</p></li>
+<li><p><strong>parameter_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.</p></li>
+<li><p><strong>sampler_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Likelihood file format specifier.  If None, looks for a format at the top of the likelihood file; if not found, defaults to ‘ensemble’.  Default: None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Chain data arranged as 3D array indexed by [sample, walker, parameter] <em>after</em> excluding the skipped lines and applying the specified stride.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="chain.mcmc_chain.read_elklhd">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_elklhd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">auto_warmup</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">sampler_type</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_elklhd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_elklhd" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads in a Themis likelihood file. Optionally, a stride, burn-in fraction, or number of
+<em>ensemble samples</em> to skip may be set. Returns an IndexError if fewer ensemble samples
+exist in the chain file than skip.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Filename in which likelihood data will be found (e.g., <cite>Lklhd.dat</cite>)</p></li>
+<li><p><strong>stride</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Integer factor by which to step through samples <em>coherently</em> among walkers.  Default: 1.</p></li>
+<li><p><strong>burn_fraction</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Fraction of the total number of lines to exclude from the beginning.  Default: 0.</p></li>
+<li><p><strong>auto_warmup</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If true it will automatically sense the Stan warmup period for Stan state files and cut it. <cite>burn_fraction</cite> then applies to the state file with warmup already removed.</p></li>
+<li><p><strong>skip</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of initial <em>ensemble samples</em> to skip.  Overrides burn_fraction unless set to None. Default: None.</p></li>
+<li><p><strong>sampler_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Likelihood file format specifier.  If None, looks for a format at the top of the likelihood file; if not found, defaults to ‘ensemble’.  Default: None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Likelihood data arranged as 2D array indexed by [sample, walker] <em>after</em> excluding the burn in period specified and applied the specified stride; Number of samples skipped.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="chain.mcmc_chain.read_ensemble_chain">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_ensemble_chain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">walkers</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_ensemble_chain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_ensemble_chain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in a Themis chain file from an ensemble sampler.  The number of walkers
 must be supplied.  Optionally, a stride, burn-in fraction, number of <em>ensemble
 samples</em> to skip, or a set of parameters may be provided.  Returns an IndexError
@@ -356,14 +436,14 @@ if fewer ensemble samples exist in the chain file than skip.</p>
 <dd class="field-even"><p>Chain data arranged as 3D array indexed by [sample, walker, parameter] <em>after</em> excluding the skipped lines and applying the specified stride.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="chain.mcmc_chain.read_elklhd">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_elklhd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_elklhd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_elklhd" title="Permalink to this definition">¶</a></dt>
+<dt id="chain.mcmc_chain.read_ensemble_lklhd">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_ensemble_lklhd</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_ensemble_lklhd"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_ensemble_lklhd" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in a Themis likelihood file from an ensemble sampler.  Optionally, a
 stride, burn-in fraction, or number of <em>ensemble samples</em> to skip may be set.
 Returns an IndexError if fewer ensemble samples exist in the chain file than skip.</p>
@@ -380,14 +460,14 @@ Returns an IndexError if fewer ensemble samples exist in the chain file than ski
 <dd class="field-even"><p>Likelihood data arranged as 2D array indexed by [sample, walker] <em>after</em> excluding the burn in period specified and applied the specified stride; Number of samples skipped.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="chain.mcmc_chain.read_stanchain">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_stanchain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_stanchain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_stanchain" title="Permalink to this definition">¶</a></dt>
+<dt id="chain.mcmc_chain.read_stan_chain">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_stan_chain</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">parameter_list</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_stan_chain"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_stan_chain" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in a Themis chain file from an stan sampler.  The number of walkers
 must be supplied.  Optionally, a stride, burn-in fraction, number of <em>ensemble
 samples</em> to skip, or a set of parameters may be provided.  Returns an IndexError
@@ -406,14 +486,14 @@ if fewer samples exist in the chain file than skip.</p>
 <dd class="field-even"><p>Chain data arranged as 2D array indexed by [sample, parameter] <em>after</em> excluding the skipped lines and applying the specified stride.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt id="chain.mcmc_chain.read_stanstate">
-<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_stanstate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">auto_warmup</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_stanstate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_stanstate" title="Permalink to this definition">¶</a></dt>
+<dt id="chain.mcmc_chain.read_stan_state">
+<code class="sig-prename descclassname">chain.mcmc_chain.</code><code class="sig-name descname">read_stan_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filename</span></em>, <em class="sig-param"><span class="n">stride</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">burn_fraction</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">skip</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">auto_warmup</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/chain/mcmc_chain.html#read_stan_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chain.mcmc_chain.read_stan_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads in a Themis state file from a Stan sampler.  Optionally, a
 stride, burn-in fraction, auto_warmup detection, or number of <em>Stan samples</em> to skip may be set.
 Returns an IndexError if fewer samples exist in the chain file than skip.</p>
@@ -431,7 +511,7 @@ Returns an IndexError if fewer samples exist in the chain file than skip.</p>
 <dd class="field-even"><p>Likelihood data arranged as 2D array indexed by [sample, walker] <em>after</em> excluding the burn in period specified and applied the specified stride; Number of samples skipped including warmup if auto_warmup is true.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -457,7 +537,7 @@ large chains.</p>
 <dd class="field-even"><p>Chain data arranged as 2D array indexed by [sample, parameter] <em>after</em> excluding the skipped lines and applying the specified stride</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -485,7 +565,7 @@ than load_erun and subsequently subsampling for large chains</p>
 <dd class="field-even"><p>Chain data arranged as 2D array indexed by [sample, parameter] <em>after</em> excluding the skipped lines and applying the specified stride; Likelihood data arranged as 1D array indexed by [sample] <em>after</em> excluding the burn in period specified and applied the specified stride.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>, <a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -533,7 +613,7 @@ than load_erun and subsequently subsampling for large chains</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+40.gc289d3c.dirty',
+            VERSION:'0.1.0+67.g19dc434',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

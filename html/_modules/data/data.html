@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>data.data &mdash; ThemisPy 0.1.0+40.gc289d3c.dirty documentation</title>
+  <title>data.data &mdash; ThemisPy 0.1.0+67.g19dc434 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+40.gc289d3c.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+67.g19dc434 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.0+40.gc289d3c.dirty
+                0.1.0+67.g19dc434
               </div>
             
           
@@ -775,6 +775,250 @@
 
 
 
+<div class="viewcode-block" id="read_crosshand_visibilities"><a class="viewcode-back" href="../../docs/src/data.html#data.data.read_crosshand_visibilities">[docs]</a><span class="k">def</span> <span class="nf">read_crosshand_visibilities</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads a themis-style amplitude data file and returns a dictionary object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      filename (str) :  Name of the file containing Themis-style data.</span>
+<span class="sd">      verbosity (int) : Verbosity level. Default: 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (dict) : Dictionary containing data with additional information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">datadict</span><span class="o">=</span><span class="p">{}</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;baseline&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;field rotation 1&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;field rotation 2&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;RR&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;RR error&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;LL&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;LL error&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;RL&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;RL error&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;LR&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;LR error&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="c1"># Skip headers/comment/flagged lines</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;#&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">toks</span><span class="o">=</span><span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;baseline&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span><span class="o">*</span><span class="mf">1e6</span><span class="p">)</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span><span class="o">*</span><span class="mf">1e6</span><span class="p">)</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;field rotation 1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">7</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;field rotation 2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">8</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;RR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">9</span><span class="p">])</span><span class="o">+</span><span class="mf">1.0</span><span class="n">j</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">11</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;RR error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">10</span><span class="p">])</span><span class="o">+</span><span class="mf">1.0</span><span class="n">j</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">12</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;LL&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">13</span><span class="p">])</span><span class="o">+</span><span class="mf">1.0</span><span class="n">j</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">15</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;LL error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">14</span><span class="p">])</span><span class="o">+</span><span class="mf">1.0</span><span class="n">j</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">16</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;RL&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">17</span><span class="p">])</span><span class="o">+</span><span class="mf">1.0</span><span class="n">j</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">19</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;RL error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">18</span><span class="p">])</span><span class="o">+</span><span class="mf">1.0</span><span class="n">j</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">20</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;LR&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">21</span><span class="p">])</span><span class="o">+</span><span class="mf">1.0</span><span class="n">j</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">23</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;LR error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">22</span><span class="p">])</span><span class="o">+</span><span class="mf">1.0</span><span class="n">j</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">24</span><span class="p">]))</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">datadict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">datadict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">datadict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;</span><span class="si">%15s</span><span class="s2"> : &quot;</span><span class="p">)</span><span class="o">%</span><span class="p">(</span><span class="n">key</span><span class="p">),</span><span class="n">datadict</span><span class="p">[</span><span class="n">key</span><span class="p">][:</span><span class="mi">5</span><span class="p">])</span>
+        
+    <span class="k">return</span> <span class="n">datadict</span></div>
+        
+
+<div class="viewcode-block" id="read_visibilities"><a class="viewcode-back" href="../../docs/src/data.html#data.data.read_visibilities">[docs]</a><span class="k">def</span> <span class="nf">read_visibilities</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads a themis-style amplitude data file and returns a dictionary object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      filename (str) :  Name of the file containing Themis-style data.</span>
+<span class="sd">      verbosity (int) : Verbosity level. Default: 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (dict) : Dictionary containing data with additional information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">datadict</span><span class="o">=</span><span class="p">{}</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;baseline&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;visibility&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="c1"># Skip headers/comment/flagged lines</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;#&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">toks</span><span class="o">=</span><span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;baseline&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span><span class="o">*</span><span class="mf">1e6</span><span class="p">)</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span><span class="o">*</span><span class="mf">1e6</span><span class="p">)</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;visibility&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span><span class="o">+</span><span class="mf">1.0</span><span class="n">j</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">9</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span><span class="o">+</span><span class="mf">1.0</span><span class="n">j</span><span class="o">*</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">10</span><span class="p">]))</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">datadict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">datadict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">datadict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;</span><span class="si">%15s</span><span class="s2"> : &quot;</span><span class="p">)</span><span class="o">%</span><span class="p">(</span><span class="n">key</span><span class="p">),</span><span class="n">datadict</span><span class="p">[</span><span class="n">key</span><span class="p">][:</span><span class="mi">5</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">datadict</span></div>
+        
+
+<div class="viewcode-block" id="read_amplitudes"><a class="viewcode-back" href="../../docs/src/data.html#data.data.read_amplitudes">[docs]</a><span class="k">def</span> <span class="nf">read_amplitudes</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads a themis-style amplitude data file and returns a dictionary object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      filename (str) :  Name of the file containing Themis-style data.</span>
+<span class="sd">      verbosity (int) : Verbosity level. Default: 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (dict) : Dictionary containing data with additional information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">datadict</span><span class="o">=</span><span class="p">{}</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;baseline&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;amplitude&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="c1"># Skip headers/comment/flagged lines</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;#&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">toks</span><span class="o">=</span><span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;baseline&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;u&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span><span class="o">*</span><span class="mf">1e6</span><span class="p">)</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span><span class="o">*</span><span class="mf">1e6</span><span class="p">)</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;amplitude&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">7</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">8</span><span class="p">]))</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">datadict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">datadict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">datadict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;</span><span class="si">%15s</span><span class="s2"> : &quot;</span><span class="p">)</span><span class="o">%</span><span class="p">(</span><span class="n">key</span><span class="p">),</span><span class="n">datadict</span><span class="p">[</span><span class="n">key</span><span class="p">][:</span><span class="mi">5</span><span class="p">])</span>
+            
+    <span class="k">return</span> <span class="n">datadict</span></div>
+
+
+<div class="viewcode-block" id="read_closure_phases"><a class="viewcode-back" href="../../docs/src/data.html#data.data.read_closure_phases">[docs]</a><span class="k">def</span> <span class="nf">read_closure_phases</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads a themis-style closure phase data file and returns a dictionary object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      filename (str) :  Name of the file containing Themis-style data.</span>
+<span class="sd">      verbosity (int) : Verbosity level. Default: 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (dict) : Dictionary containing data with additional information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="n">datadict</span><span class="o">=</span><span class="p">{}</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;triangle&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;u1&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;v1&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;u2&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;v2&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;u3&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;v3&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;closure phase&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="o">=</span><span class="p">[]</span>
+    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="c1"># Skip headers/comment/flagged lines</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;#&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">toks</span><span class="o">=</span><span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;source&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;day&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;triangle&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;u1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span><span class="o">*</span><span class="mf">1e6</span><span class="p">)</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;v1&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span><span class="o">*</span><span class="mf">1e6</span><span class="p">)</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;u2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">7</span><span class="p">])</span><span class="o">*</span><span class="mf">1e6</span><span class="p">)</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;v2&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">8</span><span class="p">])</span><span class="o">*</span><span class="mf">1e6</span><span class="p">)</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;closure phase&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">9</span><span class="p">]))</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;error&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">10</span><span class="p">]))</span>
+
+    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">datadict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+        <span class="n">datadict</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">datadict</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;u3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;u1&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;u2&#39;</span><span class="p">]</span>
+    <span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;v3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;v1&#39;</span><span class="p">]</span><span class="o">-</span><span class="n">datadict</span><span class="p">[</span><span class="s1">&#39;v2&#39;</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">datadict</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">((</span><span class="s2">&quot;</span><span class="si">%15s</span><span class="s2"> : &quot;</span><span class="p">)</span><span class="o">%</span><span class="p">(</span><span class="n">key</span><span class="p">),</span><span class="n">datadict</span><span class="p">[</span><span class="n">key</span><span class="p">][:</span><span class="mi">5</span><span class="p">])</span>
+    
+    <span class="k">return</span> <span class="n">datadict</span></div>
+
+
+
+<div class="viewcode-block" id="read_closure_amplitudes"><a class="viewcode-back" href="../../docs/src/data.html#data.data.read_closure_amplitudes">[docs]</a><span class="k">def</span> <span class="nf">read_closure_amplitudes</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads a themis-style closure amplitude data file and returns a dictionary object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      filename (str) :  Name of the file containing Themis-style data.</span>
+<span class="sd">      verbosity (int) : Verbosity level. Default: 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (dict) : Dictionary containing data with additional information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
+<div class="viewcode-block" id="read_polarization_fractions"><a class="viewcode-back" href="../../docs/src/data.html#data.data.read_polarization_fractions">[docs]</a><span class="k">def</span> <span class="nf">read_polarization_fractions</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Reads a themis-style closure amplitude data file and returns a dictionary object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      filename (str) :  Name of the file containing Themis-style data.</span>
+<span class="sd">      verbosity (int) : Verbosity level. Default: 0.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      (dict) : Dictionary containing data with additional information.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 
 <div class="viewcode-block" id="write_uvfits"><a class="viewcode-back" href="../../docs/src/data.html#data.data.write_uvfits">[docs]</a><span class="k">def</span> <span class="nf">write_uvfits</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">outname</span><span class="p">,</span> <span class="n">gain_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dterm_data</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">relative_timestamps</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
@@ -900,7 +1144,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+40.gc289d3c.dirty',
+            VERSION:'0.1.0+67.g19dc434',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.image &mdash; ThemisPy 0.1.0+40.gc289d3c.dirty documentation</title>
+  <title>vis.image &mdash; ThemisPy 0.1.0+67.g19dc434 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+40.gc289d3c.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+67.g19dc434 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.0+40.gc289d3c.dirty
+                0.1.0+67.g19dc434
               </div>
             
           
@@ -844,7 +844,7 @@
 <span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">Nx</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Ny</span><span class="p">])))</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">Nx</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Ny</span><span class="p">])))</span> <span class="o">*</span> <span class="n">uas2rad</span><span class="o">**</span><span class="mi">2</span>
 
         <span class="n">xtmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">fovx</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">fovx</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Nx</span><span class="p">)</span>
         <span class="n">ytmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">fovy</span><span class="p">,</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">fovy</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Ny</span><span class="p">)</span>
@@ -950,7 +950,7 @@
 <span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-        <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">Nx</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Ny</span><span class="p">])))</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">Nx</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">Ny</span><span class="p">])))</span> <span class="o">*</span> <span class="n">uas2rad</span><span class="o">**</span><span class="mi">2</span>
         <span class="c1">#f = np.fliplr(f)</span>
         <span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
         
@@ -1320,7 +1320,7 @@
         <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orders</span><span class="p">)</span><span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Length of orders list must match number of parameters in static image.&quot;</span><span class="p">)</span>
         
-        <span class="bp">self</span><span class="o">.</span><span class="n">reference_time</span> <span class="o">=</span> <span class="n">reference_time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_time</span> <span class="o">=</span> <span class="n">reference_time</span><span class="o">/</span><span class="mf">3600.0</span> <span class="c1"># Reference time in hr, but provided in s</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">orders</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">orders</span><span class="p">)</span>
         
 <div class="viewcode-block" id="model_image_polynomial_variable.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_polynomial_variable.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parameters</span><span class="p">)</span> <span class="p">:</span>
@@ -2172,7 +2172,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+40.gc289d3c.dirty',
+            VERSION:'0.1.0+67.g19dc434',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

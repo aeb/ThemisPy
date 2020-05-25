@@ -84,6 +84,15 @@ themispy_resample
    :nodefault:
 
 
+themispy_residual_plots
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_residual_plots
+   :func: set_parser
+   :prog: themispy_residual_plots
+   :nodefault:
+
+
 themispy_selfcal_uvfits
 ----------------------------------
 .. argparse::

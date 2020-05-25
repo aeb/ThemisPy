@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vis &mdash; ThemisPy 0.1.0+40.gc289d3c.dirty documentation</title>
+  <title>Vis &mdash; ThemisPy 0.1.0+67.g19dc434 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+40.gc289d3c.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+67.g19dc434 documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Utils" href="utils.html"/>
         <link rel="prev" title="Diag" href="diag.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+40.gc289d3c.dirty
+                0.1.0+67.g19dc434
               </div>
             
           
@@ -266,7 +266,7 @@ zero), and are therefore susceptable to rare instances of confusion.</p>
 <dd class="field-even"><p>Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys [‘tstart’,’tend’,’stations’,’toffset’,’nindependent’,&lt;station codes&gt;]</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -290,7 +290,7 @@ zero), and are therefore susceptable to rare instances of confusion.</p>
 <dd class="field-even"><p>Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys [‘tstart’,’tend’,’stations’,’toffset’,’nindependent’,&lt;station codes&gt;]</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -311,7 +311,7 @@ The file type is determined automatically from the headers.</p>
 <dd class="field-even"><p>Indexed dictionary of start and end times (relative to the first scan time) complex gains and the  by keys [‘tstart’,’tend’,’stations’,’toffset’,’nindependent’,&lt;station codes&gt;]</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -327,7 +327,7 @@ Useful for the splined raster image classes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>k</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Wavenumber.</p></li>
+<li><p><strong>k</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Wavenumber.</p></li>
 <li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Cubic spline control parameter. Default: -0.5.</p></li>
 </ul>
 </dd>
@@ -335,7 +335,7 @@ Useful for the splined raster image classes.</p>
 <dd class="field-even"><p>1D array of values of the cubic spline weight function evaluated at each value of k.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -425,9 +425,9 @@ This is VERY slow and should be used for debugging only.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions of the control points. Must have the same length as f.</p></li>
-<li><p><strong>f</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of heights of the control points.  Must have the same length as x.</p></li>
-<li><p><strong>xx</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions at which to compute inteperolated values of f.</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – 1D array of positions of the control points. Must have the same length as f.</p></li>
+<li><p><strong>f</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – 1D array of heights of the control points.  Must have the same length as x.</p></li>
+<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – 1D array of positions at which to compute inteperolated values of f.</p></li>
 <li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Cubic spline control parameter. Default: -0.5.</p></li>
 </ul>
 </dd>
@@ -435,7 +435,7 @@ This is VERY slow and should be used for debugging only.</p>
 <dd class="field-even"><p>1D array with the values of f interpolated to positions xx.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -450,11 +450,11 @@ for debugging only.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions of the control points in the x direction. Must have the same length as f.shape[0].</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions of the control points in the y direction. Must have the same length as f.shape[1].</p></li>
-<li><p><strong>f</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 2D array of heights of the control points.  Must have f.shape=[x.size,y.size].</p></li>
-<li><p><strong>xx</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions at which to compute inteperolated values of f.</p></li>
-<li><p><strong>ff</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions at which to compute inteperolated values of f.</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – 1D array of positions of the control points in the x direction. Must have the same length as f.shape[0].</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – 1D array of positions of the control points in the y direction. Must have the same length as f.shape[1].</p></li>
+<li><p><strong>f</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – 2D array of heights of the control points.  Must have f.shape=[x.size,y.size].</p></li>
+<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – 1D array of positions at which to compute inteperolated values of f.</p></li>
+<li><p><strong>ff</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – 1D array of positions at which to compute inteperolated values of f.</p></li>
 <li><p><strong>rotation_angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Rotation angle of the field counter-clockwise in radians. If None, no rotation is performed. Default: None.</p></li>
 <li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Cubic spline control parameter. Default: -0.5.</p></li>
 </ul>
@@ -463,7 +463,7 @@ for debugging only.</p>
 <dd class="field-even"><p>2D array with the values of ff interpolated to positions [xx,yy].</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -516,11 +516,11 @@ image classes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions of the control points in the x direction. Must have the same length as f.shape[0].</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions of the control points in the y direction. Must have the same length as f.shape[1].</p></li>
-<li><p><strong>f</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 2D array of heights of the control points.  Must have f.shape=[x.size,y.size].</p></li>
-<li><p><strong>xx</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions at which to compute inteperolated values of f.</p></li>
-<li><p><strong>yy</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – 1D array of positions at which to compute inteperolated values of f.</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – 1D array of positions of the control points in the x direction. Must have the same length as f.shape[0].</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – 1D array of positions of the control points in the y direction. Must have the same length as f.shape[1].</p></li>
+<li><p><strong>f</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – 2D array of heights of the control points.  Must have f.shape=[x.size,y.size].</p></li>
+<li><p><strong>xx</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – 1D array of positions at which to compute inteperolated values of f.</p></li>
+<li><p><strong>yy</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – 1D array of positions at which to compute inteperolated values of f.</p></li>
 <li><p><strong>rotation_angle</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Rotation angle of the field counter-clockwise in radians. If None, no rotation is performed. Default: None.</p></li>
 <li><p><strong>a</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Cubic spline control parameter. Default: -0.5.</p></li>
 </ul>
@@ -529,7 +529,7 @@ image classes.</p>
 <dd class="field-even"><p>2D array with the values of ff interpolated to positions [xx,yy].</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -613,8 +613,8 @@ list has been set.  This should never be called externally.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
 </dd>
@@ -633,8 +633,8 @@ convention.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Parameter list. If none is provided, uses the current set of parameters. Default: None.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
@@ -754,8 +754,8 @@ Has parameters:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
 </dd>
@@ -802,8 +802,8 @@ Has parameters:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
 </dd>
@@ -851,8 +851,8 @@ Has parameters:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
 </dd>
@@ -911,8 +911,8 @@ a similar function within the <code class="xref cpp cpp-class docutils literal n
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
 </dd>
@@ -968,7 +968,7 @@ a specified model_image object and appropriate chain data.</p>
 to be returned on the next call to <code class="xref py py-func docutils literal notranslate"><span class="pre">intensity_map()</span></code>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>chain</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – MCMC chain of parameters ordered [samples,parameters].</p>
+<dd class="field-odd"><p><strong>chain</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – MCMC chain of parameters ordered [samples,parameters].</p>
 </dd>
 </dl>
 </dd></dl>
@@ -981,8 +981,8 @@ list has been set.  This should never be called externally.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
 </dd>
@@ -1099,8 +1099,8 @@ simply copies the parameters into the local list with some additional run-time c
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
 </dd>
@@ -1240,8 +1240,8 @@ Has parameters:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
 </dd>
@@ -1353,8 +1353,8 @@ and copies the shift vector (x0,y0) for each model_image object, and performs so
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
 </dd>
@@ -1410,8 +1410,8 @@ Has parameters:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
 </dd>
@@ -1460,8 +1460,8 @@ Has parameters:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
 </dd>
@@ -1513,8 +1513,8 @@ Has parameters:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
 </dd>
@@ -1773,8 +1773,8 @@ list has been set.  This should never be called externally.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
 </dd>
@@ -1792,8 +1792,8 @@ list has been set.  This should never be called externally.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Stokes parameter to generate map for. Accepted values are ‘I’, ‘Q’, ‘U’, ‘V’, and combinations or ‘all’. Default: ‘all’.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
@@ -1847,8 +1847,8 @@ convention.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Parameter list. If none is provided, uses the current set of parameters. Default: None.</p></li>
 <li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Stokes parameter to generate map for. Accepted values are ‘I’, ‘Q’, ‘U’, ‘V’, and combinations or ‘all’. Default: ‘I’.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
@@ -1957,8 +1957,8 @@ Has parameters:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Stokes parameter to generate map for. Accepted values are ‘I’, ‘Q’, ‘U’, ‘V’, and combinations or ‘all’. Default: ‘all’.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
@@ -2027,8 +2027,8 @@ simply copies the parameters into the local list with some additional run-time c
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Stokes parameter to generate map for. Accepted values are ‘I’, ‘Q’, ‘U’, ‘V’, and combinations or ‘all’. Default: ‘all’.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
@@ -2142,8 +2142,8 @@ and copies the shift vector (x0,y0) for each model_image object, and performs so
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Stokes parameter to generate map for. Accepted values are ‘I’, ‘Q’, ‘U’, ‘V’, and combinations or ‘all’. Default: ‘all’.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
 </ul>
@@ -2259,9 +2259,9 @@ Currently accepted globs include:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>I</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a><em>,</em><a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><em>model_image</em></a>) – Either an array of intensity values in (Jy/uas^2) or a <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code> object.</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>I</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a><em>,</em><a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><em>model_image</em></a>) – Either an array of intensity values in (Jy/uas^2) or a <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code> object.</p></li>
 <li><p><strong>fits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of output FITS file.</p></li>
 <li><p><strong>uvfits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.</p></li>
 <li><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time in hr on the relevant observation day (set by uvfits file) represented by image data.</p></li>
@@ -2285,8 +2285,8 @@ Currently accepted globs include:</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
 <li><p><strong>t</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Array of times of frames</p></li>
 <li><p><strong>mov</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>,</em><a class="reference internal" href="#vis.image.model_image" title="vis.image.model_image"><em>model_image</em></a>) – Either a list of arrays of intensity values in (Jy/uas^2) computed at the times in t or a <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image</span></code> object.</p></li>
 <li><p><strong>fits_filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Name of output FITS file.</p></li>
@@ -2348,7 +2348,7 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – List of data positions.</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – List of data positions.</p></li>
 <li><p><strong>limits</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Limits in the form [xmin,xmax].  If set to None, will use the minimum and maximum values of x, expanded by 10% on each side.  Default: None.</p></li>
 <li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>.</p></li>
 <li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Value of alpha for the individual likelihood traces. Default: 1.0.</p></li>
@@ -2376,8 +2376,8 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – List of data positions in the 1st axis (horizontal).</p></li>
-<li><p><strong>y</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – List of data positions in the 2nd axis (vertical).</p></li>
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – List of data positions in the 1st axis (horizontal).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – List of data positions in the 2nd axis (vertical).</p></li>
 <li><p><strong>plevels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of cummulative probability levels at which to draw contours. If set to None, will set to <span class="math notranslate nohighlight">\(1\sigma, 2\sigma, 3\sigma\)</span>. Default: None.</p></li>
 <li><p><strong>limits</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Limits in the form [[xmin,xmax],[ymin,ymax]].  If set to None, will use the minimum and maximum values of, expanded by 10% on each side.  Default: None.</p></li>
 <li><p><strong>colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.2.1)"><em>matplotlib.colors.Colormap</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.2.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. Default: ‘Purples’.</p></li>
@@ -2403,8 +2403,8 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>lower_data_array</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Array of multidimensional data from which to generate triangle plot.</p></li>
-<li><p><strong>upper_data_array</strong> (<a class="reference external" href="https://docs.scipy.org/doc/numpy/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.17)"><em>numpy.ndarray</em></a>) – Optional array of multidimensional data from which to generate triangle plot. If provided, must match the dimensions of the lower_data_array.  Default: None.</p></li>
+<li><p><strong>lower_data_array</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Array of multidimensional data from which to generate triangle plot.</p></li>
+<li><p><strong>upper_data_array</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)"><em>numpy.ndarray</em></a>) – Optional array of multidimensional data from which to generate triangle plot. If provided, must match the dimensions of the lower_data_array.  Default: None.</p></li>
 <li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Optional list of str labels for the passed values to place on lower-triangle-plot axes. If provided, must match the dimensions of the lower_data_array. Default: None.</p></li>
 <li><p><strong>upper_labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Optional list of str labels for the passed values to place on upper-triangle-plot axes. If provided, must match the dimensions of the lower_data_array. Default: None.</p></li>
 <li><p><strong>truths</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Optional list of truth values. If provided, must match the dimensions of the lower_data_array. Default: None.</p></li>
@@ -2480,7 +2480,7 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+40.gc289d3c.dirty',
+            VERSION:'0.1.0+67.g19dc434',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

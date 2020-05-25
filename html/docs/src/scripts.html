@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>themispy_best_sample &mdash; ThemisPy 0.1.0+40.gc289d3c.dirty documentation</title>
+  <title>themispy_best_sample &mdash; ThemisPy 0.1.0+67.g19dc434 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+40.gc289d3c.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+67.g19dc434 documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Developer’s Guide" href="devel.html"/>
         <link rel="prev" title="Utils" href="utils.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+40.gc289d3c.dirty
+                0.1.0+67.g19dc434
               </div>
             
           
@@ -127,6 +127,11 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#themispy-resample">themispy_resample</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#themispy-residual-plots">themispy_residual_plots</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
 </ul>
 </li>
@@ -701,6 +706,88 @@ $ themispy_resample -c Chain.dat -l Lklhd.dat -s 1000 -bf 0.5</p>
 </dl>
 </div>
 </div>
+<div class="section" id="themispy-residual-plots">
+<h1>themispy_residual_plots<a class="headerlink" href="#themispy-residual-plots" title="Permalink to this headline">¶</a></h1>
+<p><p>Reads in a Themis residual file of any type and generates plots of the residuals.
+A gain file may be provided and used to “calibrate” the data, though this requires
+a Themis-style data file to be provided.  For polarized models, D terms may be 
+applied to the data.  A single residual file must be provided.</p>
+<p>Example:
+$ themispy_residual_plots residuals.d –plot-type uvamp|amplitude -o residuals.png –usetex</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_residual_plots</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">g</span> <span class="n">GAINFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">d</span> <span class="n">DATAFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">rs</span> <span class="n">RESTRICT_STATION_LIST</span> <span class="p">[</span><span class="n">RESTRICT_STATION_LIST</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">xs</span> <span class="n">EXCLUDE_STATION_LIST</span> <span class="p">[</span><span class="n">EXCLUDE_STATION_LIST</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">pt</span> <span class="n">PLOT_TYPE</span><span class="p">]</span>
+                               <span class="p">[</span><span class="o">--</span><span class="n">crosshand</span> <span class="n">CROSSHAND</span> <span class="p">[</span><span class="n">CROSSHAND</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">grid</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">res</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">resdist</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">usetex</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">D</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span> <span class="n">CHAINFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">l</span> <span class="n">LKLHDFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">f</span> <span class="n">FSFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="n">INDEX</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">m</span> <span class="n">MODEL</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+                               <span class="n">residual_file</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments">
+<h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>residual_file</kbd></dt>
+<dd><p>&lt;Required&gt; Name of residual file to read.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>-g, --gainfile</kbd></dt>
+<dd><p>Name of Themis gain file to read.  This will be applied to <em>all</em> of the residuals.</p>
+</dd>
+<dt><kbd>-d, --datafile</kbd></dt>
+<dd><p>Name of Themis data file to read.  This will be applied to <em>all</em> of the residuals.</p>
+</dd>
+<dt><kbd>-rs, --restrict-station-list</kbd></dt>
+<dd><p>Name of stations to which to restrict the residual plot.  The station codes shouldbe specified as used in the data file.</p>
+</dd>
+<dt><kbd>-xs, --exclude-station-list</kbd></dt>
+<dd><p>Name of stations to exclude from residual plot.  The station codes should be specifiedas used in the data file.</p>
+</dd>
+<dt><kbd>-pt, --plot-type</kbd></dt>
+<dd><p>Plot type to generate (see ThemisPy documentation for residual-type-specific options.This will be applied to all residual plots and thus may be fragile if too specific. Ifa pipe is included in the specification, e.g., ‘time|amplitude’, the argument shouldbe past with quotes.</p>
+</dd>
+<dt><kbd>--crosshand</kbd></dt>
+<dd><p>If residuals are being plotted for polarized image data, define which crosshands to plot.</p>
+</dd>
+<dt><kbd>-o, --out</kbd></dt>
+<dd><p>Output file name. Default: gain_plot.png</p>
+</dd>
+<dt><kbd>--no-grid</kbd></dt>
+<dd><p>Turn off grid lines. Default: True.</p>
+</dd>
+<dt><kbd>--no-res</kbd></dt>
+<dd><p>Turn off residual plot. Default: residuals are plotted.</p>
+</dd>
+<dt><kbd>--no-resdist</kbd></dt>
+<dd><p>Turn off residual distribution plot. Default: residual distribution is plotted.  Onlyrelevant if residuals are plotted.</p>
+</dd>
+<dt><kbd>--usetex</kbd></dt>
+<dd><p>Turns on using LaTex in the rendering.  Note that this takes longer, but the result is MUCH better looking.</p>
+</dd>
+<dt><kbd>-D, --Dterms</kbd></dt>
+<dd><p>If this is a polarized model, apply fitted D terms.</p>
+</dd>
+<dt><kbd>-c, --chainfile</kbd></dt>
+<dd><p>Name of Themis chain file to read.  Necessary if applying D terms.</p>
+</dd>
+<dt><kbd>-l, --lklhdfile</kbd></dt>
+<dd><p>Name of Themis lklhd file to read.  Necessary if applying D terms.</p>
+</dd>
+<dt><kbd>-f, --fsfile</kbd></dt>
+<dd><p>Name of fit summaries file to read.  If given, will plot records listed within.  If an index is given with -i,–index will plot the corresponding line; otherwise plots the first line. Default: fit_summaries.txt</p>
+</dd>
+<dt><kbd>-i, --index</kbd></dt>
+<dd><p>Name of fit summaries file to read.  If given, will plot records listed within.  If an index is given with -i,–index will plot the corresponding line; otherwise plots the first line.</p>
+</dd>
+<dt><kbd>-m, --model</kbd></dt>
+<dd><p>Model specification glob. May be a model tag file name or an ccm_mexico+ model specification glob. See the vis.image.construct_model_image_from_glob function documentation for format details. If contains a ‘.’ will assume that it is a tagvers-1.0 tag file. Default: model_image.tag</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Provides verbose output about model and plot construction.</p>
+</dd>
+</dl>
+</div>
+</div>
 <div class="section" id="themispy-selfcal-uvfits">
 <h1>themispy_selfcal_uvfits<a class="headerlink" href="#themispy-selfcal-uvfits" title="Permalink to this headline">¶</a></h1>
 <p><p>Reads in a Themis gain file of any type and the matching uvfits data file and
@@ -708,7 +795,8 @@ writes the self-calibrated data file.</p>
 <p>Example:
 $ themispy_selfcal_uvfits -g gain_corrections.d -d data.uvfits</p>
 </p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_selfcal_uvfits</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">g</span> <span class="n">G</span> <span class="o">-</span><span class="n">d</span> <span class="n">UVFITS</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">avg</span><span class="o">-</span><span class="n">time</span> <span class="n">AVG_TIME</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span> <span class="n">VERBOSE</span><span class="p">]</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_selfcal_uvfits</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">g</span> <span class="n">G</span> <span class="o">-</span><span class="n">d</span> <span class="n">UVFITS</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">avg</span><span class="o">-</span><span class="n">time</span> <span class="n">AVG_TIME</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">f</span> <span class="n">FRACTIONAL_SYSTEMATIC_ERROR</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="n">THRESHOLD_SYSTEMATIC_ERROR</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="n">MINIMUM_BASELINE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">x</span> <span class="n">EXCLUDE_STATION</span> <span class="p">[</span><span class="n">EXCLUDE_STATION</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span>
+                               <span class="p">[</span><span class="o">-</span><span class="n">v</span> <span class="n">VERBOSE</span><span class="p">]</span>
 </pre></div>
 </div>
 <div class="section" id="Named Arguments">
@@ -728,6 +816,18 @@ $ themispy_selfcal_uvfits -g gain_corrections.d -d data.uvfits</p>
 </dd>
 <dt><kbd>-r, --relative-timestamps</kbd></dt>
 <dd><p>Will ignore the absolute time offset in the gain file.  Requires that the number of data points in the uvfits file match the number of gain reconstruction epochs.</p>
+</dd>
+<dt><kbd>-f, --fractional-systematic-error</kbd></dt>
+<dd><p>Fractional systematic error to add IN PERCENT. Default: None.</p>
+</dd>
+<dt><kbd>-t, --threshold-systematic-error</kbd></dt>
+<dd><p>Constant systematic error threshold to add in mJy. Default: None.</p>
+</dd>
+<dt><kbd>-b, --minimum-baseline</kbd></dt>
+<dd><p>Minimum baseline, below which data are excluded from ALL data generation. Default: None.</p>
+</dd>
+<dt><kbd>-x, --exclude-station</kbd></dt>
+<dd><p>List of stations to flag.  Stations must be specified with the same station codes appearing in the uvfits file.  E.g., the 2017 code list. Default: None.</p>
 </dd>
 <dt><kbd>-o, --out</kbd></dt>
 <dd><p>Output file name. Default: gain_plot.png</p>
@@ -891,7 +991,7 @@ $ themispy_triangle_plot -c Chain.dat -p 0-5</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+40.gc289d3c.dirty',
+            VERSION:'0.1.0+67.g19dc434',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
