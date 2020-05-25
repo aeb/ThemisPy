@@ -10,115 +10,179 @@
 from themispy.utils import *
 
 import numpy as np
+import scipy
 import scipy.stats as stats
 import warnings
 
 from themispy import chain
 
 
-"""
-The autocorrelation stuff has been taken from EMCEE article on IACT
-for the ensemble samplers. In the future I will probably switch to the IACT formula from BDA3.
-"""
-def next_pow_two(n):
+def autocov(chain,axis=0):
     """
-    Returns the value of 2**n, following `emcee <https://emcee.readthedocs.io/en/stable/tutorials/autocorr>`_.
-
+    Computes the autocovariance of a MCMC chain, by-product of a chain. 
+    It uses the biased denominator for the chain `N` not the unbiased `N-t`
+    to lower the variance of the estimator, following `Geyer (1992) <https://projecteuclid.org/euclid.ss/1177011137>`_.
     Args:
-      n (int): Power of 2
-    
+      chain (numpy.ndarray): Single dimension array containing an MCMC chain.
     Returns:
-      (int): Value of 2**n
+      (numpy.ndarray): The autocovariance of the chain.
     """
-    
-    i = 1
-    while i < n:
-        i = i << 1
-    return i
+
+    assert chain.ndim==1, "Chain must be for a single run and/or parameter."
+
+    #First lets get the next power of two.
+    n = len(chain)
+    nn = scipy.fft.next_fast_len(2*n) #2* because I need to zero pad
+
+    #Now take the fft of the chain
+    fft_chain = np.fft.rfft(chain-np.mean(chain,axis=axis), n=nn,axis=axis)
+    autocov = np.fft.irfft(fft_chain*np.conjugate(fft_chain), n=nn,axis=axis)[:n]
+
+    #Divide by the unbiased estimator
+    autocov /= n
+
+    return autocov
 
 
-def autocorr_func_1d(x, norm=True):
+def _geyer_iact(autocorr):
     """
-    Computes the 1D autocorrelation function of a sequences, following 
-    `emcee <https://emcee.readthedocs.io/en/stable/tutorials/autocorr>`_.  
-    This is done via FFT, and thus assumes that the sequences is stationary.
-
+    Finds the integrated autocorrelation time using the method described in `Geyer (1992) <https://projecteuclid.org/euclid.ss/1177011137>`_, and `Vehtari (2019) <https://projecteuclid.org/euclid.ss/1177011137>`_.
     Args:
-      x (numpy.ndarray): A sequence of values.
-      norm (bool): If true normalizes the autocorrelation by the variance. Otherwise the zero-lag component of the autocorrelation function is the variance. Default: True.
-
+      autocorr (numpy.ndarray): The autocorrelation function of either a single or multichain run.
     Returns:
-      (numpy.ndarra): Autocorrlation function appropriately normalized.
+      (double): The integrated autocorrelation time.
     """
-    x = np.atleast_1d(x)
-    if len(x.shape) != 1:
-        raise ValueError("invalid dimensions for 1D autocorrelation function", x.shape)
-    n = next_pow_two(len(x))
 
-    # Compute the FFT and then (from that) the auto-correlation function
-    f = np.fft.fft(x - np.mean(x), n=2 * n)
-    acf = np.fft.ifft(f * np.conjugate(f))[: len(x)].real
-    acf /= 4 * n
-
-    # Optionally normalize
-    if norm:
-        acf /= acf[0]
-
-    return acf
+    #First find the initial monotone sequence.
+    assert autocorr.ndim==1, "autocorr must have one dimension not "+str(autocorr.ndim)
+    even_autocorr = autocorr[::2]
+    odd_autocorr = autocorr[1::2]
+    n = np.min((len(even_autocorr),len(odd_autocorr)))
+    pos_autocorr = even_autocorr[:n]+odd_autocorr[:n]
+    tmax = np.argmax(pos_autocorr<0)
+    pos_autocorr = pos_autocorr[:tmax]
+    #Now find the monotonically decreasing sequence.
+    for i in range(1,tmax):
+        pos_autocorr[i] = np.min((pos_autocorr[i-1], pos_autocorr[i]))
+    return -1 + 2*np.sum(pos_autocorr)
 
 
-# Automated windowing procedure following Sokal (1989)
-def auto_window(taus, c):
+def _sokal_iact(autocorr, c=5.0):
     """
     Automatic windowing procedure following `emcee <https://emcee.readthedocs.io/en/stable/tutorials/autocorr>`_, which follows `Sokal (1989) <https://pdfs.semanticscholar.org/0bfe/9e3db30605fe2d4d26e1a288a5e2997e7225.pdf>`_.
-
     Args:
       taus (numpy.ndarray): Estimates of the integrated autocorrelation time (IACT).
       c (float): Sokal factor, with an optimal value approximately of 5.0.  Default: 5.0.
-
     Returns:
       (int): Index of minimum window for computing the autocorrelation time?
     """
+    taus = 2.0 * np.cumsum(autocorr) - 1.0
+    print(len(taus))
     m = np.arange(len(taus)) < c * taus
     if np.any(m):
-        return np.argmin(m)
-    return len(taus) - 1
+        window =  np.argmin(m)
+    else:
+        window =  len(taus) - 1
 
-def ensemble_autocorr(param_chain, c=5.0):
+    iac = taus[window]
+    return iac
+
+
+def _single_iact(chain, method="geyer"):
+    ac = autocov(chain)
+    if method=="geyer":
+        return _geyer_iact(ac/ac[0])
+    elif method=="sokal":
+        return _sokal_iact(ac/ac[0])
+    else:
+        print("Please choose from method, 'geyer'  or 'sokal'")
+        return np.nan
+
+def _multi_iact(chains, method="geyer"):
+    M,N = chains.shape[0:2]
+    #Average over each chain, so we have the average for each chain
+    avg_n = np.mean(chains,axis=1)
+    #Average over both
+    avg_nm = np.mean(avg_n,axis=0)
+    #Now calculate the between chain variance
+    B = N/(M-1)*(np.sum(avg_n*avg_n,axis=0) - avg_nm*avg_nm*M)
+
+    #Now calculate the within chain variance
+    s2m = 1.0/(N-1)*(np.sum(chains*chains,axis=1) - avg_n*avg_n*N)
+    W = 1.0/M*np.sum(s2m,axis=0)
+    marginal_var = (N-1)/N*W + B/N
+
+    ac = np.array([autocov(chains[i,:]) for i in range(M)])
+    ac = 1 - (W - 1.0/M*np.sum(ac,axis=0))/marginal_var
+    
+    if method=="geyer":
+        return _geyer_iact(ac)
+    elif method=="sokal":
+        return _sokal_iact(ac)
+    else:
+        print("Please choose from method, 'geyer'  or 'sokal'")
+        return np.nan
+
+
+def integrated_autocorr(chains, method='geyer'):
     """
-    Computes the integrated autocorrelation time for the chain, following `emcee <https://emcee.readthedocs.io/en/stable/tutorials/autocorr>`_.
+    Finds the integrated autocorrelation time for a set of chains.
+    If the `chains` has dimension equal 1 one, we use the standard
+    Geyer 1992 formula. If there are multiple chains we use the estimator
+    from `Vehtari (2019) <https://ui.adsabs.harvard.edu/abs/2019arXiv190308008V/abstract>`_.
+
+    Args:
+      chains (numpy.ndarray): Either a single chain for a parameter or a set of chains from multiple runs,
+      or split in half. This allows us to get a better estimate of the combined autocorrelation time.
+    """
+
+    if (chains.ndim == 1):
+        return _single_iact(chains, method)
+    elif (chains.ndim == 2):
+        return _multi_iact(chains, method)
+    else:
+        raise(IndexError)
+
+    
+def ess(chains, method='geyer'):
+    """
+    Finds the mean effective sample size for a set of chains.
+    If the `chains` has dimension equal 1 one, we use the standard
+    Geyer 1992 formula. If there are multiple chains we use the estimator
+    from `Vehtari (2019) <https://ui.adsabs.harvard.edu/abs/2019arXiv190308008V/abstract>`_.
+
+    Args:
+      chains (numpy.ndarray): Either a single chain for a parameter or a set of chains from multiple runs,
+      or split in half. This allows us to get a better estimate of the combined autocorrelation time.
+    """
+
+    if (chains.ndim == 1):
+        return chains.shape[0]/_single_iact(chains, method)
+    elif (chains.ndim == 2):
+        return chains.shape[0]*chains.shape[1]/_multi_iact(chains,method)
+    else:
+        raise(IndexError)
+
+def ensemble_autocorr(param_chain, method='geyer'):
+    """
+    Computes the integrated autocorrelation time for the chain, following `emcee <https://emcee.readthedocs.io/en/stable/tutorials/autocorr>`_,
+    but using the formula and truncation scheme from `Vehtari (2019) <https://ui.adsabs.harvard.edu/abs/2019arXiv190308008V/abstract>`_.
 
     Args:
       param_chain (numpy.ndarray): Ensemble MCMC chain for a single parameters, arranged as walkers,steps.
-      c (float): Sokal factor, with an optimal value approximately of 5.0.  Default: 5.0.
 
     Returns:
       (float): Integrated autocorrelation time (IACT).
     """
     f = np.zeros(param_chain.shape[1])
     for yy in param_chain:
-        f += autocorr_func_1d(yy)
+        ac = autocov(yy)
+        f += ac/ac[0]
     f /= len(param_chain)
-    taus = 2.0 * np.cumsum(f) - 1.0
-    window = auto_window(taus, c)
-    iac = taus[window]
-    if (iac*50 > param_chain.shape[1]):
-        print("WARNING: In order to get decent estimate of the integrated autocorrelation time (IAC), IAC*50 < number of steps. You should really run the chain longer!")
+    iac = integrated_autocorr(ac, method)
+    if (iac*20 > param_chain.shape[1]):
+        print("WARNING: In order to get decent estimate of the integrated autocorrelation time (IAC), IAC*20 < number of steps. You should really run the chain longer!")
     return iac
-
-def mean_ess(y, c=5.0):
-    """
-    Calculates the average ESS across chains by dividing the number of steps by the IAC.
-    Note the actual ESS of the entire chain and walkers is greater than this, but likely isn't
-    the number of walkers * mean_ess since the chains are correlated.
-
-    Args:
-      y (numpy.ndarray): Ensemble MCMC chain for a single parameters, arranged as walkers,steps.
-
-    Returns:
-      (float): Average number of ensemble samples across chains.
-    """
-    return y.shape[1]/ensemble_autocorr(y,c)
 
 def mean_echain(echain):
     """

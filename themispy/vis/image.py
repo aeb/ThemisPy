@@ -7,6 +7,7 @@
 #   Provides model image classes and functions.
 #
 
+import themispy
 from themispy.utils import *
 
 import numpy as np
@@ -16,15 +17,6 @@ from scipy import interpolate as sint
 from scipy.signal import fftconvolve
 import matplotlib.pyplot as plt
 from matplotlib import cm
-
-# Read in ehtim, if possible
-try:
-    import ehtim as eh
-    ehtim_found = True
-except:
-    warnings.warn("Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.", Warning)
-    ehtim_found = False
-
 
 # Some constants
 rad2uas = 180.0/np.pi * 3600 * 1e6
@@ -44,17 +36,19 @@ class model_image :
       parameters (list): Parameter list for a given model. Default: None.
       size (int): Number of parameters for a given model. Default: None.
       themis_fft_sign (bool): Themis FFT sign convention flag.
+      time (float): Time at which image is to be generated.
     """
     
     def __init__(self, themis_fft_sign=True) :
         self.parameters=None
         self.size=None
         self.themis_fft_sign=themis_fft_sign
+        self.time=0
         
     def generate(self,parameters) :
         """
         Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image::generate_model`, 
-        a similar a similar function within the :cpp:class:`Themis::model_image` class.  Effectively 
+        a similar function within the :cpp:class:`Themis::model_image` class.  Effectively 
         simply copies the parameters into the local list with some additional run-time checking.
 
         Args:
@@ -67,7 +61,6 @@ class model_image :
         if (len(self.parameters)<self.size) :
             raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
     
-
     def intensity_map(self,x,y,parameters=None,verbosity=0) :
         """
         External access function to the intenesity map.  Child classes should not overwrite 
@@ -85,21 +78,24 @@ class model_image :
         """
 
         # 
-        if (self.themis_fft_sign) :
+        if (self.themis_fft_sign==True) :
             x = -x
             y = -y
+            if (verbosity>0) :
+                print("Reflecting through origin to correct themis FFT sign convention")
 
         if (not parameters is None) :
             self.generate(parameters)
 
         I = self.generate_intensity_map(x,y,verbosity=verbosity)
 
-        if (self.themis_fft_sign) :
+        if (self.themis_fft_sign==True) :
             x = -x
             y = -y
+            if (verbosity>0) :
+                print("Unreflecting through origin to correct themis FFT sign convention")
         
         return I
-
     
     def generate_intensity_map(self,x,y,verbosity=0) :
         """
@@ -117,7 +113,6 @@ class model_image :
         
         raise NotImplementedError("intensity_map must be defined in children classes of model_image.")
 
-
     def parameter_name_list(self) :
         """
         Hook for returning a list of parameter names.  Currently just returns the list of p0-p(size-1).
@@ -127,6 +122,17 @@ class model_image :
         """
 
         return [ 'p%i'%(j) for j in range(self.size) ]
+    
+    
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
     
     
 class model_image_symmetric_gaussian(model_image) :
@@ -217,15 +223,6 @@ class model_image_asymmetric_gaussian(model_image) :
           (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
         
-        s = self.parameters[1] * rad2uas
-        I0 = self.parameters[0] / (2.*np.pi*s**2)
-
-        I = I0 * np.exp( - 0.5*( x**2 + y**2 )/s**2 )
-        
-        if (verbosity>0) :
-            print("Symmetric Gaussian:",I0,s)
-
-
         s = abs(self.parameters[1]) * rad2uas
         A = max(min(self.parameters[2],0.99),0.0)
         sm = s/np.sqrt(1.+A)
@@ -698,7 +695,7 @@ class model_image_splined_raster(model_image) :
           (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
 
-        f = np.array(self.parameters).reshape([self.Nx,self.Ny])
+        f = np.transpose(np.exp(np.array(self.parameters).reshape([self.Nx,self.Ny]))) * uas2rad**2
 
         xtmp = np.linspace(-0.5*self.fovx,0.5*self.fovx,self.Nx)
         ytmp = np.linspace(-0.5*self.fovy,0.5*self.fovy,self.Ny)
@@ -804,11 +801,14 @@ class model_image_adaptive_splined_raster(model_image) :
           (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
 
-        f = np.array(self.parameters[:-3]).reshape([self.Nx,self.Ny])
-
+        f = np.transpose(np.exp(np.array(self.parameters[:-3]).reshape([self.Nx,self.Ny]))) * uas2rad**2
+        #f = np.fliplr(f)
+        f = np.flipud(f)
+        
         fovx = self.parameters[-3]*rad2uas
         fovy = self.parameters[-2]*rad2uas
-        PA = self.parameters[-1]
+        PA = -self.parameters[-1]
+        #PA = self.parameters[-1]
 
         xtmp = np.linspace(-0.5*fovx,0.5*fovx,self.Nx)
         ytmp = np.linspace(-0.5*fovy,0.5*fovy,self.Ny)
@@ -892,7 +892,7 @@ class model_image_smooth(model_image):
     def generate(self,parameters) :
         """
         Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_smooth::generate_model`, 
-        a similar a similar function within the :cpp:class:`Themis::model_image_smooth` class.  Effectively 
+        a similar function within the :cpp:class:`Themis::model_image_smooth` class.  Effectively 
         simply copies the parameters into the local list with some additional run-time checking.
 
         Args:
@@ -943,7 +943,8 @@ class model_image_smooth(model_image):
         px = x[1,1]-x[0,0]
         py = y[1,1]-y[0,0]
 
-        I = self.image.intensity_map(x,y,parameters=self.parameters[:-3],verbosity=verbosity)
+        self.image.generate(self.parameters[:-3])
+        I = self.image.generate_intensity_map(x,y,verbosity=verbosity)
         Ism = np.abs(fftconvolve(I*px*py,K*px*py, mode='same'))
 
         if (verbosity>0) :
@@ -967,6 +968,18 @@ class model_image_smooth(model_image):
         return names
 
     
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
+        self.image.set_time(time)
+
+    
     
     
 class model_image_sum(model_image) :
@@ -980,15 +993,16 @@ class model_image_sum(model_image) :
     Args:
       image_list (list): List of :class:`model_image` objects. If None, must be set prior to calling :func:`intensity_map`. Default: None.
       offset_coordinates (str): Coordinates in which to specify component shifts.  Options are 'Cartesian' and 'polar'. Default: 'Cartesian'.
+      reference_component (int): Index of component to define as reference. If None, will not set any component to be the reference. Default: None.
       themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
-
+    
     Attributes:
       image_list (list): List of :class:`model_image` objects that are to be summed.
       shift_list (list): List of shifts transformed to Cartesian coordinates.
       offset_coordinates (str): Coordinates in which to specify component shifts.
     """
 
-    def __init__(self,image_list=None, offset_coordinates='Cartesian', themis_fft_sign=True) :
+    def __init__(self,image_list=None, offset_coordinates='Cartesian', reference_component=None, themis_fft_sign=True) :
         super().__init__(themis_fft_sign)
 
         self.image_list=[]
@@ -1003,7 +1017,8 @@ class model_image_sum(model_image) :
             self.shift_list.append([0.0, 0.0])
 
         self.offset_coordinates = offset_coordinates
-
+        self.reference_component = reference_component
+        
             
     def add(self,image) :
         """
@@ -1028,11 +1043,14 @@ class model_image_sum(model_image) :
             self.size += image.size+2
             self.shift_list.append([0.0,0.0])
 
-        
+    def set_reference_component(self,reference_component) :
+        self.reference_component = reference_component
+
+            
     def generate(self,parameters) :
         """
         Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_sum::generate_model`, 
-        a similar a similar function within the :cpp:class:`Themis::model_image_sum` class.  
+        a similar function within the :cpp:class:`Themis::model_image_sum` class.  
         Effectively simply copies the parameters into the local list, transforms
         and copies the shift vector (x0,y0) for each model_image object, and performs some run-time checking.
 
@@ -1049,7 +1067,7 @@ class model_image_sum(model_image) :
 
         q = self.parameters
         for k,image in enumerate(self.image_list) :
-            image.generate(q)
+            image.generate(q[:image.size])
 
             if (self.offset_coordinates=='Cartesian') :
                 self.shift_list[k][0] = q[image.size] * rad2uas
@@ -1059,6 +1077,16 @@ class model_image_sum(model_image) :
                 self.shift_list[k][1] = q[image.size]*np.sin(q[image.size+1]) * rad2uas
                 
             q = q[(image.size+2):]
+
+
+        if (not (self.reference_component is None)) :
+            if (self.reference_component>len(self.image_list)) :
+                raise RuntimeError("Reference component %i is not in the list of images, which numbers only %i."%(self.reference_component,len(self.image_list)))
+            x0 = self.shift_list[self.reference_component][0]
+            y0 = self.shift_list[self.reference_component][1]
+            for k in range(len(self.image_list)) :
+                self.shift_list[k][0] = self.shift_list[k][0]-x0
+                self.shift_list[k][1] = self.shift_list[k][1]-y0
 
             
     def generate_intensity_map(self,x,y,verbosity=0) :
@@ -1085,7 +1113,7 @@ class model_image_sum(model_image) :
             q=self.parameters[(image.size+2):]
 
             if (verbosity>0) :
-                print("   --> Sum shift:",self.shift_list[k],self.shift_list[k])
+                print("   --> Sum shift:",self.shift_list[k])
             
         return I
 
@@ -1108,15 +1136,136 @@ class model_image_sum(model_image) :
                 names.append(r'$\Delta r$ (rad)')
                 names.append(r'$\Delta \theta$ (rad)')
         return names
+
+    
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
+        
+        for image in self.image_list :
+            image.set_time(time)
+
     
 
+class model_image_polynomial_variable(model_image) :
+    """
+    Generates a :class:`model_image` object with parameters that vary polynomially with 
+    time from an initially static :class:`model_image` object.
+
+    Args:
+      image (model_image): Static image from which to generate a dynamic image.
+      orders (list): List of integer orders of the polynomials in time of each parameter.
+      reference_time (list): Reference time that defines the time origin.
+    """    
+    def __init__(self, image, orders, reference_time, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+
+        self.image = image
+        self.orders = orders
+        if (len(self.orders)<self.image.size) :
+            raise RuntimeError("Length of orders list must match number of parameters in static image.")
+        
+        self.reference_time = reference_time/3600.0 # Reference time in hr, but provided in s
+        self.size = np.sum(orders)+len(orders)
+        
+    def generate(self,parameters) :
+        """
+        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_polynomial_variable::generate_model`, 
+        a similar function within the :cpp:class:`Themis::model_image_polynomial_variable` class.  
+
+        Args:
+          parameters (list): Parameter list.
+
+        Returns:
+          None        
+        """
+        
+            
+        self.parameters = np.copy(parameters)
+        if (len(self.parameters)<self.size) :
+            raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
+
+        q = np.zeros(self.image.size)
+        j = 0
+        dt = (self.time-self.reference_time)*3600.0 # hr to s
+        for k in range(self.image.size) :
+            for order in range(self.orders[k]+1) :
+                q[k] = q[k] + self.parameters[j] * (dt**order)
+                j += 1
+
+        self.image.generate(q)
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+
+        if (verbosity>0) :
+            print("PolynomialVariable:",self.time,self.reference_time,self.image.parameters[:3])
+        
+        return self.image.generate_intensity_map(x,y,verbosity=verbosity)
+
+
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        static_names = image.parameter_name_list()
+        names = []
+        for k in range(self.image.size) :
+            names.extend(static_names[k])
+            if (orders[k]>0) :
+                names.extend('$d/dt$ %s'%(static_names[k]))
+            if (orders[k]>1) :
+                for order in range(2,orders[k]) :
+                    names.extend('$d^%i/dt^%i %s'%(order,order,static_names[k]))
+        return names
+
+
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
+
+        self.image.set_time(time)
+
+        self.parameters = None
+        
+    
 class model_image_single_point_statistics(model_image) :
     """
     Generates a :class:`model_image` object that is filed with a desired set of 
     single-point statistics (mean, median, standard deviation, kurtosis, etc.) given
     a specified model_image object and appropriate chain data.
-
     
+    Args:
+      image (model_image): Static image from which to generate a dynamic image.
+      stats_list (list): List of strings of the statistics to generate.  Options are limited to subsets of ['mean','median','stddev','skewness','kurtosis'].
+      median_store_size (int): Number of instances about the middle to save in the construction of the median.  This is bounded from above by half of the number of chain samples.
     """
 
     def __init__(self,image, stats_list=None, median_store_size=16, themis_fft_sign=True) :
@@ -1143,6 +1292,13 @@ class model_image_single_point_statistics(model_image) :
         
             
     def generate(self,chain) :
+        """
+        Sets the chain from which to compute image statistics and the statistic of interest
+        to be returned on the next call to :func:`intensity_map`.
+
+        Args:
+          chain (numpy.ndarray): MCMC chain of parameters ordered [samples,parameters].
+        """
 
         if (np.all(self.chain==chain)) :
             return
@@ -1230,9 +1386,11 @@ class model_image_single_point_statistics(model_image) :
                     print("  On frame k = %i"%(k))
                 else :
                     pb.increment(k/float(flattened_chain.shape[0]))
-                    
-                    
-                I = self.image.intensity_map(x,y,flattened_chain[k,:],verbosity=verbosity)
+                
+                #I = self.image.intensity_map(x,y,flattened_chain[k,:],verbosity=verbosity)
+
+                self.image.generate(flattened_chain[k,:])
+                I = self.image.generate_intensity_map(x,y,verbosity=verbosity)
                 
                 if ( compute_mean ) :
                     self.Idict['mean'] = self.Idict['mean'] + I
@@ -1296,12 +1454,24 @@ class model_image_single_point_statistics(model_image) :
             
         # Return desired quantities
         return self.Idict[self.default_stat]
-            
-            
+
     
     def parameter_name_list(self) :
         return self.image.parameter_name_list()
+
     
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
+        self.image.set_time(time)
+
+        
     
 def expand_model_glob_ccm_mexico(model_glob) :
     """
@@ -1620,24 +1790,32 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
 
     if (tag[0]=='model_image_symmetric_gaussian') :
         return model_image_symmetric_gaussian(),tag[1:]
+
     elif (tag[0]=='model_image_asymmetric_gaussian') :
         return model_image_asymmetric_gaussian(),tag[1:]
+
     elif (tag[0]=='model_image_crescent') :
         return model_image_crescent(),tag[1:]
+
     elif (tag[0]=='model_image_xsring') :
         return model_image_xsring(),tag[1:]
+
     elif (tag[0]=='model_image_xsringauss') :
         return model_image_xsringauss(),tag[1:]
+
     elif (tag[0].split()[0]=='model_image_splined_raster') :
         toks = tag[0].split()
         return model_image_splined_raster(float(toks[1]),float(toks[2]),int(toks[3]),float(toks[4]),float(toks[5]),int(toks[6]),float(toks[7])),tag[1:]
+
     elif (tag[0].split()[0]=='model_image_adaptive_splined_raster') :
         toks = tag[0].split()
         return model_image_adaptive_splined_raster(int(toks[1]),int(toks[2]),float(toks[3])),tag[1:]
+
     elif (tag[0]=='model_image_smooth') :
         subtag = tagv1_find_subtag(tag[1:])
         subimage,_ = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
         return model_image_smooth(subimage),tag[(len(subtag)+3):]
+
     elif (tag[0].split()[0]=='model_image_sum') :
         offset_coordinates = tag[0].split()[1]
         subtag = tagv1_find_subtag(tag[1:])
@@ -1647,6 +1825,14 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
             subimage,subtag = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
             image_list.append(subimage)
         return model_image_sum(image_list,offset_coordinates=offset_coordinates),tag[len_subtag+3:]
+
+    elif (tag[0].split()[0]=='model_image_polynomial_variable') :
+        reference_time = float(tag[0].split()[1])
+        orders = [ int(order) for order in tag[0].split()[2:]]
+        subtag = tagv1_find_subtag(tag[1:])
+        subimage,_ = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
+        return model_image_polynomial_variable(subimage,orders,reference_time),tag[(len(subtag)+3):]
+
     else :
         raise RuntimeError("Unrecognized model tag %s"%(tag[0]))
 
@@ -1684,33 +1870,6 @@ def construct_model_image_from_tag_file(tag_file_name='model_image.tag', tagvers
     else:
         raise RuntimeError("Tag versions other than tagvers-1.0 are not supported at this time.")
 
-    
-def construct_model_image_from_glob(model_glob, glob_version, hyperparameters=None) :
-    """
-    Constructs a :class:`model_image` object given an appropriate model specification glob.  
-    Currently accepted globs include:
-
-    * ccm_mexico+ model specification string. These are an extended set of the strings used by the ccm_m87_mexico drivers.  For example, sXaagG.  For raster model types, hyperparameters must be supplied.  See :func:`expand_model_glob_ccm_mexico` for details regarding the required form.
-    * model tag file name. These can be output by Themis directly and encompass a wider set of possible models.
-
-    The appropriate associated glob version must be specified. For some specifications an additional set of hyperparameters may need to be supplied.
-
-    Args:
-      model_glob (str): Glob defining model image. Examples are 'sXaagG' or 'model_image.tag'
-      tagversion (str): Version of tag system. Currently only tagvers-1.0 is implemented. Default 'tagvers-1.0'.
-      hyperparameters (dict): Dictionary of hyperparameters if needed by the specification.
-
-    Returns:
-      (model_image): :class:`model_image` object of the corresponding model.
-
-    """
-
-    if (glob_version=='ccm_mexico' or glob_version=='ccm_mexico+') :
-        return construct_model_image_from_ccm_mexico(model_glob,hyperparameters)
-    elif (glob_version=='tagvers-1.0') :
-        return construct_model_image_from_tag_file(model_glob,glob_version)
-    else :
-        raise RuntimeError("Unrecognized model_glob version: %s"%(version))
 
     
 def plot_intensity_map(model_image, parameters, limits=None, shape=None, colormap='afmhot', Imin=0.0, Imax=None, in_radec=True, xlabel=None, ylabel=None, return_intensity_map=False, transfer_function='linear', verbosity=0) :
@@ -1831,72 +1990,3 @@ def plot_intensity_map(model_image, parameters, limits=None, shape=None, colorma
         return h,plt.gca(),plt.gcf()
     
 
-
-def write_fits(x,y,I,fits_filename,uvfits_filename=None,time=0,verbosity=0) :
-    """
-    Writes a FITS format image file given 2D image data.  
-
-    Warning: 
-
-      * This makes extensive use of ehtim and will not be available if ehtim is not installed.  Raises a NotImplementedError if ehtim is unavailable.
-      * Due to ehtim, only *square* images are supported at this time.
-
-    Args:
-      x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
-      y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
-      I (numpy.ndarray): Array of intensity values in (Jy/uas^2)
-      fits_filename (str): Name of output FITS file.
-      uvfits_filename (str): Optional name of uvfits file with relevant header data.  Failing to provide this may result in unusable FITS files.
-      time (float): Time in hr on the relevant observation day (set by uvfits file) represented by image data.
-      verbosity (int): Verbosity parameter. If 0, no information is printed.  If >=1, prints information about sizes and values.  If >=2, generates debugging plots.
-    """
-
-    if (ehtim_found==False) :
-        raise NotImplementedError("ERROR: write_fits requires ehtim to be installed.")
-
-    if (verbosity>0) :
-        print("Shapes",x.shape,y.shape,I.shape)
-
-    if (I.shape[0]!=I.shape[1]) :
-        raise RuntimeError("ERROR: ehtim cannot handle non-square images. Your image had shape",I.shape)
-
-    if (verbosity>2) :
-        plt.figure(figsize=(5,5))
-        plt.axes([0.15,0.15,0.8,0.8])
-        plt.pcolor(x,y,I,cmap='afmhot')
-    
-    uas2rad = 1e-6 / 3600.0 * np.pi/180.0
-    pixel_size = abs(x[1,1]-x[0,0])*uas2rad
-    Ippx = np.transpose(I) * abs((x[1,1]-x[0,0])*(y[1,1]-y[0,0]))
-    Ippx = np.flipud(Ippx)
-
-    if (uvfits_filename is None) :
-        warnings.warn("No uvfits file has been specified. This will probably result in an nonfunctional FITS header.", Warning)
-        ra=0.0
-        dec=0.0
-        rf=230e9
-        src='NA'
-        mjd=58583
-    else :
-        obs = eh.obsdata.load_uvfits(uvfits_filename)
-        ra=obs.ra
-        dec=obs.dec
-        rf=obs.rf
-        src=obs.source
-        mjd=obs.mjd
-
-    if (verbosity>0) :
-        print('pixel size:',pixel_size)
-        print('ra:',ra)
-        print('dec:',ra)
-        print('rf:',ra)
-        print('src:',ra)
-        print('mjd:',ra)
-
-    image = eh.image.Image(Ippx,pixel_size,ra,dec,rf=rf,source=src,mjd=mjd,time=time,pulse=eh.observing.pulses.deltaPulse2D)
-
-    if (verbosity>1) :
-        image.display()
-        plt.show()
-    
-    image.save_fits(fits_filename)

@@ -1,0 +1,145 @@
+#!/usr/bin/env python3
+
+"""
+Reads in a Themis gain file of any type and the matching uvfits data file and
+writes the self-calibrated data file.
+
+Example:
+$ themispy_selfcal_uvfits -g gain_corrections.d -d data.uvfits
+"""
+
+
+import numpy as np
+import argparse as ap
+import warnings
+from matplotlib.cbook import flatten
+
+# We don't need ehtim, so don't import it
+import sys
+import themispy as ty
+
+# Read in ehtim, if possible
+try:
+    import ehtim as eh
+    ehtim_found = True
+except:
+    warnings.warn("Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.", Warning)
+    ehtim_found = False
+
+    
+def set_parser() :
+    # Create a parser object to manage command line options
+    parser = ap.ArgumentParser(prog='themispy_gain_plots',description=__doc__)
+
+    parser.add_argument('-g',	
+                        type=str,
+                        action='store',	
+			required=True,
+                        help=("<Required> Name of gain file to read."))
+    
+    parser.add_argument('-d','--uvfits',	
+                        type=str,
+                        action='store',	
+			required=True,
+                        help=("<Required> Name of uvfits data file."))
+
+    parser.add_argument("-s","--scan-avg",
+                        action='store_true',
+                        default=False,
+                        help=("Produce scan averaged data."))
+
+    parser.add_argument("--avg-time",
+                        type=float,
+                        action='store',
+                        help=("Timescale over which to average the data in seconds. Superseded"
+                              " by -s,--scan-avg. Default: None."))
+
+    parser.add_argument("-r","--relative-timestamps",
+                        action="store_true",
+                        default=False,
+                        help=("Will ignore the absolute time offset in the gain file.  Requires"
+                              " that the number of data points in the uvfits file match the number"
+                              " of gain reconstruction epochs."))
+    
+    parser.add_argument("-f","--fractional-systematic-error",
+                        type=float,
+                        action='store',
+                        help=("Fractional systematic error to add IN PERCENT. Default: None."))
+    parser.add_argument("-t","--threshold-systematic-error",
+                        type=float,
+                        action='store',
+                        help=("Constant systematic error threshold to add in mJy. Default: None."))
+    parser.add_argument("-b","--minimum-baseline",
+                        type=float,
+                        action='store',
+                        help=("Minimum baseline, below which data are excluded from ALL data generation."
+                              " Default: None."))
+    parser.add_argument("-x","--exclude-station",
+                        type=str,
+                        nargs='+',
+                        action='append',
+                        help=("List of stations to flag.  Stations must be specified with the same"
+                              " station codes appearing in the uvfits file.  E.g., the 2017 code list."
+                              " Default: None."))
+
+    
+
+    parser.add_argument("-o","--out",
+                        type=str,
+                        action="store",
+                        help="Output file name. Default: gain_plot.png")
+
+    parser.add_argument("-v","--verbose",
+                        type=int,
+                        default=0,
+                        action="store",
+                        help="Sets verbosity level in :fun:`write_uvfits`. Level 1 outputs values, level 4 generates multiple plots.")
+
+    return parser
+
+
+if __name__ == "__main__" :
+
+
+    # Get command line options
+    args = set_parser().parse_args()
+
+    # load in the data
+    obs = eh.obsdata.load_uvfits(args.uvfits)
+
+    # exclude stations
+    if (not args.exclude_station is None) :
+        obs = obs.flag_sites(list(flatten(args.exclude_station)))
+
+    # (scan) average the data
+    if (args.scan_avg) :
+        obs.add_scans()
+        obs = obs.avg_coherent(0.0, scan_avg=True)
+    elif (not args.avg_time is None) :
+        obs = obs.avg_coherent(args.avg_time)
+
+    # add systematic noise
+    if (not args.fractional_systematic_error is None) :
+        obs = obs.add_fractional_noise(args.fractional_systematic_error/100.0)
+
+    # add threshold
+    if (not args.threshold_systematic_error is None):
+        if (obs.polrep=='stokes') :
+            obs.data['sigma'] = np.sqrt(obs.data['sigma']**2 + (args.threshold_systematic_error/1.0e3)**2)
+        else :
+            for sigtype in ['rrsigma','llsigma','rlsigma','lrsigma'] :
+                obs.data[sigtype] = np.sqrt(obs.data[sigtype]**2 + (args.threshold_systematic_error/1.0e3)**2)
+
+    # remove baselines below cutoff
+    if (not args.minimum_baseline is None) :
+        obs.flag_uvdist(args.minimum_baseline)
+
+    # Read in the gain file
+    gain_data = ty.vis.read_gain_file(args.g)
+
+    # Determine the output file name
+    if (args.out is None) :
+        args.out = 'selfcal_'+args.uvfits.split('/')[-1]
+    
+    # Apply the gains and write the calibrated uvfits file
+    ty.data.write_uvfits(obs,args.out,gain_data,relative_timestamps=args.relative_timestamps,verbosity=args.verbose)

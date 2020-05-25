@@ -10,8 +10,12 @@ Convergence Tools
 .. automodule:: diag.convergence_tools
    :members:
 
-Plotting Tools
+Diagnostic Plots
 -----------------
 .. automodule:: diag.diagnostic_plots
    :members:
-      
+
+Residual Tools
+-----------------      
+.. automodule:: diag.residual_plots
+   :members:

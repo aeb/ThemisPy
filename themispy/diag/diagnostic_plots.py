@@ -116,7 +116,7 @@ def plot_likelihood_trace(elklhd, colormap='plasma', step_norm=1000, grid=True, 
     cmap = cm.get_cmap(colormap)
         
     for w in range(elklhd.shape[1]) :
-        plt.plot(chain_step,elklhd[:,w],'-',color=cmap(w/(elklhd.shape[1]-1.0)),alpha=alpha)
+        plt.plot(chain_step,elklhd[:,w],'-',color=cmap(w/max(1,elklhd.shape[1]-1.0)),alpha=alpha)
 
     if (means) :
         xtmp = np.array([chain_step[0], chain_step[-1]])
@@ -165,7 +165,7 @@ def plot_likelihood_trace_list(elklhd_list, colormap='plasma', step_norm=1000, g
         cmap = cm.get_cmap(colormap)
         
         for w in range(elklhd.shape[1]) :
-            plt.plot(chain_step,elklhd[:,w],'-',color=cmap(w/(elklhd.shape[1]-1.0)),alpha=alpha)
+            plt.plot(chain_step,elklhd[:,w],'-',color=cmap(w/max(1,elklhd.shape[1]-1.0)),alpha=alpha)
 
         if (means) :
             xtmp = np.array([chain_step[0], chain_step[-1]])
@@ -768,7 +768,7 @@ def plot_deo_rejection_rate(annealing_summary_data,color='b') :
     return plt.gcf(), plt.gca()
 
 
-def plot_deo_lambda(annealing_summary_data,annealing_data,colormap='b') :
+def plot_deo_lambda(annealing_summary_data,annealing_data,colormap='b', axis_scales=None) :
     """
     Plots the rejection rate evolution with round for DEO tempered samplers in Themis.
 
@@ -776,6 +776,7 @@ def plot_deo_lambda(annealing_summary_data,annealing_data,colormap='b') :
       annealing_summary_data (numpy.ndarray): Array of annealing run summary data as read by :func:`chain.mcmc_chain.load_deo_summary`.
       annealing_data (dict): Dictionary containing :math:`\\beta` and :math:`R` values indexed by [round,tempering level] and accessed by keys 'Beta' and 'R', respectively, as read by :func:`chain.mcmc_chain.load_deo_summary`.
       colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm` or acceptable color type as specified in :mod:`matplotlib.colors`. Default: 'b'.
+      axis_scales (tuple): Tuple with the scales for x an y axis scales. If none uses ('logit','log') scale. 
     
     Returns:
       (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.
@@ -788,22 +789,36 @@ def plot_deo_lambda(annealing_summary_data,annealing_data,colormap='b') :
     if ( not is_color_like(colormap) ) :
         cmap = cm.get_cmap(colormap)
 
+    if (axis_scales is None):
+        yscale = 'log'
+        xscale = 'logit'
+
+    else:
+        yscale = axis_scales[1]
+        xscale = axis_scales[0]
+
+
     lines = []
     nrounds = annealing_summary_data.shape[0]
     for i in range(nrounds):
         beta_r = beta[i,::-1]
         Lambda_r = np.cumsum(R[i,::-1])
         fLambda = mcubic(beta_r[1:], Lambda_r[1:])
-        b = np.linspace(beta_r[1],1.0,500)
+        bE = np.max((0.9999,beta_r[-2]))
+        lb = np.linspace(np.log(beta_r[1]/(1-beta_r[1])),np.log(0.9999/(1-0.9999)),500)
+        b = 1.0/(1+np.exp(-lb))
+        print(b)
         if ( is_color_like(colormap) ) :
             color = list(to_rgba(colormap))
             color[3] = 0.05+0.95*i/(nrounds-1.0)
         else :
             color = cmap(i/(nrounds-1.0))
-        im = plt.gca().semilogy(b, fLambda(b,nu=1), label="%d"%(i), color=color, linewidth=2)
+        im = plt.gca().plot(b, fLambda(b,nu=1), label="%d"%(i), color=color, linewidth=2)
         lines.append(im)
     #plt.gca().set_ylim(top=1e5,auto=True)
-    plt.gca().set_xticks(np.arange(0.0,1.01,0.25))
+    plt.gca().set_xscale(xscale)
+    plt.gca().set_yscale(yscale)
+    #plt.gca().set_xticks(np.arange(1e-4,1-1e-4,0.25))
     plt.gca().set_xlabel(r"$\beta$")
     plt.gca().set_ylabel(r"$\lambda(\beta)$")
     plt.gca().text(0.95,0.95, r"$\hat{\tau}_{\rm{opt, %d}} = %.4f$"%(nrounds-1,annealing_summary_data["rt_opt"][-1]),
@@ -819,6 +834,42 @@ def plot_deo_lambda(annealing_summary_data,annealing_data,colormap='b') :
     
     return plt.gcf(), plt.gca()
 
+
+def plot_energy_dist(state,nbins=40,alpha=0.5):
+    """
+    Plots the energy transition density and marginal energy density.
+    When the distributions are similar it means HMC should give be `robust`.
+    Additionally we computed the empirical Bayesian fraction of missing information E-BFMI 
+    of the state. Typically if this is less than 0.3, HMC may have issues exploring the tails
+    of the distribution.
+    Args:
+      state (numpy.ndarray): The state array of a Themis run using the Stan sampler. *Warmup must be removed*.
+      nbins (int): The number of bins to use for the histogram.
+      alpha (float): The alpha parameter for the histogram opacity.
+    
+    Returns:  
+      (matplotlib.figure.Figure, matplotlib.axes.Axes): Handles to the figure and array of axes objects in the plot.
+    """
+    #Get the energy distributins
+    energy = state[:,-1]
+    energydiff = energy[1:] - energy[:-1]
+    mean_energy = np.mean(energy)
+
+    #Get a consistent binning between the two quantities
+    bins=np.histogram(np.hstack((energydiff,energy-mean_energy)), bins=nbins)[1]
+    
+    #Now get the Estiamted Bayesian fractin of missing information
+    est_bi = np.sum(energydiff**2)/np.sum((energy-mean_energy)**2)
+    cax = plt.gca()
+    cax.hist(energy-mean_energy, bins=bins, density=True, label=r"$\pi(E|q)$",alpha=alpha)
+    cax.hist(energydiff, bins=bins, density=True, label=r"$\pi(E)$",alpha=alpha)
+    cax.legend(frameon=False)
+    cax.set_xlabel("$E - \\bar{E}$")
+    cax.set_yticks([])
+    cax.text(0.025,0.9,r"E-BFMI = %.3f"%(est_bi),transform=cax.transAxes)
+
+    return plt.gcf(), cax
+    
 
 
 

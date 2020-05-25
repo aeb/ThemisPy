@@ -20,13 +20,13 @@ except:
     warnings.warn("Package astropy not found.  Some functionality will not be available.  If this is necessary, please ensure astropy is installed.", Warning)
     astropy_found = False
 
-# Read in ehtim, if possible
-try:
-    import ehtim as eh
-    ehtim_found = True
-except:
-    warnings.warn("Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.", Warning)
-    ehtim_found = False
+# # Read in ehtim, if possible
+# try:
+#     import ehtim as eh
+#     ehtim_found = True
+# except:
+#     warnings.warn("Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.", Warning)
+#     ehtim_found = False
 
 
 def closure_phase_covariance_ordering(obs, snrcut=0, verbosity=0) :
@@ -625,7 +625,254 @@ def write_polarization_fractions(obs,outname) :
     raise NotImplementedError
 
 
-def write_uvfits(obs, outname, gains_data=None, dterm_data=None, verbosity=0) :
+
+def read_crosshand_visibilities(filename, verbosity=0) :
+    """
+    Reads a themis-style amplitude data file and returns a dictionary object.
+
+    Args:
+      filename (str) :  Name of the file containing Themis-style data.
+      verbosity (int) : Verbosity level. Default: 0.
+
+    Returns:
+      (dict) : Dictionary containing data with additional information.
+    """
+    
+    datadict={}
+    datadict['source']=[]
+    datadict['year']=[]
+    datadict['day']=[]
+    datadict['time']=[]
+    datadict['baseline']=[]
+    datadict['u']=[]
+    datadict['v']=[]
+    datadict['field rotation 1']=[]
+    datadict['field rotation 2']=[]
+    datadict['RR']=[]
+    datadict['RR error']=[]
+    datadict['LL']=[]
+    datadict['LL error']=[]
+    datadict['RL']=[]
+    datadict['RL error']=[]
+    datadict['LR']=[]
+    datadict['LR error']=[]
+    for l in open(filename,'r') :
+        # Skip headers/comment/flagged lines
+        if (l[0]=='#') :
+            continue
+        toks=l.split()
+        datadict['source'].append(toks[0])
+        datadict['year'].append(int(toks[1]))
+        datadict['day'].append(int(toks[2]))
+        datadict['time'].append(float(toks[3]))
+        datadict['baseline'].append(toks[4])
+        datadict['u'].append(float(toks[5])*1e6)
+        datadict['v'].append(float(toks[6])*1e6)
+        datadict['field rotation 1'].append(float(toks[7]))
+        datadict['field rotation 2'].append(float(toks[8]))
+        datadict['RR'].append(float(toks[9])+1.0j*float(toks[11]))
+        datadict['RR error'].append(float(toks[10])+1.0j*float(toks[12]))
+        datadict['LL'].append(float(toks[13])+1.0j*float(toks[15]))
+        datadict['LL error'].append(float(toks[14])+1.0j*float(toks[16]))
+        datadict['RL'].append(float(toks[17])+1.0j*float(toks[19]))
+        datadict['RL error'].append(float(toks[18])+1.0j*float(toks[20]))
+        datadict['LR'].append(float(toks[21])+1.0j*float(toks[23]))
+        datadict['LR error'].append(float(toks[22])+1.0j*float(toks[24]))
+
+    for key in datadict.keys() :
+        datadict[key] = np.array(datadict[key])
+
+    if (verbosity>0) :
+        for key in datadict.keys() :
+            print(("%15s : ")%(key),datadict[key][:5])
+        
+    return datadict
+        
+
+def read_visibilities(filename, verbosity=0) :
+    """
+    Reads a themis-style amplitude data file and returns a dictionary object.
+
+    Args:
+      filename (str) :  Name of the file containing Themis-style data.
+      verbosity (int) : Verbosity level. Default: 0.
+
+    Returns:
+      (dict) : Dictionary containing data with additional information.
+    """
+    
+    datadict={}
+    datadict['source']=[]
+    datadict['year']=[]
+    datadict['day']=[]
+    datadict['time']=[]
+    datadict['baseline']=[]
+    datadict['u']=[]
+    datadict['v']=[]
+    datadict['visibility']=[]
+    datadict['error']=[]
+    for l in open(filename,'r') :
+        # Skip headers/comment/flagged lines
+        if (l[0]=='#') :
+            continue
+        toks=l.split()
+        datadict['source'].append(toks[0])
+        datadict['year'].append(int(toks[1]))
+        datadict['day'].append(int(toks[2]))
+        datadict['time'].append(float(toks[3]))
+        datadict['baseline'].append(toks[4])
+        datadict['u'].append(float(toks[5])*1e6)
+        datadict['v'].append(float(toks[6])*1e6)
+        datadict['visibility'].append(float(toks[7])+1.0j*float(toks[9]))
+        datadict['error'].append(float(toks[8])+1.0j*float(toks[10]))
+
+    for key in datadict.keys() :
+        datadict[key] = np.array(datadict[key])
+
+    if (verbosity>0) :
+        for key in datadict.keys() :
+            print(("%15s : ")%(key),datadict[key][:5])
+
+    return datadict
+        
+
+def read_amplitudes(filename, verbosity=0) :
+    """
+    Reads a themis-style amplitude data file and returns a dictionary object.
+
+    Args:
+      filename (str) :  Name of the file containing Themis-style data.
+      verbosity (int) : Verbosity level. Default: 0.
+
+    Returns:
+      (dict) : Dictionary containing data with additional information.
+    """
+    
+    datadict={}
+    datadict['source']=[]
+    datadict['year']=[]
+    datadict['day']=[]
+    datadict['time']=[]
+    datadict['baseline']=[]
+    datadict['u']=[]
+    datadict['v']=[]
+    datadict['amplitude']=[]
+    datadict['error']=[]
+    for l in open(filename,'r') :
+        # Skip headers/comment/flagged lines
+        if (l[0]=='#') :
+            continue
+        toks=l.split()
+        datadict['source'].append(toks[0])
+        datadict['year'].append(int(toks[1]))
+        datadict['day'].append(int(toks[2]))
+        datadict['time'].append(float(toks[3]))
+        datadict['baseline'].append(toks[4])
+        datadict['u'].append(float(toks[5])*1e6)
+        datadict['v'].append(float(toks[6])*1e6)
+        datadict['amplitude'].append(float(toks[7]))
+        datadict['error'].append(float(toks[8]))
+
+    for key in datadict.keys() :
+        datadict[key] = np.array(datadict[key])
+
+    if (verbosity>0) :
+        for key in datadict.keys() :
+            print(("%15s : ")%(key),datadict[key][:5])
+            
+    return datadict
+
+
+def read_closure_phases(filename, verbosity=0) :
+    """
+    Reads a themis-style closure phase data file and returns a dictionary object.
+
+    Args:
+      filename (str) :  Name of the file containing Themis-style data.
+      verbosity (int) : Verbosity level. Default: 0.
+
+    Returns:
+      (dict) : Dictionary containing data with additional information.
+    """
+    
+    datadict={}
+    datadict['source']=[]
+    datadict['year']=[]
+    datadict['day']=[]
+    datadict['time']=[]
+    datadict['triangle']=[]
+    datadict['u1']=[]
+    datadict['v1']=[]
+    datadict['u2']=[]
+    datadict['v2']=[]
+    datadict['u3']=[]
+    datadict['v3']=[]
+    datadict['closure phase']=[]
+    datadict['error']=[]
+    for l in open(filename,'r') :
+        # Skip headers/comment/flagged lines
+        if (l[0]=='#') :
+            continue
+        toks=l.split()
+        datadict['source'].append(toks[0])
+        datadict['year'].append(int(toks[1]))
+        datadict['day'].append(int(toks[2]))
+        datadict['time'].append(float(toks[3]))
+        datadict['triangle'].append(toks[4])
+        datadict['u1'].append(float(toks[5])*1e6)
+        datadict['v1'].append(float(toks[6])*1e6)
+        datadict['u2'].append(float(toks[7])*1e6)
+        datadict['v2'].append(float(toks[8])*1e6)
+        datadict['closure phase'].append(float(toks[9]))
+        datadict['error'].append(float(toks[10]))
+
+    for key in datadict.keys() :
+        datadict[key] = np.array(datadict[key])
+    
+    datadict['u3'] = -datadict['u1']-datadict['u2']
+    datadict['v3'] = -datadict['v1']-datadict['v2']
+
+    if (verbosity>0) :
+        for key in datadict.keys() :
+            print(("%15s : ")%(key),datadict[key][:5])
+    
+    return datadict
+
+
+
+def read_closure_amplitudes(filename, verbosity=0) :
+    """
+    Reads a themis-style closure amplitude data file and returns a dictionary object.
+
+    Args:
+      filename (str) :  Name of the file containing Themis-style data.
+      verbosity (int) : Verbosity level. Default: 0.
+
+    Returns:
+      (dict) : Dictionary containing data with additional information.
+    """
+
+    raise NotImplementedError
+
+
+def read_polarization_fractions(filename, verbosity=0) :
+    """
+    Reads a themis-style closure amplitude data file and returns a dictionary object.
+
+    Args:
+      filename (str) :  Name of the file containing Themis-style data.
+      verbosity (int) : Verbosity level. Default: 0.
+
+    Returns:
+      (dict) : Dictionary containing data with additional information.
+    """
+
+    raise NotImplementedError
+
+
+import matplotlib.pyplot as plt
+
+def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timestamps=False, verbosity=0) :
     """
     Writes uvfits file given an :class:`ehtim.obsdata.Obsdata` object.  Potentially applies gains and/or dterms from a Themis analysis 
 
@@ -638,17 +885,25 @@ def write_uvfits(obs, outname, gains_data=None, dterm_data=None, verbosity=0) :
       outname (str): Name of the output file to which to write data.
       gains (dictionary): Station gains organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
       dterms (dictionary): Station D terms organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
+      relative_timestamps (bool): If True, will assume that the times in the calibration files apply to the given data set and apply in order. Requires that the number of gains must match the number of time slices in the data set. Exists prirmarily to address poor absolute time specification of earlier gain files. In almost all new Themis analyses after Apr 22, 2020, should be False.
       verbosity (int): Degree of verbosity.  0 only prints warnings and errors. 1 provides more granular output. 2 generates calibrated data plots. 3 generates cal table gain plots.  
 
     Returns:
       None.
     """
 
+    ## TODO: Fix it to figure out the relative start/stop times and apply the gains in the stated time bins.
+    ##
+
     # Flip gains from corrections to the model to adjust data, i.e., G -> 1/G
-    gain_station_names = gain_data.keys()[2:] # First two are tstart
+    gain_station_names = gain_data['stations']
     for sn in gain_station_names :
         gain_data[sn] = 1.0/gain_data[sn]
 
+
+    if (verbosity>0) :
+        print("Gain data:",gain_data)
+        
     # Get the unique times
     od_time = np.unique(obs.unpack('time'))
     od_time_list = []
@@ -656,28 +911,43 @@ def write_uvfits(obs, outname, gains_data=None, dterm_data=None, verbosity=0) :
         od_time_list.append(tmp[0])
 
     # Check for consistency, if they are not consistent warn
-    if (len(od_time_list)!=len(ts)) :
-        warnings.warn("gain_data and observation data are not the same size! Will try to apply gains nonetheless ...",Warning)
+    if (relative_timestamps) :
+        gain_time_list = od_time_list
+        if (len(od_time_list)!=len(gain_data['tstart'])) :
+            raise RuntimeError("When relative_timestamps=True, number of gain epochs (%i) must match number of observation epochs (%i)."%(len(gain_data['tstart']),len(od_time_list)))
         if ( (od_time_list[-1]-od_time_list[0]) > (gain_data['tend'][-1]-gain_data['tstart'][0]) ) :
             raise RuntimeError("gain_data does not cover the observation times.  Cowardly refusing to continue.")
+    else :
+        # Get the absolute times
+        if (len(od_time_list)!=len(gain_data['tstart'])) :
+            warnings.warn("gain_data and observation data are not the same size! Will try to apply gains nonetheless ...",Warning)
+        if ( int(gain_data['toffset'].mjd) != obs.mjd ) :
+            raise RuntimeError("Observation and gain reconstruction dates differ (mjd %i vs %i). Cowardly refusing to continue."%(obs.mjd,int(gain_data['toffset'].mjd)))
+        gain_time_offset_hour = 24.0 * (gain_data['toffset'].mjd%1)
+        gain_time_list = gain_data['tstart'] + gain_time_offset_hour
+        time_precision_slop = 1e-3/3600.0 # Permit a slop of 1 ms in the time comparisons
+        if ( od_time_list[0]<gain_data['tstart'][0]+gain_time_offset_hour-time_precision_slop or od_time_list[-1]>gain_data['tend'][-1]+gain_time_offset_hour+time_precision_slop ) :
+            raise RuntimeError("gain_data does not cover the observation times. Cowardly refusing to continue.")
 
+        
     # Generate Caltable object
     if (verbosity>0) :
-        print("Sites:",station_names)
+        print("Sites:",gain_station_names)
         print("Times:",od_time_list)
     datatables = {}
-    for k in range(len(station_names)):
+    #for k in range(len(gain_station_names)):
+    for station in gain_station_names :
         datatable = []
-        for j in range(len(od_time_list)):
-            datatable.append(np.array((od_time_list[j], gains[j,k], gains[j,k]), dtype=eh.DTCAL))
-        datatables[station_names[k]] = np.array(datatable)
+        for j in range(len(gain_time_list)):
+            datatable.append(np.array((gain_time_list[j], gain_data[station][j], gain_data[station][j]), dtype=eh.DTCAL))
+        datatables[station] = np.array(datatable)
     cal=eh.caltable.Caltable(obs.ra, obs.dec, obs.rf, obs.bw, datatables, obs.tarr, source=obs.source, mjd=obs.mjd, timetype=obs.timetype)
 
     # Calibrate the observation data (Yikes!!)
     obs_cal = cal.applycal(obs)
 
     # Write out new uvfits file
-    obs_cal.save_uvfits(cal_uvfits_file_name)
+    obs_cal.save_uvfits(outname)
 
     # Make calibrated data plots if desired
     if (verbosity>2) :
