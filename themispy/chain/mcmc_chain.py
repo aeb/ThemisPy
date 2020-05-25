@@ -141,6 +141,11 @@ def read_elklhd(filename, stride=1, burn_fraction=0, skip=None, auto_warmup=Fals
         eL = np.zeros([state.shape[0],1])
         eL[:,0] = state[:,0]
         return eL,nskip
+    elif (sampler_type=='afss') :
+        state,nskip = read_afss_state(filename, stride=stride, burn_fraction=burn_fraction, skip=skip)
+        eL = np.zeros([state.shape[0],1])
+        eL[:,0] = state[:,0]
+        return eL,nskip
     else :
         raise RuntimeError("Unrecognized lklhdfmt type, %s."%(sampler_type))
 
@@ -243,6 +248,11 @@ def read_echain(filename, walkers=1, stride=1, burn_fraction=0, skip=None, param
     if (sampler_type=='ensemble') :
         return read_ensemble_chain(filename,walkers=walkers,stride=stride,burn_fraction=burn_fraction,skip=skip,parameter_list=parameter_list)
     elif (sampler_type=='stan') :
+        chain = read_stan_chain(filename,stride=stride,burn_fraction=burn_fraction,skip=skip,parameter_list=parameter_list)
+        echain = np.zeros([chain.shape[0],1,chain.shape[1]])
+        echain[:,0,:] = chain[:,:]
+        return echain
+    elif (sampler_type == 'afss') :
         chain = read_stan_chain(filename,stride=stride,burn_fraction=burn_fraction,skip=skip,parameter_list=parameter_list)
         echain = np.zeros([chain.shape[0],1,chain.shape[1]])
         echain[:,0,:] = chain[:,:]
@@ -428,6 +438,68 @@ def sample_erun(chain_filename, lklhd_filename, samples, burn_fraction=0, skip=N
     elklhd = np.array(elklhd.reshape([-1])[sample_list])
     
     return echain,elklhd
+
+def read_afss_state(filename, stride=1, burn_fraction=0, skip=None, auto_warmup=False):
+    """
+    Reads in a Themis state file from the automated factor slice sampler.  Optionally, a 
+    stride, burn-in fraction, or number of *Stan samples* to skip may be set.
+    Returns an IndexError if fewer samples exist in the chain file than skip.
+
+    Args:
+      filename (str): Filename in which state data will be found (e.g., `State.dat`)
+      stride (int): Integer factor by which to step through samples *coherently* among walkers.  Default: 1.
+      burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.
+      skip (int): Number of initial *ensemble samples* to skip.  Overrides burn_fraction unless set to None. Default: None.
+
+    Returns:
+      (numpy.ndarray, int): Likelihood data arranged as 2D array indexed by [sample, walker] *after* excluding the burn in period specified and applied the specified stride; Number of samples skipped. 
+    """
+
+    # Find the number of independent samples
+    nsamp,nhead = file_length(filename,header_string='#')
+    
+    warmup_index = 0 
+    # Set the number of lines to skip
+    nskip = 0
+    if (skip is None) :
+        nskip = int(nsamp*burn_fraction)+warmup_index
+    else :
+        nskip = skip + warmup_index
+
+    # If there are too few lines in the state file, raise IndexError
+    if (nskip>nsamp) :
+        raise IndexError
+
+    # Number of samples to store
+    nstor = (nsamp-nskip)//stride
+    state = np.zeros((nstor,6))    
+
+    # Add in the header
+    nskip += nhead
+    
+    # Loop over the lines from the file
+    j=0
+    for k,l in enumerate(open(filename,'r')) :
+    
+        # Skip the burn-in period
+        if (k<nskip) :
+            continue
+        
+        # If this is inconsistent with the thin stride skip
+        if ((k-nskip)%stride!=0) :
+            continue
+
+        # If past the end, stop
+        if (j>=nstor) :
+            break
+
+        # If this is consistent with the thin strid keep
+        #lklhd[j,:] = np.array(l.split()).astype(float)
+        tokens = l.split()
+        state[j,:] = np.array([float(tok) for tok in tokens]) #l.split()).astype(float)
+        j += 1
+
+    return state,nskip
 
 
 def read_stan_state(filename, stride=1, burn_fraction=0, skip=None, auto_warmup=False):
