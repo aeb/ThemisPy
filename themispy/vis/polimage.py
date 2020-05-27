@@ -653,7 +653,7 @@ class model_polarized_image_sum(model_polarized_image) :
     
 
 
-def plot_linear_polarization_map(polarized_image, parameters, limits=None, shape=None, tick_shape=None, colormap='plasma', tick_color='w', Lmin=0.0, Lmax=None, mscale=None, in_radec=True, xlabel=None, ylabel=None, return_stokes_map=False, transfer_function='linear', intensity_contours=False, intensity_colors=None, verbosity=0) :
+def plot_linear_polarization_map(polarized_image, parameters, limits=None, shape=None, tick_shape=None, colormap='plasma', tick_color='w', Lmin=0.0, Lmax=None, mscale=None, in_radec=True, xlabel=None, ylabel=None, return_stokes_map=False, transfer_function='linear', intensity_contours=False, intensity_colors=None, tick_fractional_intensity_floor=0.1, colorbar=None, verbosity=0) :
     """
     Plots linear polarization fraction and polarization ticks associated with a given 
     :class:`model_image` object evaluated at a specified set of parameters. A number of additional 
@@ -669,7 +669,7 @@ def plot_linear_polarization_map(polarized_image, parameters, limits=None, shape
       colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: 'afmhot'.
       tick_color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`.
       Lmin (float): Minimum intensity for colormap. Default: 0 (though see transfer_function).
-      Lmax (float): Maximum intensity for colormap. Default: maximum intensity.
+      Lmax (float): Maximum intensity for colormap. Default: maximum linearly polarized intensity.
       mscale (float): Polarization fraction scale for polarization ticks. If None, set by maximum polarization fraction where the polarized flux is above 1% of the maximum polarized flux. Default: None.
       in_radec (bool): If True, plots in :math:`\\Delta RA` and :math:`\\Delta Dec`.  If False, plots in sky-right Cartesian coordinates. Default: True.
       xlabel (str): Label for xaxis. Default: ':math:`\\Delta RA (\\mu as)` if in_radec is True, :math:`\\Delta x (\\mu as)` if in_radec is False.
@@ -678,6 +678,8 @@ def plot_linear_polarization_map(polarized_image, parameters, limits=None, shape
       transfer_function (str): Transfer function to plot.  Options are 'linear','sqrt','log'.  If 'log', if Imin=0 it will be set to Imax/1000.0 by default, else if Imin<0 it will be assumed to be a dynamic range and Imin = Imax * 10**(Imin).
       intensity_contours (int,list,bool): May either be True, an integer, or a list of contour level values. Default: False. If True, sets 8 linearly spaced contour levels.
       intensity_colors (list): A list composed of any acceptable color type as specified in :mod:`matplotlib.colors`.
+      tick_fractional_intensity_floor (float): Fraction of maximum intensity at which to stop plotting polarization ticks.  Default: 0.1.
+      colorbar (str): Adds colorbar indicating magnitude of polarized flux. Options are None, 'flux', and 'frac'.  If None, no colorbar is plotted.  If 'flux' the polarized flux in Jy will be shown.  If 'frac' the fraction of the maximum intensity in polarized flux will be shown, i.e., :math:`L/I_{max}`.  Default: None.
       verbosity (int): Verbosity level. 0 prints nothing. 1 prints various elements of the plotting process. Passed to :func:`model_image.generate_intensity_map`. Default: 0.
 
     Returns :
@@ -741,11 +743,13 @@ def plot_linear_polarization_map(polarized_image, parameters, limits=None, shape
     # Determine scale
     if (Lmax is None) :
         Lmax = np.max(L)
-
+        
     if (verbosity>0) :
         print("Minimum/Maximum L: %g / %g"%(Lmin,Lmax))
     
     # Transfered I for plotting
+    Lmin_orig = Lmin
+    Lmax_orig = Lmax
     if (transfer_function=='linear') :
         tL = L/Lmax
         Lmin = Lmin/Lmax
@@ -758,6 +762,7 @@ def plot_linear_polarization_map(polarized_image, parameters, limits=None, shape
         tL = np.log10(L/Lmax)
         if (Lmin==0) :
             Lmin = np.log10(1.0e-3)
+            Lmin_orig = 1.0e-3
         elif (Lmin>0) :
             Lmin = np.log10(Lmin/Lmax)
         Lmax = 0.0
@@ -769,12 +774,38 @@ def plot_linear_polarization_map(polarized_image, parameters, limits=None, shape
     # Make plot
     h = plt.pcolor(x,y,tL,cmap=colormap,vmin=Lmin,vmax=Lmax)
 
+    # Add colorbar if desired
+    if (not colorbar is None) :
+        cb = plt.colorbar()
+        if (colorbar=='flux') :
+            cb.ax.set_ylabel('Polarized flux (mJy/$\mu$as$^2$)',rotation=270,va='bottom')
+            cticks = cb.ax.get_yticks()
+            i = np.argsort(tL.reshape([-1]))
+            tL_sort = tL.reshape([-1])[i]
+            L_sort = L.reshape([-1])[i]
+            ctick_Lvals = np.interp(cticks,tL_sort,L_sort,left=Lmin_orig,right=Lmax_orig)
+            ctlbls = [ '%5.2g'%(x*1e3) for x in ctick_Lvals ]
+            cb.ax.set_yticklabels(ctlbls)
+        elif (colorbar=='frac') :
+            cb.ax.set_ylabel('Polarized flux ($I_{max}$)',rotation=270,va='bottom')
+            #cylim = cb.ax.get_ylim()
+            cticks = cb.ax.get_yticks()
+            i = np.argsort(tL.reshape([-1]))
+            tL_sort = tL.reshape([-1])[i]
+            L_sort = L.reshape([-1])[i]
+            ctick_Lvals = np.interp(cticks,tL_sort,L_sort,left=Lmin_orig,right=Lmax_orig)
+            ctlbls = [ '%5.2g'%(x/np.max(S[0])) for x in ctick_Lvals ]
+            cb.ax.set_yticklabels(ctlbls)
+        else :
+            raise RuntimeError("Unrecognized colorbar option %s"%(colorbar))
+
+    
     # Plot tickmarks
     dxpol = (np.max(x)-np.min(x))/tick_shape[0]
     dypol = (np.max(x)-np.min(x))/tick_shape[1]
     xstride = max( 1, int(dxpol/(np.max(x)-np.min(x))*L.shape[0]+0.5) )
     ystride = max( 1, int(dypol/(np.max(y)-np.min(y))*L.shape[1]+0.5) )
-    plot_polticks = (S[0]>0.01*np.max(S[0]))
+    plot_polticks = (S[0]>tick_fractional_intensity_floor*np.max(S[0]))
     if (mscale is None) :
         m = np.sqrt(S[1]**2+S[2]**2)/S[0]
         mscale = min(1,np.max(m[plot_polticks]))
@@ -793,7 +824,7 @@ def plot_linear_polarization_map(polarized_image, parameters, limits=None, shape
                 xtmp = [ (xs-0.5*px), (xs+0.5*px) ]
                 ytmp = [ (ys-0.5*py), (ys+0.5*py) ]
                 plt.plot(xtmp,ytmp,'-',color=tick_color,lw=1)
-
+                
 
     # Add intensity contours if desired
     if (intensity_contours!=False) :
@@ -824,7 +855,7 @@ def plot_linear_polarization_map(polarized_image, parameters, limits=None, shape
     
     # Fix x-axis to run in sky
     if (in_radec) :
-        plt.gca().invert_xaxis()
+        plt.gca().invert_xaxis()        
 
     if (return_stokes_map) :
         return h,plt.gca(),plt.gcf(),x,y,S
