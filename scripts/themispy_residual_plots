@@ -224,7 +224,7 @@ if __name__ == "__main__" :
     # Sort out name
     outname,ext = os.path.splitext(args.out)    
     index={}
-    for restype in ['amplitude','closure_phase','visibility','crosshand'] :
+    for restype in ['amplitude','closure phase','visibility','crosshand'] :
         index[restype]=0
 
 
@@ -261,7 +261,7 @@ if __name__ == "__main__" :
             if (args.plot_type is None) :
                 args.plot_type='uvamp'
             ty.diag.plot_amplitude_residuals(resdata,gain_data=gain_data,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
-        elif (resdata['type']=='closure_phase') : 
+        elif (resdata['type']=='closure phase') : 
             if (args.plot_type is None) :
                 args.plot_type='perimeter'
             ty.diag.plot_closure_phase_residuals(resdata,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
@@ -282,8 +282,8 @@ if __name__ == "__main__" :
             
         # Save figure
         if (index[resdata['type']]<2) :
-            outfile = resdata['type']+'_'+outname+ext
+            outfile = resdata['type'].replace(' ','_')+'_'+outname+ext
         else :
-            outfile = resdata['type']+'_'+outname+'_%i'%(index[resdata['type']])+ext
+            outfile = resdata['type'].replace(' ','_')+'_'+outname+'_%i'%(index[resdata['type']])+ext
             
         plt.savefig(outfile,dpi=300)
