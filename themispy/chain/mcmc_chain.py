@@ -472,7 +472,7 @@ def read_afss_state(filename, stride=1, burn_fraction=0, skip=None, auto_warmup=
 
     # Number of samples to store
     nstor = (nsamp-nskip)//stride
-    state = np.zeros((nstor,6))    
+    state = np.zeros((nstor,5))    
 
     # Add in the header
     nskip += nhead
