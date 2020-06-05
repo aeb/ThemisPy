@@ -112,6 +112,9 @@ def set_parser() :
                         default=True,
                         help=("Excludes partial hand data (e.g., JCMT) in the construction of crosshand"
                               " visibility data sets. Default: include partials."))
+    parser.add_argument("-tarr","--telescope-array-file",
+                        action='store',
+                        help=("Reads a separate telescope array file."))
 
     return parser
     
@@ -122,6 +125,11 @@ def read_uvfits(filename,polrep,args) :
     # load in the data
     obs = eh.obsdata.load_uvfits(filename,polrep=polrep)
 
+    # Load in tarr file if passed
+    if (not args.telescope_array_file is None):
+        eht = eh.io.load.load_array_txt(args.telescope_array_file)
+        obs.tarr = eht.tarr
+    
     # exclude stations
     if (not args.exclude_station is None) :
         obs = obs.flag_sites(list(flatten(args.exclude_station)))
