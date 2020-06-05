@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>diag.diagnostic_plots &mdash; ThemisPy 0.2.0 documentation</title>
+  <title>diag.diagnostic_plots &mdash; ThemisPy 0.1.0+75.g0ef1e8d.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.2.0 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+75.g0ef1e8d.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.2.0
+                0.1.0+75.g0ef1e8d.dirty
               </div>
             
           
@@ -956,7 +956,7 @@
         <span class="n">bE</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">((</span><span class="mf">0.9999</span><span class="p">,</span><span class="n">beta_r</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]))</span>
         <span class="n">lb</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">beta_r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">beta_r</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.9999</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="mf">0.9999</span><span class="p">)),</span><span class="mi">500</span><span class="p">)</span>
         <span class="n">b</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">lb</span><span class="p">))</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="c1">#print(b)</span>
         <span class="k">if</span> <span class="p">(</span> <span class="n">is_color_like</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
             <span class="n">color</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">to_rgba</span><span class="p">(</span><span class="n">colormap</span><span class="p">))</span>
             <span class="n">color</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.05</span><span class="o">+</span><span class="mf">0.95</span><span class="o">*</span><span class="n">i</span><span class="o">/</span><span class="p">(</span><span class="n">nrounds</span><span class="o">-</span><span class="mf">1.0</span><span class="p">)</span>
@@ -1055,7 +1055,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.2.0',
+            VERSION:'0.1.0+75.g0ef1e8d.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.io &mdash; ThemisPy 0.2.0 documentation</title>
+  <title>vis.io &mdash; ThemisPy 0.1.0+75.g0ef1e8d.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.2.0 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+75.g0ef1e8d.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.2.0
+                0.1.0+75.g0ef1e8d.dirty
               </div>
             
           
@@ -251,9 +251,24 @@
     <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;ERROR: write_fits requires ehtim to be installed.&quot;</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">model_image</span><span class="p">))</span> <span class="p">:</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">U</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">V</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">model_polarized_image</span><span class="p">))</span> <span class="p">:</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
-            <span class="n">time</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">time</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">time</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">stokes_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">U</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Imin/max:&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">I</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">I</span><span class="p">))</span>
+
+    <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">model_image</span><span class="p">))</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">time</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">time</span>
         <span class="n">I</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">intensity_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
     <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">))</span> <span class="p">:</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">time</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
@@ -262,7 +277,6 @@
     <span class="k">else</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;ERROR: Requies either an image or numpy.ndarray of values.&quot;</span><span class="p">)</span>
 
-    
     <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Shapes&quot;</span><span class="p">,</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">I</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 
@@ -279,6 +293,11 @@
     <span class="n">Ippx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">I</span><span class="p">)</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
     <span class="n">Ippx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">Ippx</span><span class="p">)</span>
 
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">Q</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">Qppx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span> <span class="p">)</span>
+        <span class="n">Uppx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">U</span><span class="p">)</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span> <span class="p">)</span>
+        <span class="n">Vppx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">V</span><span class="p">)</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span> <span class="p">)</span>
+        
     <span class="k">if</span> <span class="p">(</span><span class="n">uvfits_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No uvfits file has been specified. This will probably result in an nonfunctional FITS header.&quot;</span><span class="p">,</span> <span class="ne">Warning</span><span class="p">)</span>
         <span class="n">ra</span><span class="o">=</span><span class="mf">0.0</span>
@@ -302,15 +321,27 @@
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;src:&#39;</span><span class="p">,</span><span class="n">ra</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;mjd:&#39;</span><span class="p">,</span><span class="n">ra</span><span class="p">)</span>
 
-    <span class="n">image</span> <span class="o">=</span> <span class="n">eh</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">Ippx</span><span class="p">,</span><span class="n">pixel_size</span><span class="p">,</span><span class="n">ra</span><span class="p">,</span><span class="n">dec</span><span class="p">,</span><span class="n">rf</span><span class="o">=</span><span class="n">rf</span><span class="p">,</span><span class="n">source</span><span class="o">=</span><span class="n">src</span><span class="p">,</span><span class="n">mjd</span><span class="o">=</span><span class="n">mjd</span><span class="p">,</span><span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span><span class="n">pulse</span><span class="o">=</span><span class="n">eh</span><span class="o">.</span><span class="n">observing</span><span class="o">.</span><span class="n">pulses</span><span class="o">.</span><span class="n">deltaPulse2D</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Q</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saving Stokes I&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FOO&quot;</span><span class="p">)</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">eh</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">Ippx</span><span class="p">,</span><span class="n">pixel_size</span><span class="p">,</span><span class="n">ra</span><span class="p">,</span><span class="n">dec</span><span class="p">,</span><span class="n">rf</span><span class="o">=</span><span class="n">rf</span><span class="p">,</span><span class="n">source</span><span class="o">=</span><span class="n">src</span><span class="p">,</span><span class="n">mjd</span><span class="o">=</span><span class="n">mjd</span><span class="p">,</span><span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span><span class="n">pulse</span><span class="o">=</span><span class="n">eh</span><span class="o">.</span><span class="n">observing</span><span class="o">.</span><span class="n">pulses</span><span class="o">.</span><span class="n">deltaPulse2D</span><span class="p">)</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Saving Stokes I,Q,U,V&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;BAR&quot;</span><span class="p">)</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">eh</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">Ippx</span><span class="p">,</span><span class="n">pixel_size</span><span class="p">,</span><span class="n">ra</span><span class="p">,</span><span class="n">dec</span><span class="p">,</span><span class="n">rf</span><span class="o">=</span><span class="n">rf</span><span class="p">,</span><span class="n">source</span><span class="o">=</span><span class="n">src</span><span class="p">,</span><span class="n">mjd</span><span class="o">=</span><span class="n">mjd</span><span class="p">,</span><span class="n">time</span><span class="o">=</span><span class="n">time</span><span class="p">,</span><span class="n">pulse</span><span class="o">=</span><span class="n">eh</span><span class="o">.</span><span class="n">observing</span><span class="o">.</span><span class="n">pulses</span><span class="o">.</span><span class="n">deltaPulse2D</span><span class="p">,</span><span class="n">polrep</span><span class="o">=</span><span class="s1">&#39;stokes&#39;</span><span class="p">)</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">add_qu</span><span class="p">(</span><span class="n">Qppx</span><span class="p">,</span><span class="n">Uppx</span><span class="p">)</span>
+        <span class="n">image</span><span class="o">.</span><span class="n">add_v</span><span class="p">(</span><span class="n">Vppx</span><span class="p">)</span>
 
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;BAZ&quot;</span><span class="p">)</span>
+        
     <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
         <span class="n">image</span><span class="o">.</span><span class="n">display</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
     
     <span class="n">image</span><span class="o">.</span><span class="n">save_fits</span><span class="p">(</span><span class="n">fits_filename</span><span class="p">)</span></div>
     
-
 
 <div class="viewcode-block" id="write_hdf5"><a class="viewcode-back" href="../../docs/src/vis.html#vis.io.write_hdf5">[docs]</a><span class="k">def</span> <span class="nf">write_hdf5</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">mov</span><span class="p">,</span><span class="n">hdf5_filename</span><span class="p">,</span><span class="n">uvfits_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">time_offset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;ehtim&#39;</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -471,7 +502,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.2.0',
+            VERSION:'0.1.0+75.g0ef1e8d.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

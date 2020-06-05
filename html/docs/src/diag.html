@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Diag &mdash; ThemisPy 0.2.0 documentation</title>
+  <title>Diag &mdash; ThemisPy 0.1.0+75.g0ef1e8d.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.2.0 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+75.g0ef1e8d.dirty documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Vis" href="vis.html"/>
         <link rel="prev" title="Data" href="data.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.2.0
+                0.1.0+75.g0ef1e8d.dirty
               </div>
             
           
@@ -736,7 +736,7 @@ will be biased.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>resdata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Dictionary object containing the residual data as generated, e.g., by <a class="reference internal" href="#diag.residual_plots.read_residuals" title="diag.residual_plots.read_residuals"><code class="xref py py-func docutils literal notranslate"><span class="pre">read_residuals()</span></code></a>.</p></li>
-<li><p><strong>plot_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Type of residual plot to generate. Options are ‘uvamp’, ‘u’, ‘v’, ‘time’, ‘amplitude’. Default: ‘uvamp’.</p></li>
+<li><p><strong>plot_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Type of residual plot to generate. Options are ‘perimeter’, ‘arear’, ‘uvmax’, ‘uvmin’, ‘umax’, ‘umin’, ‘vmax’, ‘vmin’, ‘time’, ‘snr’. Default: ‘perimeter’.</p></li>
 <li><p><strong>station_list</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Station or list of stations to either exclude or restrict the residual plot to. Requires resdata to contain a key ‘baselines’.  Station names prepended with ‘!’ will be excluded.  If any station names without ‘!’ are given, will show <em>only</em> those stations. Default: None.</p></li>
 <li><p><strong>residuals</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True produces a sub-panel with the error-weighted residuals plotted underneath the comparison plot. Default: True.</p></li>
 <li><p><strong>resdist</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – If not None, produces a sub-panel with the distribution of residuals compared to a unit-variance Gaussian. If an int value is passed, it will set the number of bins per unit standard deviation. Default: 2.</p></li>
@@ -894,7 +894,7 @@ residual file.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.2.0',
+            VERSION:'0.1.0+75.g0ef1e8d.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
