@@ -340,8 +340,8 @@ def reconstruct_field_rotation_angles(obs, isER5=False) :
     FR2 = (f_el2*el2) + (f_par2*par2) + f_off2
 
     # Convert to radians
-    FR1 = FR1*np.pi/180.
-    FR2 = FR2*np.pi/180.
+    #FR1 = FR1*np.pi/180.
+    #FR2 = FR2*np.pi/180.
 
     obs.switch_polrep('stokes')
 
