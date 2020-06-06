@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>themispy_best_sample &mdash; ThemisPy 0.1.0+75.g0ef1e8d.dirty documentation</title>
+  <title>themispy_best_sample &mdash; ThemisPy 0.1.0+86.g2711d9d documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+75.g0ef1e8d.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+86.g2711d9d documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Developer’s Guide" href="devel.html"/>
         <link rel="prev" title="Utils" href="utils.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+75.g0ef1e8d.dirty
+                0.1.0+86.g2711d9d
               </div>
             
           
@@ -407,7 +407,7 @@ $ themispy_generate_data data.uvfits -d v -s -f 2.0</p>
 </p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_generate_data</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="o">-</span><span class="n">d</span> <span class="n">DATA_TYPE</span> <span class="p">[</span><span class="n">DATA_TYPE</span> <span class="o">...</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">avg</span><span class="o">-</span><span class="n">time</span> <span class="n">AVG_TIME</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">f</span> <span class="n">FRACTIONAL_SYSTEMATIC_ERROR</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="n">THRESHOLD_SYSTEMATIC_ERROR</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">x</span> <span class="n">EXCLUDE_STATION</span> <span class="p">[</span><span class="n">EXCLUDE_STATION</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">b</span> <span class="n">MINIMUM_BASELINE</span><span class="p">]</span>
                               <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">debias</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">snr</span> <span class="n">SNR_CUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">crosshand</span><span class="o">-</span><span class="n">SNR</span><span class="o">-</span><span class="n">cut</span> <span class="n">CROSSHAND_SNR_CUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">visibility</span><span class="o">-</span><span class="n">SNR</span><span class="o">-</span><span class="n">cut</span> <span class="n">VISIBILITY_SNR_CUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">amplitude</span><span class="o">-</span><span class="n">SNR</span><span class="o">-</span><span class="n">cut</span> <span class="n">AMPLITUDE_SNR_CUT</span><span class="p">]</span>
-                              <span class="p">[</span><span class="o">--</span><span class="n">closure</span><span class="o">-</span><span class="n">phase</span><span class="o">-</span><span class="n">SNR</span><span class="o">-</span><span class="n">cut</span> <span class="n">CLOSURE_PHASE_SNR_CUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">er5</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">xph</span><span class="p">]</span>
+                              <span class="p">[</span><span class="o">--</span><span class="n">closure</span><span class="o">-</span><span class="n">phase</span><span class="o">-</span><span class="n">SNR</span><span class="o">-</span><span class="n">cut</span> <span class="n">CLOSURE_PHASE_SNR_CUT</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">er5</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">xph</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">tarr</span> <span class="n">TELESCOPE_ARRAY_FILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">eht2017</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">eht2018</span><span class="p">]</span>
                               <span class="n">uvfits_files</span> <span class="p">[</span><span class="n">uvfits_files</span> <span class="o">...</span><span class="p">]</span>
 </pre></div>
 </div>
@@ -466,6 +466,15 @@ $ themispy_generate_data data.uvfits -d v -s -f 2.0</p>
 </dd>
 <dt><kbd>-xph, --exclude-partial-hands</kbd></dt>
 <dd><p>Excludes partial hand data (e.g., JCMT) in the construction of crosshand visibility data sets. Default: include partials.</p>
+</dd>
+<dt><kbd>-tarr, --telescope-array-file</kbd></dt>
+<dd><p>Reads a separate telescope array file.</p>
+</dd>
+<dt><kbd>-eht2017</kbd></dt>
+<dd><p>Uses a default telescope array file for 2017.</p>
+</dd>
+<dt><kbd>-eht2018</kbd></dt>
+<dd><p>Uses a default telescope array file for 2018.</p>
 </dd>
 </dl>
 </div>
@@ -991,7 +1000,7 @@ $ themispy_triangle_plot -c Chain.dat -p 0-5</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+75.g0ef1e8d.dirty',
+            VERSION:'0.1.0+86.g2711d9d',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
