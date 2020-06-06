@@ -432,7 +432,7 @@ class model_polarized_image_adaptive_splined_raster(model_polarized_image) :
             S.append(U)
         if (('V' in kind) or (kind=='all')) :
             S.append(V)
-            
+
         return S
 
     
