@@ -189,12 +189,6 @@ if __name__ == "__main__" :
         
     if (args.verbose):
         print("Model type and size:",type(model_image),model_image.size)
-
-    # Add smoothing if desired
-    uas2rad = np.pi/(180.0*3600e6)
-    if (not (args.smooth is None)) :
-        model_image_unsmoothed = copy.deepcopy(model_image)
-        model_image = ty.vis.model_image_smooth(model_image_unsmoothed)
         
     # Check limits
     if (not (args.N is None) ):
@@ -233,6 +227,12 @@ if __name__ == "__main__" :
     else :
         best_lklhd=0
         chain = ty.chain.sample_chain(args.chain,args.samples,burn_fraction=args.burn_fraction,parameter_list=range(model_image.size))
+
+    # Add smoothing if desired
+    uas2rad = np.pi/(180.0*3600e6)
+    if (not (args.smooth is None)) :
+        model_image_unsmoothed = copy.deepcopy(model_image)
+        model_image = ty.vis.model_image_smooth(model_image_unsmoothed)
             
         
         
