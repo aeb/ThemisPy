@@ -1116,7 +1116,7 @@ def plot_polarized_image(polarized_image, parameters, limits=None, shape=None, t
         return h,plt.gca(),plt.gcf()
     
 
-def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='Greens', station=None, alpha=0.5, comparison_dterms=None, comparison_fmts=None, verbosity=0) :
+def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='Greens', station=None, alpha=0.5, comparison_dterms=None, comparison_fmts=None, grid=True, verbosity=0) :
     """
     Plots D term distributions for a polarized image model from an MCMC chain.  Each station will 
     separately have its left and right D term distributions plotted in the complex plane.
@@ -1129,6 +1129,7 @@ def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='G
       station (str,list): A single station code or list of station codes to which restrict attention or exclude.  Station codes must match those in the :class:`polarized_model_image.dterm_dict['station_names']` list for the polarized_image.  Station codes prefixed with '!' will be excluded. Default: D terms will be plotted for all stations.
       comparison_dterms (dict): Dictionary of D terms to over-plot as comparisons. Dictionary should be indexed by station code.  Two element lists will be interpreted as the (complex) left and right D terms.  Four element lists will be interpreted as the (complex) right and left D terms followed by estimates of their (complex) uncertainties.
       comparison_fmts (str,list): Formats for the comparison D term points.  These must be an acceptable format string as describe in :func:`matplotlib.pyplot.plot`. If a single format string is given it will be used for both points. If a list of two format strings are given, they will be used for the right and left points, respectively. If set to None, the formats ['>g', '<r'] are used. Default: None.
+      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.    
       verbosity (int): Verbosity level.
     
     Returns:
@@ -1246,7 +1247,8 @@ def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='G
 
                  
 
-                 
+        # Add grids
+        plt.grid(grid)
         
         # Add label
         plt.text(0.85,0.85,station,transform=ax.transAxes)
