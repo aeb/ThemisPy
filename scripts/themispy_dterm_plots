@@ -1,0 +1,147 @@
+#!/usr/bin/env python3
+
+"""
+Reads in a Themis chain file from a polarized image model fit and plots the
+D term posteriors.  A single chain file must be provided.
+
+Example:
+$ themispy_dterm_plots chain.dat -xs SP --usetex
+"""
+
+
+from matplotlib import use,rc
+use('Agg')
+
+import numpy as np
+import argparse as ap
+import warnings
+from matplotlib.cbook import flatten
+import matplotlib.pyplot as plt
+
+
+# We don't need ehtim, so don't import it
+import sys
+sys.modules['ehtim'] = None
+
+import themispy as ty
+
+
+
+def set_parser() :
+    # Create a parser object to manage command line options
+    parser = ap.ArgumentParser(prog="themispy_dterm_plots",description=__doc__)
+
+    parser.add_argument("chain_file",
+                        type=str,
+                        action='store',
+                        help=("<Required> Name of chain file to read."))
+    
+    parser.add_argument("-m","--model",
+                        type=str,
+                        action='store',
+                        default="model_image.tag",
+                        help=("Model specification glob. May be a model tag file name or an ccm_mexico+"
+                              " model specification glob. See the vis.image.construct_model_image_from_glob"
+                              " function documentation for format details. If contains a '.' will assume"
+                              " that it is a tagvers-1.0 tag file."
+                              " Default: model_image.tag"))
+
+    parser.add_argument("-bf","--burn-fraction",
+                        type=float,
+                        action='store',
+                        default=0.5,
+                        help=("Fraction of chain to excise as burn in. Default: 0.5"))
+
+    parser.add_argument("-s","--samples",
+                        type=int,
+                        action='store',
+                        default=9,
+                        help=("Number of samples to draw from the specified chain file. Default: 1000."))
+    
+    parser.add_argument("-o","--out",
+                        type=str,
+                        action="store",
+                        default="dterm_posteriors.png",
+                        help="Output file name. Default: gain_plot.png")
+
+    parser.add_argument("--no-grid",
+                        action='store_false',
+                        default=True,
+                        help=("Turn off grid lines. Default: True."))
+
+    parser.add_argument("-rs","--restrict-station-list",
+                        type=str,
+                        nargs='+',
+                        action='append',
+                        help=("Name of stations to which to restrict the residual plot.  The station codes should"
+                              "be specified as used in the data file."))
+
+    parser.add_argument("-xs","--exclude-station-list",
+                        type=str,
+                        nargs='+',
+                        action='append',
+                        help=("Name of stations to exclude from residual plot.  The station codes should be specified"
+                              "as used in the data file."))
+
+    parser.add_argument("--usetex",
+                        action='store_true',
+                        default=False,
+                        help=("Turns on using LaTex in the rendering.  Note that this takes longer,"
+                              " but the result is MUCH better looking."))
+                        
+    parser.add_argument("-v","--verbose",
+                        action='store_true',
+                        default=False,
+                        help=("Provides verbose output about model and plot construction."))
+    
+    return parser
+
+
+
+if __name__ == "__main__" :
+
+
+    # Get command line options
+    args = set_parser().parse_args()
+
+
+    # Use LaTex or not
+    if (args.usetex) :
+        rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
+        rc('text', usetex=True)
+
+    # Construct a model_image from glob
+    if ('.' in args.model) :
+        if (args.verbose):
+            print("Reading tag file %s"%(args.model))
+        pimg = ty.vis.construct_model_image_from_glob(args.model,'tagvers-1.0')
+    else :
+        if (args.verbose):
+            print("Using ccm_mexico glob %s"%(args.model))
+        pimg = ty.vis.construct_model_image_from_glob(args.model,'ccm_mexico+')
+    if (not isinstance(pimg,ty.vis.model_polarized_image)) :
+        raise RuntimeError("Requires a polarized image model.")
+    if (args.verbose):
+        print("Model type and size:",type(model_image),model_image.size)
+
+    # Read chain
+    chain = (ty.chain.sample_chain(args.chain_file,args.samples,burn_fraction=args.burn_fraction))
+
+    # Sort out station list
+    station_list = None
+    if (not args.restrict_station_list is None) :
+        station_list = list(flatten([args.restrict_station_list]))
+    if (not args.exclude_station_list is None) :
+        if (station_list is None) :
+            station_list = []
+        args.exclude_station_list = list(flatten([args.exclude_station_list]))
+        for station in args.exclude_station_list :
+            station_list.append('!'+station)
+    if (args.verbose) :
+        print("station list:",station_list)
+    
+    # Plot D terms
+    ty.vis.plot_dterm_posteriors(pimg,chain,station=station_list,grid=args.no_grid)
+    
+    # Save figure
+    plt.savefig(args.out,dpi=300)
