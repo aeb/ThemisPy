@@ -349,7 +349,9 @@ if __name__ == "__main__" :
             if (ext=='.fits' or ext=='.FITS') :
                 if (args.verbose):
                     print("  Saving FITS file.")
-                ty.vis.write_fits(x,y,I,outname,args.uvfits)
+                #ty.vis.write_fits(x,y,I,outname,args.uvfits,verbosity=args.verbose)
+                model_image.generate(parameters)
+                ty.vis.write_fits(x,y,model_image,outname,args.uvfits,verbosity=args.verbose)
             elif (ext=='.hdf5') :
                 pass
             else :
@@ -369,4 +371,4 @@ if __name__ == "__main__" :
                 if (args.verbose):
                     print("  Saving FITS file.")
                     
-                ty.vis.write_hdf5(x,y,time_list_hdf5,model_image,outfile,args.uvfits)
+                ty.vis.write_hdf5(x,y,time_list_hdf5,model_image,outfile,args.uvfits,verbosity=args.verbose)
