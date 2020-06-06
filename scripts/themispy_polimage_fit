@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Reads in various Themis output files and generates a plot of the resulting image.
+Reads in various Themis output files and generates a plot of the resulting polarized image.
 A sample parameter value must be provided in one of three ways: (1) by specifying a
 fit_summaries.txt file, (2) by specifying an MCMC chain file with an index (optional),
 or (3) by specifying an MCMC chain file and corresponding likelihood file.
 This may be saved in ways, including standard image formats (PNG,JPG,PDF) and FITS.
 
 Example:
-$ themispy_image_fit -c Chain.dat -l Lklhd.dat
+$ themispy_polimage_fit -c Chain.dat -l Lklhd.dat
 """
 
 from matplotlib import use,rc
