@@ -656,6 +656,137 @@ class model_polarized_image_sum(model_polarized_image) :
     
 
 
+class model_polarized_image_smooth(model_polarized_image):
+    """
+    Smoothed polarized image class that is a polarized mirror of :cpp:class:`Themis::model_image_smooth`. Generates a smoothed 
+    image from an existing image using an asymmetric Gaussian smoothing kernel.
+    Has parameters:
+
+    * parameters[0] ............. First parameter of underlying image
+    
+    ...
+
+    * parameters[image.size-1] .. Last parameter of underlying image
+    * parameters[image.size] .... Symmetrized standard deviation of smoothing kernel :math:`\\sigma` (rad)
+    * parameters[image.size+1] .. Asymmetry parameter of smoothing kernel :math:`A` in (0,1)
+    * parameters[image.size+2] .. Position angle of smoothing kernel :math:`\\phi` (rad)
+
+    and size=image.size+3.
+
+    Args:
+      image (model_polarized_image): :class:`model_polarized_image` object that will be smoothed.
+      station_names (list): List of strings corresponding to station names for which D terms are being reconstructed. Default: None.
+      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
+
+    Attributes:
+      image (model_polarized_image): A preexisting :class:`model_polarized_image` object to be smoothed.
+    """
+
+    def __init__(self, image, station_names=None, themis_fft_sign=True) :
+        super().__init__(station_names,themis_fft_sign)
+
+        self.image = image
+        self.image_size = image.size + 3
+        self.size = self.size + 3
+
+        
+    def generate(self,parameters) :
+        """
+        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_smooth::generate_model`, 
+        a similar function within the :cpp:class:`Themis::model_image_smooth` class.  Effectively 
+        simply copies the parameters into the local list with some additional run-time checking.
+
+        Args:
+          parameters (list): Parameter list.
+
+        Returns:
+          None        
+        """
+        
+        self.parameters = np.copy(parameters)
+        if (len(self.parameters)<self.size) :
+            raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
+        self.set_dterms(parameters[self.image_size:])
+        self.image.generate(parameters[:self.image_size-3])
+
+        
+    def generate_stokes_map(self,x,y,kind='all',verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          kind (str): Stokes parameter to generate map for. Accepted values are 'I', 'Q', 'U', 'V', and combinations or 'all'. Default: 'all'.
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (list) List of arrays of desired Stokes parameter values at positions (x,y) in :math:`Jy/\\mu as^2`. Always returned in the order IQUV.
+        """
+
+        # Doesn't to boundary checking here.  Probably not a major problem, but consider it in the future.
+        sr1 = self.parameters[self.image_size-3] * rad2uas * np.sqrt( 1./(1.-self.parameters[self.image_size-2]) )
+        sr2 = self.parameters[self.image_size-3] * rad2uas * np.sqrt( 1./(1.+self.parameters[self.image_size-2]) )
+        sphi = self.parameters[self.image_size-1]
+
+        # Check to prevent convolving with zero
+        dx = 1.5*max(abs(x[1,1]-x[0,0]),abs(y[1,1]-y[0,0]))
+        if (sr1<dx) :
+            sr1 = dx
+        if (sr2<dx) :
+            sr2 = dx
+        
+        # Re-orient the grind along major and minor axes of the smoothing kernel
+        xMajor = np.cos(sphi)*x + np.sin(sphi)*y
+        xMinor = -np.sin(sphi)*x + np.cos(sphi)*y
+        exponent = 0.5*(xMajor**2/sr1**2 + xMinor**2/sr2**2)
+        K = 1.0/(2*np.pi*sr1*sr2)*np.exp(-exponent) 
+    
+        px = x[1,1]-x[0,0]
+        py = y[1,1]-y[0,0]
+
+        self.image.generate(self.parameters[:self.image_size-3])
+        S = self.image.generate_stokes_map(x,y,kind=kind,verbosity=verbosity)
+        Ssm = []
+        for s in S :
+            Ssm.append( fftconvolve(s*px*py,K*px*py, mode='same')/(px*py) )
+
+        if (verbosity>0) :
+            print('Gaussian smoothed:',sr1,sr2,sphi,self.parameters)
+            
+        return Ssm
+
+    
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        names = self.image.parameter_name_list()
+        names.append(r'$\sigma_s$ (rad)')
+        names.append(r'$A_s$')
+        names.append(r'$\phi_s$ (rad)')
+        return names
+
+    
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
+        self.image.set_time(time)
+
+
+
+            
+
 def _get_polarization_ellipse(S) :
     """
     Returns a properly oriented polarization ellipse given the Stokes parameters.
