@@ -83,6 +83,15 @@ def set_parser() :
                         help=("Name of stations to exclude from residual plot.  The station codes should be specified"
                               "as used in the data file."))
 
+    parser.add_argument("--truths",
+                        type=str,
+                        action='store',
+                        default=None,
+                        help=("Set a truths file to read in and add to plot.  The file is expected to contain"
+                              " D terms for each station on a single line formatted as 'station', 'DR.real',"
+                              " 'DR.imag', 'DL.real', 'DL.imag'.  Optionally, errors for each D term may be"
+                              " provided. Default: None."))
+
     parser.add_argument("--usetex",
                         action='store_true',
                         default=False,
@@ -139,9 +148,22 @@ if __name__ == "__main__" :
             station_list.append('!'+station)
     if (args.verbose) :
         print("station list:",station_list)
-    
+
+    # Read in truths if passed
+    if (not args.truths is None) :
+        truth_data = np.loadtxt(args.truths,dtype='str')
+        args.truths={}
+        for j in range(truth_data.shape[0]) :
+            vals = truth_data[j][1:].astype(float)
+            if (len(vals)==4) :
+                args.truths[truth_data[j][0]] = np.array([ vals[0]+1.0j*vals[1], vals[2]+1.0j*vals[3] ])
+            elif (len(vals)==8) :
+                args.truths[truth_data[j][0]] = np.array([ vals[0]+1.0j*vals[2], vals[4]+1.0j*vals[6], vals[1]+1.0j*vals[3], vals[5]+1.0j*vals[7] ])
+            else :
+                raise RuntimeError("Unrecognized truths format.")
+                
     # Plot D terms
-    ty.vis.plot_dterm_posteriors(pimg,chain,station=station_list,grid=args.no_grid)
+    ty.vis.plot_dterm_posteriors(pimg,chain,station=station_list,grid=args.no_grid,comparison_dterms=args.truths)
     
     # Save figure
     plt.savefig(args.out,dpi=300)
