@@ -713,7 +713,7 @@ def sample_chain(chain_filename, samples, burn_fraction=0, skip=None, parameter_
 
     # Determine the number of walkers, and set the burn-in relative to the shorter
     if (skip is None) :
-        nskip = burn_fraction*nsamp
+        nskip = int(burn_fraction*nsamp)
     else :
         nskip = skip
     
