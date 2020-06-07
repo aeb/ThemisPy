@@ -30,6 +30,15 @@ themispy_deo_diagnostics
    :nodefault:
 
 
+themispy_dterm_plots
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_dterm_plots
+   :func: set_parser
+   :prog: themispy_dterm_plots
+   :nodefault:
+
+
 themispy_gain_plots
 ----------------------------------
 .. argparse::
@@ -72,6 +81,24 @@ themispy_image_stats
    :filename: ../scripts/themispy_image_stats
    :func: set_parser
    :prog: themispy_image_stats
+   :nodefault:
+
+
+themispy_polimage_family
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_polimage_family
+   :func: set_parser
+   :prog: themispy_polimage_family
+   :nodefault:
+
+
+themispy_polimage_fit
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_polimage_fit
+   :func: set_parser
+   :prog: themispy_polimage_fit
    :nodefault:
 
 

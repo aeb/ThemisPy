@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vis &mdash; ThemisPy 0.1.0+86.g2711d9d documentation</title>
+  <title>Vis &mdash; ThemisPy 0.1.0+95.g8a54539 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+86.g2711d9d documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+95.g8a54539 documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Utils" href="utils.html"/>
         <link rel="prev" title="Diag" href="diag.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+86.g2711d9d
+                0.1.0+95.g8a54539
               </div>
             
           
@@ -2180,7 +2180,7 @@ and copies the shift vector (x0,y0) for each model_image object, and performs so
 
 <dl class="py function">
 <dt id="vis.polimage.plot_dterm_posteriors">
-<code class="sig-prename descclassname">vis.polimage.</code><code class="sig-name descname">plot_dterm_posteriors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">polarized_image</span></em>, <em class="sig-param"><span class="n">chain</span></em>, <em class="sig-param"><span class="n">lcolormap</span><span class="o">=</span><span class="default_value">'Reds'</span></em>, <em class="sig-param"><span class="n">rcolormap</span><span class="o">=</span><span class="default_value">'Greens'</span></em>, <em class="sig-param"><span class="n">station</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">comparison_dterms</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">comparison_fmts</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#plot_dterm_posteriors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.plot_dterm_posteriors" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.polimage.</code><code class="sig-name descname">plot_dterm_posteriors</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">polarized_image</span></em>, <em class="sig-param"><span class="n">chain</span></em>, <em class="sig-param"><span class="n">lcolormap</span><span class="o">=</span><span class="default_value">'Reds'</span></em>, <em class="sig-param"><span class="n">rcolormap</span><span class="o">=</span><span class="default_value">'Greens'</span></em>, <em class="sig-param"><span class="n">station</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">comparison_dterms</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">comparison_fmts</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">grid</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#plot_dterm_posteriors"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.plot_dterm_posteriors" title="Permalink to this definition">¶</a></dt>
 <dd><p>Plots D term distributions for a polarized image model from an MCMC chain.  Each station will
 separately have its left and right D term distributions plotted in the complex plane.</p>
 <dl class="field-list simple">
@@ -2193,6 +2193,7 @@ separately have its left and right D term distributions plotted in the complex p
 <li><p><strong>station</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – A single station code or list of station codes to which restrict attention or exclude.  Station codes must match those in the <code class="xref py py-class docutils literal notranslate"><span class="pre">polarized_model_image.dterm_dict['station_names']</span></code> list for the polarized_image.  Station codes prefixed with ‘!’ will be excluded. Default: D terms will be plotted for all stations.</p></li>
 <li><p><strong>comparison_dterms</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)"><em>dict</em></a>) – Dictionary of D terms to over-plot as comparisons. Dictionary should be indexed by station code.  Two element lists will be interpreted as the (complex) left and right D terms.  Four element lists will be interpreted as the (complex) right and left D terms followed by estimates of their (complex) uncertainties.</p></li>
 <li><p><strong>comparison_fmts</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Formats for the comparison D term points.  These must be an acceptable format string as describe in <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html#matplotlib.pyplot.plot" title="(in Matplotlib v3.2.1)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.plot()</span></code></a>. If a single format string is given it will be used for both points. If a list of two format strings are given, they will be used for the right and left points, respectively. If set to None, the formats [‘&gt;g’, ‘&lt;r’] are used. Default: None.</p></li>
+<li><p><strong>grid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Flag that determines whether or not to plot a background grid. Default: True.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity level.</p></li>
 </ul>
 </dd>
@@ -2548,7 +2549,7 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+86.g2711d9d',
+            VERSION:'0.1.0+95.g8a54539',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

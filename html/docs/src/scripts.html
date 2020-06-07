@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>themispy_best_sample &mdash; ThemisPy 0.1.0+86.g2711d9d documentation</title>
+  <title>themispy_best_sample &mdash; ThemisPy 0.1.0+95.g8a54539 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+86.g2711d9d documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+95.g8a54539 documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Developer’s Guide" href="devel.html"/>
         <link rel="prev" title="Utils" href="utils.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.1.0+86.g2711d9d
+                0.1.0+95.g8a54539
               </div>
             
           
@@ -104,6 +104,11 @@
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#themispy-dterm-plots">themispy_dterm_plots</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#themispy-gain-plots">themispy_gain_plots</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Positional Arguments">Positional Arguments</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
@@ -123,6 +128,14 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#themispy-image-stats">themispy_image_stats</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#themispy-polimage-family">themispy_polimage_family</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#themispy-polimage-fit">themispy_polimage_fit</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#Named Arguments">Named Arguments</a></li>
 </ul>
 </li>
@@ -346,6 +359,58 @@ $ themispy_deo_diagnostics -d tl</p>
 </dl>
 </div>
 </div>
+<div class="section" id="themispy-dterm-plots">
+<h1>themispy_dterm_plots<a class="headerlink" href="#themispy-dterm-plots" title="Permalink to this headline">¶</a></h1>
+<p><p>Reads in a Themis chain file from a polarized image model fit and plots the
+D term posteriors.  A single chain file must be provided.</p>
+<p>Example:
+$ themispy_dterm_plots chain.dat -xs SP –usetex</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_dterm_plots</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">m</span> <span class="n">MODEL</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">bf</span> <span class="n">BURN_FRACTION</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="n">SAMPLES</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">grid</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">rs</span> <span class="n">RESTRICT_STATION_LIST</span> <span class="p">[</span><span class="n">RESTRICT_STATION_LIST</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">xs</span> <span class="n">EXCLUDE_STATION_LIST</span> <span class="p">[</span><span class="n">EXCLUDE_STATION_LIST</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">usetex</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+                            <span class="n">chain_file</span>
+</pre></div>
+</div>
+<div class="section" id="Positional Arguments">
+<h2>Positional Arguments<a class="headerlink" href="#Positional Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>chain_file</kbd></dt>
+<dd><p>&lt;Required&gt; Name of chain file to read.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>-m, --model</kbd></dt>
+<dd><p>Model specification glob. May be a model tag file name or an ccm_mexico+ model specification glob. See the vis.image.construct_model_image_from_glob function documentation for format details. If contains a ‘.’ will assume that it is a tagvers-1.0 tag file. Default: model_image.tag</p>
+</dd>
+<dt><kbd>-bf, --burn-fraction</kbd></dt>
+<dd><p>Fraction of chain to excise as burn in. Default: 0.5</p>
+</dd>
+<dt><kbd>-s, --samples</kbd></dt>
+<dd><p>Number of samples to draw from the specified chain file. Default: 1000.</p>
+</dd>
+<dt><kbd>-o, --out</kbd></dt>
+<dd><p>Output file name. Default: gain_plot.png</p>
+</dd>
+<dt><kbd>--no-grid</kbd></dt>
+<dd><p>Turn off grid lines. Default: True.</p>
+</dd>
+<dt><kbd>-rs, --restrict-station-list</kbd></dt>
+<dd><p>Name of stations to which to restrict the residual plot.  The station codes shouldbe specified as used in the data file.</p>
+</dd>
+<dt><kbd>-xs, --exclude-station-list</kbd></dt>
+<dd><p>Name of stations to exclude from residual plot.  The station codes should be specifiedas used in the data file.</p>
+</dd>
+<dt><kbd>--usetex</kbd></dt>
+<dd><p>Turns on using LaTex in the rendering.  Note that this takes longer, but the result is MUCH better looking.</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Provides verbose output about model and plot construction.</p>
+</dd>
+</dl>
+</div>
+</div>
 <div class="section" id="themispy-gain-plots">
 <h1>themispy_gain_plots<a class="headerlink" href="#themispy-gain-plots" title="Permalink to this headline">¶</a></h1>
 <p><p>Reads in a Themis gain file of any type and generates combinations of plots of 
@@ -519,7 +584,7 @@ $ themispy_image_family -c Chain.dat -l Lklhd.dat –samples 9</p>
 <dd><p>Limits (in microarcseconds) of the plot region.  May be a single float or a set of four floats. If None uses the default in vis.image.plot_model_image function. Default: None.</p>
 </dd>
 <dt><kbd>-n, --norm</kbd></dt>
-<dd><p>Logarithmic normalization relative to to the median and maximum brightness. A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum.</p>
+<dd><p>Logarithmic normalization relative to to the median and maximum brightness. A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum. Default 1.</p>
 </dd>
 <dt><kbd>-t, --transfer</kbd></dt>
 <dd><p>Set the transfer function (‘linear’,’sqrt’,’log’). Default: ‘linear’</p>
@@ -657,7 +722,7 @@ $ themispy_image_stats -c Chain.dat –samples 10</p>
 <dd><p>Limits (in microarcseconds) of the plot region.  May be a single float or a set of four floats. If None uses the default in vis.image.plot_model_image function. Default: None.</p>
 </dd>
 <dt><kbd>-n, --norm</kbd></dt>
-<dd><p>Logarithmic normalization relative to to the median and maximum brightness. A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum.</p>
+<dd><p>Logarithmic normalization relative to to the median and maximum brightness. A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum. Default 1.</p>
 </dd>
 <dt><kbd>-t, --transfer</kbd></dt>
 <dd><p>Set the transfer function (‘linear’,’sqrt’,’log’). Default: ‘linear’</p>
@@ -669,6 +734,161 @@ $ themispy_image_stats -c Chain.dat –samples 10</p>
 <dd><p>Specifies a uvfits file from which fits header information for the relevant sources may be extracted.</p>
 </dd>
 <dt><kbd>--smooth</kbd></dt>
+<dd><p>If passed, will smooth the image with a symmetric Gaussian filter with FWHM given in microarcseconds.</p>
+</dd>
+<dt><kbd>--usetex</kbd></dt>
+<dd><p>Turns on using LaTex in the rendering.  Note that this takes longer, but the result is MUCH better looking.</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Provides verbose output about model and plot construction.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="themispy-polimage-family">
+<h1>themispy_polimage_family<a class="headerlink" href="#themispy-polimage-family" title="Permalink to this headline">¶</a></h1>
+<p><p>Reads in a Themis MCMC run and generates polarized images for a subsample.  If a likelihood
+file is specified, the highest likelihood model will be plotted in the center.  
+Optionally will generate individual images instead of one multi-panel plot.</p>
+<p>Example:
+$ themispy_polimage_family -c Chain.dat -l Lklhd.dat –samples 9</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_polimage_family</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span> <span class="n">PLOT_TYPE</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">CHAIN</span> <span class="p">[</span><span class="o">-</span><span class="n">l</span> <span class="n">LKLHD</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="n">SAMPLES</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">m</span> <span class="n">MODEL</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="p">[</span><span class="n">REFERENCE</span> <span class="p">[</span><span class="n">REFERENCE</span> <span class="o">...</span><span class="p">]]]</span> <span class="p">[</span><span class="o">-</span><span class="n">bf</span> <span class="n">BURN_FRACTION</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">N</span> <span class="p">[</span><span class="n">N</span> <span class="p">[</span><span class="n">N</span> <span class="o">...</span><span class="p">]]]</span> <span class="p">[</span><span class="o">-</span><span class="n">tN</span> <span class="p">[</span><span class="n">TN</span> <span class="p">[</span><span class="n">TN</span> <span class="o">...</span><span class="p">]]]</span> <span class="p">[</span><span class="o">--</span><span class="n">limits</span> <span class="n">LIMITS</span> <span class="p">[</span><span class="n">LIMITS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">n</span> <span class="n">NORM</span><span class="p">]</span>
+                                <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="n">TRANSFER</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">tif</span> <span class="n">TICK_INTENSITY_FLOOR</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">nm</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span> <span class="p">[</span><span class="n">OUT</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">uvfits</span> <span class="n">UVFITS</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">smooth</span> <span class="n">SMOOTH</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">usetex</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>-p, --plot-type</kbd></dt>
+<dd><p>Sets type of polarized image plot to generate.  Options are ‘lf’, ‘ef’, ‘lL’.In detail: ‘lf’ produces linear polarization ticks, color-coded by linearpolarization fraction, on top of total flux; ‘ef’ produces elliptical polarizationticks, color-coded by total polarization fraction, on top of total flux; ‘lL’produces linear polarization ticks on top of linear polarized flux, with totalflux contours superimposed.  Default: ‘lf’.</p>
+</dd>
+<dt><kbd>-c, --chain</kbd></dt>
+<dd><p>&lt;Required&gt; Name of chain file to read.</p>
+</dd>
+<dt><kbd>-l, --lklhd</kbd></dt>
+<dd><p>Name of likelihood file to read.  If given, will plot the highest likelihood sample in the center of the family.</p>
+</dd>
+<dt><kbd>-s, --samples</kbd></dt>
+<dd><p>Number of samples to draw from the specified chain file. Default: 9.</p>
+</dd>
+<dt><kbd>-m, --model</kbd></dt>
+<dd><p>Model specification glob. May be a model tag file name or an ccm_mexico+ model specification glob. See the vis.image.construct_model_image_from_glob function documentation for format details. If contains a ‘.’ will assume that it is a tagvers-1.0 tag file. Default: model_image.tag</p>
+</dd>
+<dt><kbd>-r, --reference</kbd></dt>
+<dd><p>If the model type is a <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_sum</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">model_polarized_image_sum</span></code>, will fix the image origin of the specified component. If no components are specified, will choose the first. Default: no component will be fixed to the origin.</p>
+</dd>
+<dt><kbd>-bf, --burn-fraction</kbd></dt>
+<dd><p>Fraction of chain to excise as burn in. Default: 0.5</p>
+</dd>
+<dt><kbd>-N</kbd></dt>
+<dd><p>Number of pixels in image. May be a single integer (square image) or two integers (non-square image). If None uses the default in vis.image.plot_model_image function. Default: None.</p>
+</dd>
+<dt><kbd>-tN</kbd></dt>
+<dd><p>Number of polarization ticks on image. May be a single integer (square image) or two integers (non-square image). If None uses the default in the vis.image.plot_polarized_image or vis.image.plot_linear_polarization_map functions. Default: None.</p>
+</dd>
+<dt><kbd>--limits</kbd></dt>
+<dd><p>Limits (in microarcseconds) of the plot region.  May be a single float or a set of four floats. If None uses the default in vis.image.plot_model_image function. Default: None.</p>
+</dd>
+<dt><kbd>-n, --norm</kbd></dt>
+<dd><p>Logarithmic normalization relative to to the median and maximum brightness. A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum. Default 1.</p>
+</dd>
+<dt><kbd>-t, --transfer</kbd></dt>
+<dd><p>Set the transfer function (‘linear’,’sqrt’,’log’). Default: ‘linear’</p>
+</dd>
+<dt><kbd>-tif, --tick-intensity-floor</kbd></dt>
+<dd><p>Fraction of the maximum intensity above which to plot polarization ticks.Default 0.1.</p>
+</dd>
+<dt><kbd>-nm, --no-multipanel</kbd></dt>
+<dd><p>Plots individual panels instead of a single multipanel figure. Output file names will be appended with the integer number of the frame with index 0 corresponding to the best fit.  Default: multiplanel plot.</p>
+</dd>
+<dt><kbd>-o, --out</kbd></dt>
+<dd><p>Set output files.  Multiple files and filetypes may be specified, including fits.  However, if a filename ending in ‘.fits’ is passed, the path to a uvfits data file must be provided via –uvfits to set the appropriate header information. Default: fit_family.png</p>
+</dd>
+<dt><kbd>--uvfits</kbd></dt>
+<dd><p>Specifies a uvfits file from which fits header information for the relevant sources may be extracted.</p>
+</dd>
+<dt><kbd>--smooth</kbd></dt>
+<dd><p>If passed, will smooth the image with a symmetric Gaussian filter with FWHM given in microarcseconds.</p>
+</dd>
+<dt><kbd>--usetex</kbd></dt>
+<dd><p>Turns on using LaTex in the rendering.  Note that this takes longer, but the result is MUCH better looking.</p>
+</dd>
+<dt><kbd>-v, --verbose</kbd></dt>
+<dd><p>Provides verbose output about model and plot construction.</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="section" id="themispy-polimage-fit">
+<h1>themispy_polimage_fit<a class="headerlink" href="#themispy-polimage-fit" title="Permalink to this headline">¶</a></h1>
+<p><p>Reads in various Themis output files and generates a plot of the resulting polarized image.
+A sample parameter value must be provided in one of three ways: (1) by specifying a
+fit_summaries.txt file, (2) by specifying an MCMC chain file with an index (optional),
+or (3) by specifying an MCMC chain file and corresponding likelihood file.
+This may be saved in ways, including standard image formats (PNG,JPG,PDF) and FITS.</p>
+<p>Example:
+$ themispy_polimage_fit -c Chain.dat -l Lklhd.dat</p>
+</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">usage</span><span class="p">:</span> <span class="n">themispy_polimage_fit</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">p</span> <span class="n">PLOT_TYPE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">c</span> <span class="n">CHAIN</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">l</span> <span class="n">LKLHD</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">f</span> <span class="n">FSFILE</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="n">INDEX</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">m</span> <span class="n">MODEL</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">r</span> <span class="p">[</span><span class="n">REFERENCE</span> <span class="p">[</span><span class="n">REFERENCE</span> <span class="o">...</span><span class="p">]]]</span> <span class="p">[</span><span class="o">-</span><span class="n">N</span> <span class="p">[</span><span class="n">N</span> <span class="p">[</span><span class="n">N</span> <span class="o">...</span><span class="p">]]]</span> <span class="p">[</span><span class="o">-</span><span class="n">tN</span> <span class="p">[</span><span class="n">TN</span> <span class="p">[</span><span class="n">TN</span> <span class="o">...</span><span class="p">]]]</span> <span class="p">[</span><span class="o">--</span><span class="n">limits</span> <span class="n">LIMITS</span> <span class="p">[</span><span class="n">LIMITS</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">-</span><span class="n">n</span> <span class="n">NORM</span><span class="p">]</span>
+                             <span class="p">[</span><span class="o">-</span><span class="n">t</span> <span class="n">TRANSFER</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">tif</span> <span class="n">TICK_INTENSITY_FLOOR</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">movie</span> <span class="p">[</span><span class="n">MOVIE</span> <span class="p">[</span><span class="n">MOVIE</span> <span class="o">...</span><span class="p">]]]</span> <span class="p">[</span><span class="o">--</span><span class="n">timestamp</span><span class="o">-</span><span class="n">file</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">o</span> <span class="n">OUT</span> <span class="p">[</span><span class="n">OUT</span> <span class="o">...</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">uvfits</span> <span class="n">UVFITS</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">s</span> <span class="n">SMOOTH</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">usetex</span><span class="p">]</span> <span class="p">[</span><span class="o">-</span><span class="n">v</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="section" id="Named Arguments">
+<h2>Named Arguments<a class="headerlink" href="#Named Arguments" title="Permalink to this headline">¶</a></h2>
+<dl class="option-list">
+<dt><kbd>-p, --plot-type</kbd></dt>
+<dd><p>Sets type of polarized image plot to generate.  Options are ‘lf’, ‘ef’, ‘lL’.In detail: ‘lf’ produces linear polarization ticks, color-coded by linearpolarization fraction, on top of total flux; ‘ef’ produces elliptical polarizationticks, color-coded by total polarization fraction, on top of total flux; ‘lL’produces linear polarization ticks on top of linear polarized flux, with totalflux contours superimposed.  Default: ‘lf’.</p>
+</dd>
+<dt><kbd>-c, --chain</kbd></dt>
+<dd><p>Name of chain file to read.  If given, either an index must be specified with -i,–index or likelihood file must be specified with -l,-lklhd.</p>
+</dd>
+<dt><kbd>-l, --lklhd</kbd></dt>
+<dd><p>Name of likelihood file to read.  If given, will plot the highest likelihood sample. Requires chain file to be provided with -c,–chain.</p>
+</dd>
+<dt><kbd>-f, --fsfile</kbd></dt>
+<dd><p>Name of fit summaries file to read.  If given, will plot records listed within.  If an index is given with -i,–index will plot the corresponding line; otherwise plots the first line. Default: fit_summaries.txt</p>
+</dd>
+<dt><kbd>-i, --index</kbd></dt>
+<dd><p>Name of fit summaries file to read.  If given, will plot records listed within.  If an index is given with -i,–index will plot the corresponding line; otherwise plots the first line.</p>
+</dd>
+<dt><kbd>-m, --model</kbd></dt>
+<dd><p>Model specification glob. May be a model tag file name or an ccm_mexico+ model specification glob. See the vis.image.construct_model_image_from_glob function documentation for format details. If contains a ‘.’ will assume that it is a tagvers-1.0 tag file. Default: model_image.tag</p>
+</dd>
+<dt><kbd>-r, --reference</kbd></dt>
+<dd><p>If the model type is a <code class="xref py py-class docutils literal notranslate"><span class="pre">model_image_sum</span></code> or <code class="xref py py-class docutils literal notranslate"><span class="pre">model_polarized_image_sum</span></code>, will fix the image origin of the specified component. If no components are specified, will choose the first. Default: no component will be fixed to the origin.</p>
+</dd>
+<dt><kbd>-N</kbd></dt>
+<dd><p>Number of pixels in image. May be a single integer (square image) or two integers (non-square image). If None uses the default in vis.image.plot_model_image function. Default: None.</p>
+</dd>
+<dt><kbd>-tN</kbd></dt>
+<dd><p>Number of polarization ticks on image. May be a single integer (square image) or two integers (non-square image). If None uses the default in the vis.image.plot_polarized_image or vis.image.plot_linear_polarization_map functions. Default: None.</p>
+</dd>
+<dt><kbd>--limits</kbd></dt>
+<dd><p>Limits (in microarcseconds) of the plot region.  May be a single float or a set of four floats. If None uses the default in vis.image.plot_model_image function. Default: None.</p>
+</dd>
+<dt><kbd>-n, --norm</kbd></dt>
+<dd><p>Logarithmic normalization relative to to the median and maximum brightness. A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum. Default: 1.0.</p>
+</dd>
+<dt><kbd>-t, --transfer</kbd></dt>
+<dd><p>Set the transfer function (‘linear’,’sqrt’,’log’). Default: ‘linear’</p>
+</dd>
+<dt><kbd>-tif, --tick-intensity-floor</kbd></dt>
+<dd><p>Fraction of the maximum intensity above which to plot polarization ticks.Default 0.1.</p>
+</dd>
+<dt><kbd>--movie</kbd></dt>
+<dd><p>Will treat the model as time variable. Arguments are optional, and may be contain a [start]:[step]:[stop] sequence, containing any combination of start, step, stop times in hours (colons required). Missing values will be set to defaults: if –uvfits is set, the start/stop times will be set to the first and last timesteps therein, otherwise the default start/stop times are 0h and 24h. In both cases, the default time step is 1h.</p>
+</dd>
+<dt><kbd>--timestamp-file</kbd></dt>
+<dd><p>If saving multiple frames, will append filename with timestamp instead of index.  Default: frames will be indexed.</p>
+</dd>
+<dt><kbd>-o, --out</kbd></dt>
+<dd><p>Set output files.  Multiple files and filetypes may be specified, including fits.  However, if a filename ending in ‘.fits’ is passed, the path to a uvfits data file must be provided via –uvfits to set the appropriate header information. Default: fit.png</p>
+</dd>
+<dt><kbd>--uvfits</kbd></dt>
+<dd><p>Specifies a uvfits file from which fits header information for the relevant sources may be extracted.</p>
+</dd>
+<dt><kbd>-s, --smooth</kbd></dt>
 <dd><p>If passed, will smooth the image with a symmetric Gaussian filter with FWHM given in microarcseconds.</p>
 </dd>
 <dt><kbd>--usetex</kbd></dt>
@@ -929,7 +1149,7 @@ $ themispy_triangle_plot -c Chain.dat -p 0-5</p>
 <dd><p>&lt;Required&gt; Name of chain file(s) to read.  If multiple files are listed, the burn-in will be independently be applied.</p>
 </dd>
 <dt><kbd>-s, --samples</kbd></dt>
-<dd><p>Stride over which to sample the chain.</p>
+<dd><p>Number of samples to draw from the chain.</p>
 </dd>
 <dt><kbd>-bf, --burn-fraction</kbd></dt>
 <dd><p>Fraction of chain to skip.</p>
@@ -1000,7 +1220,7 @@ $ themispy_triangle_plot -c Chain.dat -p 0-5</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+86.g2711d9d',
+            VERSION:'0.1.0+95.g8a54539',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

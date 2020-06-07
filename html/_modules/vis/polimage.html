@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.polimage &mdash; ThemisPy 0.1.0+86.g2711d9d documentation</title>
+  <title>vis.polimage &mdash; ThemisPy 0.1.0+95.g8a54539 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+86.g2711d9d documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+95.g8a54539 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.0+86.g2711d9d
+                0.1.0+95.g8a54539
               </div>
             
           
@@ -1265,7 +1265,7 @@
         <span class="k">return</span> <span class="n">h</span><span class="p">,</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span></div>
     
 
-<div class="viewcode-block" id="plot_dterm_posteriors"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.plot_dterm_posteriors">[docs]</a><span class="k">def</span> <span class="nf">plot_dterm_posteriors</span><span class="p">(</span><span class="n">polarized_image</span><span class="p">,</span> <span class="n">chain</span><span class="p">,</span> <span class="n">lcolormap</span><span class="o">=</span><span class="s1">&#39;Reds&#39;</span><span class="p">,</span> <span class="n">rcolormap</span><span class="o">=</span><span class="s1">&#39;Greens&#39;</span><span class="p">,</span> <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">comparison_dterms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comparison_fmts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="plot_dterm_posteriors"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.plot_dterm_posteriors">[docs]</a><span class="k">def</span> <span class="nf">plot_dterm_posteriors</span><span class="p">(</span><span class="n">polarized_image</span><span class="p">,</span> <span class="n">chain</span><span class="p">,</span> <span class="n">lcolormap</span><span class="o">=</span><span class="s1">&#39;Reds&#39;</span><span class="p">,</span> <span class="n">rcolormap</span><span class="o">=</span><span class="s1">&#39;Greens&#39;</span><span class="p">,</span> <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">comparison_dterms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comparison_fmts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots D term distributions for a polarized image model from an MCMC chain.  Each station will </span>
 <span class="sd">    separately have its left and right D term distributions plotted in the complex plane.</span>
@@ -1278,6 +1278,7 @@
 <span class="sd">      station (str,list): A single station code or list of station codes to which restrict attention or exclude.  Station codes must match those in the :class:`polarized_model_image.dterm_dict[&#39;station_names&#39;]` list for the polarized_image.  Station codes prefixed with &#39;!&#39; will be excluded. Default: D terms will be plotted for all stations.</span>
 <span class="sd">      comparison_dterms (dict): Dictionary of D terms to over-plot as comparisons. Dictionary should be indexed by station code.  Two element lists will be interpreted as the (complex) left and right D terms.  Four element lists will be interpreted as the (complex) right and left D terms followed by estimates of their (complex) uncertainties.</span>
 <span class="sd">      comparison_fmts (str,list): Formats for the comparison D term points.  These must be an acceptable format string as describe in :func:`matplotlib.pyplot.plot`. If a single format string is given it will be used for both points. If a list of two format strings are given, they will be used for the right and left points, respectively. If set to None, the formats [&#39;&gt;g&#39;, &#39;&lt;r&#39;] are used. Default: None.</span>
+<span class="sd">      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.    </span>
 <span class="sd">      verbosity (int): Verbosity level.</span>
 <span class="sd">    </span>
 <span class="sd">    Returns:</span>
@@ -1395,7 +1396,8 @@
 
                  
 
-                 
+        <span class="c1"># Add grids</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
         
         <span class="c1"># Add label</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.85</span><span class="p">,</span><span class="mf">0.85</span><span class="p">,</span><span class="n">station</span><span class="p">,</span><span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">)</span>
@@ -1546,7 +1548,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+86.g2711d9d',
+            VERSION:'0.1.0+95.g8a54539',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
