@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.polimage &mdash; ThemisPy 0.1.0+95.g8a54539 documentation</title>
+  <title>vis.polimage &mdash; ThemisPy 0.1.0+98.g080230c documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.1.0+95.g8a54539 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.1.0+98.g080230c documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.1.0+95.g8a54539
+                0.1.0+98.g080230c
               </div>
             
           
@@ -804,6 +804,137 @@
             <span class="n">image</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="n">time</span><span class="p">)</span></div></div>
     
 
+
+<div class="viewcode-block" id="model_polarized_image_smooth"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.model_polarized_image_smooth">[docs]</a><span class="k">class</span> <span class="nc">model_polarized_image_smooth</span><span class="p">(</span><span class="n">model_polarized_image</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Smoothed polarized image class that is a polarized mirror of :cpp:class:`Themis::model_image_smooth`. Generates a smoothed </span>
+<span class="sd">    image from an existing image using an asymmetric Gaussian smoothing kernel.</span>
+<span class="sd">    Has parameters:</span>
+
+<span class="sd">    * parameters[0] ............. First parameter of underlying image</span>
+<span class="sd">    </span>
+<span class="sd">    ...</span>
+
+<span class="sd">    * parameters[image.size-1] .. Last parameter of underlying image</span>
+<span class="sd">    * parameters[image.size] .... Symmetrized standard deviation of smoothing kernel :math:`\\sigma` (rad)</span>
+<span class="sd">    * parameters[image.size+1] .. Asymmetry parameter of smoothing kernel :math:`A` in (0,1)</span>
+<span class="sd">    * parameters[image.size+2] .. Position angle of smoothing kernel :math:`\\phi` (rad)</span>
+
+<span class="sd">    and size=image.size+3.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      image (model_polarized_image): :class:`model_polarized_image` object that will be smoothed.</span>
+<span class="sd">      station_names (list): List of strings corresponding to station names for which D terms are being reconstructed. Default: None.</span>
+<span class="sd">      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">      image (model_polarized_image): A preexisting :class:`model_polarized_image` object to be smoothed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">station_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">station_names</span><span class="p">,</span><span class="n">themis_fft_sign</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_size</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="mi">3</span>
+
+        
+<div class="viewcode-block" id="model_polarized_image_smooth.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.model_polarized_image_smooth.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parameters</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_smooth::generate_model`, </span>
+<span class="sd">        a similar function within the :cpp:class:`Themis::model_image_smooth` class.  Effectively </span>
+<span class="sd">        simply copies the parameters into the local list with some additional run-time checking.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          parameters (list): Parameter list.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          None        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span><span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Parameter list is inconsistent with the number of parameters expected.&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_dterms</span><span class="p">(</span><span class="n">parameters</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">image_size</span><span class="p">:])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">parameters</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">image_size</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span></div>
+
+        
+<div class="viewcode-block" id="model_polarized_image_smooth.generate_stokes_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.model_polarized_image_smooth.generate_stokes_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_stokes_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          kind (str): Stokes parameter to generate map for. Accepted values are &#39;I&#39;, &#39;Q&#39;, &#39;U&#39;, &#39;V&#39;, and combinations or &#39;all&#39;. Default: &#39;all&#39;.</span>
+<span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of arrays of desired Stokes parameter values at positions (x,y) in :math:`Jy/\\mu as^2`. Always returned in the order IQUV.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Doesn&#39;t to boundary checking here.  Probably not a major problem, but consider it in the future.</span>
+        <span class="n">sr1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">image_size</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">rad2uas</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">image_size</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="p">)</span>
+        <span class="n">sr2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">image_size</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">rad2uas</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">image_size</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> <span class="p">)</span>
+        <span class="n">sphi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">image_size</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Check to prevent convolving with zero</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span><span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">sr1</span><span class="o">&lt;</span><span class="n">dx</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">sr1</span> <span class="o">=</span> <span class="n">dx</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">sr2</span><span class="o">&lt;</span><span class="n">dx</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">sr2</span> <span class="o">=</span> <span class="n">dx</span>
+        
+        <span class="c1"># Re-orient the grind along major and minor axes of the smoothing kernel</span>
+        <span class="n">xMajor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">sphi</span><span class="p">)</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">sphi</span><span class="p">)</span><span class="o">*</span><span class="n">y</span>
+        <span class="n">xMinor</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">sphi</span><span class="p">)</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">sphi</span><span class="p">)</span><span class="o">*</span><span class="n">y</span>
+        <span class="n">exponent</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">xMajor</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">sr1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">xMinor</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">sr2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">K</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">sr1</span><span class="o">*</span><span class="n">sr2</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">exponent</span><span class="p">)</span> 
+    
+        <span class="n">px</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">py</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">image_size</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate_stokes_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="n">Ssm</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">S</span> <span class="p">:</span>
+            <span class="n">Ssm</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">fftconvolve</span><span class="p">(</span><span class="n">s</span><span class="o">*</span><span class="n">px</span><span class="o">*</span><span class="n">py</span><span class="p">,</span><span class="n">K</span><span class="o">*</span><span class="n">px</span><span class="o">*</span><span class="n">py</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">px</span><span class="o">*</span><span class="n">py</span><span class="p">)</span> <span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Gaussian smoothed:&#39;</span><span class="p">,</span><span class="n">sr1</span><span class="p">,</span><span class="n">sr2</span><span class="p">,</span><span class="n">sphi</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
+            
+        <span class="k">return</span> <span class="n">Ssm</span></div>
+
+    
+<div class="viewcode-block" id="model_polarized_image_smooth.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.model_polarized_image_smooth.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producess a lists parameter names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">parameter_name_list</span><span class="p">()</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\sigma_s$ (rad)&#39;</span><span class="p">)</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$A_s$&#39;</span><span class="p">)</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\phi_s$ (rad)&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">names</span></div>
+
+    
+<div class="viewcode-block" id="model_polarized_image_smooth.set_time"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.model_polarized_image_smooth.set_time">[docs]</a>    <span class="k">def</span> <span class="nf">set_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          time (float): Time in hours.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="n">time</span><span class="p">)</span></div></div>
+
+
+
+            
 
 <span class="k">def</span> <span class="nf">_get_polarization_ellipse</span><span class="p">(</span><span class="n">S</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -1548,7 +1679,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.1.0+95.g8a54539',
+            VERSION:'0.1.0+98.g080230c',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
