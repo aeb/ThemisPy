@@ -34,11 +34,11 @@ def set_parser():
                         action='store',
                         default='lf',
                         help=("Sets type of polarized image plot to generate.  Options are 'lf', 'ef', 'lL'."
-                              "In detail: 'lf' produces linear polarization ticks, color-coded by linear"
-                              "polarization fraction, on top of total flux; 'ef' produces elliptical polarization"
-                              "ticks, color-coded by total polarization fraction, on top of total flux; 'lL'"
-                              "produces linear polarization ticks on top of linear polarized flux, with total"
-                              "flux contours superimposed.  Default: 'lf'."))
+                              " In detail: 'lf' produces linear polarization ticks, color-coded by linear"
+                              " polarization fraction, on top of total flux; 'ef' produces elliptical polarization"
+                              " ticks, color-coded by total polarization fraction, on top of total flux; 'lL'"
+                              " produces linear polarization ticks on top of linear polarized flux, with total"
+                              " flux contours superimposed.  Default: 'lf'."))
 
     parser.add_argument("-c","--chain",
                         type=str,
@@ -119,12 +119,12 @@ def set_parser():
                               " a set of four floats. If None uses the default in vis.image.plot_model_image"
                               " function. Default: None."))
                         
-    parser.add_argument("-n","--norm",
-                        type=float,
-                        action='store',
-                        default=1.0,
-                        help=("Logarithmic normalization relative to to the median and maximum brightness."
-                              " A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum. Default: 1.0."))
+    # parser.add_argument("-n","--norm",
+    #                     type=float,
+    #                     action='store',
+    #                     default=1.0,
+    #                     help=("Logarithmic normalization relative to to the median and maximum brightness."
+    #                           " A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum. Default: 1.0."))
 
     parser.add_argument("-t","--transfer",
                         type=str,
