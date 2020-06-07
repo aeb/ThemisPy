@@ -260,15 +260,15 @@ if __name__ == "__main__" :
     if (args.verbose):
         print("Parameters:",parameters)
 
-    # # Add smoothing if desired
-    # if (not (args.smooth is None)) :
-    #     uas2rad = np.pi/(180.0*3600e6)
-    #     model_image_unsmoothed = copy.deepcopy(model_image)
-    #     model_image = ty.vis.model_image_smooth(model_image_unsmoothed)
-    #     parameters = np.append(parameters,[args.smooth*uas2rad/np.sqrt(8.0*np.log(2.0)), 0, 0])
+    # Add smoothing if desired
+    if (not (args.smooth is None)) :
+        uas2rad = np.pi/(180.0*3600e6)
+        model_image_unsmoothed = copy.deepcopy(model_image)
+        model_image = ty.vis.model_polarized_image_smooth(model_image_unsmoothed)
+        parameters = np.append(parameters,[args.smooth*uas2rad/np.sqrt(8.0*np.log(2.0)), 0, 0])
 
-    #     if (args.verbose):
-    #         print("Smoothed parameters:",parameters)    
+        if (args.verbose):
+            print("Smoothed parameters:",parameters)    
             
         
     # Check resolution
