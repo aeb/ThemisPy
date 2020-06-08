@@ -624,7 +624,7 @@ def fft_cubic_spline_2d(x,y,f,xx,yy,rotation_angle=None,a=-0.5) :
 
     ff = np.fft.ifft2(FF)
 
-    norm_factor = ((x[1]-x[0])*(y[1]-y[0]))/((xx[1]-xx[0])*(yy[1]-yy[0]))
+    norm_factor = np.abs(((x[1]-x[0])*(y[1]-y[0]))/((xx[1]-xx[0])*(yy[1]-yy[0])))
 
     return np.real(ff)*norm_factor
 

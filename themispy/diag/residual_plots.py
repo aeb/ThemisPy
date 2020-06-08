@@ -439,7 +439,7 @@ def plot_closure_phase_residuals(resdata, plot_type='perimeter', gain_data=None,
 
     Args:
       resdata (dict): Dictionary object containing the residual data as generated, e.g., by :func:`read_residuals`.
-      plot_type (str): Type of residual plot to generate. Options are 'uvamp', 'u', 'v', 'time', 'amplitude'. Default: 'uvamp'.
+      plot_type (str): Type of residual plot to generate. Options are 'perimeter', 'arear', 'uvmax', 'uvmin', 'umax', 'umin', 'vmax', 'vmin', 'time', 'snr'. Default: 'perimeter'.
       station_list (list,str): Station or list of stations to either exclude or restrict the residual plot to. Requires resdata to contain a key 'baselines'.  Station names prepended with '!' will be excluded.  If any station names without '!' are given, will show *only* those stations. Default: None.
       residuals (bool): If True produces a sub-panel with the error-weighted residuals plotted underneath the comparison plot. Default: True.
       resdist (int): If not None, produces a sub-panel with the distribution of residuals compared to a unit-variance Gaussian. If an int value is passed, it will set the number of bins per unit standard deviation. Default: 2.
@@ -489,7 +489,7 @@ def plot_closure_phase_residuals(resdata, plot_type='perimeter', gain_data=None,
             if (len(station_exclude_list)>0) :
                 keep[j] = keep[j] and not ((station1 in station_exclude_list) or (station2 in station_exclude_list) or (station3 in station_exclude_list))
 
-        for key in ['time','u','v','data','model','residual','error'] :
+        for key in ['time','u1','v1','u2','v2','u3','v3','data','model','residual','error'] :
             resdata_local[key] = resdata_local[key][keep]
 
     # Select coordinate

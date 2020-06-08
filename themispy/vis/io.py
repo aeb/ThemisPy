@@ -102,9 +102,22 @@ def write_fits(x,y,img,fits_filename,uvfits_filename=None,time=None,verbosity=0)
     if (ehtim_found==False) :
         raise NotImplementedError("ERROR: write_fits requires ehtim to be installed.")
 
-    if (isinstance(img,model_image)) :
+    I = None
+    Q = None
+    U = None
+    V = None
+    if (isinstance(img,model_polarized_image)) :
         if (time is None) :
-            time = image.time
+            time = img.time
+        S = img.stokes_map(x,y,kind='all',verbosity=verbosity)
+        I = S[0]
+        Q = S[1]
+        U = S[2]
+        V = S[3]
+
+    elif (isinstance(img,model_image)) :
+        if (time is None) :
+            time = img.time
         I = img.intensity_map(x,y,verbosity=verbosity)
     elif (isinstance(img,np.ndarray)) :
         if (time is None) :
@@ -113,7 +126,6 @@ def write_fits(x,y,img,fits_filename,uvfits_filename=None,time=None,verbosity=0)
     else :
         raise NotImplementedError("ERROR: Requies either an image or numpy.ndarray of values.")
 
-    
     if (verbosity>0) :
         print("Shapes",x.shape,y.shape,I.shape)
 
@@ -130,6 +142,11 @@ def write_fits(x,y,img,fits_filename,uvfits_filename=None,time=None,verbosity=0)
     Ippx = np.transpose(I) * abs((x[1,1]-x[0,0])*(y[1,1]-y[0,0]))
     Ippx = np.flipud(Ippx)
 
+    if (not Q is None) :
+        Qppx = np.flipud( np.transpose(Q) * abs((x[1,1]-x[0,0])*(y[1,1]-y[0,0])) )
+        Uppx = np.flipud( np.transpose(U) * abs((x[1,1]-x[0,0])*(y[1,1]-y[0,0])) )
+        Vppx = np.flipud( np.transpose(V) * abs((x[1,1]-x[0,0])*(y[1,1]-y[0,0])) )
+        
     if (uvfits_filename is None) :
         warnings.warn("No uvfits file has been specified. This will probably result in an nonfunctional FITS header.", Warning)
         ra=0.0
@@ -153,7 +170,16 @@ def write_fits(x,y,img,fits_filename,uvfits_filename=None,time=None,verbosity=0)
         print('src:',ra)
         print('mjd:',ra)
 
-    image = eh.image.Image(Ippx,pixel_size,ra,dec,rf=rf,source=src,mjd=mjd,time=time,pulse=eh.observing.pulses.deltaPulse2D)
+    if (Q is None) :
+        if (verbosity>0) :
+            print('Saving Stokes I')
+        image = eh.image.Image(Ippx,pixel_size,ra,dec,rf=rf,source=src,mjd=mjd,time=time,pulse=eh.observing.pulses.deltaPulse2D)
+    else :
+        if (verbosity>0) :
+            print('Saving Stokes I,Q,U,V')
+        image = eh.image.Image(Ippx,pixel_size,ra,dec,rf=rf,source=src,mjd=mjd,time=time,pulse=eh.observing.pulses.deltaPulse2D,polrep='stokes')
+        image.add_qu(Qppx,Uppx)
+        image.add_v(Vppx)
 
     if (verbosity>1) :
         image.display()
@@ -161,7 +187,6 @@ def write_fits(x,y,img,fits_filename,uvfits_filename=None,time=None,verbosity=0)
     
     image.save_fits(fits_filename)
     
-
 
 def write_hdf5(x,y,t,mov,hdf5_filename,uvfits_filename=None,time_offset=None,method='ehtim',verbosity=0) :
     """

@@ -340,15 +340,15 @@ def reconstruct_field_rotation_angles(obs, isER5=False) :
     FR2 = (f_el2*el2) + (f_par2*par2) + f_off2
 
     # Convert to radians
-    FR1 = FR1*np.pi/180.
-    FR2 = FR2*np.pi/180.
+    #FR1 = FR1*np.pi/180.
+    #FR2 = FR2*np.pi/180.
 
     obs.switch_polrep('stokes')
 
     return FR1,FR2
 
 
-def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_partial_hands=True) :
+def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_partial_hands=True, flip_field_rotation_angles=False) :
     """
     Writes complex crosshand RR,LL,RL,LR visibilities in Themis format given an :class:`ehtim.obsdata.Obsdata` object.
 
@@ -386,6 +386,11 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
     
     # Get the field rotation angles
     fr1,fr2=reconstruct_field_rotation_angles(obs,isER5=isER5)
+
+    # Flip (debugging)
+    if (flip_field_rotation_angles) :
+        fr1 = -fr1
+        fr2 = -fr2
 
     # Write header
     out=open(outname,'w')

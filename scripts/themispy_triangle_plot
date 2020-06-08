@@ -46,7 +46,7 @@ def set_parser() :
                         type=int,
                         action='store',
                         default=None,
-                        help=("Stride over which to sample the chain."))
+                        help=("Number of samples to draw from the chain."))
     
     parser.add_argument("-bf","--burn-fraction",
                         type=float,

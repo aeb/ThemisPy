@@ -807,7 +807,7 @@ def plot_deo_lambda(annealing_summary_data,annealing_data,colormap='b', axis_sca
         bE = np.max((0.9999,beta_r[-2]))
         lb = np.linspace(np.log(beta_r[1]/(1-beta_r[1])),np.log(0.9999/(1-0.9999)),500)
         b = 1.0/(1+np.exp(-lb))
-        print(b)
+        #print(b)
         if ( is_color_like(colormap) ) :
             color = list(to_rgba(colormap))
             color[3] = 0.05+0.95*i/(nrounds-1.0)

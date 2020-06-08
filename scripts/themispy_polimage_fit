@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 """
-Reads in various Themis output files and generates a plot of the resulting image.
+Reads in various Themis output files and generates a plot of the resulting polarized image.
 A sample parameter value must be provided in one of three ways: (1) by specifying a
 fit_summaries.txt file, (2) by specifying an MCMC chain file with an index (optional),
 or (3) by specifying an MCMC chain file and corresponding likelihood file.
 This may be saved in ways, including standard image formats (PNG,JPG,PDF) and FITS.
 
 Example:
-$ themispy_image_fit -c Chain.dat -l Lklhd.dat
+$ themispy_polimage_fit -c Chain.dat -l Lklhd.dat
 """
 
 from matplotlib import use,rc
@@ -27,7 +27,18 @@ import themispy as ty
 def set_parser():
 
     # Create a parser object to manage command line options
-    parser = ap.ArgumentParser(prog="themispy_image_fit",description=__doc__)
+    parser = ap.ArgumentParser(prog="themispy_polimage_fit",description=__doc__)
+
+    parser.add_argument("-p","--plot-type",
+                        type=str,
+                        action='store',
+                        default='lf',
+                        help=("Sets type of polarized image plot to generate.  Options are 'lf', 'ef', 'lL'."
+                              " In detail: 'lf' produces linear polarization ticks, color-coded by linear"
+                              " polarization fraction, on top of total flux; 'ef' produces elliptical polarization"
+                              " ticks, color-coded by total polarization fraction, on top of total flux; 'lL'"
+                              " produces linear polarization ticks on top of linear polarized flux, with total"
+                              " flux contours superimposed.  Default: 'lf'."))
 
     parser.add_argument("-c","--chain",
                         type=str,
@@ -89,6 +100,16 @@ def set_parser():
                               " vis.image.plot_model_image function."
                               " Default: None."))
 
+    parser.add_argument("-tN",
+                        type=int,
+                        nargs="*",
+                        action='store',
+                        default=None,
+                        help=("Number of polarization ticks on image. May be a single integer (square image)"
+                              " or two integers (non-square image). If None uses the default in the"
+                              " vis.image.plot_polarized_image or vis.image.plot_linear_polarization_map functions."
+                              " Default: None."))
+
     parser.add_argument("--limits",
                         type=float,
                         nargs="+",
@@ -98,18 +119,25 @@ def set_parser():
                               " a set of four floats. If None uses the default in vis.image.plot_model_image"
                               " function. Default: None."))
                         
-    parser.add_argument("-n","--norm",
-                        type=float,
-                        action='store',
-                        default=1.0,
-                        help=("Logarithmic normalization relative to to the median and maximum brightness."
-                              " A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum. Default: 1.0."))
+    # parser.add_argument("-n","--norm",
+    #                     type=float,
+    #                     action='store',
+    #                     default=1.0,
+    #                     help=("Logarithmic normalization relative to to the median and maximum brightness."
+    #                           " A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum. Default: 1.0."))
 
     parser.add_argument("-t","--transfer",
                         type=str,
                         action='store',
                         default='linear',
                         help=("Set the transfer function ('linear','sqrt','log'). Default: 'linear'"))
+
+    parser.add_argument("-tif","--tick-intensity-floor",
+                        type=float,
+                        action='store',
+                        default=0.1,
+                        help=("Fraction of the maximum intensity above which to plot polarization ticks."
+                              "Default 0.1."))
 
     parser.add_argument("--movie",
                         type=str,
@@ -151,6 +179,12 @@ def set_parser():
                         default=None,
                         help=("If passed, will smooth the image with a symmetric Gaussian filter with"
                               " FWHM given in microarcseconds."))
+
+    parser.add_argument("-ms","--mscale",
+                        type=float,
+                        action='store',
+                        default=0.5,
+                        help=("Sets the polarization fraction normalization. Default: 0.5."))    
     
     parser.add_argument("--usetex",
                         action='store_true',
@@ -236,11 +270,12 @@ if __name__ == "__main__" :
     if (not (args.smooth is None)) :
         uas2rad = np.pi/(180.0*3600e6)
         model_image_unsmoothed = copy.deepcopy(model_image)
-        model_image = ty.vis.model_image_smooth(model_image_unsmoothed)
+        model_image = ty.vis.model_polarized_image_smooth(model_image_unsmoothed)
         parameters = np.append(parameters,[args.smooth*uas2rad/np.sqrt(8.0*np.log(2.0)), 0, 0])
 
         if (args.verbose):
-            print("Smoothed parameters:",parameters)            
+            print("Smoothed parameters:",parameters)    
+            
         
     # Check resolution
     if (not (args.N is None) ):
@@ -250,6 +285,16 @@ if __name__ == "__main__" :
             pass
         else :
             print("ERROR: Either 1 or 2 arguments are expected after -N.")
+            quit()
+
+    # Check tick resolution
+    if (not (args.tN is None) ):
+        if (len(args.tN)==1) :
+            args.tN = args.tN[0]
+        elif (len(args.tN)==2) :
+            pass
+        else :
+            print("ERROR: Either 1 or 2 arguments are expected after -tN.")
             quit()
 
     # Check limits
@@ -309,30 +354,22 @@ if __name__ == "__main__" :
     for ti,time in enumerate(time_list) :
                 
         # Start figure particulars
-        plt.figure(figsize=(6,6))
-        plt.axes([0.15,0.15,0.8,0.8])
+        #plt.figure(figsize=(6,6))
+        #plt.axes([0.15,0.15,0.8,0.8])
 
         # Set model time
         model_image.set_time(time)
         
         # Generate plot
-        h,fig,axs,x,y,I = ty.vis.plot_intensity_map(model_image, parameters, limits=args.limits, shape=args.N, colormap='afmhot', return_intensity_map=True, transfer_function=args.transfer, verbosity=int(args.verbose),Imax=1)
+        if (args.plot_type=='lf') :
+            ty.vis.plot_polarized_image(model_image, parameters, limits=args.limits, shape=args.N, tick_shape=args.tN, mscale=args.mscale, transfer_function=args.transfer, tick_fractional_intensity_floor=args.tick_intensity_floor, colorbar=True, elliptical=False, verbosity=int(args.verbose))
+        elif (args.plot_type=='ef') :
+            ty.vis.plot_polarized_image(model_image, parameters, limits=args.limits, shape=args.N, tick_shape=args.tN, mscale=args.mscale, transfer_function=args.transfer, tick_fractional_intensity_floor=args.tick_intensity_floor, colorbar=True, elliptical=True, verbosity=int(args.verbose))
+        elif (args.plot_type=='lL') :
+            ty.vis.plot_linear_polarization_map(model_image, parameters, limits=args.limits, shape=args.N, tick_shape=args.tN, colormap='plasma', intensity_contours=True, intensity_colors=[[0.75,0.75,0.75]], mscale=0.5, colorbar='frac', transfer_function=args.transfer, tick_fractional_intensity_floor=args.tick_intensity_floor, verbosity=int(args.verbose))
+        else :
+            raise RuntimeError("Plot type %s is not recognized.  See help for options."%(args.plot_type))
 
-        # Set the proper normalization
-        if (time==time_list[0]) :
-            Imed = np.median(I)
-            Imax = np.max(I)
-            if (args.transfer=='linear') :
-                vmax = (Imed) * 10**( args.norm*np.log10(Imax/Imed) )
-                vmin = 0
-            elif (args.transfer=='sqrt') :
-                vmax = np.sqrt( (Imed) * 10**( args.norm*np.log10(Imax/Imed) ) )
-                vmin = 0
-            elif (args.transfer=='log') :
-                vmax = args.norm*np.log10(Imax/Imed) + np.log10(Imed)
-                vmin = vmax-2
-        plt.clim(vmin=vmin,vmax=vmax)
-        
         # Save non-hdf5 files
         for outfile in flatten(args.out) :
             if (args.verbose):
@@ -349,7 +386,6 @@ if __name__ == "__main__" :
             if (ext=='.fits' or ext=='.FITS') :
                 if (args.verbose):
                     print("  Saving FITS file.")
-                #ty.vis.write_fits(x,y,I,outname,args.uvfits,verbosity=args.verbose)
                 model_image.generate(parameters)
                 ty.vis.write_fits(x,y,model_image,outname,args.uvfits,verbosity=args.verbose)
             elif (ext=='.hdf5') :

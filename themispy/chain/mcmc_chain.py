@@ -472,7 +472,7 @@ def read_afss_state(filename, stride=1, burn_fraction=0, skip=None, auto_warmup=
 
     # Number of samples to store
     nstor = (nsamp-nskip)//stride
-    state = np.zeros((nstor,6))    
+    state = np.zeros((nstor,5))    
 
     # Add in the header
     nskip += nhead
@@ -713,7 +713,7 @@ def sample_chain(chain_filename, samples, burn_fraction=0, skip=None, parameter_
 
     # Determine the number of walkers, and set the burn-in relative to the shorter
     if (skip is None) :
-        nskip = burn_fraction*nsamp
+        nskip = int(burn_fraction*nsamp)
     else :
         nskip = skip
     
