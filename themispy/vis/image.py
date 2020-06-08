@@ -695,11 +695,14 @@ class model_image_splined_raster(model_image) :
           (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
 
-        f = np.transpose(np.exp(np.array(self.parameters).reshape([self.Nx,self.Ny]))) * uas2rad**2
-
+        #f = np.transpose(np.exp(np.array(self.parameters).reshape([self.Nx,self.Ny]))) * uas2rad**2
+        #xtmp = np.linspace(-0.5*self.fovx,0.5*self.fovx,self.Nx)
+        #ytmp = np.linspace(-0.5*self.fovy,0.5*self.fovy,self.Ny)
+        
+        f = np.transpose(np.exp(np.array(self.parameters).reshape([self.Ny,self.Nx]))) * uas2rad**2
         xtmp = np.linspace(-0.5*self.fovx,0.5*self.fovx,self.Nx)
         ytmp = np.linspace(-0.5*self.fovy,0.5*self.fovy,self.Ny)
-
+        
         # Determine the proper transposition based on if the reshaped x is fastest or slowest
         xtest = x.reshape([-1])
         if (xtest[1]==xtest[0]) :

@@ -377,11 +377,15 @@ class model_polarized_image_adaptive_splined_raster(model_polarized_image) :
         S = []
 
         Ndim = self.Nx*self.Ny
-        fI = np.flipud(np.transpose(np.exp(np.array(self.parameters[:Ndim]).reshape([self.Nx,self.Ny])))) * uas2rad**2
-        p = np.flipud(np.transpose(np.exp(np.array(self.parameters[Ndim:2*Ndim]).reshape([self.Nx,self.Ny]))))
-        evpa = np.flipud(np.transpose(np.array(self.parameters[2*Ndim:3*Ndim]).reshape([self.Nx,self.Ny])))
-        muV = np.flipud(np.transpose(np.array(self.parameters[3*Ndim:4*Ndim]).reshape([self.Nx,self.Ny])))
-
+        #fI = np.flipud(np.transpose(np.exp(np.array(self.parameters[:Ndim]).reshape([self.Nx,self.Ny])))) * uas2rad**2
+        #p = np.flipud(np.transpose(np.exp(np.array(self.parameters[Ndim:2*Ndim]).reshape([self.Nx,self.Ny]))))
+        #evpa = np.flipud(np.transpose(np.array(self.parameters[2*Ndim:3*Ndim]).reshape([self.Nx,self.Ny])))
+        #muV = np.flipud(np.transpose(np.array(self.parameters[3*Ndim:4*Ndim]).reshape([self.Nx,self.Ny])))
+        fI = np.flipud(np.transpose(np.exp(np.array(self.parameters[:Ndim]).reshape([self.Ny,self.Nx])))) * uas2rad**2
+        p = np.flipud(np.transpose(np.exp(np.array(self.parameters[Ndim:2*Ndim]).reshape([self.Ny,self.Nx]))))
+        evpa = np.flipud(np.transpose(np.array(self.parameters[2*Ndim:3*Ndim]).reshape([self.Ny,self.Nx])))
+        muV = np.flipud(np.transpose(np.array(self.parameters[3*Ndim:4*Ndim]).reshape([self.Ny,self.Nx])))
+        
         fovx = self.parameters[4*Ndim]*rad2uas
         fovy = self.parameters[4*Ndim+1]*rad2uas
         PA = -self.parameters[4*Ndim+2]
