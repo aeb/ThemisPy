@@ -185,7 +185,6 @@ def set_parser():
                         action='store',
                         default=0.5,
                         help=("Sets the polarization fraction normalization. Default: 0.5."))    
-
     
     parser.add_argument("--usetex",
                         action='store_true',
