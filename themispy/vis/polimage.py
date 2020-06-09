@@ -808,9 +808,13 @@ def _get_polarization_ellipse(S) :
     muV = S[2]/L
     EVPA = 0.5*np.arctan2(S[2],S[1])
 
+    epsilon = (1.0 - np.sqrt(1-muV**2))/muV
+    norm = 1.0/np.sqrt(1.0+epsilon**2)
+
+    
     t = np.linspace(0,2.0*np.pi,128)
-    x0 = 0.5*p*np.cos(t) * muV
-    y0 = 0.5*p*np.sin(t)
+    x0 = 0.5*p*np.cos(t) * epsilon * norm
+    y0 = 0.5*p*np.sin(t) * norm
     x = np.cos(EVPA)*x0 + np.sin(EVPA)*y0
     y = -np.sin(EVPA)*x0 + np.cos(EVPA)*y0
 
