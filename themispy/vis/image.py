@@ -806,7 +806,8 @@ class model_image_adaptive_splined_raster(model_image) :
           (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
 
-        f = np.transpose(np.exp(np.array(self.parameters[:-3]).reshape([self.Nx,self.Ny]))) * uas2rad**2
+        #f = np.transpose(np.exp(np.array(self.parameters[:-3]).reshape([self.Nx,self.Ny]))) * uas2rad**2
+        f = np.transpose(np.exp(np.array(self.parameters[:-3]).reshape([self.Ny,self.Nx]))) * uas2rad**2
         #f = np.fliplr(f)
         f = np.flipud(f)
         
