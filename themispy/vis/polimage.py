@@ -377,10 +377,6 @@ class model_polarized_image_adaptive_splined_raster(model_polarized_image) :
         S = []
 
         Ndim = self.Nx*self.Ny
-        #fI = np.flipud(np.transpose(np.exp(np.array(self.parameters[:Ndim]).reshape([self.Nx,self.Ny])))) * uas2rad**2
-        #p = np.flipud(np.transpose(np.exp(np.array(self.parameters[Ndim:2*Ndim]).reshape([self.Nx,self.Ny]))))
-        #evpa = np.flipud(np.transpose(np.array(self.parameters[2*Ndim:3*Ndim]).reshape([self.Nx,self.Ny])))
-        #muV = np.flipud(np.transpose(np.array(self.parameters[3*Ndim:4*Ndim]).reshape([self.Nx,self.Ny])))
         fI = np.flipud(np.transpose(np.exp(np.array(self.parameters[:Ndim]).reshape([self.Ny,self.Nx])))) * uas2rad**2
         p = np.flipud(np.transpose(np.exp(np.array(self.parameters[Ndim:2*Ndim]).reshape([self.Ny,self.Nx]))))
         evpa = np.flipud(np.transpose(np.array(self.parameters[2*Ndim:3*Ndim]).reshape([self.Ny,self.Nx])))
@@ -408,8 +404,13 @@ class model_polarized_image_adaptive_splined_raster(model_polarized_image) :
             xx=x[0,:]
             yy=y[:,0]
 
-        
-        if (self.spline_method=='fft') :
+
+        if ( (abs(xx[1]-xx[0])>abs(xtmp[-1]-xtmp[0])) and (abs(yy[1]-yy[0])>abs(ytmp[-1]-ytmp[0])) ) :
+            I = 0*x
+            Q = 0*x
+            U = 0*x
+            V = 0*x
+        elif (self.spline_method=='fft') :
             I = fft_cubic_spline_2d(xtmp,ytmp,fI,xx,yy,PA,a=self.a)
             Q = fft_cubic_spline_2d(xtmp,ytmp,fQ,xx,yy,PA,a=self.a)
             U = fft_cubic_spline_2d(xtmp,ytmp,fU,xx,yy,PA,a=self.a)

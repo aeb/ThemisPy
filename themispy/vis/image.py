@@ -715,7 +715,9 @@ class model_image_splined_raster(model_image) :
             yy=y[:,0]
 
         
-        if (self.spline_method=='fft') :
+        if ( (abs(xx[1]-xx[0])>abs(xtmp[-1]-xtmp[0])) and (abs(yy[1]-yy[0])>abs(ytmp[-1]-ytmp[0])) ) :
+            I = 0*x
+        elif (self.spline_method=='fft') :
             I = fft_cubic_spline_2d(xtmp,ytmp,f,xx,yy,a=self.a)
         elif (self.spline_method=='direct') :
             I = direct_cubic_spline_2d(xtmp,ytmp,f,xx,yy,a=self.a)
@@ -828,7 +830,9 @@ class model_image_adaptive_splined_raster(model_image) :
             yy=y[:,0]
 
         
-        if (self.spline_method=='fft') :
+        if ( (abs(xx[1]-xx[0])>abs(xtmp[-1]-xtmp[0])) and (abs(yy[1]-yy[0])>abs(ytmp[-1]-ytmp[0])) ) :
+            I = 0*x
+        elif (self.spline_method=='fft') :
             I = fft_cubic_spline_2d(xtmp,ytmp,f,xx,yy,PA,a=self.a)
         elif (self.spline_method=='direct') :
             I = direct_cubic_spline_2d(xtmp,ytmp,f,xx,yy,PA,a=self.a)
