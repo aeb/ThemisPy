@@ -1366,13 +1366,13 @@ def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='G
         # Add the right D-term plots
         DRr = chain[:,dterm_start_index_list[k]+0]
         DRi = chain[:,dterm_start_index_list[k]+1]
-        hR = kde_plot_2d(DRr,DRi,colormap=rcolormap,alpha=alpha,bw=np.sqrt(2.0))
+        hR = kde_plot_2d(DRr,DRi,colormap=rcolormap,alpha=alpha,scott_factor=np.sqrt(2.0))
         hlist.append(hR)
 
         # Add the left D-term plots
         DLr = chain[:,dterm_start_index_list[k]+2]
         DLi = chain[:,dterm_start_index_list[k]+3]
-        hL = kde_plot_2d(DLr,DLi,colormap=lcolormap,alpha=alpha,bw=np.sqrt(2.0))
+        hL = kde_plot_2d(DLr,DLi,colormap=lcolormap,alpha=alpha,scott_factor=np.sqrt(2.0))
         hlist.append(hL)
 
         # Add truths if provided
