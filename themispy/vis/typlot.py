@@ -13,10 +13,8 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gs
-from matplotlib import rc
-from matplotlib import cm
-from matplotlib.colors import LogNorm
-from matplotlib.colors import ListedColormap
+from matplotlib import rc, cm
+from matplotlib.colors import to_rgb, LogNorm, ListedColormap
 
 from scipy import interpolate as scint
 from scipy.optimize import bisect
@@ -50,6 +48,37 @@ def generate_streamline_colormap(colormap='plasma', number_of_streams=None, over
     cvals = cmap(v)
 
     return ( ListedColormap(cvals) )
+
+
+def generate_monocolormap(color, N=256, basecolor='w', reverse=False) :
+    """
+    Generates a new colormap that interpolates linearly from the basecolor to a given color.
+
+    Args:
+      color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors`.
+      N (int): Number of levels in the color map. Default: 256.
+      basecolor (str,list): Base color (i.e., at vmin in colormap). Accepts any acceptable color type as specified in :mod:`matplotlib.colors`. Default: 'w'.
+      reverse (bool): Reverses the colormap.
+    
+    Returns:
+      (matplotlib.colors.Colormap): A new colormap that has random rearrangements.
+    """
+
+    # Get colors
+    c0 = np.array(to_rgb(basecolor))
+    c1 = np.array(to_rgb(color))
+
+    # Generate space for a list of colors
+    cvals = np.zeros((N,3))
+    for k,t in enumerate(np.linspace(0,1,N)) :
+        cvals[k,:] = c0*(1-t)+c1*t
+
+    if (reverse) :
+        cvals = np.flip(cvals,axis=1)
+        
+    return ( ListedColormap(cvals) )
+
+
 
 
 def axes_adjust(fig=None, axes=None, shift_x0=0, shift_y0=0, shift_width=0, shift_height=0) :
