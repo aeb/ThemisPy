@@ -649,7 +649,7 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
         tstart = gain_data['tstart']
         tend = gain_data['tend']
         toffset = ((gain_data['toffset'].mjd)%1)*24
-        
+
         for j in range(len(resdata_local['baseline'])) :
             station1,station2 = _station_codes_from_baseline(resdata_local['baseline'][j])
 
