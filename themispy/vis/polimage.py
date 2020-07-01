@@ -1254,9 +1254,259 @@ def plot_polarized_image(polarized_image, parameters, limits=None, shape=None, t
         return h,plt.gca(),plt.gcf(),x,y,S
     else:
         return h,plt.gca(),plt.gcf()
+
+
+def plot_polarized_image_stats(polarized_image, chain, limits=None, shape=None, tick_shape=None, colormap='gray_r', tick_color='jet', Imin=0.0, Imax=None, Lmin=0.0, Lmax=None, mscale=None, in_radec=True, xlabel=None, ylabel=None, return_stokes_map=False, transfer_function='linear', tick_fractional_intensity_floor=0.1, colorbar=False, elliptical=False, verbosity=0) :
+    """
+    Plots linear polarization fraction, flux and intensity image associated with a given 
+    :class:`model_image` object evaluated at a specified set of parameters. A number of additional 
+    practical options may be passed. Access to a matplotlib pcolor object, the figure handle and axes 
+    handles are returned. Optionally, the Stokes map is returned.
+
+    Args:
+      polarized_image (model_polarized_image): :class:`model_polarized_image` object to plot.
+      chain (list): List of parameters that define model_image intensity map.
+      limits (float,list): Limits in uas on image size. If a single float is given, the limits are uniformly set. If a list is given, it must be in the form [xmin,xmax,ymin,ymax]. Default: 75.
+      shape (int,list): Number of pixels. If a single int is given, the number of pixels are uniformly set in both directions.  If a list is given, it must be in the form [Nx,Ny]. Default: 256.
+      tick_shape (int,list): Number of ticks to plot. If a single int is given, the number of ticks are uniformly set in both directions.  If a list is given, it must be in the form [Mx,My]. Default: 16.
+      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: 'afmhot'.
+      tick_color (matplotlib.colors.Colormap,str,list): Any acceptable colormap or color type as specified in :mod:`matplotlib.colors`.
+      Imin (float): Minimum intensity for colormap. Default: 0 (though see transfer_function).
+      Imax (float): Maximum intensity for colormap. Default: maximum linearly polarized intensity.
+      Lmin (float): Minimum intensity for colormap. Default: 0 (though see transfer_function).
+      Lmax (float): Maximum intensity for colormap. Default: maximum linearly polarized intensity.
+      mscale (float): Polarization fraction scale for polarization ticks. If None, set by maximum polarization fraction where the polarized flux is above 1% of the maximum polarized flux. Default: None.
+      in_radec (bool): If True, plots in :math:`\\Delta RA` and :math:`\\Delta Dec`.  If False, plots in sky-right Cartesian coordinates. Default: True.
+      xlabel (str): Label for xaxis. Default: ':math:`\\Delta RA (\\mu as)` if in_radec is True, :math:`\\Delta x (\\mu as)` if in_radec is False.
+      ylabel (str): Label for yaxis. Default: ':math:`\\Delta Dec (\\mu as)` if in_radec is True, :math:`\\Delta y (\\mu as)` if in_radec is False.
+      return_stokes_map (bool): If True returns the intensity map in addition to standard return items.
+      transfer_function (str): Transfer function to plot.  Options are 'linear','sqrt','log'.  If 'log', if Imin=0 it will be set to Imax/1000.0 by default, else if Imin<0 it will be assumed to be a dynamic range and Imin = Imax * 10**(Imin).
+      tick_fractional_intensity_floor (float): Fraction of maximum intensity at which to stop plotting polarization ticks.  Default: 0.1.
+      colorbar (str): Adds colorbar indicating magnitude of polarized flux. Options are None, 'flux', and 'frac'.  If None, no colorbar is plotted.  If 'flux' the polarized flux in Jy will be shown.  If 'frac' the fraction of the maximum intensity in polarized flux will be shown, i.e., :math:`L/I_{max}`.  Default: None.
+      verbosity (int): Verbosity level. 0 prints nothing. 1 prints various elements of the plotting process. Passed to :func:`model_image.generate_intensity_map`. Default: 0.
+
+    Returns :
+      (matplotlib.pyplot.image,matplotlib.pyplot.axes,matplotlib.pyplot.fig,[numpy.ndarray,numpy.ndarray,numpy.ndarray]): Image handle; Figure object; Axes object; Optionally intensity map (x,y,S).
+    """
+    
+    # Shape limits
+    if (limits is None) :
+        limits = [-75, 75, -75, 75]
+    elif (isinstance(limits,list)) :
+        limits = limits
+    else :
+        limits = [-limits, limits, -limits, limits]
+
+    # Set shape
+    if (shape is None) :
+        shape = [256, 256]
+    elif (isinstance(shape,list)) :
+        shape = shape
+    else :
+        shape = [shape, shape]
+
+    # Set polarization tick shape
+    if (tick_shape is None) :
+        tick_shape = [20,20]
+    elif (isinstance(tick_shape,list)) :
+        tick_shape = tick_shape
+    else :
+        tick_shape = [tick_shape, tick_shape]
+    
+    # Set labels
+    if (xlabel is None) :
+        if (in_radec) :
+            xlabel=r'$\Delta$RA ($\mu$as)'
+        else :
+            xlabel=r'$\Delta$x ($\mu$as)'
+    if (ylabel is None) :
+        if (in_radec) :
+            ylabel=r'$\Delta$Dec ($\mu$as)'
+        else :
+            ylabel=r'$\Delta$y ($\mu$as)'
+        
+
+    if (verbosity>0) :
+        print("limits:",limits)
+        print("shape:",shape)
+    
+    # Generate a set of pixels
+    x,y = np.mgrid[limits[0]:limits[1]:shape[0]*1j,limits[2]:limits[3]:shape[1]*1j]
+
+    # Flip x to flip x axis so that RA decreases right to left
+    if (in_radec) :
+        x = -x
+    plt.gca().set_xlim(limits[0],limits[1])
+    plt.gca().set_ylim(limits[2],limits[3])
+
+    tIavg = 0.0*x
+    
+    for parameters in chain :
+
+        # Flip x to flip x axis so that RA decreases right to left
+        if (in_radec) :
+            x = -x
+        
+        # Generate a set of Stokes parameters (Jy/uas^2)
+        S = polarized_image.stokes_map(x,y,parameters,kind='all',verbosity=verbosity)
+
+        # Flip x to flip x axis so that RA decreases right to left
+        if (in_radec) :
+            x = -x
+        
+        I = S[0]
+        L = np.sqrt(S[1]**2+S[2]**2)
+
+        # Determine scale
+        if (Lmax is None) :
+            Lmax = np.max(L)
+
+        # Determine scale
+        if (Imax is None) :
+            Imax = np.max(I)
+
+        if (verbosity>0) :
+            print("Minimum/Maximum I: %g / %g"%(Imin,Imax))
+            print("Minimum/Maximum L: %g / %g"%(Lmin,Lmax))
+
+        # Transfered I for plotting
+        Lmin_orig = Lmin
+        Lmax_orig = Lmax
+        if (transfer_function=='linear') :
+            tI = I/Imax
+            tL = L/Lmax
+            Lmin = Lmin/Lmax
+            Lmax = 1.0
+        elif (transfer_function=='sqrt') :
+            tI = np.sqrt(I/Imax)
+            tL = np.sqrt(L/Lmax)
+            Lmin = np.sqrt(Lmin/Lmax)
+            Lmax = 1.0
+        elif (transfer_function=='log') :
+            tI = np.log10(I/Imax)
+            tL = np.log10(L/Lmax)
+            if (Lmin==0) :
+                Lmin = np.log10(1.0e-3)
+                Lmin_orig = 1.0e-3
+            elif (Lmin>0) :
+                Lmin = np.log10(Lmin/Lmax)
+            Lmax = 0.0
+
+        # Set background color in Axes
+        cmap = cm.get_cmap(colormap)    
+        plt.gca().set_facecolor(cmap(0.0))
+
+        # Save intensity for intensity plot
+        tIavg = tIavg+tI
+
+        # Plot tickmarks
+        dxpol = (np.max(x)-np.min(x))/tick_shape[0]
+        dypol = (np.max(x)-np.min(x))/tick_shape[1]
+        xstride = max( 1, int(dxpol/(np.max(x)-np.min(x))*L.shape[0]+0.5) )
+        ystride = max( 1, int(dypol/(np.max(y)-np.min(y))*L.shape[1]+0.5) )
+        plot_polticks = (S[0]>tick_fractional_intensity_floor*np.max(S[0]))
+        if (not elliptical):
+            m = np.sqrt(S[1]**2+S[2]**2)
+        else :
+            m = np.sqrt(S[1]**2+S[2]**2+S[3]**2)
+        if (mscale is None) :
+            mscale = 1.0
+        pscale = 0.5*np.sqrt(dxpol*dypol)/(mscale * np.max(m[plot_polticks]))
+        m = m/S[0]
+
+        if (not is_color_like(tick_color)) :
+            cmap = cm.get_cmap(tick_color)
+
+        for i in range(xstride//2,L.shape[0],xstride) :
+            for j in range(ystride//2,L.shape[1],ystride) :
+                if (plot_polticks[i,j]) :
+                    xs = x[i,j]
+                    ys = y[i,j]
+                    ms = m[i,j]
+
+                    if (not elliptical) :
+                        Qs = S[1][i,j]
+                        Us = S[2][i,j]
+                        EVPA = 0.5*np.arctan2(Us,Qs)
+                        px = ms*np.sin(EVPA) * pscale * S[0][i,j]
+                        py = ms*np.cos(EVPA) * pscale * S[0][i,j]
+                        xtmp = [ (xs-0.5*px), (xs+0.5*px) ]
+                        ytmp = [ (ys-0.5*py), (ys+0.5*py) ]
+                        fmt = '-'
+                    else :
+                        Ss = [S[0][i,j],S[1][i,j],S[2][i,j],S[3][i,j]]
+                        xtmp,ytmp = _get_polarization_ellipse(Ss)
+                        xtmp = xs + xtmp*pscale*Ss[0]
+                        ytmp = ys + ytmp*pscale*Ss[0]
+                        if (Ss[3]>=0) :
+                            fmt = '-'
+                        else :
+                            fmt = '--'
+
+                    if (is_color_like(tick_color)) :
+                        tcolor = tick_color
+                    else :
+                        #tcolor = cmap((tL[i,j]-Lmin)/(Lmax-Lmin))
+                        tcolor = cmap(ms/mscale)
+
+                    plt.plot(xtmp,ytmp,fmt,color=tcolor,lw=2,alpha=0.01,zorder=2)
+            
+
+
+    # Make intensity plot
+    tI = tIavg/chain.shape[0]
+
+    # Transfered I for plotting
+    if (transfer_function=='linear') :
+        tI = I/Imax
+        Imin = Imin/Imax
+        Imax = 1.0
+    elif (transfer_function=='sqrt') :
+        tI = np.sqrt(I/Imax)
+        Imin = np.sqrt(Imin/Imax)
+        Imax = 1.0
+    elif (transfer_function=='log') :
+        tI = np.log10(I/Imax)
+        if (Imin==0) :
+            Imin = np.log10(1.0e-3)
+            Imin_orig = 1.0e-3
+        elif (Imin>0) :
+            Imin = np.log10(Imin/Imax)
+            Imax = 0.0
+
+    #h = plt.pcolor(x,y,tI,cmap=colormap,vmin=Imin,vmax=Imax,zorder=1)
+    h = plt.pcolor(x,y,tI,cmap=colormap,vmin=Imin,vmax=Imax,zorder=1)
+
+
+    # # Add colorbar if desired
+    if ((not is_color_like(tick_color)) and colorbar) :
+        lax = plt.pcolor(x,y,m*100,vmin=0,vmax=100*mscale,visible=False,cmap=tick_color)
+        cb = plt.colorbar(lax)
+        cb.ax.set_ylabel('Polarization fraction (%)',rotation=270,va='bottom')
+
+    # Add labels
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    
+    # Fix aspect ratio
+    plt.axis('square')
+
+    # Set limits
+    plt.gca().set_xlim(limits[0],limits[1])
+    plt.gca().set_ylim(limits[2],limits[3])
+    
+    # Fix x-axis to run in sky
+    if (in_radec) :
+        plt.gca().invert_xaxis()        
+
+    if (return_stokes_map) :
+        return h,plt.gca(),plt.gcf(),x,y,S
+    else:
+        return h,plt.gca(),plt.gcf()
+
     
 
-def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='Greens', station=None, alpha=0.5, comparison_dterms=None, comparison_fmts=None, grid=True, verbosity=0) :
+def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='Greens', station=None, alpha=0.5, comparison_dterms=None, comparison_fmts=None, grid=True, fig=None, axs=None, scott_factor=2.0, verbosity=0) :
     """
     Plots D term distributions for a polarized image model from an MCMC chain.  Each station will 
     separately have its left and right D term distributions plotted in the complex plane.
@@ -1269,7 +1519,10 @@ def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='G
       station (str,list): A single station code or list of station codes to which restrict attention or exclude.  Station codes must match those in the :class:`polarized_model_image.dterm_dict['station_names']` list for the polarized_image.  Station codes prefixed with '!' will be excluded. Default: D terms will be plotted for all stations.
       comparison_dterms (dict): Dictionary of D terms to over-plot as comparisons. Dictionary should be indexed by station code.  Two element lists will be interpreted as the (complex) left and right D terms.  Four element lists will be interpreted as the (complex) right and left D terms followed by estimates of their (complex) uncertainties.
       comparison_fmts (str,list): Formats for the comparison D term points.  These must be an acceptable format string as describe in :func:`matplotlib.pyplot.plot`. If a single format string is given it will be used for both points. If a list of two format strings are given, they will be used for the right and left points, respectively. If set to None, the formats ['>g', '<r'] are used. Default: None.
-      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.    
+      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.
+      fig (matplotlib.pyplot.figure): Figure on which to add axes. Unnecessary if a list of axes are provided. If None, a new figure will be generated. Default: None.
+      axs (list): List of axes generated by prior calls to :func:`plot_dterm_posteriors` to which to add posterior plots. This must match the number and order of axes that would be generated. If provided a figure need not be. If None, new axes will be generated. Default: None.
+      scott_factor (float): Multiplier in the Scott KDE kernel. Default: 2.
       verbosity (int): Verbosity level.
     
     Returns:
@@ -1290,6 +1543,7 @@ def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='G
     if (station is None) :
         # By default include every station
         station_list = polarized_image.dterm_dict['station_names']
+        station_list_dterms = [['R','L']]*len(station_list)
     else :
         #  If a single string is passed, then make a list of it.
         if (isinstance(station,str)) :
@@ -1304,29 +1558,50 @@ def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='G
             station_list = copy.copy(station)
             for station in station_list :
                 if (station[0]=='!') :
-                    station_exclude_list.append( station[1:] )
+                    if (':' in station[1:]) :
+                        station_exclude_list.append( station[1:] )
+                    else :
+                        station_exclude_list.append( station[1:]+':R' )
+                        station_exclude_list.append( station[1:]+':L' )
                 else :
-                    station_include_list.append( station )
+                    if (':' in station) :
+                        station_include_list.append( station )
+                    else :
+                        station_include_list.append( station+':R' )
+                        station_include_list.append( station+':L' )
+                        
         #  If no include list is given, include every station
         if (len(station_include_list)==0) :
-            station_include_list = polarized_image.dterm_dict['station_names']
+            for station in polarized_image.dterm_dict['station_names'] :
+                station_include_list.append( station+':R' )
+                station_include_list.append( station+':L' )
+
         #  Construct the total station list from the closure of the exclude list intersect the include list
-        station_list = []
+        station_dict = {}
+        station_dict['station_list'] = []
         for station in station_include_list :
+            #if (not station in station_exclude_list) :
             if (not station in station_exclude_list) :
-                station_list.append(station)
-        
+                toks = station.split(':')
+                if (not toks[0] in station_dict['station_list']) :
+                    station_dict['station_list'].append(toks[0])
+                if (toks[0] in station_dict.keys()) :
+                    station_dict[toks[0]].append(toks[1])
+                else :
+                    station_dict[toks[0]] = [toks[1]]
+
+                    
     if (comparison_fmts==None) :
         comparison_fmts=['>g','<r']
     elif (isinstance(comparison_fmts,str)) :
         comparison_fmts=[comparison_fmts,comparison_fmts]
                 
     if (verbosity>0) :
-        print("Station list for which to plot D terms:\n",station_list)
+        print("Station list for which to plot D terms:\n",station_dict['station_list'])
         
     dterm_start_index_list = []
     for k in range(polarized_image.image_size,polarized_image.size,4) :
-        if (polarized_image.dterm_dict['station_names'][(k-polarized_image.image_size)//4] in station_list) :
+        if (polarized_image.dterm_dict['station_names'][(k-polarized_image.image_size)//4] in station_dict['station_list']) :
             dterm_start_index_list.append(k)
 
     if (verbosity>0) :
@@ -1342,7 +1617,12 @@ def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='G
     Nwy = int(np.ceil(len(dterm_start_index_list)/Nwx))
     wldxy = 3
     figsize = (1+Nwx*wldxy,1+Nwy*wldxy)
-    fig = plt.figure(figsize=figsize)
+    if (not (fig is None)) :
+        pass
+    elif (not (axs is None)) :
+        fig = plt.gcf()
+    else :
+        fig = plt.figure(figsize=figsize)
     aml = 0.9/figsize[0]
     amr = 0.1/figsize[0]
     amb = 0.9/figsize[1]
@@ -1355,35 +1635,47 @@ def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='G
     # Begin looping over stations and generting axes
     axlist = []
     hlist = []
-    for k,station in enumerate(station_list) :
+    for k,station in enumerate(station_dict['station_list']) :
 
         iwx = k%Nwx
         iwy = Nwy-1-k//Nwx
 
         # Create an axis object
-        ax = plt.axes([ (aml+iwx*(awdx+abx)), (amb+iwy*(awdy+aby)), awdx, awdy ])
+        if (not (axs is None)) :
+            ax = axs[k]
+            plt.sca(ax)
+        else :
+            ax = plt.axes([ (aml+iwx*(awdx+abx)), (amb+iwy*(awdy+aby)), awdx, awdy ])
         axlist.append(ax)
         
         # Add the right D-term plots
-        DRr = chain[:,dterm_start_index_list[k]+0]
-        DRi = chain[:,dterm_start_index_list[k]+1]
-        hR = kde_plot_2d(DRr,DRi,colormap=rcolormap,alpha=alpha,scott_factor=np.sqrt(2.0))
-        hlist.append(hR)
+        if ('R' in station_dict[station]) :
+            DRr = chain[:,dterm_start_index_list[k]+0]
+            DRi = chain[:,dterm_start_index_list[k]+1]
+            #hR = kde_plot_2d(DRr,DRi,colormap=rcolormap,alpha=alpha,scott_factor=np.sqrt(2.0))
+            hR = kde_plot_2d(DRr,DRi,colormap=rcolormap,alpha=alpha,scott_factor=scott_factor)
+            hlist.append(hR)
 
         # Add the left D-term plots
-        DLr = chain[:,dterm_start_index_list[k]+2]
-        DLi = chain[:,dterm_start_index_list[k]+3]
-        hL = kde_plot_2d(DLr,DLi,colormap=lcolormap,alpha=alpha,scott_factor=np.sqrt(2.0))
-        hlist.append(hL)
+        if ('L' in station_dict[station]) :
+            DLr = chain[:,dterm_start_index_list[k]+2]
+            DLi = chain[:,dterm_start_index_list[k]+3]
+            #hL = kde_plot_2d(DLr,DLi,colormap=lcolormap,alpha=alpha,scott_factor=np.sqrt(2.0))
+            hL = kde_plot_2d(DLr,DLi,colormap=lcolormap,alpha=alpha,scott_factor=scott_factor)
+            hlist.append(hL)
 
         # Add truths if provided
         if (not comparison_dterms is None) :
             if ( station in comparison_dterms.keys() ) :
                 if (len(comparison_dterms[station])==4) :
-                    plt.errorbar(comparison_dterms[station][0].real,comparison_dterms[station][0].imag,fmt=comparison_fmts[0],xerr=comparison_dterms[station][2].real,yerr=comparison_dterms[station][2].imag)
-                    plt.errorbar(comparison_dterms[station][1].real,comparison_dterms[station][1].imag,fmt=comparison_fmts[1],xerr=comparison_dterms[station][3].real,yerr=comparison_dterms[station][3].imag)
-                plt.plot(comparison_dterms[station][0].real,comparison_dterms[station][0].imag,comparison_fmts[0])
-                plt.plot(comparison_dterms[station][1].real,comparison_dterms[station][1].imag,comparison_fmts[1])
+                    if ('R' in station_dict[station]) :
+                        plt.errorbar(comparison_dterms[station][0].real,comparison_dterms[station][0].imag,fmt=comparison_fmts[0],xerr=comparison_dterms[station][2].real,yerr=comparison_dterms[station][2].imag)
+                    if ('L' in station_dict[station]) :
+                        plt.errorbar(comparison_dterms[station][1].real,comparison_dterms[station][1].imag,fmt=comparison_fmts[1],xerr=comparison_dterms[station][3].real,yerr=comparison_dterms[station][3].imag)
+                if ('R' in station_dict[station]) :
+                    plt.plot(comparison_dterms[station][0].real,comparison_dterms[station][0].imag,comparison_fmts[0])
+                if ('L' in station_dict[station]) :
+                    plt.plot(comparison_dterms[station][1].real,comparison_dterms[station][1].imag,comparison_fmts[1])
 
                  
 
