@@ -362,11 +362,11 @@ if __name__ == "__main__" :
         
         # Generate plot
         if (args.plot_type=='lf') :
-            ty.vis.plot_polarized_image(model_image, parameters, limits=args.limits, shape=args.N, tick_shape=args.tN, mscale=args.mscale, transfer_function=args.transfer, tick_fractional_intensity_floor=args.tick_intensity_floor, colorbar=True, elliptical=False, verbosity=int(args.verbose))
+            h,axs,fig,x,y,S = ty.vis.plot_polarized_image(model_image, parameters, limits=args.limits, shape=args.N, tick_shape=args.tN, mscale=args.mscale, transfer_function=args.transfer, tick_fractional_intensity_floor=args.tick_intensity_floor, colorbar=True, elliptical=False, verbosity=int(args.verbose), return_stokes_map=True)
         elif (args.plot_type=='ef') :
-            ty.vis.plot_polarized_image(model_image, parameters, limits=args.limits, shape=args.N, tick_shape=args.tN, mscale=args.mscale, transfer_function=args.transfer, tick_fractional_intensity_floor=args.tick_intensity_floor, colorbar=True, elliptical=True, verbosity=int(args.verbose))
+            h,axs,fig,x,y,S = ty.vis.plot_polarized_image(model_image, parameters, limits=args.limits, shape=args.N, tick_shape=args.tN, mscale=args.mscale, transfer_function=args.transfer, tick_fractional_intensity_floor=args.tick_intensity_floor, colorbar=True, elliptical=True, verbosity=int(args.verbose), return_stokes_map=True)
         elif (args.plot_type=='lL') :
-            ty.vis.plot_linear_polarization_map(model_image, parameters, limits=args.limits, shape=args.N, tick_shape=args.tN, colormap='plasma', intensity_contours=True, intensity_colors=[[0.75,0.75,0.75]], mscale=0.5, colorbar='frac', transfer_function=args.transfer, tick_fractional_intensity_floor=args.tick_intensity_floor, verbosity=int(args.verbose))
+            h,axs,fig,x,y,S = ty.vis.plot_linear_polarization_map(model_image, parameters, limits=args.limits, shape=args.N, tick_shape=args.tN, colormap='plasma', intensity_contours=True, intensity_colors=[[0.75,0.75,0.75]], mscale=0.5, colorbar='frac', transfer_function=args.transfer, tick_fractional_intensity_floor=args.tick_intensity_floor, verbosity=int(args.verbose), return_stokes_map=True)
         else :
             raise RuntimeError("Plot type %s is not recognized.  See help for options."%(args.plot_type))
 
