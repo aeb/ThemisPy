@@ -173,6 +173,7 @@ def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-'
       bw (str): Bandwidth method for :func:`scipy.stats.gaussian_kde`. Overidden by nonzero scott_factor. Default: 'scott'.
       scott_factor (float): Factor by which to expand the standard `scott` bandwidth factor.  Overrides bw if nonzero.  Default: 0.
       filled (bool): If true, the histogram is plotted filled. Default: False.
+      transform (bool): Whether to use a logit transformed version of the KDE to prevent leakage out of the expected range. Default False.
 
     Returns:
       (matplotlib.lines.Line2D): A list of Line2D objects representing the plotted data, i.e., the handles returned by :func:`matplotlib.pyplot.plot`.
@@ -262,6 +263,7 @@ def kde_plot_2d(x, y, plevels=None, limits=None, colormap='Purples', alpha=1.0, 
       nbin (int): Number of bins on which to construct KDE result in each dimension. Default: 128.
       bw (str): Bandwidth method for :func:`scipy.stats.gaussian_kde`. Overidden by nonzero scott_factor. Default: 'scott'.
       scott_factor (float): Factor by which to expand the standard `scott` bandwidth factor.  Overrides bw if nonzero.  Default: 0.
+      transform (bool): Whether to use a logit transformed version of the KDE to prevent leakage out of the expected range. Default False.
 
     Returns:
       (matplotlib.contour.QuadContourSet): The handles returned by :func:`matplotlib.pyplot.contourf`.
