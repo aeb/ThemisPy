@@ -1543,7 +1543,13 @@ def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='G
     if (station is None) :
         # By default include every station
         station_list = polarized_image.dterm_dict['station_names']
-        station_list_dterms = [['R','L']]*len(station_list)
+        station_dict = {}
+        station_dict['station_list'] = []
+        for station in station_list :
+            station_dict['station_list'].append(station)
+            station_dict[station] = ['R', 'L']
+            
+        
     else :
         #  If a single string is passed, then make a list of it.
         if (isinstance(station,str)) :
