@@ -16,6 +16,7 @@ import matplotlib.gridspec as gs
 from matplotlib import rc, cm
 from matplotlib.colors import to_rgb, LogNorm, ListedColormap
 
+from scipy.special import logit
 from scipy import interpolate as scint
 from scipy.optimize import bisect
 from scipy.stats import gaussian_kde as KDEsci
@@ -126,7 +127,38 @@ def _cdf(limit,H,dx,dy,target):
     return count.sum()*dx*dy-target
 
 
-def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-', nbin=128, bw='scott', scott_factor=0, filled=False):
+def _logit_kde(x, limits, bw) :
+    """
+    Constructs a kde that uses the logit transform to to ensure the 
+    transform is in the (limits[0],limits[1]) region. 
+
+    Args:
+        x(numpy.ndarray): Array of samples to compute the kde for.
+        limits(list): Array with the limits for the samples
+        bw: Bandwidth to use. See scipy.stats.gaussian_kde for useable bw's
+    Returns:
+        closure to the kde function with the transform applied
+    """
+    _x = x[(x<limits[1])*(x>limits[0])]
+    _u = (_x - limits[0])/(limits[1]-limits[0])
+    _t = logit(_u)
+    _kde = KDEsci(_t, bw_method=bw)
+    _du = 1/(limits[1]-limits[0])
+
+    # Now define a closure because we can and I like functional programming.
+    def kde_trans(dx):
+        u = (dx - limits[0])/(limits[1]-limits[0])
+        f = _kde(logit(u))
+        # Jacobian factor with floor for numerical reasons
+        dt = np.abs(1/(u*(1.0-u)+1e-20))*_du
+        return f*dt
+
+    return kde_trans
+
+
+
+
+def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-', nbin=128, bw='scott', scott_factor=0, filled=False, transform=False):
     """
     Creates a 1d joint posterior plot using :func:`scipy.stats.gaussian_kde` function.
 
@@ -151,8 +183,7 @@ def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-'
     if (scott_factor!=0) :
         bw = scott_factor*(float(x.size))**(-1.0/6.0)
 
-    kde = KDEsci(x, bw_method=bw)
-    if (not (limits is None)):
+    if (limits is None):
         xmin = x.min()
         xmax = x.max()
         dx = xmax-xmin
@@ -161,6 +192,11 @@ def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-'
     else:
         xmin = limits[0][0]
         xmax = limits[0][1]
+
+    if (transform) :
+        kde = _logit_kde(data, [xmin,xmax], bw)
+    else :
+        kde = KDEsci(data, bw_method=bw)
 
     X = np.linspace(xmin,xmax,nbin)
     Z = kde(X)
@@ -172,7 +208,47 @@ def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-'
     return h
 
 
-def kde_plot_2d(x, y, plevels=None, limits=None, colormap='Purples', alpha=1.0, nbin=128, bw='scott', scott_factor=0):
+def _logit_kde2d(x,y, lims, bw) :
+    """
+    Constructs a kde that uses the logit transform to to ensure the 
+    transform is in the (limits[0],limits[1]) region. 
+
+    Args:
+        x(numpy.ndarray): x dimension array of samples to compute the kde.
+        y(numpy.ndarray): y dimension array of samples to compute the kde.
+        limits(list): Array of tuples with the limits for the samples
+        bw: Bandwidth to use. See scipy.stats.gaussian_kde for useable bw's
+    Returns:
+        closure to the kde function with the transform applied
+    """
+    _x = x[(x<lims[0][1])*(x>lims[0][0])]
+    _y = y[(y<lims[1][1])*(y>lims[1][0])]
+    _u = (_x - lims[0][0])/(lims[0][1]-lims[0][0])
+    _v = (_y - lims[1][0])/(lims[1][1]-lims[1][0])
+    _t = logit(_u)
+    _s = logit(_v)
+
+    _kde = KDEsci(np.vstack([_t,_s]), bw_method=bw)
+    _du = 1.0/(lims[0][1]-lims[0][0])
+    _dv = 1.0/(lims[1][1]-lims[1][0])
+
+    # Now define a closure because we can and I like functional programming.
+    def kde_trans2d(data):
+        dx = data[0,:]
+        dy = data[1,:]
+        u = (dx - lims[0][0])/(lims[0][1]-lims[0][0])
+        v = (dy - lims[1][0])/(lims[1][1]-lims[1][0])
+        tdata = np.vstack((logit(dx), logit(dy)))
+        f = _kde(tdata)
+        f_nan = np.isnan(f)
+        f[f_nan] = 0.0
+        # Jacobian factor with floor for numerical reasons
+        dt = np.abs(1/(u*(1.0-u)+1e-20))*_du*np.abs(1/(v*(1.0-v)+1e-20))*_dv
+        return f*dt
+
+    return kde_trans2d
+
+def kde_plot_2d(x, y, plevels=None, limits=None, colormap='Purples', alpha=1.0, nbin=128, bw='scott', scott_factor=0, transform=False):
     """
     Creates a 2d joint posterior plot using :func:`scipy.stats.gaussian_kde` function and :func:`matplotlib.pyplot.contourf`.
 
@@ -203,27 +279,32 @@ def kde_plot_2d(x, y, plevels=None, limits=None, colormap='Purples', alpha=1.0, 
     if (scott_factor!=0) :
         bw = scott_factor*(float(x.size))**(-1.0/6.0)
 
-    kde = KDEsci(data, bw_method=bw)
-    if not limits:
+    if (limits is None):
         xmin = x.min()
         xmax = x.max()
         dx = xmax-xmin
-        xmin = xmin-0.1*dx
-        xmax = xmax+0.1*dx
+        xmin = xmin-0.01*dx
+        xmax = xmax+0.01*dx
         ymin = y.min()
         ymax = y.max()
         dy = ymax-ymin
-        ymin = ymin-0.1*dy
-        ymax = ymax+0.1*dy
+        ymin = ymin-0.01*dy
+        ymax = ymax+0.01*dy
     else:
         xmin = limits[0][0]
         xmax = limits[0][1]
         ymin = limits[1][0]
         ymax = limits[1][1]
+    if transform :
+        kde = _logit_kde2d(x,y, [(xmin,xmax),(ymin,ymax)], bw)
+    else :
+        kde = KDEsci(data, bw_method=bw)
     
     X, Y = np.mgrid[xmin:xmax:nbin*1j, ymin:ymax:nbin*1j]
+    X = X[1:-1,1:-1]
+    Y = Y[1:-1,1:-1]
     positions = np.vstack([X.ravel(), Y.ravel()])
-
+    
     Z = np.reshape(kde(positions).T, X.shape)
     points = Z.reshape(-1)
     dX = X[1,1]-X[0,0]
