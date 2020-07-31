@@ -191,8 +191,8 @@ def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-'
         xmin = xmin-0.1*dx
         xmax = xmax+0.1*dx
     else:
-        xmin = limits[0][0]
-        xmax = limits[0][1]
+        xmin = limits[0]
+        xmax = limits[1]
 
     if (transform) :
         kde = _logit_kde(data, [xmin,xmax], bw)
@@ -222,8 +222,9 @@ def _logit_kde2d(x,y, lims, bw) :
     Returns:
         closure to the kde function with the transform applied
     """
-    _x = x[(x<lims[0][1])*(x>lims[0][0])]
-    _y = y[(y<lims[1][1])*(y>lims[1][0])]
+    cond =(x<lims[0][1])*(x>lims[0][0])*(y<lims[1][1])*(y>lims[1][0]) 
+    _x = x.copy()[cond]
+    _y = y.copy()[cond]
     _u = (_x - lims[0][0])/(lims[0][1]-lims[0][0])
     _v = (_y - lims[1][0])/(lims[1][1]-lims[1][0])
     _t = logit(_u)
@@ -345,7 +346,7 @@ def _find_limits(data,quantile=0.25,factor=1.5) :
     return lim
 
 
-def kde_triangle_plot(lower_data_array, upper_data_array=None, labels=None, upper_labels=None, truths=None, colormap='Blues', upper_colormap=None, color='blue', upper_color=None, truths_color='red', axis_location=None, alpha=1.0, quantiles=[0.99,0.9,0.5], nbin=128, linewidth=1, linestyle='-', truths_alpha=1.0, truths_linewidth=1, truths_linestype='-', scott_factor=1.41421, filled=False, grid=True) :
+def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, transform=False, labels=None, upper_labels=None, truths=None, colormap='Blues', upper_colormap=None, color='blue', upper_color=None, truths_color='red', axis_location=None, alpha=1.0, quantiles=[0.99,0.9,0.5], nbin=128, linewidth=1, linestyle='-', truths_alpha=1.0, truths_linewidth=1, truths_linestype='-', scott_factor=1.41421, filled=False, grid=True) :
     """
     Produces a triangle plot with contours set by CDF.  Data may be plotted in both lower (required) and upper (optional) triangles.
 
@@ -434,20 +435,23 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, labels=None, uppe
             y_window_start = axis_location[1] + axis_location[3] - y_window_size - k*(y_gutter+y_window_size)
             plt.axes([x_window_start, y_window_start, x_window_size, y_window_size])
         
-            # Find limits in x/y
-            limx=_find_limits(lower_data_array[:,j],quantile=1-quantiles[0])
-            limy=_find_limits(lower_data_array[:,k],quantile=1-quantiles[0])
-            if (upper_data_array is not None) :
-                upper_limx = _find_limits(upper_data_array[:,j],quantile=1-quantiles[0])
-                upper_limy = _find_limits(upper_data_array[:,k],quantile=1-quantiles[0])
-                limx[0] = min(limx[0],upper_limx[0])
-                limx[1] = max(limx[1],upper_limx[1])
-                limy[0] = min(limy[0],upper_limy[0])
-                limy[1] = max(limy[1],upper_limy[1])
-
+            if limits is None:
+                # Find limits in x/y
+                limx=_find_limits(lower_data_array[:,j],quantile=1-quantiles[0])
+                limy=_find_limits(lower_data_array[:,k],quantile=1-quantiles[0])
+                if (upper_data_array is not None) :
+                    upper_limx = _find_limits(upper_data_array[:,j],quantile=1-quantiles[0])
+                    upper_limy = _find_limits(upper_data_array[:,k],quantile=1-quantiles[0])
+                    limx[0] = min(limx[0],upper_limx[0])
+                    limx[1] = max(limx[1],upper_limx[1])
+                    limy[0] = min(limy[0],upper_limy[0])
+                    limy[1] = max(limy[1],upper_limy[1])
+            else:
+                limx = limits[j]
+                limy = limits[k]
 
             # Make 2d joint distribution plot
-            lower_triangle_plot_handles[j,k] = kde_plot_2d(lower_data_array[:,j],lower_data_array[:,k],colormap=colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=scott_factor)
+            lower_triangle_plot_handles[j,k] = kde_plot_2d(lower_data_array[:,j],lower_data_array[:,k],colormap=colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=scott_factor, transform=transform)
             axes_handles[j,k] = plt.gca()
 
             # Fix up tickmarks
@@ -494,20 +498,25 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, labels=None, uppe
                 x_window_start = axis_location[0] + (j+0)*(x_gutter+x_window_size)
                 y_window_start = axis_location[1] + axis_location[3] - y_window_size - k*(y_gutter+y_window_size)
                 plt.axes([x_window_start, y_window_start, x_window_size, y_window_size])
+            
+                if limits is None:
+                    # Find limits in x/y
+                    limx=_find_limits(lower_data_array[:,j],quantile=1-quantiles[0])
+                    limy=_find_limits(lower_data_array[:,k],quantile=1-quantiles[0])
+                    upper_limx = _find_limits(upper_data_array[:,j],quantile=1-quantiles[0])
+                    upper_limy = _find_limits(upper_data_array[:,k],quantile=1-quantiles[0])
+                    limx[0] = min(limx[0],upper_limx[0])
+                    limx[1] = max(limx[1],upper_limx[1])
+                    limy[0] = min(limy[0],upper_limy[0])
+                    limy[1] = max(limy[1],upper_limy[1])
+                else:
+                    limx = limits[j]
+                    limy = limits[k]
         
-                # Find limits in x/y
-                limx=_find_limits(lower_data_array[:,j],quantile=1-quantiles[0])
-                limy=_find_limits(lower_data_array[:,k],quantile=1-quantiles[0])
-                upper_limx = _find_limits(upper_data_array[:,j],quantile=1-quantiles[0])
-                upper_limy = _find_limits(upper_data_array[:,k],quantile=1-quantiles[0])
-                limx[0] = min(limx[0],upper_limx[0])
-                limx[1] = max(limx[1],upper_limx[1])
-                limy[0] = min(limy[0],upper_limy[0])
-                limy[1] = max(limy[1],upper_limy[1])
 
 
                 # Make 2d joint distribution plot
-                upper_triangle_plot_handles[j,k] = kde_plot_2d(upper_data_array[:,j],upper_data_array[:,k],colormap=upper_colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=scott_factor)
+                upper_triangle_plot_handles[j,k] = kde_plot_2d(upper_data_array[:,j],upper_data_array[:,k],colormap=upper_colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=scott_factor, transform=transform)
                 axes_handles[j,k] = plt.gca()
 
                 # Fix up tickmarks
@@ -549,16 +558,20 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, labels=None, uppe
         y_window_start = axis_location[1] + axis_location[3] - y_window_size - k*(y_gutter+y_window_size)
         plt.axes([x_window_start, y_window_start, x_window_size, y_window_size])
 
+        if limits is None:
+            # Find limits in x/y
+            limx=_find_limits(lower_data_array[:,j],quantile=1-quantiles[0])
+            if (upper_data_array is not None) :
+                upper_limx = _find_limits(upper_data_array[:,j],quantile=1-quantiles[0])
+                limx[0] = min(limx[0],upper_limx[0])
+                limx[1] = max(limx[1],upper_limx[1])
+        else:
+            limx = limits[j]
         # Find limits in x/y
-        limx=_find_limits(lower_data_array[:,k],quantile=1-quantiles[0])
+        
+        diagonal_plot_handles[k,0] = kde_plot_1d(lower_data_array[:,k],color=color,alpha=alpha,limits=limx,nbin=nbin,linewidth=linewidth,linestyle=linestyle,filled=filled, transform=transform)
         if (upper_data_array is not None) :
-            upper_limx = _find_limits(upper_data_array[:,k],quantile=1-quantiles[0])
-            limx[0] = min(limx[0],upper_limx[0])
-            limx[1] = max(limx[1],upper_limx[1])
-
-        diagonal_plot_handles[k,0] = kde_plot_1d(lower_data_array[:,k],color=color,alpha=alpha,limits=limx,nbin=nbin,linewidth=linewidth,linestyle=linestyle,filled=filled)
-        if (upper_data_array is not None) :
-            diagonal_plot_handles[k,1] = kde_plot_1d(upper_data_array[:,k],color=upper_color,alpha=alpha,limits=limx,nbin=nbin,linewidth=linewidth,linestyle=linestyle,filled=filled)
+            diagonal_plot_handles[k,1] = kde_plot_1d(upper_data_array[:,k],color=upper_color,alpha=alpha,limits=limx,nbin=nbin,linewidth=linewidth,linestyle=linestyle,filled=filled, transform=transform)
 
         axes_handles[k,k] = plt.gca()
 
