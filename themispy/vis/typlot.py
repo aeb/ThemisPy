@@ -230,6 +230,7 @@ def _logit_kde2d(x,y, lims, bw) :
     _t = logit(_u)
     _s = logit(_v)
 
+
     _kde = KDEsci(np.vstack([_t,_s]), bw_method=bw)
     _du = 1.0/(lims[0][1]-lims[0][0])
     _dv = 1.0/(lims[1][1]-lims[1][0])
@@ -240,12 +241,12 @@ def _logit_kde2d(x,y, lims, bw) :
         dy = data[1,:]
         u = (dx - lims[0][0])/(lims[0][1]-lims[0][0])
         v = (dy - lims[1][0])/(lims[1][1]-lims[1][0])
-        tdata = np.vstack((logit(dx), logit(dy)))
+        tdata = np.vstack((logit(u), logit(v)))
         f = _kde(tdata)
         f_nan = np.isnan(f)
         f[f_nan] = 0.0
         # Jacobian factor with floor for numerical reasons
-        dt = np.abs(1/(u*(1.0-u)+1e-20))*_du*np.abs(1/(v*(1.0-v)+1e-20))*_dv
+        dt = np.abs(1/(u*(1.0-u)+1e-8))*_du*np.abs(1/(v*(1.0-v)+1e-8))*_dv
         return f*dt
 
     return kde_trans2d
@@ -296,6 +297,7 @@ def kde_plot_2d(x, y, plevels=None, limits=None, colormap='Purples', alpha=1.0, 
     else:
         xmin = limits[0][0]
         xmax = limits[0][1]
+        
         ymin = limits[1][0]
         ymax = limits[1][1]
     if transform :
@@ -450,6 +452,8 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
                 limx = limits[j]
                 limy = limits[k]
 
+
+
             # Make 2d joint distribution plot
             lower_triangle_plot_handles[j,k] = kde_plot_2d(lower_data_array[:,j],lower_data_array[:,k],colormap=colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=scott_factor, transform=transform)
             axes_handles[j,k] = plt.gca()
@@ -560,13 +564,13 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
 
         if limits is None:
             # Find limits in x/y
-            limx=_find_limits(lower_data_array[:,j],quantile=1-quantiles[0])
+            limx=_find_limits(lower_data_array[:,k],quantile=1-quantiles[0])
             if (upper_data_array is not None) :
-                upper_limx = _find_limits(upper_data_array[:,j],quantile=1-quantiles[0])
+                upper_limx = _find_limits(upper_data_array[:,k],quantile=1-quantiles[0])
                 limx[0] = min(limx[0],upper_limx[0])
                 limx[1] = max(limx[1],upper_limx[1])
         else:
-            limx = limits[j]
+            limx = limits[k]
         # Find limits in x/y
         
         diagonal_plot_handles[k,0] = kde_plot_1d(lower_data_array[:,k],color=color,alpha=alpha,limits=limx,nbin=nbin,linewidth=linewidth,linestyle=linestyle,filled=filled, transform=transform)
