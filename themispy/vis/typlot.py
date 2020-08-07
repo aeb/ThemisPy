@@ -287,13 +287,13 @@ def kde_plot_2d(x, y, plevels=None, limits=None, colormap='Purples', alpha=1.0, 
         xmin = x.min()
         xmax = x.max()
         dx = xmax-xmin
-        xmin = xmin-0.01*dx
-        xmax = xmax+0.01*dx
+        xmin = xmin-0.1*dx
+        xmax = xmax+0.1*dx
         ymin = y.min()
         ymax = y.max()
         dy = ymax-ymin
-        ymin = ymin-0.01*dy
-        ymax = ymax+0.01*dy
+        ymin = ymin-0.1*dy
+        ymax = ymax+0.1*dy
     else:
         xmin = limits[0][0]
         xmax = limits[0][1]
