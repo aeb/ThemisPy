@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.calibration &mdash; ThemisPy 0.3.0 documentation</title>
+  <title>vis.calibration &mdash; ThemisPy 0.3.0+20.g92c982e documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+20.g92c982e documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.0
+                0.3.0+20.g92c982e
               </div>
             
           
@@ -210,7 +210,7 @@
         <span class="n">time_offset</span> <span class="o">=</span> <span class="n">t0</span>
         
     <span class="c1"># Read correction information</span>
-    <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">gainfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">gainfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">ndmin</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">ts</span><span class="o">=</span><span class="n">d</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">3600.</span> <span class="c1"># Epoch start time, converted to hours</span>
     <span class="n">te</span><span class="o">=</span><span class="n">d</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mf">3600.</span> <span class="c1"># Epoch end time, converted to hours</span>
     <span class="n">gains</span><span class="o">=</span><span class="n">d</span><span class="p">[:,</span><span class="mi">2</span><span class="p">:]</span> <span class="c1"># Gain corrections</span>
@@ -263,7 +263,7 @@
         <span class="n">time_offset</span> <span class="o">=</span> <span class="n">t0</span>
     
     <span class="c1"># Read correction information</span>
-    <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">gainfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">gainfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">ndmin</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">ts</span><span class="o">=</span><span class="n">d</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">3600.</span> <span class="c1"># Epoch start time, converted to hours</span>
     <span class="n">te</span><span class="o">=</span><span class="n">d</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mf">3600.</span> <span class="c1"># Epoch end time, converted to hours</span>
     <span class="n">gains</span><span class="o">=</span><span class="n">d</span><span class="p">[:,</span><span class="mi">2</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span><span class="o">+</span><span class="mf">1.</span><span class="n">j</span><span class="o">*</span><span class="n">d</span><span class="p">[:,</span><span class="mi">3</span><span class="p">::</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># Gain corrections</span>
@@ -597,7 +597,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0',
+            VERSION:'0.3.0+20.g92c982e',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

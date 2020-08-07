@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Chain &mdash; ThemisPy 0.3.0 documentation</title>
+  <title>Chain &mdash; ThemisPy 0.3.0+20.g92c982e documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+20.g92c982e documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Data" href="data.html"/>
         <link rel="prev" title="User’s Guide" href="userguide.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.3.0
+                0.3.0+20.g92c982e
               </div>
             
           
@@ -204,7 +204,7 @@ number of steps then the largest even common size is used to join them.</p>
 <dd class="field-even"><p>Combined ensemble chain.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -225,7 +225,7 @@ evolution, optimization, and performance for DEO annealing schemes.</p>
 <dd class="field-even"><p>Array of annealing summary information containing Lambda, rt_opt, E, rt_est, AvgR, StdR corresponding to …, indexed by round; schedule of annealing <span class="math notranslate nohighlight">\(\beta\)</span>; <span class="math notranslate nohighlight">\(R\)</span> for each tempering level and round indexed by [round,tempering level] and labelled by ‘Beta’ and ‘R’, respectively.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>,<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>,<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.8)">dict</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -254,7 +254,7 @@ computed for the <em>shorter</em> of the two files.</p>
 <dd class="field-even"><p>Chain data arranged as 3D array indexed by [sample, walker, parameter] <em>after</em> excluding the skipped lines and applying the specified stride; Likelihood data arranged as 2D array indexed by [sample, walker] <em>after</em> excluding the burn in period specified and applied the specified stride.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -282,7 +282,7 @@ computed for the <em>shorter</em> of the two files.</p>
 <dd class="field-even"><p>Chain data arranged as 2D array indexed by [sample, parameter] <em>after</em> excluding the skipped lines and applying the specified stride; State data arranged as 2D array with columns likelihood, accept, stepsize, treedepth, nleapfrog, divergence, energy <em>after</em> excluding the burn in period specified and applied the specified stride.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -310,7 +310,7 @@ than load_erun and subsequently subsampling for large chains</p>
 <dd class="field-even"><p>Chain data arranged as 2D array indexed by [sample, parameter] <em>after</em> excluding the skipped lines and applying the specified stride; Likelihood data arranged as 1D array indexed by [sample] <em>after</em> excluding the burn in period specified and applied the specified stride.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -355,7 +355,7 @@ Returns an IndexError if fewer samples exist in the chain file than skip.</p>
 <dd class="field-even"><p>Likelihood data arranged as 2D array indexed by [sample, walker] <em>after</em> excluding the burn in period specified and applied the specified stride; Number of samples skipped.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -383,7 +383,7 @@ in the chain file than skip.</p>
 <dd class="field-even"><p>Chain data arranged as 3D array indexed by [sample, walker, parameter] <em>after</em> excluding the skipped lines and applying the specified stride.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -409,7 +409,7 @@ exist in the chain file than skip.</p>
 <dd class="field-even"><p>Likelihood data arranged as 2D array indexed by [sample, walker] <em>after</em> excluding the burn in period specified and applied the specified stride; Number of samples skipped.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -436,7 +436,7 @@ if fewer ensemble samples exist in the chain file than skip.</p>
 <dd class="field-even"><p>Chain data arranged as 3D array indexed by [sample, walker, parameter] <em>after</em> excluding the skipped lines and applying the specified stride.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -460,7 +460,7 @@ Returns an IndexError if fewer ensemble samples exist in the chain file than ski
 <dd class="field-even"><p>Likelihood data arranged as 2D array indexed by [sample, walker] <em>after</em> excluding the burn in period specified and applied the specified stride; Number of samples skipped.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -486,7 +486,7 @@ if fewer samples exist in the chain file than skip.</p>
 <dd class="field-even"><p>Chain data arranged as 2D array indexed by [sample, parameter] <em>after</em> excluding the skipped lines and applying the specified stride.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -511,7 +511,7 @@ Returns an IndexError if fewer samples exist in the chain file than skip.</p>
 <dd class="field-even"><p>Likelihood data arranged as 2D array indexed by [sample, walker] <em>after</em> excluding the burn in period specified and applied the specified stride; Number of samples skipped including warmup if auto_warmup is true.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>, <a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)">int</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -537,7 +537,7 @@ large chains.</p>
 <dd class="field-even"><p>Chain data arranged as 2D array indexed by [sample, parameter] <em>after</em> excluding the skipped lines and applying the specified stride</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -565,7 +565,7 @@ than load_erun and subsequently subsampling for large chains</p>
 <dd class="field-even"><p>Chain data arranged as 2D array indexed by [sample, parameter] <em>after</em> excluding the skipped lines and applying the specified stride; Likelihood data arranged as 1D array indexed by [sample] <em>after</em> excluding the burn in period specified and applied the specified stride.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.18)">numpy.ndarray</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>, <a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)">numpy.ndarray</a>)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -613,7 +613,7 @@ than load_erun and subsequently subsampling for large chains</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0',
+            VERSION:'0.3.0+20.g92c982e',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
