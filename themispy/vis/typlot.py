@@ -13,7 +13,7 @@ import numpy as np
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gs
-from matplotlib import rc, cm
+from matplotlib import rc, cm, rcParams
 from matplotlib.colors import to_rgb, LogNorm, ListedColormap
 
 from scipy.special import logit
@@ -21,6 +21,9 @@ from scipy import interpolate as scint
 from scipy.optimize import bisect
 from scipy.stats import gaussian_kde as KDEsci
 from scipy.stats import percentileofscore
+
+# Adjust the negative linestyle
+rcParams["contour.negative_linestyle"] = 'solid'
 
 
 def generate_streamline_colormap(colormap='plasma', number_of_streams=None, oversample_factor=4, fluctuation_factor=0.2) :
@@ -251,7 +254,7 @@ def _logit_kde2d(x,y, lims, bw) :
 
     return kde_trans2d
 
-def kde_plot_2d(x, y, plevels=None, limits=None, colormap='Purples', alpha=1.0, nbin=128, bw='scott', scott_factor=0, transform=False):
+def kde_plot_2d(x, y, plevels=None, limits=None, colormap='Purples', alpha=1.0, nbin=128, bw='scott', scott_factor=0, transform=False, fill=True, edges=False, fill_zorder=None, edge_zorder=None, edge_colors=None, edge_colormap=None, edge_alpha=None, linewidth=1):
     """
     Creates a 2d joint posterior plot using :func:`scipy.stats.gaussian_kde` function and :func:`matplotlib.pyplot.contourf`.
 
@@ -261,14 +264,22 @@ def kde_plot_2d(x, y, plevels=None, limits=None, colormap='Purples', alpha=1.0, 
       plevels (list): List of cummulative probability levels at which to draw contours. If set to None, will set to :math:`1\\sigma, 2\\sigma, 3\\sigma`. Default: None.
       limits (list): Limits in the form [[xmin,xmax],[ymin,ymax]].  If set to None, will use the minimum and maximum values of, expanded by 10% on each side.  Default: None.
       colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: 'Purples'.
-      alpha (float): Value of alpha for the individual likelihood traces. Default: 1.0.
+      alpha (float): Value of alpha for the filled contours. Default: 1.0.
       nbin (int): Number of bins on which to construct KDE result in each dimension. Default: 128.
       bw (str): Bandwidth method for :func:`scipy.stats.gaussian_kde`. Overidden by nonzero scott_factor. Default: 'scott'.
       scott_factor (float): Factor by which to expand the standard `scott` bandwidth factor.  Overrides bw if nonzero.  Default: 0.
       transform (bool): Whether to use a logit transformed version of the KDE to prevent leakage out of the expected range. Default False.
+      fill (bool): Determines if contour levels will be filled. Default: True.
+      fill_zorder (int): Sets zorder of filled contours. Default: None.
+      edges (bool): Deterines if countour lines will be plotted. Default: False.
+      edge_zorder (int): Sets zorder of contour lines. Default: None.
+      edge_colors (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors` or list of such types. If not None, overrides edge_colormap. Default: None.
+      edge_colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. If None, uses the colormap passed by the colormap option. Default: None.
+      edge_alpha (float): Value of alpha for contour lines. Only meaningful if edges=True. If None, sets the contour line alpha to that passed by alpha. Default: None.
+      linewidth (float): Width of contour lines. Default: 1.
 
     Returns:
-      (matplotlib.contour.QuadContourSet): The handles returned by :func:`matplotlib.pyplot.contourf`.
+      (matplotlib.contour.QuadContourSet,list): The handles returned by :func:`matplotlib.pyplot.contourf` and :func:`matplotlib.pyplot.contour` depending on the fill and edges options.
     """
     
     if (np.any(x.shape != y.shape)) :
@@ -320,10 +331,33 @@ def kde_plot_2d(x, y, plevels=None, limits=None, colormap='Purples', alpha=1.0, 
     for p in plevels:
         target = p*norm
         levels.append(bisect(_cdf,points.min(),points.max(), args=(points,dX,dY,target), xtol=points.max()*1e-10))
-        
-    h = plt.contourf(X,Y,np.log10(Z),np.log10(levels),vmin=np.log10(levels[0]/4.0),cmap=colormap,extend='max',alpha=alpha) 
 
-    return h
+    if (fill) :
+        hf = plt.contourf(X,Y,np.log10(Z),np.log10(levels),vmin=np.log10(levels[0]/4.0),cmap=colormap,extend='max',alpha=alpha,zorder=fill_zorder) 
+    else :
+        hf = None
+
+    if (edges) :
+
+        if (not edge_colors is None) :
+            edge_colormap = None
+        elif (edge_colormap is None) :
+            edge_colormap = colormap
+            
+        if (edge_alpha is None) :
+            edge_alpha = alpha
+            
+        he = plt.contour(X,Y,np.log10(Z),np.log10(levels),vmin=np.log10(levels[0]/4.0),cmap=edge_colormap,colors=edge_colors,extend='max',alpha=edge_alpha,zorder=edge_zorder,linewidths=linewidth,linestyles='-') 
+    else :
+        he = None
+        
+
+    if (he is None) :
+        return hf
+    elif (hf is None) :
+        return he
+    else :
+        return [hf,he]
 
 
 def _find_limits(data,quantile=0.25,factor=1.5) :
