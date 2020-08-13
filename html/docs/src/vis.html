@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Vis &mdash; ThemisPy 0.3.0+20.g92c982e documentation</title>
+  <title>Vis &mdash; ThemisPy 0.3.0+23.gc36026c documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+20.g92c982e documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+23.gc36026c documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Utils" href="utils.html"/>
         <link rel="prev" title="Diag" href="diag.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.3.0+20.g92c982e
+                0.3.0+23.gc36026c
               </div>
             
           
@@ -1863,6 +1863,141 @@ convention.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt id="vis.polimage.model_polarized_image_Faraday_derotated">
+<em class="property">class </em><code class="sig-prename descclassname">vis.polimage.</code><code class="sig-name descname">model_polarized_image_Faraday_derotated</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">RM</span><span class="o">=</span><span class="default_value">0.0</span></em>, <em class="sig-param"><span class="n">wavelength</span><span class="o">=</span><span class="default_value">0.0013</span></em>, <em class="sig-param"><span class="n">station_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_Faraday_derotated"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_Faraday_derotated" title="Permalink to this definition">¶</a></dt>
+<dd><p>Faraday derotated image class.  Generates a zero-wavelength image after derotated.  The Faraday rotation measure
+(in <span class="math notranslate nohighlight">\(rad m^{-2}\)</span>), and observation wavelength (in m) may be provided at construction or modified afterward.</p>
+<p>Image parameters are the same as those of the passed <a class="reference internal" href="#vis.polimage.model_polarized_image" title="vis.polimage.model_polarized_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_polarized_image</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>image</strong> (<a class="reference internal" href="#vis.polimage.model_polarized_image" title="vis.polimage.model_polarized_image"><em>model_polarized_image</em></a>) – <a class="reference internal" href="#vis.polimage.model_polarized_image" title="vis.polimage.model_polarized_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_polarized_image</span></code></a> object that will be smoothed.</p></li>
+<li><p><strong>RM</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Faraday rotation measure of intervening screen in <span class="math notranslate nohighlight">\(rad m^{-2}\)</span>. Default: 0.0.</p></li>
+<li><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Observation wavelength in m. Default: 1.3 mm.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image_Faraday_derotated.image">
+<code class="sig-name descname">image</code><a class="headerlink" href="#vis.polimage.model_polarized_image_Faraday_derotated.image" title="Permalink to this definition">¶</a></dt>
+<dd><p>A preexisting <a class="reference internal" href="#vis.polimage.model_polarized_image" title="vis.polimage.model_polarized_image"><code class="xref py py-class docutils literal notranslate"><span class="pre">model_polarized_image</span></code></a> object to be smoothed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference internal" href="#vis.polimage.model_polarized_image" title="vis.polimage.model_polarized_image">model_polarized_image</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image_Faraday_derotated.RM">
+<code class="sig-name descname">RM</code><a class="headerlink" href="#vis.polimage.model_polarized_image_Faraday_derotated.RM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Faraday rotation measure of intervening screen in <span class="math notranslate nohighlight">\(rad m^{-2}\)</span>. Default: 0.0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt id="vis.polimage.model_polarized_image_Faraday_derotated.wavelength">
+<code class="sig-name descname">wavelength</code><a class="headerlink" href="#vis.polimage.model_polarized_image_Faraday_derotated.wavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Observation wavelength in m. Default: 1.3 mm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)">float</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_Faraday_derotated.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_Faraday_derotated.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_Faraday_derotated.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the model parameter list.  Mirrors <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00112.html#a7945f9c4716ebe7f1026b999467d9c32" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_polarized_image::generate_model</span></code></a>,
+a similar function within the <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00097.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_smooth</span></code></a> class.  Effectively
+simply copies the parameters into the local list with some additional run-time checking.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>parameters</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Parameter list.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_Faraday_derotated.generate_stokes_map">
+<code class="sig-name descname">generate_stokes_map</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">kind</span><span class="o">=</span><span class="default_value">'all'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_Faraday_derotated.generate_stokes_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_Faraday_derotated.generate_stokes_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internal generation of the intensity map. In practice you almost certainly want to call <code class="xref py py-func docutils literal notranslate"><span class="pre">model_image.intensity_map()</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><em>numpy.ndarray</em></a>) – Array of -RA offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>y</strong> (<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.19)"><em>numpy.ndarray</em></a>) – Array of Dec offsets in microarcseconds (usually plaid 2D).</p></li>
+<li><p><strong>kind</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Stokes parameter to generate map for. Accepted values are ‘I’, ‘Q’, ‘U’, ‘V’, and combinations or ‘all’. Default: ‘all’.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>(list) List of arrays of desired Stokes parameter values at positions (x,y) in <span class="math notranslate nohighlight">\(Jy/\mu as^2\)</span>. Always returned in the order IQUV.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_Faraday_derotated.parameter_name_list">
+<code class="sig-name descname">parameter_name_list</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_Faraday_derotated.parameter_name_list"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_Faraday_derotated.parameter_name_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Producess a lists parameter names.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>(list) List of strings of variable names.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_Faraday_derotated.set_RM">
+<code class="sig-name descname">set_RM</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">RM</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_Faraday_derotated.set_RM"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_Faraday_derotated.set_RM" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the Faraday rotation measure in <span class="math notranslate nohighlight">\(rad m^{-2}\)</span>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>RM</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Faraday rotation measure in <span class="math notranslate nohighlight">\(rad m^{-2}\)</span>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_Faraday_derotated.set_time">
+<code class="sig-name descname">set_time</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">time</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_Faraday_derotated.set_time"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_Faraday_derotated.set_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Time in hours.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="vis.polimage.model_polarized_image_Faraday_derotated.set_wavelength">
+<code class="sig-name descname">set_wavelength</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wavelength</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_Faraday_derotated.set_wavelength"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_Faraday_derotated.set_wavelength" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets the obervation wavlength in m.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>wavelength</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Observation wavelength in m.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="vis.polimage.model_polarized_image_adaptive_splined_raster">
 <em class="property">class </em><code class="sig-prename descclassname">vis.polimage.</code><code class="sig-name descname">model_polarized_image_adaptive_splined_raster</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">Nx</span></em>, <em class="sig-param"><span class="n">Ny</span></em>, <em class="sig-param"><span class="n">a</span><span class="o">=</span><span class="default_value">- 0.5</span></em>, <em class="sig-param"><span class="n">spline_method</span><span class="o">=</span><span class="default_value">'fft'</span></em>, <em class="sig-param"><span class="n">station_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_adaptive_splined_raster"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_adaptive_splined_raster" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adaptive splined raster image class that is a mirror of <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00113.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_polarized_image_adaptive_splined_raster</span></code></a>.
@@ -2055,7 +2190,7 @@ simply copies the parameters into the local list with some additional run-time c
 <dl class="py class">
 <dt id="vis.polimage.model_polarized_image_smooth">
 <em class="property">class </em><code class="sig-prename descclassname">vis.polimage.</code><code class="sig-name descname">model_polarized_image_smooth</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">image</span></em>, <em class="sig-param"><span class="n">station_names</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">themis_fft_sign</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_smooth"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_smooth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Smoothed polarized image class that is a polarized mirror of <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00097.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_smooth</span></code></a>. Generates a smoothed
+<dd><p>Smoothed polarized image class that is a polarized mirror of <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_polarized_image_smooth</span></code>. Generates a smoothed
 image from an existing image using an asymmetric Gaussian smoothing kernel.
 Has parameters:</p>
 <ul class="simple">
@@ -2092,8 +2227,8 @@ Has parameters:</p>
 <dl class="py method">
 <dt id="vis.polimage.model_polarized_image_smooth.generate">
 <code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">parameters</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/polimage.html#model_polarized_image_smooth.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.polimage.model_polarized_image_smooth.generate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sets the model parameter list.  Mirrors <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00097.html#a7945f9c4716ebe7f1026b999467d9c32" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_smooth::generate_model</span></code></a>,
-a similar function within the <a class="reference external" href="https://perimeterinstitute.github.io/Themis/html/a00097.html#" title="(in &lt;name of the project&gt; v&lt;version&gt;)"><code class="docutils literal notranslate"><span class="pre">Themis::model_image_smooth</span></code></a> class.  Effectively
+<dd><p>Sets the model parameter list.  Mirrors <code class="xref cpp cpp-func docutils literal notranslate"><span class="pre">:model_polarized_image_smooth::generate_model</span></code>,
+a similar function within the <code class="xref cpp cpp-class docutils literal notranslate"><span class="pre">:model_polarized_image_smooth</span></code> class.  Effectively
 simply copies the parameters into the local list with some additional run-time checking.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2605,7 +2740,7 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
 
 <dl class="py function">
 <dt id="vis.typlot.kde_plot_2d">
-<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">kde_plot_2d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">plevels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'Purples'</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">nbin</span><span class="o">=</span><span class="default_value">128</span></em>, <em class="sig-param"><span class="n">bw</span><span class="o">=</span><span class="default_value">'scott'</span></em>, <em class="sig-param"><span class="n">scott_factor</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">transform</span><span class="o">=</span><span class="default_value">False</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#kde_plot_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.kde_plot_2d" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">kde_plot_2d</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">x</span></em>, <em class="sig-param"><span class="n">y</span></em>, <em class="sig-param"><span class="n">plevels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'Purples'</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">nbin</span><span class="o">=</span><span class="default_value">128</span></em>, <em class="sig-param"><span class="n">bw</span><span class="o">=</span><span class="default_value">'scott'</span></em>, <em class="sig-param"><span class="n">scott_factor</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="n">transform</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fill</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">edges</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">fill_zorder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">edge_zorder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">edge_colors</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">edge_colormap</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">edge_alpha</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">linewidth</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#kde_plot_2d"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.kde_plot_2d" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates a 2d joint posterior plot using <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.gaussian_kde()</span></code> function and <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.contourf.html#matplotlib.pyplot.contourf" title="(in Matplotlib v3.3.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.contourf()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2615,25 +2750,33 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
 <li><p><strong>plevels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – List of cummulative probability levels at which to draw contours. If set to None, will set to <span class="math notranslate nohighlight">\(1\sigma, 2\sigma, 3\sigma\)</span>. Default: None.</p></li>
 <li><p><strong>limits</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Limits in the form [[xmin,xmax],[ymin,ymax]].  If set to None, will use the minimum and maximum values of, expanded by 10% on each side.  Default: None.</p></li>
 <li><p><strong>colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.3.0)"><em>matplotlib.colors.Colormap</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.3.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. Default: ‘Purples’.</p></li>
-<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Value of alpha for the individual likelihood traces. Default: 1.0.</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Value of alpha for the filled contours. Default: 1.0.</p></li>
 <li><p><strong>nbin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Number of bins on which to construct KDE result in each dimension. Default: 128.</p></li>
 <li><p><strong>bw</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a>) – Bandwidth method for <code class="xref py py-func docutils literal notranslate"><span class="pre">scipy.stats.gaussian_kde()</span></code>. Overidden by nonzero scott_factor. Default: ‘scott’.</p></li>
 <li><p><strong>scott_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Factor by which to expand the standard <cite>scott</cite> bandwidth factor.  Overrides bw if nonzero.  Default: 0.</p></li>
 <li><p><strong>transform</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Whether to use a logit transformed version of the KDE to prevent leakage out of the expected range. Default False.</p></li>
+<li><p><strong>fill</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Determines if contour levels will be filled. Default: True.</p></li>
+<li><p><strong>fill_zorder</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Sets zorder of filled contours. Default: None.</p></li>
+<li><p><strong>edges</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Deterines if countour lines will be plotted. Default: False.</p></li>
+<li><p><strong>edge_zorder</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Sets zorder of contour lines. Default: None.</p></li>
+<li><p><strong>edge_colors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.3.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a> or list of such types. If not None, overrides edge_colormap. Default: None.</p></li>
+<li><p><strong>edge_colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.3.0)"><em>matplotlib.colors.Colormap</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.3.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. If None, uses the colormap passed by the colormap option. Default: None.</p></li>
+<li><p><strong>edge_alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Value of alpha for contour lines. Only meaningful if edges=True. If None, sets the contour line alpha to that passed by alpha. Default: None.</p></li>
+<li><p><strong>linewidth</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Width of contour lines. Default: 1.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p>The handles returned by <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.contourf.html#matplotlib.pyplot.contourf" title="(in Matplotlib v3.3.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.contourf()</span></code></a>.</p>
+<dd class="field-even"><p>The handles returned by <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.contourf.html#matplotlib.pyplot.contourf" title="(in Matplotlib v3.3.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.contourf()</span></code></a> and <a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.pyplot.contour.html#matplotlib.pyplot.contour" title="(in Matplotlib v3.3.0)"><code class="xref py py-func docutils literal notranslate"><span class="pre">matplotlib.pyplot.contour()</span></code></a> depending on the fill and edges options.</p>
 </dd>
 <dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/api/contour_api.html#matplotlib.contour.QuadContourSet" title="(in Matplotlib v3.3.0)">matplotlib.contour.QuadContourSet</a>)</p>
+<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/api/contour_api.html#matplotlib.contour.QuadContourSet" title="(in Matplotlib v3.3.0)">matplotlib.contour.QuadContourSet</a>,<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)">list</a>)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt id="vis.typlot.kde_triangle_plot">
-<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">kde_triangle_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lower_data_array</span></em>, <em class="sig-param"><span class="n">upper_data_array</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">transform</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">upper_labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">truths</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'Blues'</span></em>, <em class="sig-param"><span class="n">upper_colormap</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">color</span><span class="o">=</span><span class="default_value">'blue'</span></em>, <em class="sig-param"><span class="n">upper_color</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">truths_color</span><span class="o">=</span><span class="default_value">'red'</span></em>, <em class="sig-param"><span class="n">axis_location</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">quantiles</span><span class="o">=</span><span class="default_value">[0.99, 0.9, 0.5]</span></em>, <em class="sig-param"><span class="n">nbin</span><span class="o">=</span><span class="default_value">128</span></em>, <em class="sig-param"><span class="n">linewidth</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">linestyle</span><span class="o">=</span><span class="default_value">'-'</span></em>, <em class="sig-param"><span class="n">truths_alpha</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">truths_linewidth</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">truths_linestype</span><span class="o">=</span><span class="default_value">'-'</span></em>, <em class="sig-param"><span class="n">scott_factor</span><span class="o">=</span><span class="default_value">1.41421</span></em>, <em class="sig-param"><span class="n">filled</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">grid</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#kde_triangle_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.kde_triangle_plot" title="Permalink to this definition">¶</a></dt>
+<code class="sig-prename descclassname">vis.typlot.</code><code class="sig-name descname">kde_triangle_plot</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">lower_data_array</span></em>, <em class="sig-param"><span class="n">upper_data_array</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">limits</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">transform</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">upper_labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">truths</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colormap</span><span class="o">=</span><span class="default_value">'Blues'</span></em>, <em class="sig-param"><span class="n">upper_colormap</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">color</span><span class="o">=</span><span class="default_value">'blue'</span></em>, <em class="sig-param"><span class="n">upper_color</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">truths_color</span><span class="o">=</span><span class="default_value">'red'</span></em>, <em class="sig-param"><span class="n">axis_location</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">alpha</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">quantiles</span><span class="o">=</span><span class="default_value">[0.99, 0.9, 0.5]</span></em>, <em class="sig-param"><span class="n">nbin</span><span class="o">=</span><span class="default_value">128</span></em>, <em class="sig-param"><span class="n">linewidth</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">linestyle</span><span class="o">=</span><span class="default_value">'-'</span></em>, <em class="sig-param"><span class="n">truths_alpha</span><span class="o">=</span><span class="default_value">1.0</span></em>, <em class="sig-param"><span class="n">truths_linewidth</span><span class="o">=</span><span class="default_value">1</span></em>, <em class="sig-param"><span class="n">truths_linestype</span><span class="o">=</span><span class="default_value">'-'</span></em>, <em class="sig-param"><span class="n">scott_factor</span><span class="o">=</span><span class="default_value">1.41421</span></em>, <em class="sig-param"><span class="n">filled</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">grid</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">contour_fill</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">contour_edges</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">contourfill_zorder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">contour_edge_zorder</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">contour_edge_colors</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">contour_edge_colormap</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">contour_edge_alpha</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">contour_linewidth</span><span class="o">=</span><span class="default_value">1</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/vis/typlot.html#kde_triangle_plot"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#vis.typlot.kde_triangle_plot" title="Permalink to this definition">¶</a></dt>
 <dd><p>Produces a triangle plot with contours set by CDF.  Data may be plotted in both lower (required) and upper (optional) triangles.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -2660,6 +2803,14 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
 <li><p><strong>scott_factor</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Factor by which to expand the standard <cite>scott</cite> bandwidth factor.  Overrides bw if nonzero.  Default: 1.41421.</p></li>
 <li><p><strong>filled</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True, the 1d histograms along the diagonal are plotted filled. Default: False.</p></li>
 <li><p><strong>grid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – If True, adds gridlines to plots. Default: True.</p></li>
+<li><p><strong>contour_fill</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Determines if contour levels will be filled. Default: True.</p></li>
+<li><p><strong>contour_fill_zorder</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Sets zorder of filled contours. Default: None.</p></li>
+<li><p><strong>contour_edges</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.8)"><em>bool</em></a>) – Deterines if countour lines will be plotted. Default: False.</p></li>
+<li><p><strong>contour_edge_zorder</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.8)"><em>int</em></a>) – Sets zorder of contour lines. Default: None.</p></li>
+<li><p><strong>contour_edge_colors</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.8)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.8)"><em>list</em></a>) – Any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.3.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a> or list of such types. If not None, overrides edge_colormap. Default: None.</p></li>
+<li><p><strong>contour_edge_colormap</strong> (<a class="reference external" href="https://matplotlib.org/api/_as_gen/matplotlib.colors.Colormap.html#matplotlib.colors.Colormap" title="(in Matplotlib v3.3.0)"><em>matplotlib.colors.Colormap</em></a>) – A colormap name as specified in <a class="reference external" href="https://matplotlib.org/api/cm_api.html#module-matplotlib.cm" title="(in Matplotlib v3.3.0)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.cm</span></code></a>. If None, uses the colormap passed by the colormap option. Default: None.</p></li>
+<li><p><strong>contour_edge_alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Value of alpha for contour lines. Only meaningful if edges=True. If None, sets the contour line alpha to that passed by alpha. Default: None.</p></li>
+<li><p><strong>contour_linewidth</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.8)"><em>float</em></a>) – Width of contour lines. Default: 1.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -2715,7 +2866,7 @@ Useful for making plots that indicate flow, e.g., <code class="xref py py-func d
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+20.g92c982e',
+            VERSION:'0.3.0+23.gc36026c',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
