@@ -663,7 +663,7 @@ class model_polarized_image_sum(model_polarized_image) :
 
 class model_polarized_image_smooth(model_polarized_image):
     """
-    Smoothed polarized image class that is a polarized mirror of :cpp:class:`Themis::model_image_smooth`. Generates a smoothed 
+    Smoothed polarized image class that is a polarized mirror of :cpp:class:`Themis::model_polarized_image_smooth`. Generates a smoothed 
     image from an existing image using an asymmetric Gaussian smoothing kernel.
     Has parameters:
 
@@ -697,8 +697,8 @@ class model_polarized_image_smooth(model_polarized_image):
         
     def generate(self,parameters) :
         """
-        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_smooth::generate_model`, 
-        a similar function within the :cpp:class:`Themis::model_image_smooth` class.  Effectively 
+        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_polarized_image_smooth::generate_model`, 
+        a similar function within the :cpp:class:`Themis::model_polarized_image_smooth` class.  Effectively 
         simply copies the parameters into the local list with some additional run-time checking.
 
         Args:
@@ -789,6 +789,140 @@ class model_polarized_image_smooth(model_polarized_image):
         self.image.set_time(time)
 
 
+
+class model_polarized_image_Faraday_derotated(model_polarized_image):
+    """
+    Faraday derotated image class.  Generates a zero-wavelength image after derotated.  The Faraday rotation measure 
+    (in :math:`rad m^{-2}`), and observation wavelength (in m) may be provided at construction or modified afterward.
+
+    Image parameters are the same as those of the passed :class:`model_polarized_image`.
+
+    Args:
+      image (model_polarized_image): :class:`model_polarized_image` object that will be smoothed.
+      RM (float): Faraday rotation measure of intervening screen in :math:`rad m^{-2}`. Default: 0.0.
+      wavelength (float): Observation wavelength in m. Default: 1.3 mm.
+
+    Attributes:
+      image (model_polarized_image): A preexisting :class:`model_polarized_image` object to be smoothed.
+      RM (float): Faraday rotation measure of intervening screen in :math:`rad m^{-2}`. Default: 0.0.
+      wavelength (float): Observation wavelength in m. Default: 1.3 mm.
+    """
+
+    def __init__(self, image, RM=0.0, wavelength=1.3e-3, station_names=None, themis_fft_sign=True) :
+        super().__init__(station_names,themis_fft_sign)
+
+        self.image = image
+        self.RM = RM
+        self.wavelength = wavelength
+        self.image_size = image.image_size
+        self.size = image.size
+
+
+    def set_RM(self, RM) :
+        """
+        Sets the Faraday rotation measure in :math:`rad m^{-2}`.
+
+        Args:
+          RM (float): Faraday rotation measure in :math:`rad m^{-2}`.
+
+        Returns:
+          None
+        """
+        
+        self.RM = RM
+
+        
+    def set_wavelength(self, wavelength) :
+        """
+        Sets the obervation wavlength in m.
+
+        Args:
+          wavelength (float): Observation wavelength in m.
+
+        Returns:
+          None
+        """
+        
+        self.wavelength = wavelength
+        
+        
+    def generate(self,parameters) :
+        """
+        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_polarized_image::generate_model`, 
+        a similar function within the :cpp:class:`Themis::model_image_smooth` class.  Effectively 
+        simply copies the parameters into the local list with some additional run-time checking.
+
+        Args:
+          parameters (list): Parameter list.
+
+        Returns:
+          None        
+        """
+        
+        self.parameters = np.copy(parameters)
+        if (len(self.parameters)<self.size) :
+            raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
+        self.set_dterms(parameters[self.image_size:])
+        self.image.generate(parameters[:self.image_size])
+
+        
+    def generate_stokes_map(self,x,y,kind='all',verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          kind (str): Stokes parameter to generate map for. Accepted values are 'I', 'Q', 'U', 'V', and combinations or 'all'. Default: 'all'.
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (list) List of arrays of desired Stokes parameter values at positions (x,y) in :math:`Jy/\\mu as^2`. Always returned in the order IQUV.
+        """
+
+        self.image.generate(self.parameters[:self.image_size])
+
+        if (kind in ['Q','U']) :
+            kind = 'all'
+        S = self.image.generate_stokes_map(x,y,kind=kind,verbosity=verbosity)
+
+        # Rotate by Faraday rotation measure
+        Q = np.copy(S[1])
+        U = np.copy(S[2])
+        Psi = self.RM*self.wavelength**2
+        S[1] = np.cos(2.0*Psi)*Q + np.sin(2.0*Psi)*U
+        S[2] = -np.sin(2.0*Psi)*Q + np.cos(2.0*Psi)*U
+        
+        if (verbosity>0) :
+            print('Faraday derotated:',self.RM,self.wavelength,Psi)
+            
+        return S
+
+    
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        names = self.image.parameter_name_list()
+        return names
+
+    
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
+        self.image.set_time(time)
+
+        
 
             
 

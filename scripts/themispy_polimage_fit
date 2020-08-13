@@ -185,6 +185,18 @@ def set_parser():
                         action='store',
                         default=0.5,
                         help=("Sets the polarization fraction normalization. Default: 0.5."))    
+
+    parser.add_argument("-RM",
+                        type=float,
+                        action='store',
+                        default=None,
+                        help=("Sets the Faraday rotation measure in rad/m^2. Default: None"))    
+
+    parser.add_argument("-w","--wavelength",
+                        type=float,
+                        action='store',
+                        default=1.3e-3,
+                        help=("Sets the observation wavelength in m. Default: 1.3e-3."))
     
     parser.add_argument("--usetex",
                         action='store_true',
@@ -275,6 +287,15 @@ if __name__ == "__main__" :
 
         if (args.verbose):
             print("Smoothed parameters:",parameters)    
+
+
+    # Add rotation measure if desired
+    if (not (args.RM is None)) :
+        model_image_underotated = copy.deepcopy(model_image)
+        model_image = ty.vis.model_polarized_image_Faraday_derotated(model_image_underotated,args.RM,args.wavelength)
+
+        if (args.verbose):
+            print("Faraday derotating:",args.RM,args.wavelength)
             
         
     # Check resolution
