@@ -382,7 +382,7 @@ def _find_limits(data,quantile=0.25,factor=1.5) :
     return lim
 
 
-def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, transform=False, labels=None, upper_labels=None, truths=None, colormap='Blues', upper_colormap=None, color='blue', upper_color=None, truths_color='red', axis_location=None, alpha=1.0, quantiles=[0.99,0.9,0.5], nbin=128, linewidth=1, linestyle='-', truths_alpha=1.0, truths_linewidth=1, truths_linestype='-', scott_factor=1.41421, filled=False, grid=True) :
+def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, transform=False, labels=None, upper_labels=None, truths=None, colormap='Blues', upper_colormap=None, color='blue', upper_color=None, truths_color='red', axis_location=None, alpha=1.0, quantiles=[0.99,0.9,0.5], nbin=128, linewidth=1, linestyle='-', truths_alpha=1.0, truths_linewidth=1, truths_linestype='-', scott_factor=1.41421, filled=False, grid=True, contour_fill=True, contour_edges=False, contourfill_zorder=None, contour_edge_zorder=None, contour_edge_colors=None, contour_edge_colormap=None, contour_edge_alpha=None, contour_linewidth=1) :
     """
     Produces a triangle plot with contours set by CDF.  Data may be plotted in both lower (required) and upper (optional) triangles.
 
@@ -409,6 +409,14 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
       scott_factor (float): Factor by which to expand the standard `scott` bandwidth factor.  Overrides bw if nonzero.  Default: 1.41421.
       filled (bool): If True, the 1d histograms along the diagonal are plotted filled. Default: False.
       grid (bool): If True, adds gridlines to plots. Default: True.
+      contour_fill (bool): Determines if contour levels will be filled. Default: True.
+      contour_fill_zorder (int): Sets zorder of filled contours. Default: None.
+      contour_edges (bool): Deterines if countour lines will be plotted. Default: False.
+      contour_edge_zorder (int): Sets zorder of contour lines. Default: None.
+      contour_edge_colors (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors` or list of such types. If not None, overrides edge_colormap. Default: None.
+      contour_edge_colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. If None, uses the colormap passed by the colormap option. Default: None.
+      contour_edge_alpha (float): Value of alpha for contour lines. Only meaningful if edges=True. If None, sets the contour line alpha to that passed by alpha. Default: None.
+      contour_linewidth (float): Width of contour lines. Default: 1.
 
     Returns:
       (matplotlib.axes.Axes, list, list, list): Handles to the array of axes objects in the plot, list of handels to the 2d kde plot objects in the lower triangle, 2d kde plot objects in the upper triangle, and 1d plot objects in along the diagonal (see :func:`kde_plot_2d` and :func:`kde_plot_1d` for more information).
@@ -489,7 +497,8 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
 
 
             # Make 2d joint distribution plot
-            lower_triangle_plot_handles[j,k] = kde_plot_2d(lower_data_array[:,j],lower_data_array[:,k],colormap=colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=scott_factor, transform=transform)
+            #lower_triangle_plot_handles[j,k] = kde_plot_2d(lower_data_array[:,j],lower_data_array[:,k],colormap=colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=scott_factor, transform=transform)
+            lower_triangle_plot_handles[j,k] = kde_plot_2d(lower_data_array[:,j],lower_data_array[:,k],colormap=colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=scott_factor, transform=transform, fill=contour_fill, edges=contour_edges, fill_zorder=contourfill_zorder, edge_zorder=contour_edge_zorder, edge_colors=contour_edge_colors, edge_colormap=contour_edge_colormap, edge_alpha=contour_edge_alpha, linewidth=contour_linewidth)
             axes_handles[j,k] = plt.gca()
 
             # Fix up tickmarks
@@ -554,7 +563,7 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
 
 
                 # Make 2d joint distribution plot
-                upper_triangle_plot_handles[j,k] = kde_plot_2d(upper_data_array[:,j],upper_data_array[:,k],colormap=upper_colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=scott_factor, transform=transform)
+                upper_triangle_plot_handles[j,k] = kde_plot_2d(upper_data_array[:,j],upper_data_array[:,k],colormap=upper_colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=scott_factor, transform=transform, fill=contour_fill, edges=contour_edges, fill_zorder=contourfill_zorder, edge_zorder=contour_edge_zorder, edge_colors=contour_edge_colors, edge_colormap=contour_edge_colormap, edge_alpha=contour_edge_alpha, linewidth=contour_linewidth)
                 axes_handles[j,k] = plt.gca()
 
                 # Fix up tickmarks
