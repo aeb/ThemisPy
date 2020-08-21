@@ -1,3 +1,4 @@
+---
 title: 'ThemisPy: A Python analysis layer for post-processing Themis projects'
 tags:
   - Python
@@ -24,7 +25,7 @@ affiliations:
     index: 3
 date: 21 August 2021
 bibliography: paper.bib
-
+---
 
 # Summary
 
