@@ -382,7 +382,7 @@ def _find_limits(data,quantile=0.25,factor=1.5) :
     return lim
 
 
-def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, transform=False, labels=None, upper_labels=None, truths=None, colormap='Blues', upper_colormap=None, color='blue', upper_color=None, truths_color='red', axis_location=None, alpha=1.0, quantiles=[0.99,0.9,0.5], nbin=128, linewidth=1, linestyle='-', truths_alpha=1.0, truths_linewidth=1, truths_linestype='-', scott_factor=1.41421, filled=False, grid=True, contour_fill=True, contour_edges=False, contourfill_zorder=None, contour_edge_zorder=None, contour_edge_colors=None, contour_edge_colormap=None, contour_edge_alpha=None, contour_linewidth=1) :
+def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, transform=False, labels=None, upper_labels=None, truths=None, colormap='Blues', upper_colormap=None, color='blue', upper_color=None, truths_color='red', axis_location=None, axes=None, alpha=1.0, quantiles=[0.99,0.9,0.5], nbin=128, linewidth=1, linestyle='-', truths_alpha=1.0, truths_linewidth=1, truths_linestype='-', scott_factor=1.41421, filled=False, grid=True, contour_fill=True, contour_edges=False, contourfill_zorder=None, contour_edge_zorder=None, contour_edge_colors=None, contour_edge_colormap=None, contour_edge_alpha=None, contour_linewidth=1) :
     """
     Produces a triangle plot with contours set by CDF.  Data may be plotted in both lower (required) and upper (optional) triangles.
 
@@ -398,6 +398,7 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
       upper_color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors` to be used in the 1d histograms along the diagonal for the upper data. If set to None, uses the same color as the lower triangle Default: None.
       truths_color (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors` to be used in the 1d histograms along the diagonal for the upper data. If set to None, uses the same color as the lower triangle Default: 'red'.
       axis_location (list): List of axis location in which to place bounding box of the entire plot. If set to None, a default size will be set. Default: None.
+      axes (list) : List of axes, consistent with that produced by kde_triangle_plot, on which to plot.  Permits multiple over-laid triangle plots. Default: None.
       alpha (float): Value of alpha for the individual likelihood traces. Default: 1.0.
       quantiles (list): List of quantiles at which to draw contours. Default: 0.99, 0.9, 0.5. Note that the defaults will change if set!
       nbin (int): Number of bins on which to construct KDE result in each dimension. Default: 128.
@@ -477,7 +478,10 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
             # Find axis location with various gutters, etc.
             x_window_start = axis_location[0] + j*(x_gutter+x_window_size)
             y_window_start = axis_location[1] + axis_location[3] - y_window_size - k*(y_gutter+y_window_size)
-            plt.axes([x_window_start, y_window_start, x_window_size, y_window_size])
+            if (axes is None) :
+                plt.axes([x_window_start, y_window_start, x_window_size, y_window_size])
+            else :
+                plt.sca(axes[j,k])
         
             if limits is None:
                 # Find limits in x/y
@@ -544,7 +548,10 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
                 # Find axis location with various gutters, etc.
                 x_window_start = axis_location[0] + (j+0)*(x_gutter+x_window_size)
                 y_window_start = axis_location[1] + axis_location[3] - y_window_size - k*(y_gutter+y_window_size)
-                plt.axes([x_window_start, y_window_start, x_window_size, y_window_size])
+                if (axes is None) :
+                    plt.axes([x_window_start, y_window_start, x_window_size, y_window_size])
+                else :
+                    plt.sca(axes[j,k])
             
                 if limits is None:
                     # Find limits in x/y
@@ -603,7 +610,10 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
         # Find axis location with various gutters, etc.
         x_window_start = axis_location[0] + k*(x_gutter+x_window_size)
         y_window_start = axis_location[1] + axis_location[3] - y_window_size - k*(y_gutter+y_window_size)
-        plt.axes([x_window_start, y_window_start, x_window_size, y_window_size])
+        if (axes is None) :
+            plt.axes([x_window_start, y_window_start, x_window_size, y_window_size])
+        else :
+            plt.sca(axes[k,k])
 
         if limits is None:
             # Find limits in x/y
