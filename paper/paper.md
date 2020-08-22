@@ -49,7 +49,7 @@ Detailed information about the API and installation can be found in the packaged
 # Acknowledgements
 
 This work was supported in part by Perimeter Institute for Theoretical Physics.  Research at Perimeter Institute is supported by the Government of Canada through the Department of Innovation, Science and Economic Development Canada and by the Province of Ontario through the Ministry of Economic Development, Job Creation and Trade.
+Additional financial support was received from the Natural Sciences and Engineering Research Council of Canada through a Discovery Grant.
 A.E.B. thanks the Delaney Family for their generous financial support via the Delaney Family John A. Wheeler Chair at Perimeter Institute.
-A.E.B., P.T., and M.K. receive additional financial support from the Natural Sciences and Engineering Research Council of Canada through a Discovery Grant.
 
 # References
