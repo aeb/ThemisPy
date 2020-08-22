@@ -41,7 +41,7 @@ The ThemisPy package consists of three major and two minor components, each coll
 
 In addition, two minor components that more specific to the Themis representations of EHT data and EHT specific elements are encapsulated in the `data` and `utils` packages.
 
-In addition, ThemisPy provides a number of command-line utilities for executing pre-scripted ThemisPy tasks on Themis analysis outputs.  These include the basic tasks of plotting samples from an MCMC chain, generating triangle plots of parameters (including double triangles), and computing diagnostics (e.g., split-$\hat{R}$, integrated autocorrelation times, etc.).
+In addition, ThemisPy provides a number of command-line utilities for executing pre-scripted ThemisPy tasks on Themis analysis outputs.  These include the basic tasks of plotting samples from an MCMC chain, generating triangle plots of parameters (including double triangles), and computing diagnostics (e.g., split-$\hat{R}$, integrated autocorrelation times, etc.), as well as more complex, VLBI specific tasks of plotting calibration solutions, image statistics, residual plots and sampler-specific diagnostics plots.
 
 Detailed information about the API and installation can be found in the packaged documentation.  
 
