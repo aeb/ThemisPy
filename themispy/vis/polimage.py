@@ -1640,7 +1640,7 @@ def plot_polarized_image_stats(polarized_image, chain, limits=None, shape=None, 
 
     
 
-def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='Greens', station=None, alpha=0.5, comparison_dterms=None, comparison_fmts=None, grid=True, fig=None, axs=None, scott_factor=2.0, nbin=128, size=None, plevels=None, station_labels=None, verbosity=0) :
+def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='Greens', station=None, alpha=0.5, comparison_dterms=None, comparison_fmts=None, grid=True, fig=None, axs=None, scott_factor=2.0, nbin=128, size=None, plevels=None, station_labels=None, fill=True, edges=False, fill_zorder=None, edge_zorder=None, edge_rcolors=None, edge_lcolors=None, edge_colormap=None, edge_alpha=None, linewidth=1, verbosity=0) :
     """
     Plots D term distributions for a polarized image model from an MCMC chain.  Each station will 
     separately have its left and right D term distributions plotted in the complex plane.
@@ -1661,6 +1661,15 @@ def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='G
       size (list): List of two integers specifying the number of windows in the horizontal and vertical direction. If None, the number of windows will be set to be the most square possible. Default: None.
       plevels (list): Probability levels at which to plot contours. If None, will plot the 1, 2 and 3 sigma contours. Default: None.
       station_labels (dict): Dictionary of station labels to plot organized as 'station code':'label' pairs. If None, the station codes will be used. Default: None.
+      fill (bool): Determines if contour levels will be filled. Default: True.
+      fill_zorder (int): Sets zorder of filled contours. Default: None.
+      edges (bool): Deterines if countour lines will be plotted. Default: False.
+      edge_zorder (int): Sets zorder of contour lines. Default: None.
+      edge_lcolors (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors` or list of such types. If not None, overrides edge_colormap. Default: None.
+      edge_rcolors (str,list): Any acceptable color type as specified in :mod:`matplotlib.colors` or list of such types. If not None, overrides edge_colormap. Default: None.
+      edge_colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. If None, uses the colormap passed by the colormap option. Default: None.
+      edge_alpha (float): Value of alpha for contour lines. Only meaningful if edges=True. If None, sets the contour line alpha to that passed by alpha. Default: None.
+      linewidth (float): Width of contour lines. Default: 1.
       verbosity (int): Verbosity level.
     
     Returns:
@@ -1809,16 +1818,20 @@ def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='G
         if ('R' in station_dict[station]) :
             DRr = chain[:,dterm_start_index_list[k]+0]
             DRi = chain[:,dterm_start_index_list[k]+1]
+            limits = [[1.2*np.min(DRr)-0.2*np.max(DRr),1.2*np.max(DRr)-0.2*np.min(DRr)],[1.2*np.min(DRi)-0.2*np.max(DRi),1.2*np.max(DRi)-0.2*np.min(DRi)]]
+            #print("FOO:",limits,np.min(DRr),np.max(DRr),np.min(DRi),np.max(DRi))
             #hR = kde_plot_2d(DRr,DRi,colormap=rcolormap,alpha=alpha,scott_factor=np.sqrt(2.0))
-            hR = kde_plot_2d(DRr,DRi,colormap=rcolormap,alpha=alpha,scott_factor=scott_factor,nbin=nbin,plevels=plevels)
+            hR = kde_plot_2d(DRr,DRi,colormap=rcolormap,alpha=alpha,scott_factor=scott_factor,nbin=nbin,plevels=plevels,fill=fill,edges=edges,fill_zorder=fill_zorder,edge_zorder=edge_zorder,edge_colors=edge_rcolors,edge_colormap=edge_colormap,edge_alpha=edge_alpha,linewidth=linewidth,limits=limits)
             hlist.append(hR)
 
         # Add the left D-term plots
         if ('L' in station_dict[station]) :
             DLr = chain[:,dterm_start_index_list[k]+2]
             DLi = chain[:,dterm_start_index_list[k]+3]
+            limits = [[1.2*np.min(DLr)-0.2*np.max(DLr),1.2*np.max(DLr)-0.2*np.min(DLr)],[1.2*np.min(DLi)-0.2*np.max(DLi),1.2*np.max(DLi)-0.2*np.min(DLi)]]
+            #print("BAR:",limits,np.min(DLr),np.max(DLr),np.min(DLi),np.max(DLi))
             #hL = kde_plot_2d(DLr,DLi,colormap=lcolormap,alpha=alpha,scott_factor=np.sqrt(2.0))
-            hL = kde_plot_2d(DLr,DLi,colormap=lcolormap,alpha=alpha,scott_factor=scott_factor,nbin=nbin,plevels=plevels)
+            hL = kde_plot_2d(DLr,DLi,colormap=lcolormap,alpha=alpha,scott_factor=scott_factor,nbin=nbin,plevels=plevels,fill=fill,edges=edges,fill_zorder=fill_zorder,edge_zorder=edge_zorder,edge_colors=edge_lcolors,edge_colormap=edge_colormap,edge_alpha=edge_alpha,linewidth=linewidth,limits=limits)
             hlist.append(hL)
 
         # Add truths if provided
