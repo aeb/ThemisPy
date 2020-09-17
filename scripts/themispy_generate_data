@@ -123,6 +123,10 @@ def set_parser() :
                         action='store_true',
                         default=False,
                         help=("Uses a default telescope array file for 2018."))
+    parser.add_argument("-eht",
+                        action='store_true',
+                        default=False,
+                        help=("Uses a default telescope array file for 2018."))
     
     
     return parser
@@ -150,7 +154,9 @@ def read_uvfits(filename,polrep,args) :
                              ('SR', -5.46455549300e+06, -2.49292798900e+06,  2150797.17600, 0., 0., 0.+0.j, 0.+0.j, 0.,  0.,  0.),
                              ('SP',  1.00000000000e-02,  1.00000000000e-02, -6359609.70000, 0., 0., 0.+0.j, 0.+0.j, 0.,  0.,  0.)],
                             dtype=[('site', '<U32'), ('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('sefdr', '<f8'), ('sefdl', '<f8'), ('dr', '<c16'), ('dl', '<c16'), ('fr_par', '<f8'), ('fr_elev', '<f8'), ('fr_off', '<f8')])
+        args.eht=True
     elif (args.eht2018==True) :
+        args.eht=True
         raise RuntimeError("2018 array not implemented yet!")
         
         
@@ -246,7 +252,7 @@ if __name__ == "__main__" :
                 snrcut = 0.0
 
             # Write data file
-            tydat.write_crosshand_visibilities(obs, outfile, isER5=args.er5, snrcut=snrcut, keep_partial_hands=args.exclude_partial_hands)
+            tydat.write_crosshand_visibilities(obs, outfile, isER5=args.er5, snrcut=snrcut, keep_partial_hands=args.exclude_partial_hands, eht_field_rotation_convention=args.eht)
 
             # Remove from data_type_list
             data_type_list = data_type_list.replace('x','')

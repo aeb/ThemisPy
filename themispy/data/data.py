@@ -348,7 +348,7 @@ def reconstruct_field_rotation_angles(obs, isER5=False) :
     return FR1,FR2
 
 
-def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_partial_hands=True, flip_field_rotation_angles=False) :
+def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_partial_hands=True, flip_field_rotation_angles=False, eht_field_rotation_convention=False) :
     """
     Writes complex crosshand RR,LL,RL,LR visibilities in Themis format given an :class:`ehtim.obsdata.Obsdata` object.
 
@@ -362,7 +362,7 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
       isER5 (bool): Flag to indicate that this is an ER5 file with polconvert errors that modify the field rotation angles. Default: False.
       snrcut (float): A possible signal-to-noise ratio below which to reject points. Default: 0.
       keep_partial_hands (bool): Flag to deterime how to treat data with incomplete polarization information.  If true, the single-hand visibilities are kept, and large errors are assigned to correlation products that include other hands. Default: True.
-
+      eht_field_rotation_convention (bool): Flag to determine if a derotation of the field rotation angles is required, as is the case for data produced by standard EHT pipelines. Default: True.
     Returns:
       None.
     """
@@ -392,6 +392,11 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
         fr1 = -fr1
         fr2 = -fr2
 
+    # Halve field rotation angles if this is not EHT data to mock up the EHT definition
+    if (eht_field_rotation_convention==False) :
+        fr1 = 0.5*fr1
+        fr2 = 0.5*fr2
+        
     # Write header
     out=open(outname,'w')
     out.write('#%24s %4s %4s %15s %6s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s %15s\n'%('source','year',' day','time (hr)','base','u (Ml)','v (Ml)','fr1 (rad)', 'fr2 (rad)','RR.r (Jy)','RRerr.r (Jy)','RR.i (Jy)','RRerr.i (Jy)','LL.r (Jy)','LLerr.r (Jy)','LL.i (Jy)','LLerr.i (Jy)','RL.r (Jy)','RLerr.r (Jy)','RL.i (Jy)','RLerr.i (Jy)','LR.r (Jy)','LRerr.r (Jy)','LR.i (Jy)','LRerr.i (Jy)'))
