@@ -434,8 +434,8 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
 
         # Pre-rotate by the field rotation angles if not EHT data to match the EHT definition
         if (eht_field_rotation_convention==False) :
-            efr1 = np.exp(1.0j*fr1[ii])
-            efr2 = np.exp(1.0j*fr2[ii])
+            efr1 = np.exp(-1.0j*fr1[ii])
+            efr2 = np.exp(-1.0j*fr2[ii])
 
             RR = RR * efr1*np.conj(efr2)
             LL = LL * np.conj(efr1)*efr2
