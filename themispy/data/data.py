@@ -391,11 +391,6 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
     if (flip_field_rotation_angles) :
         fr1 = -fr1
         fr2 = -fr2
-
-    # Halve field rotation angles if this is not EHT data to mock up the EHT definition
-    if (eht_field_rotation_convention==False) :
-        fr1 = 0.5*fr1
-        fr2 = 0.5*fr2
         
     # Write header
     out=open(outname,'w')
@@ -437,6 +432,17 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
                 LRerr = 100.0
 
 
+        # Pre-rotate by the field rotation angles if not EHT data to match the EHT definition
+        if (eht_field_rotation_convention==False) :
+            efr1 = np.exp(1.0j*fr1[ii])
+            efr2 = np.exp(1.0j*fr2[ii])
+
+            RR = RR * efr1*np.conj(efr2)
+            LL = LL * np.conj(efr1)*efr2
+            RL = RL * efr1*efr2
+            LR = LR * np.conj(efr1)*np.conj(efr2)
+
+                
         # Only output data that does not include nans
         if (np.isnan([RR,LL,RL,LR]).any()==False) :
             if (SNR>snrcut) :
