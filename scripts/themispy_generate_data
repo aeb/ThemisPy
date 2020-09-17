@@ -252,7 +252,7 @@ if __name__ == "__main__" :
                 snrcut = 0.0
 
             # Write data file
-            tydat.write_crosshand_visibilities(obs, outfile, isER5=args.er5, snrcut=snrcut, keep_partial_hands=args.exclude_partial_hands, eht_field_rotation_convention=!args.eht)
+            tydat.write_crosshand_visibilities(obs, outfile, isER5=args.er5, snrcut=snrcut, keep_partial_hands=args.exclude_partial_hands, eht_field_rotation_convention=(not args.eht))
 
             # Remove from data_type_list
             data_type_list = data_type_list.replace('x','')
