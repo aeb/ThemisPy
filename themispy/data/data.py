@@ -343,12 +343,12 @@ def reconstruct_field_rotation_angles(obs, isER5=False) :
     #FR1 = FR1*np.pi/180.
     #FR2 = FR2*np.pi/180.
 
-    obs.switch_polrep('stokes')
+    # obs.switch_polrep('stokes')
 
     return FR1,FR2
 
 
-def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_partial_hands=True, flip_field_rotation_angles=False, eht_field_rotation_convention=False) :
+def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_partial_hands=True, flip_field_rotation_angles=False, eht_field_rotation_convention=True) :
     """
     Writes complex crosshand RR,LL,RL,LR visibilities in Themis format given an :class:`ehtim.obsdata.Obsdata` object.
 
@@ -412,6 +412,19 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
         LR = d['lrvis']
         LRerr = d['lrsigma']
 
+
+        # Pre-rotate by the field rotation angles if not EHT data to match the EHT definition
+        if (eht_field_rotation_convention==False) :
+            #efr1 = np.exp(1j*fr1[ii])
+            #efr2 = np.exp(1j*fr2[ii])
+            #RR = RR * efr1*np.conj(efr2)
+            #LL = LL * np.conj(efr1)*efr2
+            #RL = RL * efr1*efr2
+            #LR = LR * np.conj(efr1)*np.conj(efr2)
+            
+            fr1[ii] *= 0.5
+            fr2[ii] *= 0.5
+            
         SNR = (np.abs(RR)+np.abs(LL))/(RRerr+LLerr)
         
         # If we want to still use only partial-hand visibilities, 
@@ -430,18 +443,6 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
             if (np.isnan(LR)) :
                 LR = 0.0+1j*0.0
                 LRerr = 100.0
-
-
-        # Pre-rotate by the field rotation angles if not EHT data to match the EHT definition
-        if (eht_field_rotation_convention==False) :
-            efr1 = np.exp(-1.0j*fr1[ii])
-            efr2 = np.exp(-1.0j*fr2[ii])
-
-            RR = RR * efr1*np.conj(efr2)
-            LL = LL * np.conj(efr1)*efr2
-            RL = RL * efr1*efr2
-            LR = LR * np.conj(efr1)*np.conj(efr2)
-
                 
         # Only output data that does not include nans
         if (np.isnan([RR,LL,RL,LR]).any()==False) :
