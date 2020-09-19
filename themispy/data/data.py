@@ -355,6 +355,7 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
     Warning: 
       * The :class:`ehtim.obsdata.Obsdata` must be read in with a polrep='circ'.  If this is not the case, raises a ValueError.  DO NOT SWITCH THE POLREP AS THIS INFLATES THE ERRORS.
       * This makes extensive use of ehtim and astropy and will not be available if either is not installed.  Raises a NotImplementedError if they are is unavailable.
+      * This has not been fully tested on data that is not pre-rotated by the field rotation angle as is the convention for EHT-type data sets.  
 
     Args:
       obs (ehtim.obsdata.Obsdata): An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).
@@ -414,16 +415,14 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
 
 
         # Pre-rotate by the field rotation angles if not EHT data to match the EHT definition
+        # NOT FULLY TESTED
         if (eht_field_rotation_convention==False) :
-            #efr1 = np.exp(1j*fr1[ii])
-            #efr2 = np.exp(1j*fr2[ii])
-            #RR = RR * efr1*np.conj(efr2)
-            #LL = LL * np.conj(efr1)*efr2
-            #RL = RL * efr1*efr2
-            #LR = LR * np.conj(efr1)*np.conj(efr2)
-            
-            fr1[ii] *= 0.5
-            fr2[ii] *= 0.5
+            efr1 = np.exp(1j*fr1[ii])
+            efr2 = np.exp(1j*fr2[ii])
+            RR = RR * efr1*np.conj(efr2)
+            LL = LL * np.conj(efr1)*efr2
+            RL = RL * efr1*efr2
+            LR = LR * np.conj(efr1)*np.conj(efr2)
             
         SNR = (np.abs(RR)+np.abs(LL))/(RRerr+LLerr)
         
