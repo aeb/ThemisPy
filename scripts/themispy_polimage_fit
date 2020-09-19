@@ -94,7 +94,7 @@ def set_parser():
                         type=int,
                         nargs="*",
                         action='store',
-                        default=None,
+                        default=[128],
                         help=("Number of pixels in image. May be a single integer (square image) or two"
                               " integers (non-square image). If None uses the default in"
                               " vis.image.plot_model_image function."
@@ -104,7 +104,7 @@ def set_parser():
                         type=int,
                         nargs="*",
                         action='store',
-                        default=None,
+                        default=[32],
                         help=("Number of polarization ticks on image. May be a single integer (square image)"
                               " or two integers (non-square image). If None uses the default in the"
                               " vis.image.plot_polarized_image or vis.image.plot_linear_polarization_map functions."
@@ -175,10 +175,13 @@ def set_parser():
 
     parser.add_argument("-s","--smooth",
                         type=float,
+                        nargs="*",
                         action='store',
                         default=None,
-                        help=("If passed, will smooth the image with a symmetric Gaussian filter with"
-                              " FWHM given in microarcseconds."))
+                        help=("If set, will smooth the image with a Gaussian filter.  Either one or three"
+                              "arguments are required: either the FWHM of a symmetric Gaussian in"
+                              "microarcseconds, or the major axis FWHM, minor axis FWHM, both in microarcseconds,"
+                              "and major axis position angle measured east of north in degrees."))
 
     parser.add_argument("-ms","--mscale",
                         type=float,
@@ -283,8 +286,19 @@ if __name__ == "__main__" :
         uas2rad = np.pi/(180.0*3600e6)
         model_image_unsmoothed = copy.deepcopy(model_image)
         model_image = ty.vis.model_polarized_image_smooth(model_image_unsmoothed)
-        parameters = np.append(parameters,[args.smooth*uas2rad/np.sqrt(8.0*np.log(2.0)), 0, 0])
 
+        if (len(args.smooth)==1) :            
+            parameters = np.append(parameters,[args.smooth[0]*uas2rad/np.sqrt(8.0*np.log(2.0)), 0, 0])
+        elif (len(args.smooth)==3) :
+            ssig = 1.0/np.sqrt( 1.0/args.smooth[0]**2 + 1.0/args.smooth[1]**2 ) * uas2rad/np.sqrt(8.0*np.log(2.0))
+            sA = (args.smooth[0]**2-args.smooth[1]**2)/(args.smooth[0]**2+args.smooth[1]**2)
+            sPA = np.pi/180.0 * (args.smooth[2] + 90.0)
+            parameters = np.append(parameters,[ssig,sA,sPA])
+        else :
+            print("ERROR: --smooth, -s takes one or three arguments.  Try -h for more information.")
+            quit()
+
+            
         if (args.verbose):
             print("Smoothed parameters:",parameters)    
 
