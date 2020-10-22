@@ -402,6 +402,7 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
       alpha (float): Value of alpha for the individual likelihood traces. Default: 1.0.
       quantiles (list): List of quantiles at which to draw contours. Default: 0.99, 0.9, 0.5. Note that the defaults will change if set!
       nbin (int): Number of bins on which to construct KDE result in each dimension. Default: 128.
+      limits (list): List of two-element lists containing the limits to apply to the plotting region. If None, limits will be automatically applied. Default: None.
       linewidth (float): Linewidth to be passed to :func:`matplotlib.pyplot.plot` for diagonal 1d histograms. Default: 1.
       linestype (str): Linestyle to be passed to :func:`matplotlib.pyplot.plot` for diagonal 1d histograms. Default: '-'.
       truths_alpha (float): Value of alpha for the individual likelihood traces. Default: 1.0.
@@ -418,6 +419,7 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
       contour_edge_colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. If None, uses the colormap passed by the colormap option. Default: None.
       contour_edge_alpha (float): Value of alpha for contour lines. Only meaningful if edges=True. If None, sets the contour line alpha to that passed by alpha. Default: None.
       contour_linewidth (float): Width of contour lines. Default: 1.
+      transform (bool): If True, will logit transform the data to within the region specified by limits, forming sharp boundaries. Default: False.
 
     Returns:
       (matplotlib.axes.Axes, list, list, list): Handles to the array of axes objects in the plot, list of handels to the 2d kde plot objects in the lower triangle, 2d kde plot objects in the upper triangle, and 1d plot objects in along the diagonal (see :func:`kde_plot_2d` and :func:`kde_plot_1d` for more information).
