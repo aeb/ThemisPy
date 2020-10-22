@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.typlot &mdash; ThemisPy 0.3.0+35.gca4270d documentation</title>
+  <title>vis.typlot &mdash; ThemisPy 0.3.0+36.g8744325 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+35.gca4270d documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+36.g8744325 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.0+35.gca4270d
+                0.3.0+36.g8744325
               </div>
             
           
@@ -551,6 +551,7 @@
 <span class="sd">      alpha (float): Value of alpha for the individual likelihood traces. Default: 1.0.</span>
 <span class="sd">      quantiles (list): List of quantiles at which to draw contours. Default: 0.99, 0.9, 0.5. Note that the defaults will change if set!</span>
 <span class="sd">      nbin (int): Number of bins on which to construct KDE result in each dimension. Default: 128.</span>
+<span class="sd">      limits (list): List of two-element lists containing the limits to apply to the plotting region. If None, limits will be automatically applied. Default: None.</span>
 <span class="sd">      linewidth (float): Linewidth to be passed to :func:`matplotlib.pyplot.plot` for diagonal 1d histograms. Default: 1.</span>
 <span class="sd">      linestype (str): Linestyle to be passed to :func:`matplotlib.pyplot.plot` for diagonal 1d histograms. Default: &#39;-&#39;.</span>
 <span class="sd">      truths_alpha (float): Value of alpha for the individual likelihood traces. Default: 1.0.</span>
@@ -567,6 +568,7 @@
 <span class="sd">      contour_edge_colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. If None, uses the colormap passed by the colormap option. Default: None.</span>
 <span class="sd">      contour_edge_alpha (float): Value of alpha for contour lines. Only meaningful if edges=True. If None, sets the contour line alpha to that passed by alpha. Default: None.</span>
 <span class="sd">      contour_linewidth (float): Width of contour lines. Default: 1.</span>
+<span class="sd">      transform (bool): If True, will logit transform the data to within the region specified by limits, forming sharp boundaries. Default: False.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">      (matplotlib.axes.Axes, list, list, list): Handles to the array of axes objects in the plot, list of handels to the 2d kde plot objects in the lower triangle, 2d kde plot objects in the upper triangle, and 1d plot objects in along the diagonal (see :func:`kde_plot_2d` and :func:`kde_plot_1d` for more information).</span>
@@ -845,7 +847,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+35.gca4270d',
+            VERSION:'0.3.0+36.g8744325',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
