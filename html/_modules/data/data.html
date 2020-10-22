@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>data.data &mdash; ThemisPy 0.3.0+23.gc36026c documentation</title>
+  <title>data.data &mdash; ThemisPy 0.3.0+35.gca4270d documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+23.gc36026c documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+35.gca4270d documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.0+23.gc36026c
+                0.3.0+35.gca4270d
               </div>
             
           
@@ -492,18 +492,19 @@
     <span class="c1">#FR1 = FR1*np.pi/180.</span>
     <span class="c1">#FR2 = FR2*np.pi/180.</span>
 
-    <span class="n">obs</span><span class="o">.</span><span class="n">switch_polrep</span><span class="p">(</span><span class="s1">&#39;stokes&#39;</span><span class="p">)</span>
+    <span class="c1"># obs.switch_polrep(&#39;stokes&#39;)</span>
 
     <span class="k">return</span> <span class="n">FR1</span><span class="p">,</span><span class="n">FR2</span></div>
 
 
-<div class="viewcode-block" id="write_crosshand_visibilities"><a class="viewcode-back" href="../../docs/src/data.html#data.data.write_crosshand_visibilities">[docs]</a><span class="k">def</span> <span class="nf">write_crosshand_visibilities</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">outname</span><span class="p">,</span> <span class="n">isER5</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">snrcut</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keep_partial_hands</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flip_field_rotation_angles</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="write_crosshand_visibilities"><a class="viewcode-back" href="../../docs/src/data.html#data.data.write_crosshand_visibilities">[docs]</a><span class="k">def</span> <span class="nf">write_crosshand_visibilities</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">outname</span><span class="p">,</span> <span class="n">isER5</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">snrcut</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">keep_partial_hands</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">flip_field_rotation_angles</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">eht_field_rotation_convention</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Writes complex crosshand RR,LL,RL,LR visibilities in Themis format given an :class:`ehtim.obsdata.Obsdata` object.</span>
 
 <span class="sd">    Warning: </span>
 <span class="sd">      * The :class:`ehtim.obsdata.Obsdata` must be read in with a polrep=&#39;circ&#39;.  If this is not the case, raises a ValueError.  DO NOT SWITCH THE POLREP AS THIS INFLATES THE ERRORS.</span>
 <span class="sd">      * This makes extensive use of ehtim and astropy and will not be available if either is not installed.  Raises a NotImplementedError if they are is unavailable.</span>
+<span class="sd">      * This has not been fully tested on data that is not pre-rotated by the field rotation angle as is the convention for EHT-type data sets.  </span>
 
 <span class="sd">    Args:</span>
 <span class="sd">      obs (ehtim.obsdata.Obsdata): An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).</span>
@@ -511,7 +512,7 @@
 <span class="sd">      isER5 (bool): Flag to indicate that this is an ER5 file with polconvert errors that modify the field rotation angles. Default: False.</span>
 <span class="sd">      snrcut (float): A possible signal-to-noise ratio below which to reject points. Default: 0.</span>
 <span class="sd">      keep_partial_hands (bool): Flag to deterime how to treat data with incomplete polarization information.  If true, the single-hand visibilities are kept, and large errors are assigned to correlation products that include other hands. Default: True.</span>
-
+<span class="sd">      eht_field_rotation_convention (bool): Flag to determine if a derotation of the field rotation angles is required, as is the case for data produced by standard EHT pipelines. Default: True.</span>
 <span class="sd">    Returns:</span>
 <span class="sd">      None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -540,7 +541,7 @@
     <span class="k">if</span> <span class="p">(</span><span class="n">flip_field_rotation_angles</span><span class="p">)</span> <span class="p">:</span>
         <span class="n">fr1</span> <span class="o">=</span> <span class="o">-</span><span class="n">fr1</span>
         <span class="n">fr2</span> <span class="o">=</span> <span class="o">-</span><span class="n">fr2</span>
-
+        
     <span class="c1"># Write header</span>
     <span class="n">out</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="n">outname</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
     <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#</span><span class="si">%24s</span><span class="s1"> </span><span class="si">%4s</span><span class="s1"> </span><span class="si">%4s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%6s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="s1"> </span><span class="si">%15s</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="s1">&#39;source&#39;</span><span class="p">,</span><span class="s1">&#39;year&#39;</span><span class="p">,</span><span class="s1">&#39; day&#39;</span><span class="p">,</span><span class="s1">&#39;time (hr)&#39;</span><span class="p">,</span><span class="s1">&#39;base&#39;</span><span class="p">,</span><span class="s1">&#39;u (Ml)&#39;</span><span class="p">,</span><span class="s1">&#39;v (Ml)&#39;</span><span class="p">,</span><span class="s1">&#39;fr1 (rad)&#39;</span><span class="p">,</span> <span class="s1">&#39;fr2 (rad)&#39;</span><span class="p">,</span><span class="s1">&#39;RR.r (Jy)&#39;</span><span class="p">,</span><span class="s1">&#39;RRerr.r (Jy)&#39;</span><span class="p">,</span><span class="s1">&#39;RR.i (Jy)&#39;</span><span class="p">,</span><span class="s1">&#39;RRerr.i (Jy)&#39;</span><span class="p">,</span><span class="s1">&#39;LL.r (Jy)&#39;</span><span class="p">,</span><span class="s1">&#39;LLerr.r (Jy)&#39;</span><span class="p">,</span><span class="s1">&#39;LL.i (Jy)&#39;</span><span class="p">,</span><span class="s1">&#39;LLerr.i (Jy)&#39;</span><span class="p">,</span><span class="s1">&#39;RL.r (Jy)&#39;</span><span class="p">,</span><span class="s1">&#39;RLerr.r (Jy)&#39;</span><span class="p">,</span><span class="s1">&#39;RL.i (Jy)&#39;</span><span class="p">,</span><span class="s1">&#39;RLerr.i (Jy)&#39;</span><span class="p">,</span><span class="s1">&#39;LR.r (Jy)&#39;</span><span class="p">,</span><span class="s1">&#39;LRerr.r (Jy)&#39;</span><span class="p">,</span><span class="s1">&#39;LR.i (Jy)&#39;</span><span class="p">,</span><span class="s1">&#39;LRerr.i (Jy)&#39;</span><span class="p">))</span>
@@ -561,6 +562,17 @@
         <span class="n">LR</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;lrvis&#39;</span><span class="p">]</span>
         <span class="n">LRerr</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="s1">&#39;lrsigma&#39;</span><span class="p">]</span>
 
+
+        <span class="c1"># Pre-rotate by the field rotation angles if not EHT data to match the EHT definition</span>
+        <span class="c1"># NOT FULLY TESTED</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">eht_field_rotation_convention</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">efr1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">fr1</span><span class="p">[</span><span class="n">ii</span><span class="p">])</span>
+            <span class="n">efr2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="n">fr2</span><span class="p">[</span><span class="n">ii</span><span class="p">])</span>
+            <span class="n">RR</span> <span class="o">=</span> <span class="n">RR</span> <span class="o">*</span> <span class="n">efr1</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">efr2</span><span class="p">)</span>
+            <span class="n">LL</span> <span class="o">=</span> <span class="n">LL</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">efr1</span><span class="p">)</span><span class="o">*</span><span class="n">efr2</span>
+            <span class="n">RL</span> <span class="o">=</span> <span class="n">RL</span> <span class="o">*</span> <span class="n">efr1</span><span class="o">*</span><span class="n">efr2</span>
+            <span class="n">LR</span> <span class="o">=</span> <span class="n">LR</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">efr1</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">efr2</span><span class="p">)</span>
+            
         <span class="n">SNR</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">RR</span><span class="p">)</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">LL</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">RRerr</span><span class="o">+</span><span class="n">LLerr</span><span class="p">)</span>
         
         <span class="c1"># If we want to still use only partial-hand visibilities, </span>
@@ -579,8 +591,7 @@
             <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">LR</span><span class="p">))</span> <span class="p">:</span>
                 <span class="n">LR</span> <span class="o">=</span> <span class="mf">0.0</span><span class="o">+</span><span class="mi">1</span><span class="n">j</span><span class="o">*</span><span class="mf">0.0</span>
                 <span class="n">LRerr</span> <span class="o">=</span> <span class="mf">100.0</span>
-
-
+                
         <span class="c1"># Only output data that does not include nans</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">([</span><span class="n">RR</span><span class="p">,</span><span class="n">LL</span><span class="p">,</span><span class="n">RL</span><span class="p">,</span><span class="n">LR</span><span class="p">])</span><span class="o">.</span><span class="n">any</span><span class="p">()</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">SNR</span><span class="o">&gt;</span><span class="n">snrcut</span><span class="p">)</span> <span class="p">:</span>
@@ -1149,7 +1160,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+23.gc36026c',
+            VERSION:'0.3.0+35.gca4270d',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
