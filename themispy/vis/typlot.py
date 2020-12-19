@@ -107,7 +107,7 @@ def axes_adjust(fig=None, axes=None, shift_x0=0, shift_y0=0, shift_width=0, shif
         axes = plt.gca()
 
     figsize = fig.get_size_inches()
-    current_location = plt.gca().get_position()
+    current_location = axes.get_position()
     axes.set_position([ current_location.x0+shift_x0/figsize[0], current_location.y0+shift_y0/figsize[1], current_location.width+shift_width/figsize[0], current_location.height+shift_height/figsize[1] ])
     
 
@@ -205,9 +205,10 @@ def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-'
     X = np.linspace(xmin,xmax,nbin)
     Z = kde(X)
 
+    h = []
     if (filled) :
-        plt.fill_between(X,Z,color=color,alpha=0.25*alpha,linewidth=linewidth,linestyle=linestyle)
-    h = plt.plot(X,Z,color=color,linewidth=linewidth,linestyle=linestyle,alpha=alpha)
+        h.append(plt.fill_between(X,Z,color=color,alpha=0.25*alpha,linewidth=linewidth,linestyle=linestyle))
+    h.append(plt.plot(X,Z,color=color,linewidth=linewidth,linestyle=linestyle,alpha=alpha))
 
     return h
 
