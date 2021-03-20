@@ -332,8 +332,9 @@ if __name__ == "__main__" :
 
         # Set the proper normalization
         if (time==time_list[0]) :
-            Imed = np.median(I)
+            Imed = np.median(I)+1e-10
             Imax = np.max(I)
+            #print(Imed, Imax)
             if (args.transfer=='linear') :
                 vmax = (Imed) * 10**( args.norm*np.log10(Imax/Imed) )
                 vmin = 0

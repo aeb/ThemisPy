@@ -303,7 +303,7 @@ if __name__ == "__main__" :
 
         # Set the brightness normalization by the central panel
         if (k==0) :
-            Imed = np.median(I)
+            Imed = np.median(I) + 1e-20
             Imax = np.max(I)
             if (args.transfer=='linear') :
                 vmax = (Imed) * 10**( args.norm*np.log10(Imax/Imed) )

@@ -185,7 +185,7 @@ def read_uvfits(filename,polrep,args) :
 
     # remove baselines below cutoff
     if (not args.minimum_baseline is None) :
-        obs.flag_uvdist(args.minimum_baseline)
+        obs = obs.flag_uvdist(args.minimum_baseline)
 
     return obs
 

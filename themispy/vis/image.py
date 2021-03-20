@@ -479,6 +479,93 @@ class model_image_xsringauss(model_image) :
         return [ r'$I_0$ (Jy)', r'$R_{\rm out}$ (rad)', r'$\psi$', r'$\epsilon$', r'$f$', r'$g_{ax}$', r'$a_q$', r'$g_q$', r'$\phi$ (rad)']
 
 
+class model_image_xsring_ellip(model_image) :
+    """
+    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_xsring_ellip`.
+    Has parameters:
+
+    * parameters[0] ... Total intensity :math:`I_0` (Jy)
+    * parameters[1] ... Outer radius :math:`R` (rad)
+    * parameters[2] ... Width parameter :math:`\\psi` in (0,1)
+    * parameters[3] ... Eccentricity parameter :math:`\\epsilon` in (0,1)
+    * parameters[4] ... Ellipticity parameter, ration of semi-minor to semi-major in (0,1)
+    * parameters[5] ... Ellipticity orientation, (rad)
+    * parameters[6] ... Linear fade parameter math:`f` in (0,1)
+    * parameters[7] ... Position angle :math:`\\phi` (rad)
+
+    and size=8.
+
+    Args:
+      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
+    """
+
+    def __init__(self, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+        self.size=8
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+
+        # Make sure that delta ring is resolvable
+        dx = 1.5*max(abs(x[1,1]-x[0,0]),abs(y[1,1]-y[0,0]))
+        self.parameters[2] = max(self.parameters[2],dx/(self.parameters[1]*rad2uas))
+
+        I0 = max(1e-8,self.parameters[0])
+        Rp = max(1e-20,self.parameters[1]) * rad2uas
+        Rin = min( max(1e-4,1-self.parameters[2]), 0.9999 ) * Rp
+        d = min(max(self.parameters[3],1e-4),0.9999) * (Rp - Rin)
+        tau = max(self.parameters[4], 1e-4)
+        xit = self.parameters[5]
+        f = min(max(self.parameters[6],1e-4),0.9999);
+        phi = self.parameters[7]
+        scale = 1.0/(1.0-tau)
+        c = np.cos(xit)
+        s = np.sin(xit)
+        ddx = (x*c + y*s)*scale
+        ddy = (-x*s + y*c)/scale
+
+        Iring0 = (2.*I0/np.pi) *1.0/((1.0+f)*(Rp**2 - Rin**2) - (1.0-f)*d*Rin**2/Rp);
+
+        c = np.cos(phi)
+        s = np.sin(phi)
+        dx = ddx*c - ddy*s
+        dy = ddx*s + ddy*c
+
+        Iring = Iring0*(0.5*(1.0-dx/Rp) + 0.5*f*(1.0+dx/Rp)) 
+
+        Iring *= ((dx**2+dy**2)<=Rp**2)
+        Iring *= (((dx-d)**2+(dy)**2)>Rin**2)
+
+        if (verbosity>0) :
+            print('xsring_ellip:',I0, Rp, Rin, d, tau, xit, f, phi)
+
+        return (Iring)
+
+
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        return [ r'$I_0$ (Jy)', r'$R_{\rm out}$ (rad)', r'$\psi$', r'$\epsilon$', r'$\tau$', r'$\xi$ (rad)', r'$f$', r'$g_{ax}$', r'$a_q$', r'$g_q$', r'$\phi$ (rad)']
+
+
+
+
 def direct_cubic_spline_1d(x,f,xx,a=-0.5) :
     """
     Image-space approximate cubic spline convolution along 1D.  Useful for the splined raster image classes.  
@@ -1810,6 +1897,9 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
 
     elif (tag[0]=='model_image_xsringauss') :
         return model_image_xsringauss(),tag[1:]
+    
+    elif (tag[0]=="model_image_xsring_ellip") :
+        return model_image_xsring_ellip(),tag[1:]
 
     elif (tag[0].split()[0]=='model_image_splined_raster') :
         toks = tag[0].split()

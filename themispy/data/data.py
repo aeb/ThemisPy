@@ -486,12 +486,13 @@ def write_visibilities(obs, outname, snrcut=0) :
     # Get some dataset particulars
     src = obs.source
     mjd = obs.mjd
+    freq = obs.rf
     t=Time(mjd,format='mjd')
     [year,day]=map(int,t.yday.split(':')[:2])
     
     # Write header
     out=open(outname,'w')
-    out.write('#%24s %4s %4s %15s %6s %15s %15s %15s %15s %15s %15s\n'%('source','year',' day','time (hr)','base','u (Ml)','v (Ml)','V.r (Jy)','err.r (Jy)','V.i (Jy)','err.i (Jy)'))
+    out.write('#%24s %4s %4s %15s %15s %6s %15s %15s %15s %15s %15s %15s\n'%('source','year',' day',"freq (GHz)",'time (hr)','base','u (Ml)','v (Ml)','V.r (Jy)','err.r (Jy)','V.i (Jy)','err.i (Jy)'))
 
     # Write data file
     for d in obs.data :
@@ -502,7 +503,7 @@ def write_visibilities(obs, outname, snrcut=0) :
         cv = d['vis']
         err = d['sigma']
         if ( np.abs(cv)/err >= snrcut ) :
-            out.write('%25s %4i %4i %15.8f %4s %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,time,bl,u,v,cv.real,err,cv.imag,err))
+            out.write('%25s %4i %4i %15.8f %15.8f %4s %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,freq/1e9,time,bl,u,v,cv.real,err,cv.imag,err))
     out.close()
     
 
@@ -925,6 +926,8 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
     od_time_list = []
     for tmp in od_time :
         od_time_list.append(tmp[0])
+    od_time_list = od_time_list[:-3]
+
 
     # Check for consistency, if they are not consistent warn
     if (relative_timestamps) :
@@ -943,11 +946,13 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
         gain_time_list = gain_data['tstart'] + gain_time_offset_hour
         time_precision_slop = 1e-3/3600.0 # Permit a slop of 1 ms in the time comparisons
         if ( od_time_list[0]<gain_data['tstart'][0]+gain_time_offset_hour-time_precision_slop or od_time_list[-1]>gain_data['tend'][-1]+gain_time_offset_hour+time_precision_slop ) :
+            print(od_time_list[0], gain_data['tstart'][0]+gain_time_offset_hour-time_precision_slop)
+            print(od_time_list[-1],gain_data['tend'][-1]+gain_time_offset_hour+time_precision_slop)
             raise RuntimeError("gain_data does not cover the observation times. Cowardly refusing to continue.")
 
-        
+    print(gain_data)
     # Generate Caltable object
-    if (verbosity>0) :
+    if (verbosity > -1) :
         print("Sites:",gain_station_names)
         print("Times:",od_time_list)
     datatables = {}
@@ -960,7 +965,9 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
     cal=eh.caltable.Caltable(obs.ra, obs.dec, obs.rf, obs.bw, datatables, obs.tarr, source=obs.source, mjd=obs.mjd, timetype=obs.timetype)
 
     # Calibrate the observation data (Yikes!!)
-    obs_cal = cal.applycal(obs)
+    obs_cal = cal.applycal(obs, extrapolate=True)
+    print("Here")
+    print(obs_cal.unpack("time"))
 
     # Write out new uvfits file
     obs_cal.save_uvfits(outname)

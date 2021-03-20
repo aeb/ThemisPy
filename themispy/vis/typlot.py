@@ -161,7 +161,7 @@ def _logit_kde(x, limits, bw) :
 
 
 
-def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-', nbin=128, bw='scott', scott_factor=0, filled=False, transform=False):
+def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-', nbin=128, bw='scott', scott_factor=0, filled=False, transform=False, vertical=False, **kwargs):
     """
     Creates a 1d joint posterior plot using :func:`scipy.stats.gaussian_kde` function.
 
@@ -177,6 +177,7 @@ def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-'
       scott_factor (float): Factor by which to expand the standard `scott` bandwidth factor.  Overrides bw if nonzero.  Default: 0.
       filled (bool): If true, the histogram is plotted filled. Default: False.
       transform (bool): Whether to use a logit transformed version of the KDE to prevent leakage out of the expected range. Default False.
+      vertical (bool): If true the kde will be drawn on the y-axis not the x-axis, Default False.
 
     Returns:
       (matplotlib.lines.Line2D): A list of Line2D objects representing the plotted data, i.e., the handles returned by :func:`matplotlib.pyplot.plot`.
@@ -204,11 +205,14 @@ def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-'
 
     X = np.linspace(xmin,xmax,nbin)
     Z = kde(X)
-
-    h = []
-    if (filled) :
-        h.append(plt.fill_between(X,Z,color=color,alpha=0.25*alpha,linewidth=linewidth,linestyle=linestyle))
-    h.append(plt.plot(X,Z,color=color,linewidth=linewidth,linestyle=linestyle,alpha=alpha))
+    if not vertical :
+        if (filled) :
+            plt.fill_between(X,Z,color=color,alpha=0.25*alpha,linewidth=linewidth,linestyle=linestyle)
+        h = plt.plot(X,Z,color=color,linewidth=linewidth,linestyle=linestyle,alpha=alpha, **kwargs)
+    else :
+        if (filled) :
+            plt.fill_between(Z,X,color=color,alpha=0.25*alpha,linewidth=linewidth,linestyle=linestyle)
+        h = plt.plot(Z,X,color=color,linewidth=linewidth,linestyle=linestyle,alpha=alpha, **kwargs)
 
     return h
 
@@ -255,7 +259,7 @@ def _logit_kde2d(x,y, lims, bw) :
 
     return kde_trans2d
 
-def kde_plot_2d(x, y, plevels=None, limits=None, colormap='Purples', alpha=1.0, nbin=128, bw='scott', scott_factor=0, transform=False, fill=True, edges=False, fill_zorder=None, edge_zorder=None, edge_colors=None, edge_colormap=None, edge_alpha=None, linewidth=1):
+def kde_plot_2d(x, y, plevels=None, limits=None, colormap='Purples', alpha=1.0, nbin=128, bw='scott', scott_factor=0, transform=False, fill=True, edges=False, fill_zorder=None, edge_zorder=None, edge_colors=None, edge_colormap=None, edge_alpha=None, linewidth=1, **kwargs):
     """
     Creates a 2d joint posterior plot using :func:`scipy.stats.gaussian_kde` function and :func:`matplotlib.pyplot.contourf`.
 
@@ -383,7 +387,7 @@ def _find_limits(data,quantile=0.25,factor=1.5) :
     return lim
 
 
-def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, transform=False, labels=None, upper_labels=None, truths=None, colormap='Blues', upper_colormap=None, color='blue', upper_color=None, truths_color='red', axis_location=None, axes=None, alpha=1.0, quantiles=[0.99,0.9,0.5], nbin=128, linewidth=1, linestyle='-', truths_alpha=1.0, truths_linewidth=1, truths_linestype='-', scott_factor=1.41421, filled=False, grid=True, contour_fill=True, contour_edges=False, contourfill_zorder=None, contour_edge_zorder=None, contour_edge_colors=None, contour_edge_colormap=None, contour_edge_alpha=None, contour_linewidth=1) :
+def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, transform=False, labels=None, upper_labels=None, truths=None, colormap='Blues', upper_colormap=None, color='blue', upper_color=None, truths_color='red', axis_location=None, axes=None, alpha=1.0, quantiles=[0.99,0.9,0.5], nbin=128, linewidth=1, linestyle='-', truths_alpha=1.0, truths_linewidth=1, truths_linestype='-', scott_factor=1.41421, upper_scott_factor=1.41421, filled=False, grid=True, contour_fill=True, contour_edges=False, contourfill_zorder=None, contour_edge_zorder=None, contour_edge_colors=None, contour_edge_colormap=None, contour_edge_alpha=None, contour_linewidth=1) :
     """
     Produces a triangle plot with contours set by CDF.  Data may be plotted in both lower (required) and upper (optional) triangles.
 
@@ -573,7 +577,7 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
 
 
                 # Make 2d joint distribution plot
-                upper_triangle_plot_handles[j,k] = kde_plot_2d(upper_data_array[:,j],upper_data_array[:,k],colormap=upper_colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=scott_factor, transform=transform, fill=contour_fill, edges=contour_edges, fill_zorder=contourfill_zorder, edge_zorder=contour_edge_zorder, edge_colors=contour_edge_colors, edge_colormap=contour_edge_colormap, edge_alpha=contour_edge_alpha, linewidth=contour_linewidth)
+                upper_triangle_plot_handles[j,k] = kde_plot_2d(upper_data_array[:,j],upper_data_array[:,k],colormap=upper_colormap,alpha=alpha,plevels=quantiles,limits=[limx,limy],nbin=nbin,scott_factor=upper_scott_factor, transform=transform, fill=contour_fill, edges=contour_edges, fill_zorder=contourfill_zorder, edge_zorder=contour_edge_zorder, edge_colors=contour_edge_colors, edge_colormap=contour_edge_colormap, edge_alpha=contour_edge_alpha, linewidth=contour_linewidth)
                 axes_handles[j,k] = plt.gca()
 
                 # Fix up tickmarks
@@ -629,9 +633,9 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
             limx = limits[k]
         # Find limits in x/y
         
-        diagonal_plot_handles[k,0] = kde_plot_1d(lower_data_array[:,k],color=color,alpha=alpha,limits=limx,nbin=nbin,linewidth=linewidth,linestyle=linestyle,filled=filled, transform=transform)
+        diagonal_plot_handles[k,0] = kde_plot_1d(lower_data_array[:,k],color=color,alpha=alpha,limits=limx,nbin=nbin,linewidth=linewidth,linestyle=linestyle,filled=filled, transform=transform, scott_factor=scott_factor)
         if (upper_data_array is not None) :
-            diagonal_plot_handles[k,1] = kde_plot_1d(upper_data_array[:,k],color=upper_color,alpha=alpha,limits=limx,nbin=nbin,linewidth=linewidth,linestyle=linestyle,filled=filled, transform=transform)
+            diagonal_plot_handles[k,1] = kde_plot_1d(upper_data_array[:,k],color=upper_color,alpha=alpha,limits=limx,nbin=nbin,linewidth=linewidth,linestyle=linestyle,filled=filled, transform=transform, scott_factor=upper_scott_factor)
 
         axes_handles[k,k] = plt.gca()
 
