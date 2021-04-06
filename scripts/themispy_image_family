@@ -107,7 +107,7 @@ def set_parser():
 
 
     parser.add_argument("-nm","--no-multipanel",
-                        action='store_false',
+                        action='store_true',
                         default=False,
                         help=("Plots individual panels instead of a single multipanel figure. Output"
                               " file names will be appended with the integer number of the frame with"
@@ -277,10 +277,11 @@ if __name__ == "__main__" :
         parameters = chain[k,:]
 
         # Set subplot axis
-        kw = (k + kshift)%args.samples
-        ix = kw%Nwx
-        iy = kw//Nwx
-        plt.sca(spaxs[iy,ix])
+        if args.no_multipanel==False:
+            kw = (k + kshift)%args.samples
+            ix = kw%Nwx
+            iy = kw//Nwx
+            plt.sca(spaxs[iy,ix])
 
         # Add smoothing if desired
         if (not (args.smooth is None)) :

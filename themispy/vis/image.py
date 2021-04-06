@@ -479,6 +479,86 @@ class model_image_xsringauss(model_image) :
         return [ r'$I_0$ (Jy)', r'$R_{\rm out}$ (rad)', r'$\psi$', r'$\epsilon$', r'$f$', r'$g_{ax}$', r'$a_q$', r'$g_q$', r'$\phi$ (rad)']
 
 
+class model_image_mring(model_image) :
+    """
+    Fourier mode delta mring model that is a mirror of :cpp:class:`Themis::model_image_mring`.
+    Has parameters:
+
+    * parameters[0] ... Total intensity :math:`I_0` (Jy)
+    * parameters[1] ... Radius :math:`R` (rad)
+    * parameters[2,3] ... Coefficients (re,im) for first mring mode 
+    * parameters[4,5] ... Coefficients (re,im) for second mring mode
+    * parameters[2N,2N+1] ... Coefficients for (re,im) for N mring mode 
+
+    and size=2+2*N.
+
+    Args:
+      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
+    """
+
+    def __init__(self, nmodes, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+        self.size=2+nmodes*2
+        self.nmodes = nmodes
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+
+        # Make sure that delta ring is resolvable
+        dx = 1.5*max(abs(x[1,1]-x[0,0]),abs(y[1,1]-y[0,0]))
+
+        I0 = max(1e-8,self.parameters[0])
+        R = max(1e-20,self.parameters[1]) * rad2uas
+        
+        phi = np.angle((y - params['y0']) + 1j*(x - params['x0']))
+        beta_factor = (1.0 + np.sum([2.*np.real(params['beta_list'][m-1] * np.exp(1j * m * phi)) for m in range(1,len(params['beta_list'])+1)],axis=0))
+
+        val = (params['F0']*psize**2/(np.pi*params['d']*psize*LINE_THICKNESS)
+                * beta_factor
+                * (params['d']/2.0 - psize*LINE_THICKNESS/2 < np.sqrt((x - params['x0'])**2 + (y - params['y0'])**2))
+                * (params['d']/2.0 + psize*LINE_THICKNESS/2 > np.sqrt((x - params['x0'])**2 + (y - params['y0'])**2)))
+
+        Iring0 = (2.*I0/np.pi) *1.0/((1.0+f)*(Rp**2 - Rin**2) - (1.0-f)*d*Rin**2/Rp);
+
+        c = np.cos(phi)
+        s = np.sin(phi)
+        dx = ddx*c - ddy*s
+        dy = ddx*s + ddy*c
+
+        Iring = Iring0*(0.5*(1.0-dx/Rp) + 0.5*f*(1.0+dx/Rp)) 
+
+        Iring *= ((dx**2+dy**2)<=Rp**2)
+        Iring *= (((dx-d)**2+(dy)**2)>Rin**2)
+
+        if (verbosity>0) :
+            print('xsring_ellip:',I0, Rp, Rin, d, tau, xit, f, phi)
+
+        return (Iring)
+
+
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        return [ r'$I_0$ (Jy)', r'$R_{\rm out}$ (rad)', r'$\psi$', r'$\epsilon$', r'$\tau$', r'$\xi$ (rad)', r'$f$', r'$g_{ax}$', r'$a_q$', r'$g_q$', r'$\phi$ (rad)']
+
+
+
 class model_image_xsring_ellip(model_image) :
     """
     Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_xsring_ellip`.
