@@ -912,56 +912,68 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
     ## TODO: Fix it to figure out the relative start/stop times and apply the gains in the stated time bins.
     ##
 
-    # Flip gains from corrections to the model to adjust data, i.e., G -> 1/G
-    gain_station_names = gain_data['stations']
-    for sn in gain_station_names :
-        gain_data[sn] = 1.0/gain_data[sn]
-
-
-    if (verbosity>0) :
-        print("Gain data:",gain_data)
-        
-    # Get the unique times
-    od_time = np.unique(obs.unpack('time'))
-    od_time_list = []
-    for tmp in od_time :
-        od_time_list.append(tmp[0])
-    od_time_list = od_time_list[:-3]
-
-
-    # Check for consistency, if they are not consistent warn
-    if (relative_timestamps) :
-        gain_time_list = od_time_list
-        if (len(od_time_list)!=len(gain_data['tstart'])) :
-            raise RuntimeError("When relative_timestamps=True, number of gain epochs (%i) must match number of observation epochs (%i)."%(len(gain_data['tstart']),len(od_time_list)))
-        if ( (od_time_list[-1]-od_time_list[0]) > (gain_data['tend'][-1]-gain_data['tstart'][0]) ) :
-            raise RuntimeError("gain_data does not cover the observation times.  Cowardly refusing to continue.")
-    else :
-        # Get the absolute times
-        if (len(od_time_list)!=len(gain_data['tstart'])) :
-            warnings.warn("gain_data and observation data are not the same size! Will try to apply gains nonetheless ...",Warning)
-        if ( int(gain_data['toffset'].mjd) != obs.mjd ) :
-            raise RuntimeError("Observation and gain reconstruction dates differ (mjd %i vs %i). Cowardly refusing to continue."%(obs.mjd,int(gain_data['toffset'].mjd)))
-        gain_time_offset_hour = 24.0 * (gain_data['toffset'].mjd%1)
-        gain_time_list = gain_data['tstart'] + gain_time_offset_hour
-        time_precision_slop = 1e-3/3600.0 # Permit a slop of 1 ms in the time comparisons
-        if ( od_time_list[0]<gain_data['tstart'][0]+gain_time_offset_hour-time_precision_slop or od_time_list[-1]>gain_data['tend'][-1]+gain_time_offset_hour+time_precision_slop ) :
-            print(od_time_list[0], gain_data['tstart'][0]+gain_time_offset_hour-time_precision_slop)
-            print(od_time_list[-1],gain_data['tend'][-1]+gain_time_offset_hour+time_precision_slop)
-            raise RuntimeError("gain_data does not cover the observation times. Cowardly refusing to continue.")
-
-    print(gain_data)
-    # Generate Caltable object
-    if (verbosity > -1) :
-        print("Sites:",gain_station_names)
-        print("Times:",od_time_list)
+    
     datatables = {}
-    #for k in range(len(gain_station_names)):
-    for station in gain_station_names :
-        datatable = []
-        for j in range(len(gain_time_list)):
-            datatable.append(np.array((gain_time_list[j], gain_data[station][j], gain_data[station][j]), dtype=eh.DTCAL))
-        datatables[station] = np.array(datatable)
+    if (not gain_data is None) :
+    # Flip gains from corrections to the model to adjust data, i.e., G -> 1/G
+        gain_station_names = gain_data['stations']
+        for sn in gain_station_names :
+            gain_data[sn] = 1.0/gain_data[sn]
+
+        if (verbosity>0) :
+            print("Gain data:",gain_data)
+
+        # Get the unique times
+        od_time = np.unique(obs.unpack('time'))
+        od_time_list = []
+        for tmp in od_time :
+            od_time_list.append(tmp[0])
+        od_time_list = od_time_list[:-3]
+
+
+        # Check for consistency, if they are not consistent warn
+        if (relative_timestamps) :
+            gain_time_list = od_time_list
+            if (len(od_time_list)!=len(gain_data['tstart'])) :
+                raise RuntimeError("When relative_timestamps=True, number of gain epochs (%i) must match number of observation epochs (%i)."%(len(gain_data['tstart']),len(od_time_list)))
+            if ( (od_time_list[-1]-od_time_list[0]) > (gain_data['tend'][-1]-gain_data['tstart'][0]) ) :
+                raise RuntimeError("gain_data does not cover the observation times.  Cowardly refusing to continue.")
+        else :
+            # Get the absolute times
+            if (len(od_time_list)!=len(gain_data['tstart'])) :
+                warnings.warn("gain_data (%g) and observation data (%g) are not the same size! Will try to apply gains nonetheless ..."%(len(gain_data['tstart']),len(od_time_list)),Warning)
+            if ( int(gain_data['toffset'].mjd) != obs.mjd ) :
+                raise RuntimeError("Observation and gain reconstruction dates differ (mjd %i vs %i). Cowardly refusing to continue."%(obs.mjd,int(gain_data['toffset'].mjd)))
+            gain_time_offset_hour = 24.0 * (gain_data['toffset'].mjd%1)
+            gain_time_list = gain_data['tstart'] + gain_time_offset_hour
+            time_precision_slop = 1e-3/3600.0 # Permit a slop of 1 ms in the time comparisons
+            if ( od_time_list[0]<gain_data['tstart'][0]+gain_time_offset_hour-time_precision_slop or od_time_list[-1]>gain_data['tend'][-1]+gain_time_offset_hour+time_precision_slop ) :
+                print(od_time_list[0], gain_data['tstart'][0]+gain_time_offset_hour-time_precision_slop)
+                print(od_time_list[-1],gain_data['tend'][-1]+gain_time_offset_hour+time_precision_slop)
+                raise RuntimeError("gain_data does not cover the observation times. Cowardly refusing to continue.")
+
+        print(gain_data)
+        # Generate Caltable object
+        if (verbosity > -1) :
+            print("Sites:",gain_station_names)
+            print("Times:",od_time_list)
+        #for k in range(len(gain_station_names)):
+        for station in gain_station_names :
+            datatable = []
+            for j in range(len(gain_time_list)):
+                datatable.append(np.array((gain_time_list[j], gain_data[station][j], gain_data[station][j]), dtype=eh.DTCAL))
+            datatables[station] = np.array(datatable)
+
+    if (not dterm_data is None) :
+        print(dterm_data)
+        # Fix obs.tarr to include dterms
+        for s in range(0,len(obs.tarr)) :
+            station = obs.tarr[s]['site']
+            if (station in dterm_data['station_names']) :
+                obs.tarr[s]['dr'] = dterm_data[station][0]
+                obs.tarr[s]['dl'] = dterm_data[station][1]
+
+    # Generaet caltable object
     cal=eh.caltable.Caltable(obs.ra, obs.dec, obs.rf, obs.bw, datatables, obs.tarr, source=obs.source, mjd=obs.mjd, timetype=obs.timetype)
 
     # Calibrate the observation data (Yikes!!)
@@ -969,6 +981,90 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
     print("Here")
     print(obs_cal.unpack("time"))
 
+    # Apply dterms
+    if (not dterm_data is None) :
+
+        # Get the field rotation angles
+        fr1,fr2=reconstruct_field_rotation_angles(obs_cal)
+
+        print("Field rotation angles:")
+        print(fr1)
+        print(fr2)
+
+        
+        # Make a copy that generates the circular basis
+        if (obs_cal.polrep!='circ') :
+            obs_cal = obs_cal.switch_polrep('circ')
+
+        for i,datum in enumerate(obs_cal.data) :
+            stationA = datum['t1']
+            stationB = datum['t2']
+
+            # Construct inverse D-term matrix for station A
+            if (stationA in dterm_data['station_names']) :
+                DAR = dterm_data[stationA][0]*np.exp(2.0j*fr1[i])
+                DAL = dterm_data[stationA][1]*np.exp(-2.0j*fr1[i])
+            else :
+                DAR = 1.0+0.0j
+                DAL = 1.0+0.0j
+            iDA = np.matrix([[ 1.0+0.0j, -DAR ], [ -DAL, 1.0+0.0j ]]) / (1.0-DAR*DAL)
+                
+
+            # Construct inverse D-term matrix for station A
+            if (stationB in dterm_data['station_names']) :
+                DBR = dterm_data[stationB][0]*np.exp(2.0j*fr2[i])
+                DBL = dterm_data[stationB][1]*np.exp(-2.0j*fr2[i])
+            else :
+                DBR = 1.0+0.0j
+                DBL = 1.0+0.0j
+            iDB = np.matrix([[ 1.0+0.0j, -DBR ], [ -DBL, 1.0+0.0j ]]) / (1.0-DBR*DBL)
+
+            # Generate coherency matrix
+            XAB = np.matrix([[ datum['rrvis'], datum['rlvis'] ],
+                             [ datum['lrvis'], datum['llvis'] ]])
+
+            # Apply inverse D-terms
+            XAB = iDA*XAB*(iDB.H)
+
+            # Unpack back to data elements
+            datum['rrvis'] = XAB[0,0]
+            datum['rlvis'] = XAB[0,1]
+            datum['lrvis'] = XAB[1,0]
+            datum['llvis'] = XAB[1,1]
+
+            # Generate new error esimates
+            var = np.matrix([[ datum['rrsigma'], datum['rlsigma'] ],
+                             [ datum['lrsigma'], datum['llsigma'] ]])
+            for a in [0,1] :
+                for b in [0,1] :
+                    var[a,b] = (var[a,b].real)**2 + 1.0j*(var[a,b].imag)**2
+            varnew = np.matrix([[0.0j,0.0j],[0.0j,0.0j]])
+            X = np.matrix([[0.0j,0.0j],[0.0j,0.0j]])
+            for a in [0,1] :
+                for b in [0,1] :
+                    X[a,b] = 1.0
+                    Xnew =iDA*X*(iDB.H)
+                    varnew[a,b] = varnew[a,b] \
+                                  + (Xnew[a,b].real)**2*var[a,b].real + (Xnew[a,b].imag)**2*var[a,b].imag \
+                                  + ((Xnew[a,b].real)**2*var[a,b].imag + (Xnew[a,b].imag)**2*var[a,b].real)*1.0j
+                    X[a,b] = 0.0
+                    
+            for a in [0,1] :
+                for b in [0,1] :
+                    varnew[a,b] = np.sqrt(varnew[a,b].real) + 1.0j*np.sqrt(varnew[a,b].imag)
+
+            datum['rrsigma'] = varnew[0,0]
+            datum['rlsigma'] = varnew[0,1]
+            datum['lrsigma'] = varnew[1,0]
+            datum['llsigma'] = varnew[1,1]
+
+            # Should now be in obs.data because datum was always just a reference.
+            
+        # I can't quite figure out the ehtim way to do this!
+        # obs_tmp = obs_cal.copy()
+        # obs_tmp.data = eh.observing.obs_simulate.apply_jones_inverse(obs_tmp, dcal=False, verbose=False)
+        # obs_cal = obs_tmp
+        
     # Write out new uvfits file
     obs_cal.save_uvfits(outname)
 
