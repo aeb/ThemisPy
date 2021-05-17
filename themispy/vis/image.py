@@ -436,7 +436,6 @@ class model_image_xsringauss(model_image) :
         # Make sure that delta ring is resolvable
         dx = 1.5*max(abs(x[1,1]-x[0,0]),abs(y[1,1]-y[0,0]))
         self.parameters[2] = max(self.parameters[2],dx/(self.parameters[1]*rad2uas))
-
         I0 = max(1e-8,self.parameters[0])
         Rp = max(1e-20,self.parameters[1]) * rad2uas
         Rin = min( max(1e-4,1-self.parameters[2]), 0.9999 ) * Rp
@@ -517,34 +516,26 @@ class model_image_mring(model_image) :
 
         # Make sure that delta ring is resolvable
         dx = 1.5*max(abs(x[1,1]-x[0,0]),abs(y[1,1]-y[0,0]))
+        LINE_THICKNESS=2
 
         I0 = max(1e-8,self.parameters[0])
         R = max(1e-20,self.parameters[1]) * rad2uas
-        
-        phi = np.angle((y - params['y0']) + 1j*(x - params['x0']))
-        beta_factor = (1.0 + np.sum([2.*np.real(params['beta_list'][m-1] * np.exp(1j * m * phi)) for m in range(1,len(params['beta_list'])+1)],axis=0))
 
-        val = (params['F0']*psize**2/(np.pi*params['d']*psize*LINE_THICKNESS)
+        betalist = [self.parameters[i]+1j*self.parameters[i+1] for i in range(2,2*self.nmodes+2,2)]
+        phi = np.angle(y + 1j*x)
+        beta_factor = (1.0 + np.sum([2.*np.real(betalist[m-1] * np.exp(1j * m * phi)) for m in range(1,len(betalist)+1)],axis=0))
+
+        val = (I0*dx**2/(2*np.pi*R*dx*LINE_THICKNESS)
                 * beta_factor
-                * (params['d']/2.0 - psize*LINE_THICKNESS/2 < np.sqrt((x - params['x0'])**2 + (y - params['y0'])**2))
-                * (params['d']/2.0 + psize*LINE_THICKNESS/2 > np.sqrt((x - params['x0'])**2 + (y - params['y0'])**2)))
+                * (R - dx*LINE_THICKNESS/2 < np.sqrt((x)**2 + (y)**2))
+                * (R + dx*LINE_THICKNESS/2 > np.sqrt((x)**2 + (y)**2)))
 
-        Iring0 = (2.*I0/np.pi) *1.0/((1.0+f)*(Rp**2 - Rin**2) - (1.0-f)*d*Rin**2/Rp);
 
-        c = np.cos(phi)
-        s = np.sin(phi)
-        dx = ddx*c - ddy*s
-        dy = ddx*s + ddy*c
-
-        Iring = Iring0*(0.5*(1.0-dx/Rp) + 0.5*f*(1.0+dx/Rp)) 
-
-        Iring *= ((dx**2+dy**2)<=Rp**2)
-        Iring *= (((dx-d)**2+(dy)**2)>Rin**2)
 
         if (verbosity>0) :
-            print('xsring_ellip:',I0, Rp, Rin, d, tau, xit, f, phi)
+            print('mring:',I0, R, betalist)
 
-        return (Iring)
+        return (val)
 
 
     def parameter_name_list(self) :
@@ -1033,6 +1024,118 @@ class model_image_adaptive_splined_raster(model_image) :
 
 
 
+class model_image_stretch(model_image):
+    """
+    Smoothed image class that is a mirror of :cpp:class:`Themis::model_image_stretch`. Generates a smoothed 
+    image from an existing image using an asymmetric Gaussian smoothing kernel.
+    Has parameters:
+
+    * parameters[0] ............. First parameter of underlying image
+    
+    ...
+
+    * parameters[image.size-1] .. Last parameter of underlying image
+    * parameters[image.size] .... stretch parameter :math:`\\tau = 1 - b/a` where b is semi-minor and a is semi-major
+    * parameters[image.size+1] .. Position angle of stretch :math:`\\phi` (rad)
+
+    and size=image.size+3.
+
+    Args:
+      image (model_image): :class:`model_image` object that will be smoothed.
+      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
+
+    Attributes:
+      image (model_image): A preexisting :class:`model_image` object to be stretched.
+    """
+
+    def __init__(self, image, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+        self.size=image.size+2
+        self.image = image
+
+        
+    def generate(self,parameters) :
+        """
+        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_stretch::generate_model`, 
+        a similar function within the :cpp:class:`Themis::model_image_stretch` class.  Effectively 
+        simply copies the parameters into the local list with some additional run-time checking.
+
+        Args:
+          parameters (list): Parameter list.
+
+        Returns:
+          None        
+        """
+        
+        self.parameters = np.copy(parameters)
+        if (len(self.parameters)<self.size) :
+            raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
+
+        self.image.generate(parameters[:-2])
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+
+        # Doesn't to boundary checking here.  Probably not a major problem, but consider it in the future.
+        srmaj = 1.0/np.sqrt(1-self.parameters[-2]) 
+        srmin = np.sqrt(1-self.parameters[-2]) 
+        sphi = self.parameters[-1]
+
+        # Re-orient the grind along major and minor axes of the smoothing kernel
+        xMinor = np.cos(sphi)*x - np.sin(sphi)*y
+        xMajor = np.sin(sphi)*x + np.cos(sphi)*y
+        px = x[1,1]-x[0,0]
+        py = y[1,1]-y[0,0]
+
+        self.image.generate(self.parameters[:-2])
+        I = self.image.generate_intensity_map(xMinor*srmin,xMajor*srmaj,verbosity=verbosity)
+        #I = self.image.generate_intensity_map(x,y,verbosity=verbosity)
+
+        if (verbosity>0) :
+            print('Stretched:',sr1,sr2,sphi,self.parameters)
+            
+        return I
+
+    
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        names = self.image.parameter_name_list()
+        names.append(r'$\sigma_s$ (rad)')
+        names.append(r'$A_s$')
+        names.append(r'$\phi_s$ (rad)')
+        return names
+
+    
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
+        self.image.set_time(time)
+
+
+
 class model_image_smooth(model_image):
     """
     Smoothed image class that is a mirror of :cpp:class:`Themis::model_image_smooth`. Generates a smoothed 
@@ -1115,8 +1218,8 @@ class model_image_smooth(model_image):
         exponent = 0.5*(xMajor**2/sr1**2 + xMinor**2/sr2**2)
         K = 1.0/(2*np.pi*sr1*sr2)*np.exp(-exponent) 
     
-        px = x[1,1]-x[0,0]
-        py = y[1,1]-y[0,0]
+        px = abs(x[1,1]-x[0,0])
+        py = abs(y[1,1]-y[0,0])
 
         self.image.generate(self.parameters[:-3])
         I = self.image.generate_intensity_map(x,y,verbosity=verbosity)
@@ -1957,6 +2060,7 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
     Returns:
       (model_image, list) : The first :class:`model_image` object fully described within the tag; the remaining tag lines.
     """
+    #print(tag)
 
     if (verbosity>0) :
         for j,l in enumerate(tag) :
@@ -1975,6 +2079,10 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
     elif (tag[0]=='model_image_xsring') :
         return model_image_xsring(),tag[1:]
 
+    elif (tag[0].split()[0]=='model_image_mring') :
+        toks = tag[0].split()
+        return model_image_mring(int(toks[1])),tag[1:]
+    
     elif (tag[0]=='model_image_xsringauss') :
         return model_image_xsringauss(),tag[1:]
     
@@ -1990,6 +2098,11 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
         toks = tag[0].split()
         return model_image_adaptive_splined_raster(int(toks[1]),int(toks[2]),float(toks[3])),tag[1:]
 
+    elif (tag[0]=='model_image_stretch') :
+        subtag = tagv1_find_subtag(tag[1:])
+        subimage,_ = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
+        return model_image_stretch(subimage),tag[(len(subtag)+3):]
+    
     elif (tag[0]=='model_image_smooth') :
         subtag = tagv1_find_subtag(tag[1:])
         subimage,_ = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
