@@ -1124,22 +1124,11 @@ class model_image_stretch(model_image):
         """
 
         names = self.image.parameter_name_list()
-        names.append(r'$\sigma_s$ (rad)')
-        names.append(r'$A_s$')
-        names.append(r'$\phi_s$ (rad)')
+        names.append(r'$\tau$')
+        names.append(r'$\phi_\tau$ (rad)')
         return names
 
     
-    def set_time(self,time) :
-        """
-        Sets time.
-
-        Args:
-          time (float): Time in hours.
-        """
-        
-        self.time = time
-        self.image.set_time(time)
 
 
 
