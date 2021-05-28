@@ -161,7 +161,7 @@ def _logit_kde(x, limits, bw) :
 
 
 
-def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-', nbin=128, bw='scott', scott_factor=0, filled=False, transform=False, vertical=False, **kwargs):
+def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-', nbin=128, bw='scott', scott_factor=0, filled=False, wrapped=None, transform=False, vertical=False, **kwargs):
     """
     Creates a 1d joint posterior plot using :func:`scipy.stats.gaussian_kde` function.
 
@@ -183,7 +183,13 @@ def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-'
       (matplotlib.lines.Line2D): A list of Line2D objects representing the plotted data, i.e., the handles returned by :func:`matplotlib.pyplot.plot`.
     """
 
-    data = x
+    data = x.copy()
+
+    if (wrapped is not None):
+        xup = x.copy() + wrapped
+        xlo = x.copy() - wrapped
+        data = np.concat((x, xlo,xhi))
+
 
     if (scott_factor!=0) :
         bw = scott_factor*(float(x.size))**(-1.0/6.0)

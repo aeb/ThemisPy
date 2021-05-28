@@ -545,8 +545,15 @@ class model_image_mring(model_image) :
         Returns:
           (list) List of strings of variable names.
         """
+        nr = [r"$\rm{Re}(c_%d)$"%i for i in range(1,self.nmodes+1)]
+        ni = [r"$\rm{Im}(c_%d)$"%i for i in range(1,self.nmodes+1)]
 
-        return [ r'$I_0$ (Jy)', r'$R_{\rm out}$ (rad)', r'$\psi$', r'$\epsilon$', r'$\tau$', r'$\xi$ (rad)', r'$f$', r'$g_{ax}$', r'$a_q$', r'$g_q$', r'$\phi$ (rad)']
+        names =[r'$I_0$ (Jy)', r'$R_{\rm delta}$ (rad)']
+        for i in range(self.nmodes):
+            names.append(nr[i])
+            names.append(ni[i])
+
+        return names
 
 
 
