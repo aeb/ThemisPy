@@ -480,19 +480,19 @@ class model_image_xsringauss(model_image) :
 
 class model_image_mring(model_image) :
     """
-    Fourier mode delta mring model that is a mirror of :cpp:class:`Themis::model_image_mring`.
-    Has parameters:
+    fourier mode delta mring model that is a mirror of :cpp:class:`themis::model_image_mring`.
+    has parameters:
 
-    * parameters[0] ... Total intensity :math:`I_0` (Jy)
-    * parameters[1] ... Radius :math:`R` (rad)
-    * parameters[2,3] ... Coefficients (re,im) for first mring mode 
-    * parameters[4,5] ... Coefficients (re,im) for second mring mode
-    * parameters[2N,2N+1] ... Coefficients for (re,im) for N mring mode 
+    * parameters[0] ... total intensity :math:`i_0` (jy)
+    * parameters[1] ... radius :math:`r` (rad)
+    * parameters[2,3] ... coefficients (re,im) for first mring mode 
+    * parameters[4,5] ... coefficients (re,im) for second mring mode
+    * parameters[2n,2n+1] ... coefficients for (re,im) for n mring mode 
 
-    and size=2+2*N.
+    and size=2+2*n.
 
-    Args:
-      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
+    args:
+      themis_fft_sign (bool): if true will assume the themis-default fft sign convention, which reflects the reconstructed image through the origin. default: true.
     """
 
     def __init__(self, nmodes, themis_fft_sign=True) :
@@ -503,56 +503,138 @@ class model_image_mring(model_image) :
         
     def generate_intensity_map(self,x,y,verbosity=0) :
         """
-        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+        internal generation of the intensity map. in practice you almost certainly want to call :func:`model_image.intensity_map`.
 
-        Args:
-          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
-          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
-          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+        args:
+          x (numpy.ndarray): array of -ra offsets in microarcseconds (usually plaid 2d).
+          y (numpy.ndarray): array of dec offsets in microarcseconds (usually plaid 2d).
+          verbosity (int): verbosity parameter. if nonzero, prints information about model properties. default: 0.
 
-        Returns:
-          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        returns:
+          (numpy.ndarray) array of intensity values at positions (x,y) in :math:`jy/\\mu as^2`.
         """
 
-        # Make sure that delta ring is resolvable
+        # make sure that delta ring is resolvable
         dx = 1.5*max(abs(x[1,1]-x[0,0]),abs(y[1,1]-y[0,0]))
-        LINE_THICKNESS=2
+        line_thickness=2
 
-        I0 = max(1e-8,self.parameters[0])
-        R = max(1e-20,self.parameters[1]) * rad2uas
+        i0 = max(1e-8,self.parameters[0])
+        r = max(1e-20,self.parameters[1]) * rad2uas
 
         betalist = [self.parameters[i]+1j*self.parameters[i+1] for i in range(2,2*self.nmodes+2,2)]
         phi = np.angle(y + 1j*x)
         beta_factor = (1.0 + np.sum([2.*np.real(betalist[m-1] * np.exp(1j * m * phi)) for m in range(1,len(betalist)+1)],axis=0))
 
-        val = (I0*dx**2/(2*np.pi*R*dx*LINE_THICKNESS)
+        val = (i0*dx**2/(2*np.pi*r*dx*line_thickness)
                 * beta_factor
-                * (R - dx*LINE_THICKNESS/2 < np.sqrt((x)**2 + (y)**2))
-                * (R + dx*LINE_THICKNESS/2 > np.sqrt((x)**2 + (y)**2)))
+                * (r - dx*line_thickness/2 < np.sqrt((x)**2 + (y)**2))
+                * (r + dx*line_thickness/2 > np.sqrt((x)**2 + (y)**2)))
 
 
 
         if (verbosity>0) :
-            print('mring:',I0, R, betalist)
+            print('mring:',i0, r, betalist)
 
         return (val)
 
 
     def parameter_name_list(self) :
         """
-        Producess a lists parameter names.
+        producess a lists parameter names.
 
-        Returns:
-          (list) List of strings of variable names.
+        returns:
+          (list) list of strings of variable names.
         """
-        nr = [r"$\rm{Re}(c_%d)$"%i for i in range(1,self.nmodes+1)]
-        ni = [r"$\rm{Im}(c_%d)$"%i for i in range(1,self.nmodes+1)]
+        nr = [r"$\rm{re}(c_%d)$"%i for i in range(1,self.nmodes+1)]
+        ni = [r"$\rm{im}(c_%d)$"%i for i in range(1,self.nmodes+1)]
 
-        names =[r'$I_0$ (Jy)', r'$R_{\rm delta}$ (rad)']
+        names =[r'$i_0$ (jy)', r'$r_{\rm delta}$ (rad)']
         for i in range(self.nmodes):
             names.append(nr[i])
             names.append(ni[i])
 
+        return names
+
+class model_image_mring_floor(model_image) :
+    """
+    fourier mode delta mring model with floor that is a mirror of :cpp:class:`themis::model_image_mring_floor`.
+    has parameters:
+
+    * parameters[0] ... total intensity :math:`i_0` (jy)
+    * parameters[1] ... radius :math:`r` (rad)
+    * parameters[2] ... fraction of disk flux floor
+    * parameters[3,4] ... coefficients (re,im) for first mring mode 
+    * parameters[5,6] ... coefficients (re,im) for second mring mode
+    * parameters[3+2n,3_2n+1] ... coefficients for (re,im) for n mring mode 
+
+    and size=3+2*n.
+
+    args:
+      themis_fft_sign (bool): if true will assume the themis-default fft sign convention, which reflects the reconstructed image through the origin. default: true.
+    """
+
+    def __init__(self, nmodes, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+        self.size=3+nmodes*2
+        self.nmodes = nmodes
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        internal generation of the intensity map. in practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        args:
+          x (numpy.ndarray): array of -ra offsets in microarcseconds (usually plaid 2d).
+          y (numpy.ndarray): array of dec offsets in microarcseconds (usually plaid 2d).
+          verbosity (int): verbosity parameter. if nonzero, prints information about model properties. default: 0.
+
+        returns:
+          (numpy.ndarray) array of intensity values at positions (x,y) in :math:`jy/\\mu as^2`.
+        """
+
+        # make sure that delta ring is resolvable
+        dx = 1.5*max(abs(x[1,1]-x[0,0]),abs(y[1,1]-y[0,0]))
+        line_thickness=2
+
+        floor = self.parameters[2]
+        ir = max(1e-8,self.parameters[0])*(1-floor)
+        id =max(1e-8,self.parameters[0])*floor 
+        r = max(1e-20,self.parameters[1]) * rad2uas
+
+        betalist = [self.parameters[i]*np.exp(1j*self.parameters[i+1]) for i in range(3,2*self.nmodes+2,2)]
+        phi = np.angle(y + 1j*x)
+        beta_factor = (1.0 + np.sum([2.*np.real(betalist[m-1] * np.exp(1j * m * phi)) for m in range(1,len(betalist)+1)],axis=0))
+
+        val = (ir*dx**2/(2*np.pi*r*dx*line_thickness)
+                * beta_factor
+                * (r - dx*line_thickness/2 < np.sqrt((x)**2 + (y)**2))
+                * (r + dx*line_thickness/2 > np.sqrt((x)**2 + (y)**2)))
+
+        val += id*dx**2/(np.pi*r**2)*(x**2+y**2 < r**2)
+
+
+
+
+        if (verbosity>0) :
+            print('mring:',ir+id, r, floor, betalist)
+
+        return (val)
+
+
+    def parameter_name_list(self) :
+        """
+        producess a lists parameter names.
+
+        returns:
+          (list) list of strings of variable names.
+        """
+        nr = [r"$|c_%d|$"%i for i in range(1,self.nmodes+1)]
+        ni = [r"$\rm{arg}(c_%d)$"%i for i in range(1,self.nmodes+1)]
+
+        names =[r'$i_0$ (jy)', r'$r_{\rm delta}$ (rad)', "floor"]
+        for i in range(self.nmodes):
+            names.append(nr[i])
+            names.append(ni[i])
         return names
 
 
@@ -2078,6 +2160,10 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
     elif (tag[0].split()[0]=='model_image_mring') :
         toks = tag[0].split()
         return model_image_mring(int(toks[1])),tag[1:]
+    
+    elif (tag[0].split()[0]=='model_image_mring_floor') :
+        toks = tag[0].split()
+        return model_image_mring_floor(int(toks[1])),tag[1:]
     
     elif (tag[0]=='model_image_xsringauss') :
         return model_image_xsringauss(),tag[1:]

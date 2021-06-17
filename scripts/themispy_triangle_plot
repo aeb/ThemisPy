@@ -167,7 +167,7 @@ if __name__ == "__main__" :
                 print("Using ccm_mexico glob %s"%(args.model))
             model_image = ty.vis.construct_model_image_from_glob(args.model,'ccm_mexico+')
 
-        parameter_names = (np.array(model_image.parameter_name_list())[plist]).tolist()
+        parameter_names = (np.array(model_image.parameter_name_list())[plist]).tolist()[0]
 
         if (args.verbose) :
             print(parameter_names)

@@ -468,7 +468,6 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
     diagonal_plot_handles = {}
     axes_handles = {}
 
-
     if (len(labels)!=lower_data_array.shape[1]) :
         print("ERROR! kde_triangle_plot : Number of labels is inconsistent with the number of arrays of data passed.")
         exit(1)
