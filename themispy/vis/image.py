@@ -1971,7 +1971,7 @@ def plot_intensity_map(model_image, parameters, limits=None, shape=None, colorma
     plt.gca().set_facecolor(cmap(0.0))
 
     # Make plot
-    h = plt.pcolor(x,y,tI,cmap=colormap,vmin=Imin,vmax=Imax)
+    h = plt.pcolormesh(x,y,tI,cmap=colormap,vmin=Imin,vmax=Imax,shading='auto')
     
     # Add labels
     plt.xlabel(xlabel)
