@@ -161,7 +161,7 @@ def _logit_kde(x, limits, bw) :
 
 
 
-def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-', nbin=128, bw='scott', scott_factor=0, filled=False, transform=False, vertical=False, **kwargs):
+def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-', nbin=128, bw='scott', scott_factor=0, filled=False, wrapped=None, transform=False, vertical=False, **kwargs):
     """
     Creates a 1d joint posterior plot using :func:`scipy.stats.gaussian_kde` function.
 
@@ -183,7 +183,13 @@ def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-'
       (matplotlib.lines.Line2D): A list of Line2D objects representing the plotted data, i.e., the handles returned by :func:`matplotlib.pyplot.plot`.
     """
 
-    data = x
+    data = x.copy()
+
+    if (wrapped is not None):
+        xup = x.copy() + wrapped
+        xlo = x.copy() - wrapped
+        data = np.concat((x, xlo,xhi))
+
 
     if (scott_factor!=0) :
         bw = scott_factor*(float(x.size))**(-1.0/6.0)
@@ -461,7 +467,6 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
     upper_triangle_plot_handles = {}
     diagonal_plot_handles = {}
     axes_handles = {}
-
 
     if (len(labels)!=lower_data_array.shape[1]) :
         print("ERROR! kde_triangle_plot : Number of labels is inconsistent with the number of arrays of data passed.")

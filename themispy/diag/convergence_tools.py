@@ -367,13 +367,14 @@ def save_ensemble_diagnostics(out_file_name, chains, chainsname, method="rank", 
 
     print("outputting to", out_file_name)
     io =  open(out_file_name, "w")
-    io.write("IACT:\n")
+    io.write("ESS:\n")
     row_fmt = ("{:>15}"*(chains[0].shape[2])+" {:<25}")
     io.write(row_fmt.format(*map(lambda x: "p"+str(x),range(chains[0].shape[2])), "filename"))
     io.write("\n")
     for i in range(len(chains)):
-        iact = find_eautocorr(chains[i])*stride
-        print("IACT: ", iact, chainsname[i])
+        iact = chains[0].shape[0]/find_eautocorr(chains[i])*stride
+        print("ESS: ", iact, chainsname[i])
+        print("ESSmin: ", np.min(iact))
         io.write(row_fmt.format(*list(np.round(iact,2)), chainsname[i]))
         io.write("\n")
     io.write("Split-Rhat: \n")
@@ -382,11 +383,11 @@ def save_ensemble_diagnostics(out_file_name, chains, chainsname, method="rank", 
     mean_rhat = bulk_split_rhat(meanchains)
     var_rhat = bulk_split_rhat(varchains)
     print("bulk Rhat median: ", mean_rhat)
-    print("bulk Rhat 0.95 quantile: ", var_rhat)
+    #print("bulk Rhat 0.95 quantile: ", var_rhat)
     row_fmt = ("{:>15}"*(mean_rhat.shape[0])+" {:<25}")
     io.write(row_fmt.format(*list(np.round(mean_rhat,6)), "median"))
-    io.write("\n")
-    io.write(row_fmt.format(*list(np.round(var_rhat,6)), "quantile"))
+    #io.write("\n")
+    #io.write(row_fmt.format(*list(np.round(var_rhat,6)), "quantile"))
     io.close()
 
     return iact, mean_rhat, var_rhat
