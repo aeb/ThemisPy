@@ -455,7 +455,7 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
 
 
 
-def write_visibilities(obs, outname, snrcut=0) :
+def write_visibilities(obs, outname, snrcut=0, writeFrequency=False) :
     """
     Writes complex visibilities (Stokes I) in Themis format given an :class:`ehtim.obsdata.Obsdata` object.
 
@@ -492,7 +492,10 @@ def write_visibilities(obs, outname, snrcut=0) :
     
     # Write header
     out=open(outname,'w')
-    out.write('#%24s %4s %4s %15s %15s %6s %15s %15s %15s %15s %15s %15s\n'%('source','year',' day',"freq (GHz)",'time (hr)','base','u (Ml)','v (Ml)','V.r (Jy)','err.r (Jy)','V.i (Jy)','err.i (Jy)'))
+    if (writeFrequency) :
+        out.write('#%24s %4s %4s %15s %15s %6s %15s %15s %15s %15s %15s %15s\n'%('source','year',' day',"freq (GHz)",'time (hr)','base','u (Ml)','v (Ml)','V.r (Jy)','err.r (Jy)','V.i (Jy)','err.i (Jy)'))
+    else :
+        out.write('#%24s %4s %4s %15s %6s %15s %15s %15s %15s %15s %15s\n'%('source','year',' day','time (hr)','base','u (Ml)','v (Ml)','V.r (Jy)','err.r (Jy)','V.i (Jy)','err.i (Jy)'))
 
     # Write data file
     for d in obs.data :
@@ -503,7 +506,11 @@ def write_visibilities(obs, outname, snrcut=0) :
         cv = d['vis']
         err = d['sigma']
         if ( np.abs(cv)/err >= snrcut ) :
-            out.write('%25s %4i %4i %15.8f %15.8f %4s %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,freq/1e9,time,bl,u,v,cv.real,err,cv.imag,err))
+            if (writeFrequency) :
+                out.write('%25s %4i %4i %15.8f %15.8f %4s %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,freq/1e9,time,bl,u,v,cv.real,err,cv.imag,err))
+            else :
+                out.write('%25s %4i %4i %15.8f %4s %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,time,bl,u,v,cv.real,err,cv.imag,err))
+                
     out.close()
     
 
