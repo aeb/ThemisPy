@@ -492,14 +492,10 @@ def write_visibilities(obs, outname, snrcut=0, writeFrequency=False) :
     
     # Write header
     out=open(outname,'w')
-<<<<<<< HEAD
     if (writeFrequency) :
         out.write('#%24s %4s %4s %15s %15s %6s %15s %15s %15s %15s %15s %15s\n'%('source','year',' day',"freq (GHz)",'time (hr)','base','u (Ml)','v (Ml)','V.r (Jy)','err.r (Jy)','V.i (Jy)','err.i (Jy)'))
     else :
         out.write('#%24s %4s %4s %15s %6s %15s %15s %15s %15s %15s %15s\n'%('source','year',' day','time (hr)','base','u (Ml)','v (Ml)','V.r (Jy)','err.r (Jy)','V.i (Jy)','err.i (Jy)'))
-=======
-    out.write('#%24s %4s %4s %15s %6s %15s %15s %15s %15s %15s %15s\n'%('source','year',' day', 'time (hr)','base','u (Ml)','v (Ml)','V.r (Jy)','err.r (Jy)','V.i (Jy)','err.i (Jy)'))
->>>>>>> 54389285771a6a4f3307b6dd9e856ed52831e99b
 
     # Write data file
     for d in obs.data :
@@ -510,15 +506,11 @@ def write_visibilities(obs, outname, snrcut=0, writeFrequency=False) :
         cv = d['vis']
         err = d['sigma']
         if ( np.abs(cv)/err >= snrcut ) :
-<<<<<<< HEAD
             if (writeFrequency) :
                 out.write('%25s %4i %4i %15.8f %15.8f %4s %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,freq/1e9,time,bl,u,v,cv.real,err,cv.imag,err))
             else :
-                out.write('%25s %4i %4i %15.8f %4s %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,time,bl,u,v,cv.real,err,cv.imag,err))
-                
-=======
-            out.write('%25s %4i %4i %15.8f %4s %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,time,bl,u,v,cv.real,err,cv.imag,err))
->>>>>>> 54389285771a6a4f3307b6dd9e856ed52831e99b
+                out.write('%25s %4i %4i %15.8f %4s %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,time,bl,u,v,cv.real,err,cv.imag,err))                
+
     out.close()
     
 
