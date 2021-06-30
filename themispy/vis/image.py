@@ -1984,7 +1984,8 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
     elif (tag[0].split()[0]=='model_image_splined_raster') :
         toks = tag[0].split()
         # return model_image_splined_raster(float(toks[1]),float(toks[2]),int(toks[3]),float(toks[4]),float(toks[5]),int(toks[6]),float(toks[7])),tag[1:]
-        return model_image_splined_raster(int(toks[1]),int(toks[2]),float(toks[3]),float(toks[4]),float(toks[5])),tag[1:]
+        # return model_image_splined_raster(int(toks[1]),int(toks[2]),float(toks[3]),float(toks[4]),float(toks[5])),tag[1:]
+        return model_image_splined_raster(int(toks[3]),int(toks[6]),float(toks[2])-float(toks[1]),float(toks[5])-float(toks[4]),float(toks[7])),tag[1:]
 
     elif (tag[0].split()[0]=='model_image_adaptive_splined_raster') :
         toks = tag[0].split()
@@ -2150,6 +2151,7 @@ def plot_intensity_map(model_image, parameters, limits=None, shape=None, colorma
     plt.gca().set_facecolor(cmap(0.0))
 
     # Make plot
+    #print("I think the colormap is:",colormap)
     h = plt.pcolor(x,y,tI,cmap=colormap,vmin=Imin,vmax=Imax)
     
     # Add labels
