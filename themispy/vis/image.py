@@ -601,9 +601,19 @@ class model_image_mring_floor(model_image) :
         id =max(1e-8,self.parameters[0])*floor 
         r = max(1e-20,self.parameters[1]) * rad2uas
 
-        betalist = [self.parameters[i]*np.exp(1j*self.parameters[i+1]) for i in range(3,2*self.nmodes+2,2)]
-        phi = np.angle(y + 1j*x)
-        beta_factor = (1.0 + np.sum([2.*np.real(betalist[m-1] * np.exp(1j * m * phi)) for m in range(1,len(betalist)+1)],axis=0))
+        phases = self.parameters[4:2*self.nmodes+5:2]
+        amps = self.parameters[3:2*self.nmodes+4:2]
+        alphas = amps*np.cos(phases)
+        betas = amps*np.sin(phases)
+        beta_factor = 1
+        #This is because I don't include the -x in Themis and I used to opposite phase like
+        #a dummy PT
+        phi = np.arctan2(x,-y)
+        for i in range(self.nmodes):
+            c = np.cos((i+1)*phi)
+            s = np.sin((i+1)*phi)
+            beta_factor += alphas[i]*c - betas[i]*s
+        
 
         val = (ir*dx**2/(2*np.pi*r*dx*line_thickness)
                 * beta_factor
