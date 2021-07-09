@@ -263,7 +263,7 @@ class model_image_crescent(model_image) :
 
     * parameters[0] ... Total intensity :math:`I_0` (Jy)
     * parameters[1] ... Outer radius :math:`R` (rad)
-    * parameters[2] ... Width paramter :math:`\\psi` in (0,1)
+    * parameters[2] ... Width parameter :math:`\\psi` in (0,1)
     * parameters[3] ... Asymmetry parmaeter :math:`\\tau` in (0,1)
     * parameters[4] ... Position angle :math:`\\phi` (rad)
 
@@ -295,7 +295,7 @@ class model_image_crescent(model_image) :
         dx = 1.5*max(abs(x[1,1]-x[0,0]),abs(y[1,1]-y[0,0]))
         self.parameters[2] = max(self.parameters[2],dx/(self.parameters[1]*rad2uas))
 
-        I0 = max(1e-8,self.paramters[0])
+        I0 = max(1e-8,self.parameters[0])
         Rp = max(1e-20,self.parameters[1]) * rad2uas
         Rn = min( max(1e-4,1-self.parameters[2]), 0.9999 ) * Rp
         d = min(max(self.parameters[3],1e-4),0.9999) * (Rp - Rn)
