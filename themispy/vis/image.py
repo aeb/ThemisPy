@@ -263,7 +263,7 @@ class model_image_crescent(model_image) :
 
     * parameters[0] ... Total intensity :math:`I_0` (Jy)
     * parameters[1] ... Outer radius :math:`R` (rad)
-    * parameters[2] ... Width paramter :math:`\\psi` in (0,1)
+    * parameters[2] ... Width parameter :math:`\\psi` in (0,1)
     * parameters[3] ... Asymmetry parmaeter :math:`\\tau` in (0,1)
     * parameters[4] ... Position angle :math:`\\phi` (rad)
 
@@ -295,7 +295,7 @@ class model_image_crescent(model_image) :
         dx = 1.5*max(abs(x[1,1]-x[0,0]),abs(y[1,1]-y[0,0]))
         self.parameters[2] = max(self.parameters[2],dx/(self.parameters[1]*rad2uas))
 
-        I0 = max(1e-8,self.paramters[0])
+        I0 = max(1e-8,self.parameters[0])
         Rp = max(1e-20,self.parameters[1]) * rad2uas
         Rn = min( max(1e-4,1-self.parameters[2]), 0.9999 ) * Rp
         d = min(max(self.parameters[3],1e-4),0.9999) * (Rp - Rn)
@@ -601,9 +601,19 @@ class model_image_mring_floor(model_image) :
         id =max(1e-8,self.parameters[0])*floor 
         r = max(1e-20,self.parameters[1]) * rad2uas
 
-        betalist = [self.parameters[i]*np.exp(1j*self.parameters[i+1]) for i in range(3,2*self.nmodes+2,2)]
-        phi = np.angle(y + 1j*x)
-        beta_factor = (1.0 + np.sum([2.*np.real(betalist[m-1] * np.exp(1j * m * phi)) for m in range(1,len(betalist)+1)],axis=0))
+        phases = self.parameters[4:2*self.nmodes+5:2]
+        amps = self.parameters[3:2*self.nmodes+4:2]
+        alphas = amps*np.cos(phases)
+        betas = amps*np.sin(phases)
+        beta_factor = 1
+        #This is because I don't include the -x in Themis and I used to opposite phase like
+        #a dummy PT
+        phi = np.arctan2(x,-y)
+        for i in range(self.nmodes):
+            c = np.cos((i+1)*phi)
+            s = np.sin((i+1)*phi)
+            beta_factor += alphas[i]*c - betas[i]*s
+        
 
         val = (ir*dx**2/(2*np.pi*r*dx*line_thickness)
                 * beta_factor
@@ -1610,7 +1620,115 @@ class model_image_polynomial_variable(model_image) :
         self.image.set_time(time)
 
         self.parameters = None
+ 
+class model_image_fourier_variable(model_image) :
+    """
+    Generates a :class:`model_image` object with parameters whose Fourier coefficients vary with 
+    time from an initially static :class:`model_image` object.
+
+    Args:
+      image (model_image): Static image from which to generate a dynamic image.
+      orders (list): List of integer orders of the Fourier series in time of each parameter.
+      reference_time (list): Reference time that defines the time origin.
+      end_time (list): Reference time that defines the time end.
+    """    
+    def __init__(self, image, orders, reference_time, end_time, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+
+        self.image = image
+        self.orders = orders
+        if (len(self.orders)<self.image.size) :
+            raise RuntimeError("Length of orders list must match number of parameters in static image.")
         
+        self.reference_time = reference_time/3600.0 # Reference time in hr, but provided in s
+        self.end_time = end_time/3600.0 # End time in hr, but provided in s
+        self.size = 2*np.sum(orders)+len(orders)
+        
+    def generate(self,parameters) :
+        """
+        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_fourier_variable::generate_model`, 
+        a similar function within the :cpp:class:`Themis::model_image_fourier_variable` class.  
+
+        Args:
+          parameters (list): Parameter list.
+
+        Returns:
+          None        
+        """
+        
+            
+        self.parameters = np.copy(parameters)
+        if (len(self.parameters)<self.size) :
+            raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
+
+        q = np.zeros(self.image.size)
+        j = 0
+        dt = np.pi*(self.time-self.reference_time)/(self.end_time-self.reference_time)*3600.0 # hr to s
+        for k in range(self.image.size) :
+            q[k] = q[k] + self.parameters[j]
+            j += 1
+            for order in range(1,self.orders[k]+1) :
+                q[k] = q[k] + self.parameters[j] * np.cos(dt*order)
+                j += 1
+                q[k] = q[k] + self.parameters[j] * np.sin(dt*order)
+                j += 1
+
+        self.image.generate(q)
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+
+        if (verbosity>0) :
+            print("FourierVariable:",self.time,self.reference_time,self.image.parameters[:3])
+        
+        return self.image.generate_intensity_map(x,y,verbosity=verbosity)
+
+    def parameter_name_list(self) :
+        """
+        Produces a list of parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        static_names = image.parameter_name_list()
+        names = []
+        for k in range(self.image.size) :
+            names.extend(static_names[k])
+            if (orders[k]>0) :
+                for order in range(1,orders[k],2) :
+                    names.extend('Cos(%i dt) %s'%(order,static_names[k]))
+                    names.extend('Sin(%i dt) %s'%(order,static_names[k]))
+                 
+        return names
+
+
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
+
+        self.image.set_time(time)
+
+        self.parameters = None
+ 
+       
     
 class model_image_single_point_statistics(model_image) :
     """
@@ -2207,6 +2325,15 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
         subtag = tagv1_find_subtag(tag[1:])
         subimage,_ = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
         return model_image_polynomial_variable(subimage,orders,reference_time),tag[(len(subtag)+3):]
+
+    elif (tag[0].split()[0]=='model_image_fourier_variable') :
+        reference_time = float(tag[0].split()[1])
+        end_time = float(tag[0].split()[2])
+        orders = [ int(order) for order in tag[0].split()[3:]]
+        subtag = tagv1_find_subtag(tag[1:])
+        subimage,_ = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
+        return model_image_fourier_variable(subimage,orders,reference_time,end_time),tag[(len(subtag)+3):]
+
 
     else :
         raise RuntimeError("Unrecognized model tag %s"%(tag[0]))
