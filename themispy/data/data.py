@@ -935,7 +935,7 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
         od_time_list = []
         for tmp in od_time :
             od_time_list.append(tmp[0])
-        od_time_list = od_time_list[:-3]
+        # od_time_list = od_time_list[:-3]
 
 
         # Check for consistency, if they are not consistent warn
