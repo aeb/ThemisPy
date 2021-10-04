@@ -485,8 +485,8 @@ class model_image_mring(model_image) :
 
     * parameters[0] ... total intensity :math:`i_0` (jy)
     * parameters[1] ... radius :math:`r` (rad)
-    * parameters[2,3] ... coefficients (re,im) for first mring mode 
-    * parameters[4,5] ... coefficients (re,im) for second mring mode
+    * parameters[2,3] ... coefficients (amp,phase) for first mring mode 
+    * parameters[4,5] ... coefficients (amp,phase) for second mring mode
     * parameters[2n,2n+1] ... coefficients for (re,im) for n mring mode 
 
     and size=2+2*n.
@@ -521,9 +521,18 @@ class model_image_mring(model_image) :
         i0 = max(1e-8,self.parameters[0])
         r = max(1e-20,self.parameters[1]) * rad2uas
 
-        betalist = [self.parameters[i]+1j*self.parameters[i+1] for i in range(2,2*self.nmodes+2,2)]
-        phi = np.angle(y + 1j*x)
-        beta_factor = (1.0 + np.sum([2.*np.real(betalist[m-1] * np.exp(1j * m * phi)) for m in range(1,len(betalist)+1)],axis=0))
+        phases = self.parameters[3:2*self.nmodes+4:2]
+        amps = self.parameters[2:2*self.nmodes+3:2]
+        alphas = amps*np.cos(phases)
+        betas = amps*np.sin(phases)
+        beta_factor = 1
+        #This is because I don't include the -x in Themis and I used to opposite phase like
+        #a dummy PT
+        phi = np.arctan2(x,-y)
+        for i in range(self.nmodes):
+            c = np.cos((i+1)*phi)
+            s = np.sin((i+1)*phi)
+            beta_factor += alphas[i]*c - betas[i]*s
 
         val = (i0*dx**2/(2*np.pi*r*dx*line_thickness)
                 * beta_factor
