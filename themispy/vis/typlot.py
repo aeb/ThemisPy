@@ -211,14 +211,15 @@ def kde_plot_1d(x, limits=None, color='b', alpha=1.0, linewidth=1, linestyle='-'
 
     X = np.linspace(xmin,xmax,nbin)
     Z = kde(X)
+    h = []
     if not vertical :
         if (filled) :
-            plt.fill_between(X,Z,color=color,alpha=0.25*alpha,linewidth=linewidth,linestyle=linestyle)
-        h = plt.plot(X,Z,color=color,linewidth=linewidth,linestyle=linestyle,alpha=alpha, **kwargs)
+            h.append(plt.fill_between(X,Z,color=color,alpha=0.25*alpha,linewidth=linewidth,linestyle=linestyle))
+        h.append(plt.plot(X,Z,color=color,linewidth=linewidth,linestyle=linestyle,alpha=alpha, **kwargs))
     else :
         if (filled) :
-            plt.fill_between(Z,X,color=color,alpha=0.25*alpha,linewidth=linewidth,linestyle=linestyle)
-        h = plt.plot(Z,X,color=color,linewidth=linewidth,linestyle=linestyle,alpha=alpha, **kwargs)
+            h.append(plt.fill_between(Z,X,color=color,alpha=0.25*alpha,linewidth=linewidth,linestyle=linestyle))
+        h.append(plt.plot(Z,X,color=color,linewidth=linewidth,linestyle=linestyle,alpha=alpha, **kwargs))
 
     return h
 
