@@ -1,0 +1,252 @@
+#!/usr/bin/env python3
+
+"""
+Reads in a Themis gain file of any type and the matching uvfits data file and
+writes the self-calibrated data file.
+
+Example:
+$ themispy_write_caltables -g complex_gains.d
+"""
+
+
+import numpy as np
+import argparse as ap
+import warnings
+from matplotlib.cbook import flatten
+
+# We don't need ehtim, so don't import it
+import sys
+import themispy as ty
+
+# Read in ehtim, if possible
+try:
+    import ehtim as eh
+    ehtim_found = True
+except:
+    warnings.warn("Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.", Warning)
+    ehtim_found = False
+
+    
+def set_parser() :
+    # Create a parser object to manage command line options
+    parser = ap.ArgumentParser(prog='themispy_write_caltables',description=__doc__)
+
+    parser.add_argument('-d','--uvfits',	
+                        type=str,
+                        action='store',	
+			required=False,
+                        help=("Name of uvfits data file (will use ehtim functionality to generate caltables)."))
+
+    parser.add_argument('-g',	
+                        type=str,
+                        action='store',	
+                        help=("Complex gain file from which to obtain gains."))
+
+    parser.add_argument("-s","--scan-avg",
+                        action='store_true',
+                        default=False,
+                        help=("Produce scan averaged data."))
+
+    parser.add_argument("--avg-time",
+                        type=float,
+                        action='store',
+                        help=("Timescale over which to average the data in seconds. Superseded"
+                              " by -s,--scan-avg. Default: None."))
+
+    parser.add_argument("-r","--relative-timestamps",
+                        action="store_true",
+                        default=False,
+                        help=("Will ignore the absolute time offset in the gain file.  Requires"
+                              " that the number of data points in the uvfits file match the number"
+                              " of gain reconstruction epochs."))
+    
+    parser.add_argument("-f","--fractional-systematic-error",
+                        type=float,
+                        action='store',
+                        help=("Fractional systematic error to add IN PERCENT. Default: None."))
+    parser.add_argument("-t","--threshold-systematic-error",
+                        type=float,
+                        action='store',
+                        help=("Constant systematic error threshold to add in mJy. Default: None."))
+    parser.add_argument("-b","--minimum-baseline",
+                        type=float,
+                        action='store',
+                        help=("Minimum baseline, below which data are excluded from ALL data generation."
+                              " Default: None."))
+    parser.add_argument("-x","--exclude-station",
+                        type=str,
+                        nargs='+',
+                        action='append',
+                        help=("List of stations to flag.  Stations must be specified with the same"
+                              " station codes appearing in the uvfits file.  E.g., the 2017 code list."
+                              " Default: None."))
+
+    parser.add_argument('-D','--fsfile',	
+                        type=str,
+                        action='store',	
+                        help=("Applies D-term calibration in fit summaries file provided, if this is a polarimetric"
+                              " model.  If an index is given with -i,--index will plot the corresponding line;"
+                              " otherwise plots the first line.  A model must be specified, either the default or"
+                              " with the -m,--model option."))
+
+    parser.add_argument("-i","--index",
+                        type=int,
+                        action='store',
+                        default=0,
+                        help=("Name of fit summaries file to read.  If given, will plot records listed"
+                              " within.  If an index is given with -i,--index will plot the corresponding"
+                              " line; otherwise plots the first line."))
+
+    parser.add_argument("-m","--model",
+                        type=str,
+                        action='store',
+                        default="model_image.tag",
+                        help=("Model specification glob. May be a model tag file name or an ccm_mexico+"
+                              " model specification glob. See the vis.image.construct_model_image_from_glob"
+                              " function documentation for format details. If contains a '.' will assume"
+                              " that it is a tagvers-1.0 tag file."
+                              " Default: model_image.tag"))
+
+    parser.add_argument("-tarr","--telescope-array-file",
+                        action='store',
+                        help=("Reads a separate telescope array file."))
+    parser.add_argument("-eht2017",
+                        action='store_true',
+                        default=False,
+                        help=("Uses a default telescope array file for 2017."))
+    parser.add_argument("-eht2018",
+                        action='store_true',
+                        default=False,
+                        help=("Uses a default telescope array file for 2018."))
+    parser.add_argument("-noteht",
+                        action='store_true',
+                        default=False,
+                        help=("Uses a default telescope array file for 2018."))
+
+    parser.add_argument("-o","--out",
+                        type=str,
+                        action="store",
+                        default="caltable",
+                        help="Output directory name in which to write caltable. Default: caltable")
+
+    parser.add_argument("-v","--verbose",
+                        type=int,
+                        default=0,
+                        action="store",
+                        help="Sets verbosity level in :fun:`write_uvfits`. Level 1 outputs values, level 4 generates multiple plots.")
+
+    return parser
+
+
+if __name__ == "__main__" :
+
+
+    # Get command line options
+    args = set_parser().parse_args()
+
+    # load in the data
+    if (not args.uvfits is None) :
+        obs = eh.obsdata.load_uvfits(args.uvfits)
+
+        # Load in tarr file if passed
+        if (not args.telescope_array_file is None) :
+            print("Reading telescope array file %s."%(args.telescope_array_file))
+            obs.tarr = eh.array.load_txt(args.telescope_array_file).tarr
+        elif (args.eht2017==True) :
+            print("Using 2017 EHT telescope array.")
+            obs.tarr = np.array([('AA',  2.22506081360e+06, -5.44005959994e+06, -2481681.15054, 0., 0., 0.+0.j, 0.+0.j, 1.,  0.,  0.),
+                                 ('AP',  2.22503952970e+06, -5.44119762920e+06, -2479303.35970, 0., 0., 0.+0.j, 0.+0.j, 1.,  1.,  0.),
+                                 ('AZ', -1.82879620000e+06, -5.05440680000e+06,  3427865.20000, 0., 0., 0.+0.j, 0.+0.j, 1.,  1.,  0.),
+                                 ('JC', -5.46458467600e+06, -2.49300117000e+06,  2150653.98200, 0., 0., 0.+0.j, 0.+0.j, 1.,  0.,  0.),
+                                 ('LM', -7.68715632000e+05, -5.98850707200e+06,  2063354.85200, 0., 0., 0.+0.j, 0.+0.j, 1., -1.,  0.),
+                                 ('PV',  5.08896774544e+06, -3.01681185860e+05,  3825012.20561, 0., 0., 0.+0.j, 0.+0.j, 1., -1.,  0.),
+                                 ('SM', -5.46455549300e+06, -2.49292798900e+06,  2150797.17600, 0., 0., 0.+0.j, 0.+0.j, 1., -1., 45.),
+                                 ('SR', -5.46455549300e+06, -2.49292798900e+06,  2150797.17600, 0., 0., 0.+0.j, 0.+0.j, 0.,  0.,  0.),
+                                 ('SP',  1.00000000000e-02,  1.00000000000e-02, -6359609.70000, 0., 0., 0.+0.j, 0.+0.j, 0.,  0.,  0.)],
+                                dtype=[('site', '<U32'), ('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('sefdr', '<f8'), ('sefdl', '<f8'), ('dr', '<c16'), ('dl', '<c16'), ('fr_par', '<f8'), ('fr_elev', '<f8'), ('fr_off', '<f8')])
+            args.noteht=False
+        elif (args.eht2018==True) :
+            args.noteht=False
+            raise RuntimeError("2018 array not implemented yet!")
+    
+        # exclude stations
+        if (not args.exclude_station is None) :
+            obs = obs.flag_sites(list(flatten(args.exclude_station)))
+
+        # (scan) average the data
+        if (args.scan_avg) :
+            obs.add_scans()
+            obs = obs.avg_coherent(0.0, scan_avg=True)
+        elif (not args.avg_time is None) :
+            obs = obs.avg_coherent(args.avg_time)
+
+        # add systematic noise
+        if (not args.fractional_systematic_error is None) :
+            obs = obs.add_fractional_noise(args.fractional_systematic_error/100.0)
+
+        # add threshold
+        if (not args.threshold_systematic_error is None):
+            if (obs.polrep=='stokes') :
+                obs.data['sigma'] = np.sqrt(obs.data['sigma']**2 + (args.threshold_systematic_error/1.0e3)**2)
+            else :
+                for sigtype in ['rrsigma','llsigma','rlsigma','lrsigma'] :
+                    obs.data[sigtype] = np.sqrt(obs.data[sigtype]**2 + (args.threshold_systematic_error/1.0e3)**2)
+
+        # remove baselines below cutoff
+        if (not args.minimum_baseline is None) :
+            obs.flag_uvdist(args.minimum_baseline)
+
+    # Read in the gain file, if desired
+    if (not args.g is None) :
+        gain_data = ty.vis.read_gain_file(args.g)
+    else :
+        gain_data = None
+
+    # Read in D term data, if desired
+    # Run through checkdown for different ways of specifying parameters
+    if (not (args.fsfile is None) ) :
+
+        # Construct a model_image from glob
+        if ('.' in args.model) :
+            if (args.verbose):
+                print("Reading tag file %s"%(args.model))
+            pimg = ty.vis.construct_model_image_from_glob(args.model,'tagvers-1.0')
+        else :
+            if (args.verbose):
+                print("Using ccm_mexico glob %s"%(args.model))
+            pimg = ty.vis.construct_model_image_from_glob(args.model,'ccm_mexico+')
+
+        # Check if this is a polarized image
+        if (not isinstance(pimg,ty.vis.model_polarized_image)) :
+            print("WARNING: This is not a polarized image model.  Cowardly refusing to apply D terms!")
+            dterm_data = None
+        else :
+            # A fit_summaries file has been passed:
+            if (args.verbose):
+                print("Reading fit_summaries file %s"%(args.fsfile))
+            parameters = np.loadtxt(args.fsfile,skiprows=(1+args.index),max_rows=1,usecols=np.arange(1,pimg.size+1))
+            
+            # Check that D terms are being fit
+            if (pimg.number_of_dterms==0) :
+                print("WARNING: No D terms present in model, nothing to plot!")
+                dterm_data = None
+
+            pimg.generate(parameters)
+            dterm_data = pimg.dterms()
+
+    else :
+        dterm_data = None
+
+    
+    # Determine the output file name
+    if (args.out is None) :
+        args.out = 'selfcal_'+args.uvfits.split('/')[-1]
+    
+
+    if (not args.uvfits is None) :
+        # Apply the gains and write the calibrated uvfits file
+        ty.data.write_caltables(outdir=args.out,gain_data=gain_data,dterm_data=dterm_data,relative_timestamps=args.relative_timestamps,verbosity=args.verbose)
+    else :
+        # Write without going through ehtim (doesn't write dterms)
+        ty.data.write_caltables(outdir=args.out,gain_data=gain_data,verbosity=args.verbose)
+        

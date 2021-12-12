@@ -12,6 +12,8 @@ from themispy.utils import *
 
 import numpy as np
 
+import os
+
 # Read in astropy, if possible
 try:
     from astropy.time import Time
@@ -902,13 +904,12 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
 
     Warning: 
       * This makes extensive use of ehtim and will not be available if ehtim is not installed.  Raises a NotImplementedError if ehtim is unavailable.
-      * D term calibration not yet implemented.
 
     Args:
       obs (ehtim.obsdata.Obsdata): An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).
       outname (str): Name of the output file to which to write data.
-      gains (dictionary): Station gains organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
-      dterms (dictionary): Station D terms organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
+      gains_data (dictionary): Station gains organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
+      dterm_data (dictionary): Station D terms organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
       relative_timestamps (bool): If True, will assume that the times in the calibration files apply to the given data set and apply in order. Requires that the number of gains must match the number of time slices in the data set. Exists prirmarily to address poor absolute time specification of earlier gain files. In almost all new Themis analyses after Apr 22, 2020, should be False.
       verbosity (int): Degree of verbosity.  0 only prints warnings and errors. 1 provides more granular output. 2 generates calibrated data plots. 3 generates cal table gain plots.  
 
@@ -1088,3 +1089,114 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
         plt.show()
 
     
+
+def write_caltables(obs=None, outdir='caltable', gain_data=None, dterm_data=None, relative_timestamps=False, verbosity=0) :
+    """
+    Writes uvfits file given an :class:`ehtim.obsdata.Obsdata` object.  Potentially applies gains and/or dterms from a Themis analysis 
+
+    Warning: 
+      * This makes extensive use of ehtim and will not be available if ehtim is not installed.  Raises a NotImplementedError if ehtim is unavailable.
+
+    Args:
+      obs (ehtim.obsdata.Obsdata): An ehtim Obsdata object containing the observation data (presumably repackaging a uvfits file).
+      outdir (str): Name of the output directory to which to write caltables.
+      gain_data (dictionary): Station gains organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
+      dterm_data (dictionary): Station D terms organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
+      relative_timestamps (bool): If True, will assume that the times in the calibration files apply to the given data set and apply in order. Requires that the number of gains must match the number of time slices in the data set. Exists prirmarily to address poor absolute time specification of earlier gain files. In almost all new Themis analyses after Apr 22, 2020, should be False.
+      verbosity (int): Degree of verbosity.  0 only prints warnings and errors. 1 provides more granular output. 2 generates calibrated data plots. 3 generates cal table gain plots.  
+
+    Returns:
+      None.
+    """
+
+    if (not obs is None ) :
+
+        # Generate caltables via ehtim caltable interface.  Requires Obsdata object.
+        
+        datatables = {}
+        if (not gain_data is None) :
+        # Flip gains from corrections to the model to adjust data, i.e., G -> 1/G
+            gain_station_names = gain_data['stations']
+            for sn in gain_station_names :
+                gain_data[sn] = 1.0/gain_data[sn]
+
+            if (verbosity>0) :
+                print("Gain data:",gain_data)
+
+            # Get the unique times
+            od_time = np.unique(obs.unpack('time'))
+            od_time_list = []
+            for tmp in od_time :
+                od_time_list.append(tmp[0])
+            # od_time_list = od_time_list[:-3]
+
+
+            # Check for consistency, if they are not consistent warn
+            if (relative_timestamps) :
+                gain_time_list = od_time_list
+                if (len(od_time_list)!=len(gain_data['tstart'])) :
+                    raise RuntimeError("When relative_timestamps=True, number of gain epochs (%i) must match number of observation epochs (%i)."%(len(gain_data['tstart']),len(od_time_list)))
+                if ( (od_time_list[-1]-od_time_list[0]) > (gain_data['tend'][-1]-gain_data['tstart'][0]) ) :
+                    raise RuntimeError("gain_data does not cover the observation times.  Cowardly refusing to continue.")
+            else :
+                # Get the absolute times
+                if (len(od_time_list)!=len(gain_data['tstart'])) :
+                    warnings.warn("gain_data (%g) and observation data (%g) are not the same size! Will try to apply gains nonetheless ..."%(len(gain_data['tstart']),len(od_time_list)),Warning)
+                if ( int(gain_data['toffset'].mjd) != obs.mjd ) :
+                    raise RuntimeError("Observation and gain reconstruction dates differ (mjd %i vs %i). Cowardly refusing to continue."%(obs.mjd,int(gain_data['toffset'].mjd)))
+                gain_time_offset_hour = 24.0 * (gain_data['toffset'].mjd%1)
+                gain_time_list = gain_data['tstart'] + gain_time_offset_hour
+                time_precision_slop = 1e-3/3600.0 # Permit a slop of 1 ms in the time comparisons
+                if ( od_time_list[0]<gain_data['tstart'][0]+gain_time_offset_hour-time_precision_slop or od_time_list[-1]>gain_data['tend'][-1]+gain_time_offset_hour+time_precision_slop ) :
+                    print(od_time_list[0], gain_data['tstart'][0]+gain_time_offset_hour-time_precision_slop)
+                    print(od_time_list[-1],gain_data['tend'][-1]+gain_time_offset_hour+time_precision_slop)
+                    raise RuntimeError("gain_data does not cover the observation times. Cowardly refusing to continue.")
+
+            print(gain_data)
+            # Generate Caltable object
+            if (verbosity > -1) :
+                print("Sites:",gain_station_names)
+                print("Times:",od_time_list)
+            #for k in range(len(gain_station_names)):
+            for station in gain_station_names :
+                datatable = []
+                for j in range(len(gain_time_list)):
+                    datatable.append(np.array((gain_time_list[j], gain_data[station][j], gain_data[station][j]), dtype=eh.DTCAL))
+                datatables[station] = np.array(datatable)
+
+        if (not dterm_data is None) :
+            print(dterm_data)
+            # Fix obs.tarr to include dterms
+            for s in range(0,len(obs.tarr)) :
+                station = obs.tarr[s]['site']
+                if (station in dterm_data['station_names']) :
+                    obs.tarr[s]['dr'] = dterm_data[station][0]
+                    obs.tarr[s]['dl'] = dterm_data[station][1]
+
+        # Generaet caltable object
+        cal=eh.caltable.Caltable(obs.ra, obs.dec, obs.rf, obs.bw, datatables, obs.tarr, source=obs.source, mjd=obs.mjd, timetype=obs.timetype)
+
+        # Save caltable
+        cal.save_txt(obs,outdir)
+    
+    else :
+        # Generate caltables directly.  Does not require Obsdata object
+
+        datatables = {}
+        if (not gain_data is None) :
+            # Flip gains from corrections to the model to adjust data, i.e., G -> 1/G
+            gain_station_names = gain_data['stations']
+            for sn in gain_station_names :
+                gain_data[sn] = 1.0/gain_data[sn]
+
+            if (verbosity>0) :
+                print("Gain data:",gain_data)
+
+            os.mkdir(outdir)
+
+            time_center_list = gain_data['toffset'].mjd + 0.5*(gain_data['tstart']+gain_data['tend'])/(24.)
+            for sn in gain_station_names :
+                np.savetxt(outdir+'/'+sn+'.txt',np.array([time_center_list.T,gain_data[sn].real.T,gain_data[sn].imag.T,gain_data[sn].real.T,gain_data[sn].imag.T]).T)
+                
+        
+        
