@@ -31,12 +31,18 @@ def set_parser():
                         type=str,
                         action='store',
                         default='lf',
-                        help=("Sets type of polarized image plot to generate.  Options are 'lf', 'ef', 'lL'."
-                              "In detail: 'lf' produces linear polarization ticks, color-coded by linear"
-                              "polarization fraction, on top of total flux; 'ef' produces elliptical polarization"
-                              "ticks, color-coded by total polarization fraction, on top of total flux; 'lL'"
-                              "produces linear polarization ticks on top of linear polarized flux, with total"
-                              "flux contours superimposed.  Default: 'lf'."))
+                        help=("Sets type of polarized image plot to generate.  Options are:"
+                              "  lf ... linear polarization ticks, color-coded by linear"
+                              "         polarization fraction, on top of total flux."
+                              "  ef ... elliptical polarization ticks, color-coded by total"
+                              "         polarization fraction."
+                              "  lL ... linear polarization ticks on top of linear polarized"
+                              "         flux, with total flux contours superimposed."
+                              "  I .... Stokes I with Stokes I contours. (Silly!)"
+                              "  Q .... Stokes Q with Stokes I contours."
+                              "  U .... Stokes U with Stokes I contours."
+                              "  V .... Stokes V with Stokes I contours."
+                              " Default: lf."))
 
     parser.add_argument("-c","--chain",
                         type=str,
@@ -348,6 +354,8 @@ if __name__ == "__main__" :
             ty.vis.plot_polarized_image(model_image, parameters, limits=args.limits, shape=args.N, tick_shape=args.tN, mscale=args.mscale, transfer_function=args.transfer, tick_fractional_intensity_floor=args.tick_intensity_floor, colorbar=False, elliptical=True, verbosity=int(args.verbose))
         elif (args.plot_type=='lL') :
             ty.vis.plot_linear_polarization_map(model_image, parameters, limits=args.limits, shape=args.N, tick_shape=args.tN, colormap='plasma', intensity_contours=True, intensity_colors=[[0.75,0.75,0.75]], mscale=0.5, colorbar=None, transfer_function=args.transfer, tick_fractional_intensity_floor=args.tick_intensity_floor, verbosity=int(args.verbose))
+        elif (args.plot_type in ['I','Q','U','V'] ) :
+            ty.vis.plot_stokes_map(model_image, parameters, stokes=args.plot_type, limits=args.limits, shape=args.N, colormap='bwr', intensity_contours=True, intensity_colors=['k'], colorbar=None, stokes_fractional_intensity_floor=args.tick_intensity_floor, verbosity=int(args.verbose))
         else :
             raise RuntimeError("Plot type %s is not recognized.  See help for options."%(args.plot_type))
 
