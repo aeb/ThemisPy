@@ -1167,6 +1167,170 @@ def plot_linear_polarization_map(polarized_image, parameters, limits=None, shape
         return h,plt.gca(),plt.gcf()
 
 
+def plot_stokes_map(polarized_image, parameters, stokes='V', limits=None, shape=None, colormap='bwr', in_radec=True, xlabel=None, ylabel=None, return_stokes_map=False, intensity_contours=True, intensity_colors=None, stokes_fractional_intensity_floor=0.1, colorbar=None, verbosity=0) :
+    """
+    Plots Stokes maps with intensity contours associated with a given 
+    :class:`model_image` object evaluated at a specified set of parameters. A number of additional 
+    practical options may be passed. Access to a matplotlib pcolor object, the figure handle and axes 
+    handles are returned. Optionally, the Stokes map is returned.
+
+    Args:
+      polarized_image (model_polarized_image): :class:`model_polarized_image` object to plot.
+      parameters (list): List of parameters that define model_image intensity map.
+      limits (float,list): Limits in uas on image size. If a single float is given, the limits are uniformly set. If a list is given, it must be in the form [xmin,xmax,ymin,ymax]. Default: 75.
+      shape (int,list): Number of pixels. If a single int is given, the number of pixels are uniformly set in both directions.  If a list is given, it must be in the form [Nx,Ny]. Default: 256.
+      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: 'afmhot'.
+      in_radec (bool): If True, plots in :math:`\\Delta RA` and :math:`\\Delta Dec`.  If False, plots in sky-right Cartesian coordinates. Default: True.
+      xlabel (str): Label for xaxis. Default: ':math:`\\Delta RA (\\mu as)` if in_radec is True, :math:`\\Delta x (\\mu as)` if in_radec is False.
+      ylabel (str): Label for yaxis. Default: ':math:`\\Delta Dec (\\mu as)` if in_radec is True, :math:`\\Delta y (\\mu as)` if in_radec is False.
+      return_stokes_map (bool): If True returns the intensity map in addition to standard return items.
+      intensity_contours (int,list,bool): May either be True, an integer, or a list of contour level values. Default: True. If True, sets 8 linearly spaced contour levels.
+      intensity_colors (list): A list composed of any acceptable color type as specified in :mod:`matplotlib.colors`.
+      stokes_fractional_intensity_floor (float): Fraction of maximum intensity at which to stop plotting Stokes map.  Default: 0.1.
+      colorbar (str): Adds colorbar indicating magnitude of polarized flux. Options are None, 'flux', and 'frac'.  If None, no colorbar is plotted.  If 'flux' the polarized flux in Jy will be shown.  If 'frac' the fraction of the maximum intensity in polarized flux will be shown, i.e., :math:`L/I_{max}`.  Default: None.
+      verbosity (int): Verbosity level. 0 prints nothing. 1 prints various elements of the plotting process. Passed to :func:`model_image.generate_intensity_map`. Default: 0.
+
+    Returns :
+      (matplotlib.pyplot.image,matplotlib.pyplot.axes,matplotlib.pyplot.fig,[numpy.ndarray,numpy.ndarray,numpy.ndarray]): Image handle; Figure object; Axes object; Optionally intensity map (x,y,S).
+    """
+    
+    # Shape limits
+    if (limits is None) :
+        limits = [-75, 75, -75, 75]
+    elif (isinstance(limits,list)) :
+        limits = limits
+    else :
+        limits = [-limits, limits, -limits, limits]
+
+    # Set shape
+    if (shape is None) :
+        shape = [256, 256]
+    elif (isinstance(shape,list)) :
+        shape = shape
+    else :
+        shape = [shape, shape]
+    
+    # Set labels
+    if (xlabel is None) :
+        if (in_radec) :
+            xlabel=r'$\Delta$RA ($\mu$as)'
+        else :
+            xlabel=r'$\Delta$x ($\mu$as)'
+    if (ylabel is None) :
+        if (in_radec) :
+            ylabel=r'$\Delta$Dec ($\mu$as)'
+        else :
+            ylabel=r'$\Delta$y ($\mu$as)'
+        
+
+    if (verbosity>0) :
+        print("limits:",limits)
+        print("shape:",shape)
+    
+    # Generate a set of pixels
+    x,y = np.mgrid[limits[0]:limits[1]:shape[0]*1j,limits[2]:limits[3]:shape[1]*1j]
+    # Generate a set of Stokes parameters (Jy/uas^2)
+    S = polarized_image.stokes_map(x,y,parameters,kind='all',verbosity=verbosity)
+    
+    # Flip x to flip x axis so that RA decreases right to left
+    if (in_radec) :
+        x = -x
+    plt.gca().set_xlim(limits[0],limits[1])
+    plt.gca().set_ylim(limits[2],limits[3])
+    
+    if (verbosity>0) :
+        print("Minimum/Maximum L: %g / %g"%(Lmin,Lmax))
+
+    # Select Stokes pararmeter for plotting
+    I = S[0]
+    if (stokes=='I') :
+        L = S[0]
+    elif (stokes=='Q') :
+        L = S[1]
+    elif (stokes=='U') :
+        L = S[2]
+    elif (stokes=='V') :
+        L = S[3]
+
+    # Apply the I cut
+    tL = L
+    for i in range(L.shape[0]) :
+        for j in range(L.shape[1]) :
+            if (I[i,j]<stokes_fractional_intensity_floor*np.max(I)) :
+                tL[i,j] = np.nan
+        
+    # Set background color in Axes
+    cmap = cm.get_cmap(colormap)    
+    # plt.gca().set_facecolor(cmap(0.0))
+    plt.gca().set_facecolor('w')
+
+    # Make plot
+    h = plt.pcolor(x,y,tL,cmap=colormap) #,vmin=Lmin,vmax=Lmax)
+
+    # Add colorbar if desired
+    if (not colorbar is None) :
+        cb = plt.colorbar()
+        if (colorbar=='flux') :
+            cb.ax.set_ylabel('Stokes %s flux (mJy/$\mu$as$^2$)'%(stokes),rotation=270,va='bottom')
+            cticks = cb.ax.get_yticks()
+            i = np.argsort(tL.reshape([-1]))
+            tL_sort = tL.reshape([-1])[i]
+            L_sort = L.reshape([-1])[i]
+            ctick_Lvals = np.interp(cticks,tL_sort,L_sort) #,left=Lmin_orig,right=Lmax_orig)
+            ctlbls = [ '%5.2g'%(x*1e3) for x in ctick_Lvals ]
+            cb.ax.set_yticklabels(ctlbls)
+        elif (colorbar=='frac') :
+            cb.ax.set_ylabel('Stokes %s flux ($I_{max}$)'%(stokes),rotation=270,va='bottom')
+            #cylim = cb.ax.get_ylim()
+            cticks = cb.ax.get_yticks()
+            i = np.argsort(tL.reshape([-1]))
+            tL_sort = tL.reshape([-1])[i]
+            L_sort = L.reshape([-1])[i]
+            ctick_Lvals = np.interp(cticks,tL_sort,L_sort) #,left=Lmin_orig,right=Lmax_orig)
+            ctlbls = [ '%5.2g'%(x/np.max(S[0])) for x in ctick_Lvals ]
+            cb.ax.set_yticklabels(ctlbls)
+        else :
+            raise RuntimeError("Unrecognized colorbar option %s"%(colorbar))
+
+    
+    # Add intensity contours if desired
+    if (intensity_contours!=False) :
+        if (intensity_contours==True) :
+            intensity_contours=np.linspace(0,np.max(S[0]),10)[1:-1]
+        elif (isinstance(intensity_contours,int)) :
+            intensity_contours=np.linspace(0,np.max(S[0]),intensity_contours+2)[1:-1]
+        elif (isinstance(intensity_contours,list)) :
+            pass
+        else :
+            raise RuntimeError("intensity_countours must be a boolean, int, or list of intensity values at which to draw contours.")
+
+        if (intensity_colors is None) :
+            intensity_colors = [[0.75,0.75,0.75]]
+        
+        plt.contour(x,y,S[0],levels=intensity_contours,colors=intensity_colors,alpha=0.5)
+
+    # Add labels
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    
+    # Fix aspect ratio
+    plt.axis('square')
+
+    # Set limits
+    plt.gca().set_xlim(limits[0],limits[1])
+    plt.gca().set_ylim(limits[2],limits[3])
+    
+    # Fix x-axis to run in sky
+    if (in_radec) :
+        plt.gca().invert_xaxis()        
+
+    if (return_stokes_map) :
+        return h,plt.gca(),plt.gcf(),x,y,S
+    else:
+        return h,plt.gca(),plt.gcf()
+
+    
+
 def plot_polarized_image(polarized_image, parameters, limits=None, shape=None, tick_shape=None, colormap='gray_r', tick_color='jet', Imin=0.0, Imax=None, Lmin=0.0, Lmax=None, mscale=None, in_radec=True, xlabel=None, ylabel=None, return_stokes_map=False, transfer_function='linear', tick_fractional_intensity_floor=0.1, colorbar=False, elliptical=False, verbosity=0) :
     """
     Plots linear polarization fraction, flux and intensity image associated with a given 
@@ -1869,6 +2033,144 @@ def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='G
     return fig,axlist,hlist
     
     
+def write_dterm_statistics(polarized_image, chain, outfile="dterm_statistics.txt", station=None, verbosity=0) :
+    """
+    Writes a text file contaning D-term means and standard deviations.
+
+    Args:
+      polarized_image (model_polarized_image): :class:`model_polarized_image` object to plot.
+      chain (numpy.ndarray): MCMC chain with parameters that include the fitted D terms.
+      outfile (str): Text file in which to write the D-term statistics.  Default: dterm_statistics.txt.
+      station (str,list): A single station code or list of station codes to which restrict attention or exclude.  Station codes must match those in the :class:`polarized_model_image.dterm_dict['station_names']` list for the polarized_image.  Station codes prefixed with '!' will be excluded. Default: D terms will be plotted for all stations.
+      verbosity (int): Verbosity level.
+    
+    Returns:
+    """
+
+    # Check that D terms are being fit
+    if (polarized_image.number_of_dterms==0) :
+        print("No D terms present in model, nothing to plot!")
+        return
+
+
+    # Flatten chain
+    Nparam = chain.shape[-1]
+    chain = np.reshape(chain,[-1,Nparam])
+    
+    # Get the list of indices to plot
+    if (station is None) :
+        # By default include every station
+        station_list = polarized_image.dterm_dict['station_names']
+        station_dict = {}
+        station_dict['station_list'] = []
+        for station in station_list :
+            station_dict['station_list'].append(station)
+            station_dict[station] = ['R', 'L']
+            
+        
+    else :
+        #  If a single string is passed, then make a list of it.
+        if (isinstance(station,str)) :
+            station = [station]
+
+        # Exclude those station codes prepended with '!', otherwise include them exclusively.
+        #  Make a list of excluded or included stations
+        station_exclude_list = []
+        station_include_list = []
+        #  Loop over stations in the list and check for '!', adding the station to the proper list
+        if (isinstance(station,list)) :
+            station_list = copy.copy(station)
+            for station in station_list :
+                if (station[0]=='!') :
+                    if (':' in station[1:]) :
+                        station_exclude_list.append( station[1:] )
+                    else :
+                        station_exclude_list.append( station[1:]+':R' )
+                        station_exclude_list.append( station[1:]+':L' )
+                else :
+                    if (':' in station) :
+                        station_include_list.append( station )
+                    else :
+                        station_include_list.append( station+':R' )
+                        station_include_list.append( station+':L' )
+                        
+        #  If no include list is given, include every station
+        if (len(station_include_list)==0) :
+            for station in polarized_image.dterm_dict['station_names'] :
+                station_include_list.append( station+':R' )
+                station_include_list.append( station+':L' )
+
+        #  Construct the total station list from the closure of the exclude list intersect the include list
+        station_dict = {}
+        station_dict['station_list'] = []
+        for station in station_include_list :
+            #if (not station in station_exclude_list) :
+            if (not station in station_exclude_list) :
+                toks = station.split(':')
+                if (not toks[0] in station_dict['station_list']) :
+                    station_dict['station_list'].append(toks[0])
+                if (toks[0] in station_dict.keys()) :
+                    station_dict[toks[0]].append(toks[1])
+                else :
+                    station_dict[toks[0]] = [toks[1]]
+
+                    
+    if (verbosity>0) :
+        print("Station list for which to plot D terms:\n",station_dict['station_list'])
+        
+    dterm_start_index_list = []
+    for k in range(polarized_image.image_size,polarized_image.size,4) :
+        if (polarized_image.dterm_dict['station_names'][(k-polarized_image.image_size)//4] in station_dict['station_list']) :
+            dterm_start_index_list.append(k)
+
+    if (verbosity>0) :
+        print("Assummed starting index in parameter list:\n",dterm_start_index_list)
+
+    # Makes sure that we are plotting something!
+    if (len(dterm_start_index_list)==0) :
+        warnings.warn("No D term posteriors will be generated.")
+        return
+
+    out = open(outfile,'w')
+    out.write("# %13s %15s %15s %15s %15s %15s %15s %15s %15s\n"%('Station','mean DR.real','stddev DR.real','mean DR.imag','stddev DR.imag','mean DL.real','stddev DL.real','mean DL.imag','stddev DL.imag'))
+    for k,station in enumerate(station_dict['station_list']) :
+        
+        # Add the right D-term plots
+        if ('R' in station_dict[station]) :
+            DRr = chain[:,dterm_start_index_list[k]+0]
+            DRi = chain[:,dterm_start_index_list[k]+1]
+
+            DRr_mean = np.mean(DRr)
+            DRr_sig = np.std(DRr)
+            DRi_mean = np.mean(DRi)
+            DRi_sig = np.std(DRi)
+        else :
+            DRr_mean = np.nan
+            DRr_sig = np.nan
+            DRi_mean = np.nan
+            DRi_sig = np.nan
+            
+            
+        # Add the left D-term plots
+        if ('L' in station_dict[station]) :
+            DLr = chain[:,dterm_start_index_list[k]+2]
+            DLi = chain[:,dterm_start_index_list[k]+3]
+
+            DLr_mean = np.mean(DLr)
+            DLr_sig = np.std(DLr)
+            DLi_mean = np.mean(DLi)
+            DLi_sig = np.std(DLi)
+        else :
+            DLr_mean = np.nan
+            DLr_sig = np.nan
+            DLi_mean = np.nan
+            DLi_sig = np.nan
+
+
+        out.write("%15s %15.8g %15.8g %15.8g %15.8g %15.8g %15.8g %15.8g %15.8g\n"%(station,DRr_mean,DRr_sig,DRi_mean,DRi_sig,DLr_mean,DLr_sig,DLi_mean,DLi_sig))
+
+    out.close()
+
     
     
 

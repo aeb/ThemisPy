@@ -102,6 +102,11 @@ def set_parser() :
                         action='store_true',
                         default=False,
                         help=("Provides verbose output about model and plot construction."))
+
+    parser.add_argument("-so","--stats-out",
+                        type=str,
+                        action="store",
+                        help="Output statistics (mean and standard deviation for each dterm).  Default: None.")
     
     return parser
 
@@ -164,6 +169,11 @@ if __name__ == "__main__" :
                 
     # Plot D terms
     ty.vis.plot_dterm_posteriors(pimg,chain,station=station_list,grid=args.no_grid,comparison_dterms=args.truths)
+
+
+    # Write summary statistics file, if desired
+    if (args.stats_out != None) :
+        ty.vis.write_dterm_statistics(pimg, chain, outfile=args.stats_out, station=station_list)
     
     # Save figure
     plt.savefig(args.out,dpi=300)
