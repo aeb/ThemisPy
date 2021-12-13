@@ -1252,6 +1252,12 @@ def plot_stokes_map(polarized_image, parameters, stokes='V', limits=None, shape=
     elif (stokes=='V') :
         L = S[3]
 
+    L = L*1e3
+        
+    Lmax = np.max(np.abs(L))
+    Lmin = -Lmax
+        
+
     # Apply the I cut
     tL = L
     for i in range(L.shape[0]) :
@@ -1265,7 +1271,7 @@ def plot_stokes_map(polarized_image, parameters, stokes='V', limits=None, shape=
     plt.gca().set_facecolor('w')
 
     # Make plot
-    h = plt.pcolor(x,y,tL,cmap=colormap) #,vmin=Lmin,vmax=Lmax)
+    h = plt.pcolor(x,y,tL,cmap=colormap,vmin=Lmin,vmax=Lmax)
 
     # Add colorbar if desired
     if (not colorbar is None) :
@@ -1276,9 +1282,9 @@ def plot_stokes_map(polarized_image, parameters, stokes='V', limits=None, shape=
             i = np.argsort(tL.reshape([-1]))
             tL_sort = tL.reshape([-1])[i]
             L_sort = L.reshape([-1])[i]
-            ctick_Lvals = np.interp(cticks,tL_sort,L_sort) #,left=Lmin_orig,right=Lmax_orig)
-            ctlbls = [ '%5.2g'%(x*1e3) for x in ctick_Lvals ]
-            cb.ax.set_yticklabels(ctlbls)
+            #ctick_Lvals = np.interp(cticks,tL_sort,L_sort) #,left=Lmin_orig,right=Lmax_orig)
+            #ctlbls = [ '%5.2g'%(x*1e3) for x in ctick_Lvals ]
+            #cb.ax.set_yticklabels(ctlbls)
         elif (colorbar=='frac') :
             cb.ax.set_ylabel('Stokes %s flux ($I_{max}$)'%(stokes),rotation=270,va='bottom')
             #cylim = cb.ax.get_ylim()
@@ -1286,9 +1292,9 @@ def plot_stokes_map(polarized_image, parameters, stokes='V', limits=None, shape=
             i = np.argsort(tL.reshape([-1]))
             tL_sort = tL.reshape([-1])[i]
             L_sort = L.reshape([-1])[i]
-            ctick_Lvals = np.interp(cticks,tL_sort,L_sort) #,left=Lmin_orig,right=Lmax_orig)
-            ctlbls = [ '%5.2g'%(x/np.max(S[0])) for x in ctick_Lvals ]
-            cb.ax.set_yticklabels(ctlbls)
+            #ctick_Lvals = np.interp(cticks,tL_sort,L_sort) #,left=Lmin_orig,right=Lmax_orig)
+            #ctlbls = [ '%5.2g'%(x/np.max(S[0])) for x in ctick_Lvals ]
+            #cb.ax.set_yticklabels(ctlbls)
         else :
             raise RuntimeError("Unrecognized colorbar option %s"%(colorbar))
 
