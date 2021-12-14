@@ -1810,7 +1810,7 @@ def plot_polarized_image_stats(polarized_image, chain, limits=None, shape=None, 
 
     
 
-def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='Greens', station=None, alpha=0.5, comparison_dterms=None, comparison_fmts=None, grid=True, fig=None, axs=None, scott_factor=2.0, nbin=128, size=None, plevels=None, station_labels=None, fill=True, edges=False, fill_zorder=None, edge_zorder=None, edge_rcolors=None, edge_lcolors=None, edge_colormap=None, edge_alpha=None, linewidth=1, verbosity=0) :
+def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='Greens', station=None, alpha=0.5, comparison_dterms=None, comparison_fmts=None, grid=True, fig=None, axs=None, scott_factor=3.0, nbin=128, size=None, plevels=None, station_labels=None, fill=True, edges=False, fill_zorder=None, edge_zorder=None, edge_rcolors=None, edge_lcolors=None, edge_colormap=None, edge_alpha=None, linewidth=1, verbosity=0) :
     """
     Plots D term distributions for a polarized image model from an MCMC chain.  Each station will 
     separately have its left and right D term distributions plotted in the complex plane.
