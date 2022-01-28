@@ -55,7 +55,7 @@ def set_parser() :
     parser.add_argument("-s","--samples",
                         type=int,
                         action='store',
-                        default=9,
+                        default=1000,
                         help=("Number of samples to draw from the specified chain file. Default: 1000."))
     
     parser.add_argument("-o","--out",
