@@ -1737,7 +1737,89 @@ class model_image_fourier_variable(model_image) :
 
         self.parameters = None
  
-       
+     
+     
+class model_image_themaussian(model_image) :
+    """
+    Themaussian image class that is a mirror of :cpp:class:`Themis::model_image_themaussian`.
+    A themaussian is a sum of asymmetric gaussians.
+    Has parameters:
+
+    * parameters[0,6,12...] ... Total intensity :math:`I_0` (Jy) for p0. For all others, a ratio of total intensity to the previous gaussian in (0,1).
+    * parameters[1,7,13...] ... Symmetrized standard deviation :math:`\\sigma` (rad)
+    * parameters[2,8,14...] ... Asymmetry parameter :math:`A` in (0,1)
+    * parameters[3,9,15...] ... Position angle :math:`\\phi` (rad)
+    * parameters[4,10,16...] ... x-position of first gaussian for p4. For all others, a difference from the first gaussian.
+    * parameters[5,11,17...] ... y-position of first gaussian for p4. For all others, a difference from the first gaussian.
+
+    and size=6*Num_gauss. Plotting fixes first gaussian to origin.
+
+    Args:
+      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
+    """
+
+    def __init__(self,Num_gauss, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+        self.Num_gauss=Num_gauss
+        self.size=6*Num_gauss
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+        I=np.zeros(x.shape)
+        F=self.parameters[0]
+        xi=self.parameters[4]*rad2uas
+        yi=self.parameters[5]*rad2uas
+        #xi=0
+        #yi=0
+        for i in range(self.Num_gauss):
+            if i!=0:
+                xi=(self.parameters[4+6*i]+self.parameters[4])*rad2uas
+                yi=(self.parameters[5+6*i]+self.parameters[5])*rad2uas
+                F=F*self.parameters[0+6*i]
+        
+            s = abs(self.parameters[1+6*i]) * rad2uas
+            A = max(min(self.parameters[2+6*i],0.99),0.0)
+            sm = s/np.sqrt(1.+A)
+            sM = s/np.sqrt(1.-A)
+            I0 = abs(F) / (2.*np.pi*sm*sM)
+            phi = self.parameters[3+6*i]
+
+            c = np.cos(phi)
+            s = np.sin(phi)
+            dxm = c*(x-xi) - s*(y-yi)
+            dxM = s*(x-xi) + c*(y-yi)
+
+            I += I0 * np.exp( - 0.5*( dxm**2/sm**2 + dxM**2/sM**2 ) )
+
+            if (verbosity>0) :
+                print("Asymmetric Gaussian:",F,sm,sM,phi,xi,yi)
+
+        return I
+ 
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+        parameter_name=[ r'$I_0$ (Jy)', r'$\sigma_0$ (rad)', r'$A_0$', r'$\phi_0$ (rad)', r'$x_0 (rad)$', r'$y_0 (rad)$']
+        for i in range(self.Num_gauss):
+            parameter_name.extend([ r'$I_%s/I_%s$'%(i,i-1), r'$\sigma_%s$ (rad)'%i, r'$A_%s$'%i, r'$\phi_%s$ (rad)'%i, r'$x_%s-x_0 (rad)$'%s, r'$y_%s-y_0 (rad)$'%s])
+        return parameter_name
+    
+ 
     
 class model_image_single_point_statistics(model_image) :
     """
@@ -2298,6 +2380,10 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
     elif (tag[0]=="model_image_xsring_ellip") :
         return model_image_xsring_ellip(),tag[1:]
 
+    elif (tag[0].split()[0]=='model_image_themaussian') :
+        toks = tag[0].split()
+        return model_image_themaussian(int(toks[1])),tag[1:]
+ 
     elif (tag[0].split()[0]=='model_image_splined_raster') :
         toks = tag[0].split()
         # return model_image_splined_raster(float(toks[1]),float(toks[2]),int(toks[3]),float(toks[4]),float(toks[5]),int(toks[6]),float(toks[7])),tag[1:]
