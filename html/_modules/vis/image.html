@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.image &mdash; ThemisPy 0.3.0+36.g8744325 documentation</title>
+  <title>vis.image &mdash; ThemisPy 0.3.0+71.g0923b95.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+36.g8744325 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+71.g0923b95.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.0+36.g8744325
+                0.3.0+71.g0923b95.dirty
               </div>
             
           
@@ -412,7 +412,7 @@
 
 <span class="sd">    * parameters[0] ... Total intensity :math:`I_0` (Jy)</span>
 <span class="sd">    * parameters[1] ... Outer radius :math:`R` (rad)</span>
-<span class="sd">    * parameters[2] ... Width paramter :math:`\\psi` in (0,1)</span>
+<span class="sd">    * parameters[2] ... Width parameter :math:`\\psi` in (0,1)</span>
 <span class="sd">    * parameters[3] ... Asymmetry parmaeter :math:`\\tau` in (0,1)</span>
 <span class="sd">    * parameters[4] ... Position angle :math:`\\phi` (rad)</span>
 
@@ -444,7 +444,7 @@
         <span class="n">dx</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span><span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">dx</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">rad2uas</span><span class="p">))</span>
 
-        <span class="n">I0</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">paramters</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">I0</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">Rp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-20</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">rad2uas</span>
         <span class="n">Rn</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="mf">0.9999</span> <span class="p">)</span> <span class="o">*</span> <span class="n">Rp</span>
         <span class="n">d</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="mf">1e-4</span><span class="p">),</span><span class="mf">0.9999</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">Rp</span> <span class="o">-</span> <span class="n">Rn</span><span class="p">)</span>
@@ -585,7 +585,6 @@
         <span class="c1"># Make sure that delta ring is resolvable</span>
         <span class="n">dx</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span><span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">dx</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">rad2uas</span><span class="p">))</span>
-
         <span class="n">I0</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
         <span class="n">Rp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-20</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">rad2uas</span>
         <span class="n">Rin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="mf">0.9999</span> <span class="p">)</span> <span class="o">*</span> <span class="n">Rp</span>
@@ -626,6 +625,273 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="k">return</span> <span class="p">[</span> <span class="sa">r</span><span class="s1">&#39;$I_0$ (Jy)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$R_{\rm out}$ (rad)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\psi$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\epsilon$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$f$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$g_</span><span class="si">{ax}</span><span class="s1">$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$a_q$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$g_q$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\phi$ (rad)&#39;</span><span class="p">]</span></div></div>
+
+
+<div class="viewcode-block" id="model_image_mring"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_mring">[docs]</a><span class="k">class</span> <span class="nc">model_image_mring</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    fourier mode delta mring model that is a mirror of :cpp:class:`themis::model_image_mring`.</span>
+<span class="sd">    has parameters:</span>
+
+<span class="sd">    * parameters[0] ... total intensity :math:`i_0` (jy)</span>
+<span class="sd">    * parameters[1] ... radius :math:`r` (rad)</span>
+<span class="sd">    * parameters[2,3] ... coefficients (amp,phase) for first mring mode </span>
+<span class="sd">    * parameters[4,5] ... coefficients (amp,phase) for second mring mode</span>
+<span class="sd">    * parameters[2n,2n+1] ... coefficients for (re,im) for n mring mode </span>
+
+<span class="sd">    and size=2+2*n.</span>
+
+<span class="sd">    args:</span>
+<span class="sd">      themis_fft_sign (bool): if true will assume the themis-default fft sign convention, which reflects the reconstructed image through the origin. default: true.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nmodes</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">themis_fft_sign</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">=</span><span class="mi">2</span><span class="o">+</span><span class="n">nmodes</span><span class="o">*</span><span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nmodes</span> <span class="o">=</span> <span class="n">nmodes</span>
+
+        
+<div class="viewcode-block" id="model_image_mring.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_mring.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        internal generation of the intensity map. in practice you almost certainly want to call :func:`model_image.intensity_map`.</span>
+
+<span class="sd">        args:</span>
+<span class="sd">          x (numpy.ndarray): array of -ra offsets in microarcseconds (usually plaid 2d).</span>
+<span class="sd">          y (numpy.ndarray): array of dec offsets in microarcseconds (usually plaid 2d).</span>
+<span class="sd">          verbosity (int): verbosity parameter. if nonzero, prints information about model properties. default: 0.</span>
+
+<span class="sd">        returns:</span>
+<span class="sd">          (numpy.ndarray) array of intensity values at positions (x,y) in :math:`jy/\\mu as^2`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># make sure that delta ring is resolvable</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span><span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">line_thickness</span><span class="o">=</span><span class="mi">2</span>
+
+        <span class="n">i0</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-20</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">rad2uas</span>
+
+        <span class="n">phases</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">nmodes</span><span class="o">+</span><span class="mi">4</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">amps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">:</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">nmodes</span><span class="o">+</span><span class="mi">3</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">alphas</span> <span class="o">=</span> <span class="n">amps</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phases</span><span class="p">)</span>
+        <span class="n">betas</span> <span class="o">=</span> <span class="n">amps</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phases</span><span class="p">)</span>
+        <span class="n">beta_factor</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1">#This is because I don&#39;t include the -x in Themis and I used to opposite phase like</span>
+        <span class="c1">#a dummy PT</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">-</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nmodes</span><span class="p">):</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">((</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">phi</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">((</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">phi</span><span class="p">)</span>
+            <span class="n">beta_factor</span> <span class="o">+=</span> <span class="n">alphas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">c</span> <span class="o">-</span> <span class="n">betas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">s</span>
+
+        <span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="n">i0</span><span class="o">*</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">dx</span><span class="o">*</span><span class="n">line_thickness</span><span class="p">)</span>
+                <span class="o">*</span> <span class="n">beta_factor</span>
+                <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">dx</span><span class="o">*</span><span class="n">line_thickness</span><span class="o">/</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+                <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="n">dx</span><span class="o">*</span><span class="n">line_thickness</span><span class="o">/</span><span class="mi">2</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span>
+
+
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;mring:&#39;</span><span class="p">,</span><span class="n">i0</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">betalist</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="model_image_mring.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_mring.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        producess a lists parameter names.</span>
+
+<span class="sd">        returns:</span>
+<span class="sd">          (list) list of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nr</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$\rm</span><span class="si">{re}</span><span class="s2">(c_</span><span class="si">%d</span><span class="s2">)$&quot;</span><span class="o">%</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">nmodes</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+        <span class="n">ni</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$\rm</span><span class="si">{im}</span><span class="s2">(c_</span><span class="si">%d</span><span class="s2">)$&quot;</span><span class="o">%</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">nmodes</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+
+        <span class="n">names</span> <span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s1">&#39;$i_0$ (jy)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$r_{\rm delta}$ (rad)&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nmodes</span><span class="p">):</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nr</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ni</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">names</span></div></div>
+
+<div class="viewcode-block" id="model_image_mring_floor"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_mring_floor">[docs]</a><span class="k">class</span> <span class="nc">model_image_mring_floor</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    fourier mode delta mring model with floor that is a mirror of :cpp:class:`themis::model_image_mring_floor`.</span>
+<span class="sd">    has parameters:</span>
+
+<span class="sd">    * parameters[0] ... total intensity :math:`i_0` (jy)</span>
+<span class="sd">    * parameters[1] ... radius :math:`r` (rad)</span>
+<span class="sd">    * parameters[2] ... fraction of disk flux floor</span>
+<span class="sd">    * parameters[3,4] ... coefficients (re,im) for first mring mode </span>
+<span class="sd">    * parameters[5,6] ... coefficients (re,im) for second mring mode</span>
+<span class="sd">    * parameters[3+2n,3_2n+1] ... coefficients for (re,im) for n mring mode </span>
+
+<span class="sd">    and size=3+2*n.</span>
+
+<span class="sd">    args:</span>
+<span class="sd">      themis_fft_sign (bool): if true will assume the themis-default fft sign convention, which reflects the reconstructed image through the origin. default: true.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">nmodes</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">themis_fft_sign</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">=</span><span class="mi">3</span><span class="o">+</span><span class="n">nmodes</span><span class="o">*</span><span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nmodes</span> <span class="o">=</span> <span class="n">nmodes</span>
+
+        
+<div class="viewcode-block" id="model_image_mring_floor.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_mring_floor.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        internal generation of the intensity map. in practice you almost certainly want to call :func:`model_image.intensity_map`.</span>
+
+<span class="sd">        args:</span>
+<span class="sd">          x (numpy.ndarray): array of -ra offsets in microarcseconds (usually plaid 2d).</span>
+<span class="sd">          y (numpy.ndarray): array of dec offsets in microarcseconds (usually plaid 2d).</span>
+<span class="sd">          verbosity (int): verbosity parameter. if nonzero, prints information about model properties. default: 0.</span>
+
+<span class="sd">        returns:</span>
+<span class="sd">          (numpy.ndarray) array of intensity values at positions (x,y) in :math:`jy/\\mu as^2`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># make sure that delta ring is resolvable</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span><span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">line_thickness</span><span class="o">=</span><span class="mi">2</span>
+
+        <span class="n">floor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">ir</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">floor</span><span class="p">)</span>
+        <span class="nb">id</span> <span class="o">=</span><span class="nb">max</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">floor</span> 
+        <span class="n">r</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-20</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">rad2uas</span>
+
+        <span class="n">phases</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">nmodes</span><span class="o">+</span><span class="mi">5</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">amps</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">2</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">nmodes</span><span class="o">+</span><span class="mi">4</span><span class="p">:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">alphas</span> <span class="o">=</span> <span class="n">amps</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phases</span><span class="p">)</span>
+        <span class="n">betas</span> <span class="o">=</span> <span class="n">amps</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phases</span><span class="p">)</span>
+        <span class="n">beta_factor</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="c1">#This is because I don&#39;t include the -x in Themis and I used to opposite phase like</span>
+        <span class="c1">#a dummy PT</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="o">-</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nmodes</span><span class="p">):</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">((</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">phi</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">((</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">phi</span><span class="p">)</span>
+            <span class="n">beta_factor</span> <span class="o">+=</span> <span class="n">alphas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">c</span> <span class="o">-</span> <span class="n">betas</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">s</span>
+        
+
+        <span class="n">val</span> <span class="o">=</span> <span class="p">(</span><span class="n">ir</span><span class="o">*</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">r</span><span class="o">*</span><span class="n">dx</span><span class="o">*</span><span class="n">line_thickness</span><span class="p">)</span>
+                <span class="o">*</span> <span class="n">beta_factor</span>
+                <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">-</span> <span class="n">dx</span><span class="o">*</span><span class="n">line_thickness</span><span class="o">/</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+                <span class="o">*</span> <span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="n">dx</span><span class="o">*</span><span class="n">line_thickness</span><span class="o">/</span><span class="mi">2</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">x</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span>
+
+        <span class="n">val</span> <span class="o">+=</span> <span class="nb">id</span><span class="o">*</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">&lt;</span> <span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+
+
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;mring:&#39;</span><span class="p">,</span><span class="n">ir</span><span class="o">+</span><span class="nb">id</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">floor</span><span class="p">,</span> <span class="n">betalist</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="model_image_mring_floor.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_mring_floor.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        producess a lists parameter names.</span>
+
+<span class="sd">        returns:</span>
+<span class="sd">          (list) list of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nr</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$|c_</span><span class="si">%d</span><span class="s2">|$&quot;</span><span class="o">%</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">nmodes</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+        <span class="n">ni</span> <span class="o">=</span> <span class="p">[</span><span class="sa">r</span><span class="s2">&quot;$\rm</span><span class="si">{arg}</span><span class="s2">(c_</span><span class="si">%d</span><span class="s2">)$&quot;</span><span class="o">%</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">nmodes</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span>
+
+        <span class="n">names</span> <span class="o">=</span><span class="p">[</span><span class="sa">r</span><span class="s1">&#39;$i_0$ (jy)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$r_{\rm delta}$ (rad)&#39;</span><span class="p">,</span> <span class="s2">&quot;floor&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nmodes</span><span class="p">):</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nr</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ni</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">names</span></div></div>
+
+
+
+<div class="viewcode-block" id="model_image_xsring_ellip"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_xsring_ellip">[docs]</a><span class="k">class</span> <span class="nc">model_image_xsring_ellip</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_xsring_ellip`.</span>
+<span class="sd">    Has parameters:</span>
+
+<span class="sd">    * parameters[0] ... Total intensity :math:`I_0` (Jy)</span>
+<span class="sd">    * parameters[1] ... Outer radius :math:`R` (rad)</span>
+<span class="sd">    * parameters[2] ... Width parameter :math:`\\psi` in (0,1)</span>
+<span class="sd">    * parameters[3] ... Eccentricity parameter :math:`\\epsilon` in (0,1)</span>
+<span class="sd">    * parameters[4] ... Ellipticity parameter, ration of semi-minor to semi-major in (0,1)</span>
+<span class="sd">    * parameters[5] ... Ellipticity orientation, (rad)</span>
+<span class="sd">    * parameters[6] ... Linear fade parameter math:`f` in (0,1)</span>
+<span class="sd">    * parameters[7] ... Position angle :math:`\\phi` (rad)</span>
+
+<span class="sd">    and size=8.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">themis_fft_sign</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">=</span><span class="mi">8</span>
+
+        
+<div class="viewcode-block" id="model_image_xsring_ellip.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_xsring_ellip.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Make sure that delta ring is resolvable</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="mf">1.5</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span><span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">dx</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">rad2uas</span><span class="p">))</span>
+
+        <span class="n">I0</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">Rp</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-20</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="n">rad2uas</span>
+        <span class="n">Rin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="mf">0.9999</span> <span class="p">)</span> <span class="o">*</span> <span class="n">Rp</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span><span class="mf">1e-4</span><span class="p">),</span><span class="mf">0.9999</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">Rp</span> <span class="o">-</span> <span class="n">Rin</span><span class="p">)</span>
+        <span class="n">tau</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="mf">1e-4</span><span class="p">)</span>
+        <span class="n">xit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span><span class="mf">1e-4</span><span class="p">),</span><span class="mf">0.9999</span><span class="p">);</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
+        <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">tau</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">xit</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">xit</span><span class="p">)</span>
+        <span class="n">ddx</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">*</span><span class="n">c</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">s</span><span class="p">)</span><span class="o">*</span><span class="n">scale</span>
+        <span class="n">ddy</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="o">*</span><span class="n">s</span> <span class="o">+</span> <span class="n">y</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">/</span><span class="n">scale</span>
+
+        <span class="n">Iring0</span> <span class="o">=</span> <span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">I0</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">*</span><span class="mf">1.0</span><span class="o">/</span><span class="p">((</span><span class="mf">1.0</span><span class="o">+</span><span class="n">f</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">Rp</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">Rin</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">f</span><span class="p">)</span><span class="o">*</span><span class="n">d</span><span class="o">*</span><span class="n">Rin</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">Rp</span><span class="p">);</span>
+
+        <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">ddx</span><span class="o">*</span><span class="n">c</span> <span class="o">-</span> <span class="n">ddy</span><span class="o">*</span><span class="n">s</span>
+        <span class="n">dy</span> <span class="o">=</span> <span class="n">ddx</span><span class="o">*</span><span class="n">s</span> <span class="o">+</span> <span class="n">ddy</span><span class="o">*</span><span class="n">c</span>
+
+        <span class="n">Iring</span> <span class="o">=</span> <span class="n">Iring0</span><span class="o">*</span><span class="p">(</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">dx</span><span class="o">/</span><span class="n">Rp</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">f</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">+</span><span class="n">dx</span><span class="o">/</span><span class="n">Rp</span><span class="p">))</span> 
+
+        <span class="n">Iring</span> <span class="o">*=</span> <span class="p">((</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">dy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">&lt;=</span><span class="n">Rp</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">Iring</span> <span class="o">*=</span> <span class="p">(((</span><span class="n">dx</span><span class="o">-</span><span class="n">d</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="n">dy</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">&gt;</span><span class="n">Rin</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;xsring_ellip:&#39;</span><span class="p">,</span><span class="n">I0</span><span class="p">,</span> <span class="n">Rp</span><span class="p">,</span> <span class="n">Rin</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">tau</span><span class="p">,</span> <span class="n">xit</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="n">Iring</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="model_image_xsring_ellip.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_xsring_ellip.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producess a lists parameter names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[</span> <span class="sa">r</span><span class="s1">&#39;$I_0$ (Jy)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$R_{\rm out}$ (rad)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\psi$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\epsilon$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\tau$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\xi$ (rad)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$f$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$g_</span><span class="si">{ax}</span><span class="s1">$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$a_q$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$g_q$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\phi$ (rad)&#39;</span><span class="p">]</span></div></div>
+
+
 
 
 <div class="viewcode-block" id="direct_cubic_spline_1d"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.direct_cubic_spline_1d">[docs]</a><span class="k">def</span> <span class="nf">direct_cubic_spline_1d</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">f</span><span class="p">,</span><span class="n">xx</span><span class="p">,</span><span class="n">a</span><span class="o">=-</span><span class="mf">0.5</span><span class="p">)</span> <span class="p">:</span>
@@ -1015,6 +1281,107 @@
 
 
 
+<div class="viewcode-block" id="model_image_stretch"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_stretch">[docs]</a><span class="k">class</span> <span class="nc">model_image_stretch</span><span class="p">(</span><span class="n">model_image</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Smoothed image class that is a mirror of :cpp:class:`Themis::model_image_stretch`. Generates a smoothed </span>
+<span class="sd">    image from an existing image using an asymmetric Gaussian smoothing kernel.</span>
+<span class="sd">    Has parameters:</span>
+
+<span class="sd">    * parameters[0] ............. First parameter of underlying image</span>
+<span class="sd">    </span>
+<span class="sd">    ...</span>
+
+<span class="sd">    * parameters[image.size-1] .. Last parameter of underlying image</span>
+<span class="sd">    * parameters[image.size] .... stretch parameter :math:`\\tau = 1 - b/a` where b is semi-minor and a is semi-major</span>
+<span class="sd">    * parameters[image.size+1] .. Position angle of stretch :math:`\\phi` (rad)</span>
+
+<span class="sd">    and size=image.size+3.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      image (model_image): :class:`model_image` object that will be smoothed.</span>
+<span class="sd">      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">      image (model_image): A preexisting :class:`model_image` object to be stretched.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">themis_fft_sign</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span>
+
+        
+<div class="viewcode-block" id="model_image_stretch.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_stretch.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parameters</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_stretch::generate_model`, </span>
+<span class="sd">        a similar function within the :cpp:class:`Themis::model_image_stretch` class.  Effectively </span>
+<span class="sd">        simply copies the parameters into the local list with some additional run-time checking.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          parameters (list): Parameter list.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          None        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span><span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Parameter list is inconsistent with the number of parameters expected.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">parameters</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span></div>
+
+        
+<div class="viewcode-block" id="model_image_stretch.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_stretch.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Doesn&#39;t to boundary checking here.  Probably not a major problem, but consider it in the future.</span>
+        <span class="n">srmaj</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> 
+        <span class="n">srmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span> 
+        <span class="n">sphi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Re-orient the grind along major and minor axes of the smoothing kernel</span>
+        <span class="n">xMinor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">sphi</span><span class="p">)</span><span class="o">*</span><span class="n">x</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">sphi</span><span class="p">)</span><span class="o">*</span><span class="n">y</span>
+        <span class="n">xMajor</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">sphi</span><span class="p">)</span><span class="o">*</span><span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">sphi</span><span class="p">)</span><span class="o">*</span><span class="n">y</span>
+        <span class="n">px</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">py</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate_intensity_map</span><span class="p">(</span><span class="n">xMinor</span><span class="o">*</span><span class="n">srmin</span><span class="p">,</span><span class="n">xMajor</span><span class="o">*</span><span class="n">srmaj</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="c1">#I = self.image.generate_intensity_map(x,y,verbosity=verbosity)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Stretched:&#39;</span><span class="p">,</span><span class="n">sr1</span><span class="p">,</span><span class="n">sr2</span><span class="p">,</span><span class="n">sphi</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span>
+            
+        <span class="k">return</span> <span class="n">I</span></div>
+
+    
+<div class="viewcode-block" id="model_image_stretch.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_stretch.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producess a lists parameter names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">parameter_name_list</span><span class="p">()</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\tau$&#39;</span><span class="p">)</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\phi_\tau$ (rad)&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">names</span></div></div>
+
+    
+
+
+
 <div class="viewcode-block" id="model_image_smooth"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_smooth">[docs]</a><span class="k">class</span> <span class="nc">model_image_smooth</span><span class="p">(</span><span class="n">model_image</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Smoothed image class that is a mirror of :cpp:class:`Themis::model_image_smooth`. Generates a smoothed </span>
@@ -1097,8 +1464,8 @@
         <span class="n">exponent</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">xMajor</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">sr1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">xMinor</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">sr2</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">K</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">sr1</span><span class="o">*</span><span class="n">sr2</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">exponent</span><span class="p">)</span> 
     
-        <span class="n">px</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">py</span> <span class="o">=</span> <span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">px</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">py</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[:</span><span class="o">-</span><span class="mi">3</span><span class="p">])</span>
         <span class="n">I</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate_intensity_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
@@ -1411,7 +1778,197 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+ 
+<div class="viewcode-block" id="model_image_fourier_variable"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_fourier_variable">[docs]</a><span class="k">class</span> <span class="nc">model_image_fourier_variable</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a :class:`model_image` object with parameters whose Fourier coefficients vary with </span>
+<span class="sd">    time from an initially static :class:`model_image` object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      image (model_image): Static image from which to generate a dynamic image.</span>
+<span class="sd">      orders (list): List of integer orders of the Fourier series in time of each parameter.</span>
+<span class="sd">      reference_time (list): Reference time that defines the time origin.</span>
+<span class="sd">      end_time (list): Reference time that defines the time end.</span>
+<span class="sd">    &quot;&quot;&quot;</span>    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">orders</span><span class="p">,</span> <span class="n">reference_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">themis_fft_sign</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">orders</span> <span class="o">=</span> <span class="n">orders</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">orders</span><span class="p">)</span><span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Length of orders list must match number of parameters in static image.&quot;</span><span class="p">)</span>
         
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_time</span> <span class="o">=</span> <span class="n">reference_time</span><span class="o">/</span><span class="mf">3600.0</span> <span class="c1"># Reference time in hr, but provided in s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">end_time</span> <span class="o">=</span> <span class="n">end_time</span><span class="o">/</span><span class="mf">3600.0</span> <span class="c1"># End time in hr, but provided in s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">orders</span><span class="p">)</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">orders</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="model_image_fourier_variable.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_fourier_variable.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">parameters</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_fourier_variable::generate_model`, </span>
+<span class="sd">        a similar function within the :cpp:class:`Themis::model_image_fourier_variable` class.  </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          parameters (list): Parameter list.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          None        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span><span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Parameter list is inconsistent with the number of parameters expected.&quot;</span><span class="p">)</span>
+
+        <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_time</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">end_time</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_time</span><span class="p">)</span><span class="o">*</span><span class="mf">3600.0</span> <span class="c1"># hr to s</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">q</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+            <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">orders</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">q</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">dt</span><span class="o">*</span><span class="n">order</span><span class="p">)</span>
+                <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">q</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">dt</span><span class="o">*</span><span class="n">order</span><span class="p">)</span>
+                <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">q</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="model_image_fourier_variable.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_fourier_variable.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;FourierVariable:&quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_time</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">parameters</span><span class="p">[:</span><span class="mi">3</span><span class="p">])</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate_intensity_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="model_image_fourier_variable.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_fourier_variable.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Produces a list of parameter names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">static_names</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">parameter_name_list</span><span class="p">()</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">static_names</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">orders</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">orders</span><span class="p">[</span><span class="n">k</span><span class="p">],</span><span class="mi">2</span><span class="p">)</span> <span class="p">:</span>
+                    <span class="n">names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="s1">&#39;Cos(</span><span class="si">%i</span><span class="s1"> dt) </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">order</span><span class="p">,</span><span class="n">static_names</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>
+                    <span class="n">names</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="s1">&#39;Sin(</span><span class="si">%i</span><span class="s1"> dt) </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">order</span><span class="p">,</span><span class="n">static_names</span><span class="p">[</span><span class="n">k</span><span class="p">]))</span>
+                 
+        <span class="k">return</span> <span class="n">names</span></div>
+
+
+<div class="viewcode-block" id="model_image_fourier_variable.set_time"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_fourier_variable.set_time">[docs]</a>    <span class="k">def</span> <span class="nf">set_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          time (float): Time in hours.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="n">time</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="kc">None</span></div></div>
+ 
+     
+     
+<div class="viewcode-block" id="model_image_themaussian"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_themaussian">[docs]</a><span class="k">class</span> <span class="nc">model_image_themaussian</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Themaussian image class that is a mirror of :cpp:class:`Themis::model_image_themaussian`.</span>
+<span class="sd">    A themaussian is a sum of asymmetric gaussians.</span>
+<span class="sd">    Has parameters:</span>
+
+<span class="sd">    * parameters[0,6,12...] ... Total intensity :math:`I_0` (Jy) for p0. For all others, a ratio of total intensity to the previous gaussian in (0,1).</span>
+<span class="sd">    * parameters[1,7,13...] ... Symmetrized standard deviation :math:`\\sigma` (rad)</span>
+<span class="sd">    * parameters[2,8,14...] ... Asymmetry parameter :math:`A` in (0,1)</span>
+<span class="sd">    * parameters[3,9,15...] ... Position angle :math:`\\phi` (rad)</span>
+<span class="sd">    * parameters[4,10,16...] ... x-position of first gaussian for p4. For all others, a difference from the first gaussian.</span>
+<span class="sd">    * parameters[5,11,17...] ... y-position of first gaussian for p4. For all others, a difference from the first gaussian.</span>
+
+<span class="sd">    and size=6*Num_gauss. Plotting fixes first gaussian to origin.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">Num_gauss</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">themis_fft_sign</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Num_gauss</span><span class="o">=</span><span class="n">Num_gauss</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">=</span><span class="mi">6</span><span class="o">*</span><span class="n">Num_gauss</span>
+
+        
+<div class="viewcode-block" id="model_image_themaussian.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_themaussian.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">I</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="n">F</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">xi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">*</span><span class="n">rad2uas</span>
+        <span class="n">yi</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">*</span><span class="n">rad2uas</span>
+        <span class="c1">#xi=0</span>
+        <span class="c1">#yi=0</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Num_gauss</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span><span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">xi</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">4</span><span class="o">+</span><span class="mi">6</span><span class="o">*</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span><span class="o">*</span><span class="n">rad2uas</span>
+                <span class="n">yi</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">5</span><span class="o">+</span><span class="mi">6</span><span class="o">*</span><span class="n">i</span><span class="p">]</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span><span class="o">*</span><span class="n">rad2uas</span>
+                <span class="n">F</span><span class="o">=</span><span class="n">F</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="o">+</span><span class="mi">6</span><span class="o">*</span><span class="n">i</span><span class="p">]</span>
+        
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="mi">6</span><span class="o">*</span><span class="n">i</span><span class="p">])</span> <span class="o">*</span> <span class="n">rad2uas</span>
+            <span class="n">A</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="o">+</span><span class="mi">6</span><span class="o">*</span><span class="n">i</span><span class="p">],</span><span class="mf">0.99</span><span class="p">),</span><span class="mf">0.0</span><span class="p">)</span>
+            <span class="n">sm</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span><span class="o">+</span><span class="n">A</span><span class="p">)</span>
+            <span class="n">sM</span> <span class="o">=</span> <span class="n">s</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.</span><span class="o">-</span><span class="n">A</span><span class="p">)</span>
+            <span class="n">I0</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">F</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">sm</span><span class="o">*</span><span class="n">sM</span><span class="p">)</span>
+            <span class="n">phi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">3</span><span class="o">+</span><span class="mi">6</span><span class="o">*</span><span class="n">i</span><span class="p">]</span>
+
+            <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+            <span class="n">dxm</span> <span class="o">=</span> <span class="n">c</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">xi</span><span class="p">)</span> <span class="o">-</span> <span class="n">s</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">yi</span><span class="p">)</span>
+            <span class="n">dxM</span> <span class="o">=</span> <span class="n">s</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">xi</span><span class="p">)</span> <span class="o">+</span> <span class="n">c</span><span class="o">*</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">yi</span><span class="p">)</span>
+
+            <span class="n">I</span> <span class="o">+=</span> <span class="n">I0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span> <span class="n">dxm</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">sm</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dxM</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">sM</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span> <span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Asymmetric Gaussian:&quot;</span><span class="p">,</span><span class="n">F</span><span class="p">,</span><span class="n">sm</span><span class="p">,</span><span class="n">sM</span><span class="p">,</span><span class="n">phi</span><span class="p">,</span><span class="n">xi</span><span class="p">,</span><span class="n">yi</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">I</span></div>
+ 
+<div class="viewcode-block" id="model_image_themaussian.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_themaussian.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producess a lists parameter names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">parameter_name</span><span class="o">=</span><span class="p">[</span> <span class="sa">r</span><span class="s1">&#39;$I_0$ (Jy)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\sigma_0$ (rad)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$A_0$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\phi_0$ (rad)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$x_0 (rad)$&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$y_0 (rad)$&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Num_gauss</span><span class="p">):</span>
+            <span class="n">parameter_name</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span> <span class="sa">r</span><span class="s1">&#39;$I_</span><span class="si">%s</span><span class="s1">/I_</span><span class="si">%s</span><span class="s1">$&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="sa">r</span><span class="s1">&#39;$\sigma_</span><span class="si">%s</span><span class="s1">$ (rad)&#39;</span><span class="o">%</span><span class="n">i</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$A_</span><span class="si">%s</span><span class="s1">$&#39;</span><span class="o">%</span><span class="n">i</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\phi_</span><span class="si">%s</span><span class="s1">$ (rad)&#39;</span><span class="o">%</span><span class="n">i</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$x_</span><span class="si">%s</span><span class="s1">-x_0 (rad)$&#39;</span><span class="o">%</span><span class="n">s</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$y_</span><span class="si">%s</span><span class="s1">-y_0 (rad)$&#39;</span><span class="o">%</span><span class="n">s</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">parameter_name</span></div></div>
+    
+ 
     
 <div class="viewcode-block" id="model_image_single_point_statistics"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_single_point_statistics">[docs]</a><span class="k">class</span> <span class="nc">model_image_single_point_statistics</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -1939,6 +2496,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">      (model_image, list) : The first :class:`model_image` object fully described within the tag; the remaining tag lines.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1">#print(tag)</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">tag</span><span class="p">)</span> <span class="p">:</span>
@@ -1957,17 +2515,39 @@
     <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_xsring&#39;</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">return</span> <span class="n">model_image_xsring</span><span class="p">(),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_mring&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">toks</span> <span class="o">=</span> <span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">model_image_mring</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_mring_floor&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">toks</span> <span class="o">=</span> <span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">model_image_mring_floor</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    
     <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_xsringauss&#39;</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">return</span> <span class="n">model_image_xsringauss</span><span class="p">(),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s2">&quot;model_image_xsring_ellip&quot;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">model_image_xsring_ellip</span><span class="p">(),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_themaussian&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">toks</span> <span class="o">=</span> <span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">model_image_themaussian</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+ 
     <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_splined_raster&#39;</span><span class="p">)</span> <span class="p">:</span>
         <span class="n">toks</span> <span class="o">=</span> <span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">model_image_splined_raster</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">5</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">6</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">7</span><span class="p">])),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="c1"># return model_image_splined_raster(float(toks[1]),float(toks[2]),int(toks[3]),float(toks[4]),float(toks[5]),int(toks[6]),float(toks[7])),tag[1:]</span>
+        <span class="c1"># return model_image_splined_raster(int(toks[1]),int(toks[2]),float(toks[3]),float(toks[4]),float(toks[5])),tag[1:]</span>
+        <span class="k">return</span> <span class="n">model_image_splined_raster</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">6</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span><span class="o">-</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">4</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">7</span><span class="p">])),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
     <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_adaptive_splined_raster&#39;</span><span class="p">)</span> <span class="p">:</span>
         <span class="n">toks</span> <span class="o">=</span> <span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">model_image_adaptive_splined_raster</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
 
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_stretch&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">subtag</span> <span class="o">=</span> <span class="n">tagv1_find_subtag</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="n">subimage</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">construct_model_image_from_tagv1</span><span class="p">(</span><span class="n">subtag</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model_image_stretch</span><span class="p">(</span><span class="n">subimage</span><span class="p">),</span><span class="n">tag</span><span class="p">[(</span><span class="nb">len</span><span class="p">(</span><span class="n">subtag</span><span class="p">)</span><span class="o">+</span><span class="mi">3</span><span class="p">):]</span>
+    
     <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_smooth&#39;</span><span class="p">)</span> <span class="p">:</span>
         <span class="n">subtag</span> <span class="o">=</span> <span class="n">tagv1_find_subtag</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
         <span class="n">subimage</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">construct_model_image_from_tagv1</span><span class="p">(</span><span class="n">subtag</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
@@ -1989,6 +2569,15 @@
         <span class="n">subtag</span> <span class="o">=</span> <span class="n">tagv1_find_subtag</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
         <span class="n">subimage</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">construct_model_image_from_tagv1</span><span class="p">(</span><span class="n">subtag</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">model_image_polynomial_variable</span><span class="p">(</span><span class="n">subimage</span><span class="p">,</span><span class="n">orders</span><span class="p">,</span><span class="n">reference_time</span><span class="p">),</span><span class="n">tag</span><span class="p">[(</span><span class="nb">len</span><span class="p">(</span><span class="n">subtag</span><span class="p">)</span><span class="o">+</span><span class="mi">3</span><span class="p">):]</span>
+
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_fourier_variable&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">reference_time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">end_time</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">orders</span> <span class="o">=</span> <span class="p">[</span> <span class="nb">int</span><span class="p">(</span><span class="n">order</span><span class="p">)</span> <span class="k">for</span> <span class="n">order</span> <span class="ow">in</span> <span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">3</span><span class="p">:]]</span>
+        <span class="n">subtag</span> <span class="o">=</span> <span class="n">tagv1_find_subtag</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+        <span class="n">subimage</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">construct_model_image_from_tagv1</span><span class="p">(</span><span class="n">subtag</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model_image_fourier_variable</span><span class="p">(</span><span class="n">subimage</span><span class="p">,</span><span class="n">orders</span><span class="p">,</span><span class="n">reference_time</span><span class="p">,</span><span class="n">end_time</span><span class="p">),</span><span class="n">tag</span><span class="p">[(</span><span class="nb">len</span><span class="p">(</span><span class="n">subtag</span><span class="p">)</span><span class="o">+</span><span class="mi">3</span><span class="p">):]</span>
+
 
     <span class="k">else</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unrecognized model tag </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span></div>
@@ -2128,7 +2717,7 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="n">cmap</span><span class="p">(</span><span class="mf">0.0</span><span class="p">))</span>
 
     <span class="c1"># Make plot</span>
-    <span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolor</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">tI</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">Imin</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">Imax</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">tI</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">Imin</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">Imax</span><span class="p">,</span><span class="n">shading</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
     
     <span class="c1"># Add labels</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
@@ -2180,7 +2769,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+36.g8744325',
+            VERSION:'0.3.0+71.g0923b95.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

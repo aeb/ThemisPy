@@ -147,3 +147,12 @@ themispy_triangle_plot
    :nodefault:
 
 
+themispy_write_caltables
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_write_caltables
+   :func: set_parser
+   :prog: themispy_write_caltables
+   :nodefault:
+
+

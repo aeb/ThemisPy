@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>diag.convergence_tools &mdash; ThemisPy 0.3.0+36.g8744325 documentation</title>
+  <title>diag.convergence_tools &mdash; ThemisPy 0.3.0+71.g0923b95.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+36.g8744325 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+71.g0923b95.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.0+36.g8744325
+                0.3.0+71.g0923b95.dirty
               </div>
             
           
@@ -516,13 +516,14 @@
 
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;outputting to&quot;</span><span class="p">,</span> <span class="n">out_file_name</span><span class="p">)</span>
     <span class="n">io</span> <span class="o">=</span>  <span class="nb">open</span><span class="p">(</span><span class="n">out_file_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
-    <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;IACT:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;ESS:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">row_fmt</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&gt;15}</span><span class="s2">&quot;</span><span class="o">*</span><span class="p">(</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="o">+</span><span class="s2">&quot; </span><span class="si">{:&lt;25}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;p&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">),</span><span class="nb">range</span><span class="p">(</span><span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])),</span> <span class="s2">&quot;filename&quot;</span><span class="p">))</span>
     <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">chains</span><span class="p">)):</span>
-        <span class="n">iact</span> <span class="o">=</span> <span class="n">find_eautocorr</span><span class="p">(</span><span class="n">chains</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="n">stride</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;IACT: &quot;</span><span class="p">,</span> <span class="n">iact</span><span class="p">,</span> <span class="n">chainsname</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">iact</span> <span class="o">=</span> <span class="n">chains</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">find_eautocorr</span><span class="p">(</span><span class="n">chains</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">*</span><span class="n">stride</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ESS: &quot;</span><span class="p">,</span> <span class="n">iact</span><span class="p">,</span> <span class="n">chainsname</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;ESSmin: &quot;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">iact</span><span class="p">))</span>
         <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">iact</span><span class="p">,</span><span class="mi">2</span><span class="p">)),</span> <span class="n">chainsname</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
         <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Split-Rhat: </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -531,11 +532,11 @@
     <span class="n">mean_rhat</span> <span class="o">=</span> <span class="n">bulk_split_rhat</span><span class="p">(</span><span class="n">meanchains</span><span class="p">)</span>
     <span class="n">var_rhat</span> <span class="o">=</span> <span class="n">bulk_split_rhat</span><span class="p">(</span><span class="n">varchains</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;bulk Rhat median: &quot;</span><span class="p">,</span> <span class="n">mean_rhat</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;bulk Rhat 0.95 quantile: &quot;</span><span class="p">,</span> <span class="n">var_rhat</span><span class="p">)</span>
+    <span class="c1">#print(&quot;bulk Rhat 0.95 quantile: &quot;, var_rhat)</span>
     <span class="n">row_fmt</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&gt;15}</span><span class="s2">&quot;</span><span class="o">*</span><span class="p">(</span><span class="n">mean_rhat</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">+</span><span class="s2">&quot; </span><span class="si">{:&lt;25}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">mean_rhat</span><span class="p">,</span><span class="mi">6</span><span class="p">)),</span> <span class="s2">&quot;median&quot;</span><span class="p">))</span>
-    <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">io</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">row_fmt</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">var_rhat</span><span class="p">,</span><span class="mi">6</span><span class="p">)),</span> <span class="s2">&quot;quantile&quot;</span><span class="p">))</span>
+    <span class="c1">#io.write(&quot;\n&quot;)</span>
+    <span class="c1">#io.write(row_fmt.format(*list(np.round(var_rhat,6)), &quot;quantile&quot;))</span>
     <span class="n">io</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">iact</span><span class="p">,</span> <span class="n">mean_rhat</span><span class="p">,</span> <span class="n">var_rhat</span></div>
@@ -577,7 +578,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+36.g8744325',
+            VERSION:'0.3.0+71.g0923b95.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

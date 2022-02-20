@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.polimage &mdash; ThemisPy 0.3.0+36.g8744325 documentation</title>
+  <title>vis.polimage &mdash; ThemisPy 0.3.0+71.g0923b95.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+36.g8744325 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+71.g0923b95.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.0+36.g8744325
+                0.3.0+71.g0923b95.dirty
               </div>
             
           
@@ -1316,6 +1316,176 @@
         <span class="k">return</span> <span class="n">h</span><span class="p">,</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span></div>
 
 
+<div class="viewcode-block" id="plot_stokes_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.plot_stokes_map">[docs]</a><span class="k">def</span> <span class="nf">plot_stokes_map</span><span class="p">(</span><span class="n">polarized_image</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">stokes</span><span class="o">=</span><span class="s1">&#39;V&#39;</span><span class="p">,</span> <span class="n">limits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;bwr&#39;</span><span class="p">,</span> <span class="n">in_radec</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_stokes_map</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">intensity_contours</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">intensity_colors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stokes_fractional_intensity_floor</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots Stokes maps with intensity contours associated with a given </span>
+<span class="sd">    :class:`model_image` object evaluated at a specified set of parameters. A number of additional </span>
+<span class="sd">    practical options may be passed. Access to a matplotlib pcolor object, the figure handle and axes </span>
+<span class="sd">    handles are returned. Optionally, the Stokes map is returned.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      polarized_image (model_polarized_image): :class:`model_polarized_image` object to plot.</span>
+<span class="sd">      parameters (list): List of parameters that define model_image intensity map.</span>
+<span class="sd">      limits (float,list): Limits in uas on image size. If a single float is given, the limits are uniformly set. If a list is given, it must be in the form [xmin,xmax,ymin,ymax]. Default: 75.</span>
+<span class="sd">      shape (int,list): Number of pixels. If a single int is given, the number of pixels are uniformly set in both directions.  If a list is given, it must be in the form [Nx,Ny]. Default: 256.</span>
+<span class="sd">      colormap (matplotlib.colors.Colormap): A colormap name as specified in :mod:`matplotlib.cm`. Default: &#39;afmhot&#39;.</span>
+<span class="sd">      in_radec (bool): If True, plots in :math:`\\Delta RA` and :math:`\\Delta Dec`.  If False, plots in sky-right Cartesian coordinates. Default: True.</span>
+<span class="sd">      xlabel (str): Label for xaxis. Default: &#39;:math:`\\Delta RA (\\mu as)` if in_radec is True, :math:`\\Delta x (\\mu as)` if in_radec is False.</span>
+<span class="sd">      ylabel (str): Label for yaxis. Default: &#39;:math:`\\Delta Dec (\\mu as)` if in_radec is True, :math:`\\Delta y (\\mu as)` if in_radec is False.</span>
+<span class="sd">      return_stokes_map (bool): If True returns the intensity map in addition to standard return items.</span>
+<span class="sd">      intensity_contours (int,list,bool): May either be True, an integer, or a list of contour level values. Default: True. If True, sets 8 linearly spaced contour levels.</span>
+<span class="sd">      intensity_colors (list): A list composed of any acceptable color type as specified in :mod:`matplotlib.colors`.</span>
+<span class="sd">      stokes_fractional_intensity_floor (float): Fraction of maximum intensity at which to stop plotting Stokes map.  Default: 0.1.</span>
+<span class="sd">      colorbar (str): Adds colorbar indicating magnitude of polarized flux. Options are None, &#39;flux&#39;, and &#39;frac&#39;.  If None, no colorbar is plotted.  If &#39;flux&#39; the polarized flux in Jy will be shown.  If &#39;frac&#39; the fraction of the maximum intensity in polarized flux will be shown, i.e., :math:`L/I_{max}`.  Default: None.</span>
+<span class="sd">      verbosity (int): Verbosity level. 0 prints nothing. 1 prints various elements of the plotting process. Passed to :func:`model_image.generate_intensity_map`. Default: 0.</span>
+
+<span class="sd">    Returns :</span>
+<span class="sd">      (matplotlib.pyplot.image,matplotlib.pyplot.axes,matplotlib.pyplot.fig,[numpy.ndarray,numpy.ndarray,numpy.ndarray]): Image handle; Figure object; Axes object; Optionally intensity map (x,y,S).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1"># Shape limits</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">limits</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">limits</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">,</span> <span class="o">-</span><span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">limits</span><span class="p">,</span><span class="nb">list</span><span class="p">))</span> <span class="p">:</span>
+        <span class="n">limits</span> <span class="o">=</span> <span class="n">limits</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">limits</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">limits</span><span class="p">,</span> <span class="n">limits</span><span class="p">,</span> <span class="o">-</span><span class="n">limits</span><span class="p">,</span> <span class="n">limits</span><span class="p">]</span>
+
+    <span class="c1"># Set shape</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">shape</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">[</span><span class="mi">256</span><span class="p">,</span> <span class="mi">256</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">shape</span><span class="p">,</span><span class="nb">list</span><span class="p">))</span> <span class="p">:</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">shape</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">shape</span><span class="p">,</span> <span class="n">shape</span><span class="p">]</span>
+    
+    <span class="c1"># Set labels</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">xlabel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">in_radec</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">xlabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\Delta$RA ($\mu$as)&#39;</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">xlabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\Delta$x ($\mu$as)&#39;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ylabel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">in_radec</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\Delta$Dec ($\mu$as)&#39;</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">ylabel</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;$\Delta$y ($\mu$as)&#39;</span>
+        
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;limits:&quot;</span><span class="p">,</span><span class="n">limits</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;shape:&quot;</span><span class="p">,</span><span class="n">shape</span><span class="p">)</span>
+    
+    <span class="c1"># Generate a set of pixels</span>
+    <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="n">limits</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span><span class="n">limits</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="p">,</span><span class="n">limits</span><span class="p">[</span><span class="mi">2</span><span class="p">]:</span><span class="n">limits</span><span class="p">[</span><span class="mi">3</span><span class="p">]:</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">1</span><span class="n">j</span><span class="p">]</span>
+    <span class="c1"># Generate a set of Stokes parameters (Jy/uas^2)</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">polarized_image</span><span class="o">.</span><span class="n">stokes_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">parameters</span><span class="p">,</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+    
+    <span class="c1"># Flip x to flip x axis so that RA decreases right to left</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">in_radec</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="o">-</span><span class="n">x</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">limits</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">limits</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Minimum/Maximum L: </span><span class="si">%g</span><span class="s2"> / </span><span class="si">%g</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">Lmin</span><span class="p">,</span><span class="n">Lmax</span><span class="p">))</span>
+
+    <span class="c1"># Select Stokes pararmeter for plotting</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">stokes</span><span class="o">==</span><span class="s1">&#39;I&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">stokes</span><span class="o">==</span><span class="s1">&#39;Q&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">stokes</span><span class="o">==</span><span class="s1">&#39;U&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">stokes</span><span class="o">==</span><span class="s1">&#39;V&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="n">L</span> <span class="o">=</span> <span class="n">L</span><span class="o">*</span><span class="mf">1e3</span>
+        
+    <span class="n">Lmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">L</span><span class="p">))</span>
+    <span class="n">Lmin</span> <span class="o">=</span> <span class="o">-</span><span class="n">Lmax</span>
+        
+
+    <span class="c1"># Apply the I cut</span>
+    <span class="n">tL</span> <span class="o">=</span> <span class="n">L</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="p">:</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">L</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">I</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span><span class="o">&lt;</span><span class="n">stokes_fractional_intensity_floor</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">I</span><span class="p">))</span> <span class="p">:</span>
+                <span class="n">tL</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+        
+    <span class="c1"># Set background color in Axes</span>
+    <span class="n">cmap</span> <span class="o">=</span> <span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="n">colormap</span><span class="p">)</span>    
+    <span class="c1"># plt.gca().set_facecolor(cmap(0.0))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Make plot</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolor</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">tL</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">colormap</span><span class="p">,</span><span class="n">vmin</span><span class="o">=</span><span class="n">Lmin</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="n">Lmax</span><span class="p">)</span>
+
+    <span class="c1"># Add colorbar if desired</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">colorbar</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">cb</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">colorbar</span><span class="o">==</span><span class="s1">&#39;flux&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">cb</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Stokes </span><span class="si">%s</span><span class="s1"> flux (mJy/$\mu$as$^2$)&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">stokes</span><span class="p">),</span><span class="n">rotation</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span><span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+            <span class="n">cticks</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">get_yticks</span><span class="p">()</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">tL</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">tL_sort</span> <span class="o">=</span> <span class="n">tL</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">])[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">L_sort</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">])[</span><span class="n">i</span><span class="p">]</span>
+            <span class="c1">#ctick_Lvals = np.interp(cticks,tL_sort,L_sort) #,left=Lmin_orig,right=Lmax_orig)</span>
+            <span class="c1">#ctlbls = [ &#39;%5.2g&#39;%(x*1e3) for x in ctick_Lvals ]</span>
+            <span class="c1">#cb.ax.set_yticklabels(ctlbls)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">colorbar</span><span class="o">==</span><span class="s1">&#39;frac&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">cb</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Stokes </span><span class="si">%s</span><span class="s1"> flux ($I_</span><span class="si">{max}</span><span class="s1">$)&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">stokes</span><span class="p">),</span><span class="n">rotation</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span><span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">)</span>
+            <span class="c1">#cylim = cb.ax.get_ylim()</span>
+            <span class="n">cticks</span> <span class="o">=</span> <span class="n">cb</span><span class="o">.</span><span class="n">ax</span><span class="o">.</span><span class="n">get_yticks</span><span class="p">()</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">tL</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">tL_sort</span> <span class="o">=</span> <span class="n">tL</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">])[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">L_sort</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">])[</span><span class="n">i</span><span class="p">]</span>
+            <span class="c1">#ctick_Lvals = np.interp(cticks,tL_sort,L_sort) #,left=Lmin_orig,right=Lmax_orig)</span>
+            <span class="c1">#ctlbls = [ &#39;%5.2g&#39;%(x/np.max(S[0])) for x in ctick_Lvals ]</span>
+            <span class="c1">#cb.ax.set_yticklabels(ctlbls)</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unrecognized colorbar option </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">colorbar</span><span class="p">))</span>
+
+    
+    <span class="c1"># Add intensity contours if desired</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">intensity_contours</span><span class="o">!=</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">intensity_contours</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">intensity_contours</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="mi">10</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">intensity_contours</span><span class="p">,</span><span class="nb">int</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">intensity_contours</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="n">intensity_contours</span><span class="o">+</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">intensity_contours</span><span class="p">,</span><span class="nb">list</span><span class="p">))</span> <span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;intensity_countours must be a boolean, int, or list of intensity values at which to draw contours.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">intensity_colors</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">intensity_colors</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.75</span><span class="p">,</span><span class="mf">0.75</span><span class="p">,</span><span class="mf">0.75</span><span class="p">]]</span>
+        
+        <span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">levels</span><span class="o">=</span><span class="n">intensity_contours</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="n">intensity_colors</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="c1"># Add labels</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+    
+    <span class="c1"># Fix aspect ratio</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;square&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Set limits</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">limits</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">limits</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">limits</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    
+    <span class="c1"># Fix x-axis to run in sky</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">in_radec</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_xaxis</span><span class="p">()</span>        
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">return_stokes_map</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">h</span><span class="p">,</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">S</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">h</span><span class="p">,</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span></div>
+
+    
+
 <div class="viewcode-block" id="plot_polarized_image"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.plot_polarized_image">[docs]</a><span class="k">def</span> <span class="nf">plot_polarized_image</span><span class="p">(</span><span class="n">polarized_image</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">limits</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tick_shape</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">colormap</span><span class="o">=</span><span class="s1">&#39;gray_r&#39;</span><span class="p">,</span> <span class="n">tick_color</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="n">Imin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">Imax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">Lmin</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">Lmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">mscale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">in_radec</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">xlabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_stokes_map</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">transfer_function</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span> <span class="n">tick_fractional_intensity_floor</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">elliptical</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots linear polarization fraction, flux and intensity image associated with a given </span>
@@ -1789,7 +1959,7 @@
 
     
 
-<div class="viewcode-block" id="plot_dterm_posteriors"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.plot_dterm_posteriors">[docs]</a><span class="k">def</span> <span class="nf">plot_dterm_posteriors</span><span class="p">(</span><span class="n">polarized_image</span><span class="p">,</span> <span class="n">chain</span><span class="p">,</span> <span class="n">lcolormap</span><span class="o">=</span><span class="s1">&#39;Reds&#39;</span><span class="p">,</span> <span class="n">rcolormap</span><span class="o">=</span><span class="s1">&#39;Greens&#39;</span><span class="p">,</span> <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">comparison_dterms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comparison_fmts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scott_factor</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">nbin</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plevels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">station_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">edges</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill_zorder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge_zorder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge_rcolors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge_lcolors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge_colormap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge_alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="plot_dterm_posteriors"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.plot_dterm_posteriors">[docs]</a><span class="k">def</span> <span class="nf">plot_dterm_posteriors</span><span class="p">(</span><span class="n">polarized_image</span><span class="p">,</span> <span class="n">chain</span><span class="p">,</span> <span class="n">lcolormap</span><span class="o">=</span><span class="s1">&#39;Reds&#39;</span><span class="p">,</span> <span class="n">rcolormap</span><span class="o">=</span><span class="s1">&#39;Greens&#39;</span><span class="p">,</span> <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">comparison_dterms</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comparison_fmts</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">axs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">scott_factor</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">nbin</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">plevels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">station_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">edges</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fill_zorder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge_zorder</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge_rcolors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge_lcolors</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge_colormap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">edge_alpha</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Plots D term distributions for a polarized image model from an MCMC chain.  Each station will </span>
 <span class="sd">    separately have its left and right D term distributions plotted in the complex plane.</span>
@@ -2018,6 +2188,144 @@
     <span class="k">return</span> <span class="n">fig</span><span class="p">,</span><span class="n">axlist</span><span class="p">,</span><span class="n">hlist</span></div>
     
     
+<div class="viewcode-block" id="write_dterm_statistics"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.write_dterm_statistics">[docs]</a><span class="k">def</span> <span class="nf">write_dterm_statistics</span><span class="p">(</span><span class="n">polarized_image</span><span class="p">,</span> <span class="n">chain</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;dterm_statistics.txt&quot;</span><span class="p">,</span> <span class="n">station</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Writes a text file contaning D-term means and standard deviations.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      polarized_image (model_polarized_image): :class:`model_polarized_image` object to plot.</span>
+<span class="sd">      chain (numpy.ndarray): MCMC chain with parameters that include the fitted D terms.</span>
+<span class="sd">      outfile (str): Text file in which to write the D-term statistics.  Default: dterm_statistics.txt.</span>
+<span class="sd">      station (str,list): A single station code or list of station codes to which restrict attention or exclude.  Station codes must match those in the :class:`polarized_model_image.dterm_dict[&#39;station_names&#39;]` list for the polarized_image.  Station codes prefixed with &#39;!&#39; will be excluded. Default: D terms will be plotted for all stations.</span>
+<span class="sd">      verbosity (int): Verbosity level.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Check that D terms are being fit</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">polarized_image</span><span class="o">.</span><span class="n">number_of_dterms</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No D terms present in model, nothing to plot!&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+
+    <span class="c1"># Flatten chain</span>
+    <span class="n">Nparam</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">chain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">chain</span><span class="p">,[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">Nparam</span><span class="p">])</span>
+    
+    <span class="c1"># Get the list of indices to plot</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">station</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="c1"># By default include every station</span>
+        <span class="n">station_list</span> <span class="o">=</span> <span class="n">polarized_image</span><span class="o">.</span><span class="n">dterm_dict</span><span class="p">[</span><span class="s1">&#39;station_names&#39;</span><span class="p">]</span>
+        <span class="n">station_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">station_dict</span><span class="p">[</span><span class="s1">&#39;station_list&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">station_list</span> <span class="p">:</span>
+            <span class="n">station_dict</span><span class="p">[</span><span class="s1">&#39;station_list&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">station</span><span class="p">)</span>
+            <span class="n">station_dict</span><span class="p">[</span><span class="n">station</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;R&#39;</span><span class="p">,</span> <span class="s1">&#39;L&#39;</span><span class="p">]</span>
+            
+        
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="c1">#  If a single string is passed, then make a list of it.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">station</span><span class="p">,</span><span class="nb">str</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">station</span> <span class="o">=</span> <span class="p">[</span><span class="n">station</span><span class="p">]</span>
+
+        <span class="c1"># Exclude those station codes prepended with &#39;!&#39;, otherwise include them exclusively.</span>
+        <span class="c1">#  Make a list of excluded or included stations</span>
+        <span class="n">station_exclude_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">station_include_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1">#  Loop over stations in the list and check for &#39;!&#39;, adding the station to the proper list</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">station</span><span class="p">,</span><span class="nb">list</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">station_list</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">station</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">station_list</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">station</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;!&#39;</span><span class="p">)</span> <span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">station</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span> <span class="p">:</span>
+                        <span class="n">station_exclude_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">station</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="p">)</span>
+                    <span class="k">else</span> <span class="p">:</span>
+                        <span class="n">station_exclude_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">station</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">+</span><span class="s1">&#39;:R&#39;</span> <span class="p">)</span>
+                        <span class="n">station_exclude_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">station</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">+</span><span class="s1">&#39;:L&#39;</span> <span class="p">)</span>
+                <span class="k">else</span> <span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span class="n">station</span><span class="p">)</span> <span class="p">:</span>
+                        <span class="n">station_include_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">station</span> <span class="p">)</span>
+                    <span class="k">else</span> <span class="p">:</span>
+                        <span class="n">station_include_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">station</span><span class="o">+</span><span class="s1">&#39;:R&#39;</span> <span class="p">)</span>
+                        <span class="n">station_include_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">station</span><span class="o">+</span><span class="s1">&#39;:L&#39;</span> <span class="p">)</span>
+                        
+        <span class="c1">#  If no include list is given, include every station</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">station_include_list</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">polarized_image</span><span class="o">.</span><span class="n">dterm_dict</span><span class="p">[</span><span class="s1">&#39;station_names&#39;</span><span class="p">]</span> <span class="p">:</span>
+                <span class="n">station_include_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">station</span><span class="o">+</span><span class="s1">&#39;:R&#39;</span> <span class="p">)</span>
+                <span class="n">station_include_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span> <span class="n">station</span><span class="o">+</span><span class="s1">&#39;:L&#39;</span> <span class="p">)</span>
+
+        <span class="c1">#  Construct the total station list from the closure of the exclude list intersect the include list</span>
+        <span class="n">station_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">station_dict</span><span class="p">[</span><span class="s1">&#39;station_list&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">station_include_list</span> <span class="p">:</span>
+            <span class="c1">#if (not station in station_exclude_list) :</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">station_exclude_list</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">toks</span> <span class="o">=</span> <span class="n">station</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">toks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">station_dict</span><span class="p">[</span><span class="s1">&#39;station_list&#39;</span><span class="p">])</span> <span class="p">:</span>
+                    <span class="n">station_dict</span><span class="p">[</span><span class="s1">&#39;station_list&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">station_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="p">:</span>
+                    <span class="n">station_dict</span><span class="p">[</span><span class="n">toks</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="k">else</span> <span class="p">:</span>
+                    <span class="n">station_dict</span><span class="p">[</span><span class="n">toks</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+
+                    
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Station list for which to plot D terms:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">station_dict</span><span class="p">[</span><span class="s1">&#39;station_list&#39;</span><span class="p">])</span>
+        
+    <span class="n">dterm_start_index_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">polarized_image</span><span class="o">.</span><span class="n">image_size</span><span class="p">,</span><span class="n">polarized_image</span><span class="o">.</span><span class="n">size</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">polarized_image</span><span class="o">.</span><span class="n">dterm_dict</span><span class="p">[</span><span class="s1">&#39;station_names&#39;</span><span class="p">][(</span><span class="n">k</span><span class="o">-</span><span class="n">polarized_image</span><span class="o">.</span><span class="n">image_size</span><span class="p">)</span><span class="o">//</span><span class="mi">4</span><span class="p">]</span> <span class="ow">in</span> <span class="n">station_dict</span><span class="p">[</span><span class="s1">&#39;station_list&#39;</span><span class="p">])</span> <span class="p">:</span>
+            <span class="n">dterm_start_index_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Assummed starting index in parameter list:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">dterm_start_index_list</span><span class="p">)</span>
+
+    <span class="c1"># Makes sure that we are plotting something!</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dterm_start_index_list</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;No D term posteriors will be generated.&quot;</span><span class="p">)</span>
+        <span class="k">return</span>
+
+    <span class="n">out</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# </span><span class="si">%13s</span><span class="s2"> </span><span class="si">%15s</span><span class="s2"> </span><span class="si">%15s</span><span class="s2"> </span><span class="si">%15s</span><span class="s2"> </span><span class="si">%15s</span><span class="s2"> </span><span class="si">%15s</span><span class="s2"> </span><span class="si">%15s</span><span class="s2"> </span><span class="si">%15s</span><span class="s2"> </span><span class="si">%15s</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="s1">&#39;Station&#39;</span><span class="p">,</span><span class="s1">&#39;mean DR.real&#39;</span><span class="p">,</span><span class="s1">&#39;stddev DR.real&#39;</span><span class="p">,</span><span class="s1">&#39;mean DR.imag&#39;</span><span class="p">,</span><span class="s1">&#39;stddev DR.imag&#39;</span><span class="p">,</span><span class="s1">&#39;mean DL.real&#39;</span><span class="p">,</span><span class="s1">&#39;stddev DL.real&#39;</span><span class="p">,</span><span class="s1">&#39;mean DL.imag&#39;</span><span class="p">,</span><span class="s1">&#39;stddev DL.imag&#39;</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">station</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">station_dict</span><span class="p">[</span><span class="s1">&#39;station_list&#39;</span><span class="p">])</span> <span class="p">:</span>
+        
+        <span class="c1"># Add the right D-term plots</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;R&#39;</span> <span class="ow">in</span> <span class="n">station_dict</span><span class="p">[</span><span class="n">station</span><span class="p">])</span> <span class="p">:</span>
+            <span class="n">DRr</span> <span class="o">=</span> <span class="n">chain</span><span class="p">[:,</span><span class="n">dterm_start_index_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">+</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">DRi</span> <span class="o">=</span> <span class="n">chain</span><span class="p">[:,</span><span class="n">dterm_start_index_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+
+            <span class="n">DRr_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">DRr</span><span class="p">)</span>
+            <span class="n">DRr_sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">DRr</span><span class="p">)</span>
+            <span class="n">DRi_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">DRi</span><span class="p">)</span>
+            <span class="n">DRi_sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">DRi</span><span class="p">)</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">DRr_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">DRr_sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">DRi_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">DRi_sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            
+            
+        <span class="c1"># Add the left D-term plots</span>
+        <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;L&#39;</span> <span class="ow">in</span> <span class="n">station_dict</span><span class="p">[</span><span class="n">station</span><span class="p">])</span> <span class="p">:</span>
+            <span class="n">DLr</span> <span class="o">=</span> <span class="n">chain</span><span class="p">[:,</span><span class="n">dterm_start_index_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">DLi</span> <span class="o">=</span> <span class="n">chain</span><span class="p">[:,</span><span class="n">dterm_start_index_list</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">+</span><span class="mi">3</span><span class="p">]</span>
+
+            <span class="n">DLr_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">DLr</span><span class="p">)</span>
+            <span class="n">DLr_sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">DLr</span><span class="p">)</span>
+            <span class="n">DLi_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">DLi</span><span class="p">)</span>
+            <span class="n">DLi_sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">DLi</span><span class="p">)</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">DLr_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">DLr_sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">DLi_mean</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+            <span class="n">DLi_sig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+
+
+        <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%15s</span><span class="s2"> </span><span class="si">%15.8g</span><span class="s2"> </span><span class="si">%15.8g</span><span class="s2"> </span><span class="si">%15.8g</span><span class="s2"> </span><span class="si">%15.8g</span><span class="s2"> </span><span class="si">%15.8g</span><span class="s2"> </span><span class="si">%15.8g</span><span class="s2"> </span><span class="si">%15.8g</span><span class="s2"> </span><span class="si">%15.8g</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">station</span><span class="p">,</span><span class="n">DRr_mean</span><span class="p">,</span><span class="n">DRr_sig</span><span class="p">,</span><span class="n">DRi_mean</span><span class="p">,</span><span class="n">DRi_sig</span><span class="p">,</span><span class="n">DLr_mean</span><span class="p">,</span><span class="n">DLr_sig</span><span class="p">,</span><span class="n">DLi_mean</span><span class="p">,</span><span class="n">DLi_sig</span><span class="p">))</span>
+
+    <span class="n">out</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
     
     
 
@@ -2152,7 +2460,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+36.g8744325',
+            VERSION:'0.3.0+71.g0923b95.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
