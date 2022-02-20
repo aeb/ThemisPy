@@ -394,7 +394,7 @@ def _find_limits(data,quantile=0.25,factor=1.5) :
     return lim
 
 
-def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, transform=False, labels=None, upper_labels=None, truths=None, colormap='Blues', upper_colormap=None, color='blue', upper_color=None, truths_color='red', axis_location=None, axes=None, alpha=1.0, quantiles=[0.99,0.9,0.5], nbin=128, linewidth=1, linestyle='-', truths_alpha=1.0, truths_linewidth=1, truths_linestype='-', scott_factor=1.41421, upper_scott_factor=1.41421, filled=False, grid=True, contour_fill=True, contour_edges=False, contourfill_zorder=None, contour_edge_zorder=None, contour_edge_colors=None, contour_edge_colormap=None, contour_edge_alpha=None, contour_linewidth=1) :
+def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, transform=False, labels=None, upper_labels=None, truths=None, colormap='Blues', upper_colormap=None, color='blue', upper_color=None, truths_color='red', axis_location=None, axes=None, alpha=1.0, quantiles=[0.99,0.9,0.5], nbin=128, linewidth=1, linestyle='-', truths_alpha=1.0, truths_linewidth=1, truths_linestype='-', scott_factor=1.41421, upper_scott_factor=None, filled=False, grid=True, contour_fill=True, contour_edges=False, contourfill_zorder=None, contour_edge_zorder=None, contour_edge_colors=None, contour_edge_colormap=None, contour_edge_alpha=None, contour_linewidth=1) :
     """
     Produces a triangle plot with contours set by CDF.  Data may be plotted in both lower (required) and upper (optional) triangles.
 
@@ -421,6 +421,7 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
       truths_linewidth (float): Linewidth to be passed to :func:`matplotlib.pyplot.plot` for diagonal 1d histograms of lower data. Default: 1.
       truths_linestype (str): Linestyle to be passed to :func:`matplotlib.pyplot.plot` for diagonal 1d histograms of lower data. Default: '-'.
       scott_factor (float): Factor by which to expand the standard `scott` bandwidth factor.  Overrides bw if nonzero.  Default: 1.41421.
+      upper_scott_factor (float): Factor by which to expand the standard `scott` bandwidth factor for upper triangle.  If None uses scott_factor.  Default: None.
       filled (bool): If True, the 1d histograms along the diagonal are plotted filled. Default: False.
       grid (bool): If True, adds gridlines to plots. Default: True.
       contour_fill (bool): Determines if contour levels will be filled. Default: True.
@@ -482,7 +483,9 @@ def kde_triangle_plot(lower_data_array, upper_data_array=None, limits=None, tran
         if (upper_data_array.shape[1]!=lower_data_array.shape[1]) :
             print("ERROR! kde_triangle_plot : Number of arrays of data on upper and lower triangles must be the same.")
             exit(1)
-            
+
+    if (upper_scott_factor is None) :
+        upper_scott_factor = scott_factor        
 
     ########
     # Lower triangle
