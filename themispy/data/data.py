@@ -1117,8 +1117,8 @@ def write_caltables(obs=None, outdir='caltable', gain_data=None, dterm_data=None
         if (not gain_data is None) :
         # Flip gains from corrections to the model to adjust data, i.e., G -> 1/G
             gain_station_names = gain_data['stations']
-            for sn in gain_station_names :
-                gain_data[sn] = 1.0/gain_data[sn]
+            # for sn in gain_station_names :
+            #     gain_data[sn] = 1.0/gain_data[sn]  # Not sure what the defn is.
 
             if (verbosity>0) :
                 print("Gain data:",gain_data)
@@ -1186,8 +1186,8 @@ def write_caltables(obs=None, outdir='caltable', gain_data=None, dterm_data=None
         if (not gain_data is None) :
             # Flip gains from corrections to the model to adjust data, i.e., G -> 1/G
             gain_station_names = gain_data['stations']
-            for sn in gain_station_names :
-                gain_data[sn] = 1.0/gain_data[sn]
+            # for sn in gain_station_names :
+            #     gain_data[sn] = 1.0/gain_data[sn] # Not sure what defn is
 
             if (verbosity>0) :
                 print("Gain data:",gain_data)
