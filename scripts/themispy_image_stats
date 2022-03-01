@@ -257,7 +257,8 @@ if __name__ == "__main__" :
 
         # Set the proper normalization
         if (stat=='mean') :
-            Imed = np.median(I)
+            # Imed = np.median(I)
+            Imed = np.abs(np.median(I)) + 1e-20
             Imax = np.max(I)
             if (args.transfer=='linear') :
                 vmax = (Imed) * 10**( args.norm*np.log10(Imax/Imed) )
