@@ -1,0 +1,414 @@
+#!/usr/bin/env python3
+
+"""
+Reads in a Themis MCMC run and generates a mosaic from a subsample.  If a likelihood
+file is specified, the highest likelihood model will be plotted in the center.  
+Optionally will generate individual images instead of one multi-panel plot.
+
+Example:
+$ themispy_image_mosaic -c Chain.dat -l Lklhd.dat --samples 9
+"""
+
+from matplotlib import use,rc
+use('Agg')
+
+import numpy as np
+import argparse as ap
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.cbook import flatten
+import os
+import copy
+
+from scipy import interpolate as si
+
+import themispy as ty
+
+def set_parser():
+
+    # Create a parser object to manage command line options
+    parser = ap.ArgumentParser(prog="themispy_image_mosaic",description=__doc__)
+
+    parser.add_argument("-c","--chain",
+                        type=str,
+                        action='store',
+                        default=None,
+                        required=True,
+                        help=("<Required> Name of chain file to read."))
+
+    parser.add_argument("-l","--lklhd",
+                        type=str,
+                        action='store',
+                        default=None,
+                        help=("Name of likelihood file to read.  If given, will plot the highest likelihood"
+                              " sample in the center of the family."))
+
+    parser.add_argument("-s","--samples",
+                        type=int,
+                        action='store',
+                        default=1024,
+                        help=("Approximate number of samples to draw from the specified chain file. Will"
+			      " modify to nearest value that provides a uniform sampling of the image plane."
+			      " Default: 100."))
+        
+    parser.add_argument("-m","--model",
+                        type=str,
+                        action='store',
+                        default="model_image.tag",
+                        help=("Model specification glob. May be a model tag file name or an ccm_mexico+"
+                              " model specification glob. See the vis.image.construct_model_image_from_glob"
+                              " function documentation for format details. If contains a '.' will assume"
+                              " that it is a tagvers-1.0 tag file."
+                              " Default: model_image.tag"))
+
+    parser.add_argument("-r","--reference",
+                        type=int,
+                        nargs="*",
+                        action='store',
+                        default=None,
+                        help=("If the model type is a :class:`model_image_sum` or :class:`model_polarized_image_sum`, will fix the image origin of"
+                              " the specified component. If no components are specified, will choose the first."
+                              " Default: no component will be fixed to the origin."))
+
+    parser.add_argument("-bf","--burn-fraction",
+                        type=float,
+                        action='store',
+                        default=0.5,
+                        help=("Fraction of chain to excise as burn in. Default: 0.5"))
+    
+    parser.add_argument("-N",
+                        type=int,
+                        nargs="*",
+                        action='store',
+                        default=[32],
+                        help=("Number of pixels in each subimage. May be a single integer (square image)"
+                              " or two integers (non-square image). Default: 32."))
+
+    parser.add_argument("--limits",
+                        type=float,
+                        nargs="+",
+                        action='store',
+                        default=None,
+                        help=("Limits (in microarcseconds) of the plot region.  May be a single float or"
+                              " a set of four floats. If None uses the default in vis.image.plot_model_image"
+                              " function. Default: None."))
+                        
+    parser.add_argument("-n","--norm",
+                        type=float,
+                        action='store',
+                        default=1.0,
+                        help=("Logarithmic normalization relative to to the median and maximum brightness."
+                              " A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum."
+                              " Default 1."))
+
+    parser.add_argument("-t","--transfer",
+                        type=str,
+                        action='store',
+                        default='linear',
+                        help=("Set the transfer function ('linear','sqrt','log'). Default: 'linear'"))
+
+    
+    parser.add_argument("-o","--out",
+                        type=str,
+                        nargs="+",
+                        action='append',
+                        default=None,
+                        help=("Set output files.  Multiple files and filetypes may be specified,"
+                              " including fits.  However, if a filename ending in '.fits' is passed,"
+                              " the path to a uvfits data file must be provided via --uvfits to set"
+                              " the appropriate header information."
+                              " Default: fit_family.png"))
+
+    parser.add_argument("--smooth",
+                        type=float,
+                        nargs="*",
+                        action='store',
+                        default=None,
+                        help=("If set, will smooth the image with a Gaussian filter.  Either one or three"
+                              " arguments are required: either the FWHM of a symmetric Gaussian in"
+                              " microarcseconds, or the major axis FWHM, minor axis FWHM, both in microarcseconds,"
+                              " and major axis position angle measured east of north in degrees."))
+
+    parser.add_argument("--usetex",
+                        action='store_true',
+                        default=False,
+                        help=("Turns on using LaTex in the rendering.  Note that this takes longer,"
+                              " but the result is MUCH better looking."))
+                        
+    parser.add_argument("-v","--verbose",
+                        action='store_true',
+                        default=False,
+                        help=("Provides verbose output about model and plot construction."))
+
+    parser.add_argument("-b","--background",
+                        type=str,
+                        action='store',
+                        default=None,
+                        help=("If passed, will use provided file as the background.  By default, averages"
+                              " chain file samples drawn."))
+									
+    parser.add_argument("--big",
+                        action='store_true',
+                        default=False,
+                        help=("Permits the generation of images with more than 1e8 pixels."))
+
+    parser.add_argument("--title",
+                        type=str,
+                        action='store',
+                        default=None,
+                        help=("Sets the title string, applied across the top.  Default: None."))
+
+    parser.add_argument("--page-width",
+                        type=float,
+                        action='store',
+                        default=8,
+                        help=("Sets the physical size of the image.  Default: 8in"))
+
+    parser.add_argument("-mdrf","--mosaic-dynamic-range-factor",
+                        type=float,
+                        action='store',
+                        default = 0.85,
+                        help=("Sets the dynamic range to be shown in the subpanels of the figure."
+                              " 1.0 results in each subpanel running from zero to the local brightness."
+                              " 0.0 results in each subpanel being the larger image value."
+                              " Default: 0.85"))
+
+    parser.add_argument("--themage",
+                        action='store_true',
+                        default=False,
+                        help=("If set, prints the themage line at the bottom."))
+    
+    
+    return parser
+
+
+
+if __name__ == "__main__" :
+
+
+    # Get command line options
+    args = set_parser().parse_args()    
+    if (args.verbose) :
+        print("  ",args)
+
+    # Use LaTex or not
+    if (args.usetex) :
+        rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
+        rc('text', usetex=True)
+
+    # Construct a model_image from glob
+    if ('.' in args.model) :
+        if (args.verbose):
+            print("Reading tag file %s"%(args.model))
+        model_image = ty.vis.construct_model_image_from_glob(args.model,'tagvers-1.0')
+    else :
+        if (args.verbose):
+            print("Using ccm_mexico glob %s"%(args.model))
+        model_image = ty.vis.construct_model_image_from_glob(args.model,'ccm_mexico+')
+
+    # Set the reference component if desired
+    if (not (args.reference is None)) :
+        if (isinstance(model_image,ty.vis.model_image_sum) or isinstance(model_image,ty.vis.model_polarized_image_sum)) :
+            if (args.reference==[]) :
+                args.reference=0
+            else :
+                args.reference=args.reference[0]
+            model_image.set_reference_component(args.reference)
+        else :
+            print("WARNING: -r,--reference only have an effect when the model is a model_image_sum or model_polarized_image_sum.")
+        
+    if (args.verbose):
+        print("Model type and size:",type(model_image),model_image.size)
+        
+    # Check dimensions
+    if (not (args.N is None) ):
+        if (len(args.N)==1) :
+            args.N = [args.N[0], args.N[0]]
+        elif (len(args.N)==2) :
+            pass
+        else :
+            print("ERROR: Either 1 or 2 arguments are expected after -N.")
+            quit()
+
+    # Check limits
+    if (not (args.limits is None) ):
+        if (len(args.limits)==1) :
+            args.limits = [-args.limits[0], args.limits[0], -args.limits[0], args.limits[0]]
+        elif (len(args.limits)==4) :
+            pass
+        else :
+            print("ERROR: Either 1 or 4 arguments are expected after --limits.")
+            quit()
+    else :
+        args.limits = [-75,75,-75,75]
+
+
+    # Get the dimensions of the mosaic
+    dX = args.limits[1]-args.limits[0]
+    dY = args.limits[3]-args.limits[2]
+    dmx = np.sqrt(args.samples)
+    nmx = int(dmx+0.5)
+    nmy = nmx
+    # nmy = int(dmy+0.5)
+    dX = nmx/dmx * dX
+    dY = nmx/dmx * dY
+    args.samples = nmx*nmy
+    args.limits = [ (0.5*(args.limits[0]+args.limits[1])-0.5*dX), (0.5*(args.limits[0]+args.limits[1])+0.5*dX), (0.5*(args.limits[2]+args.limits[3])-0.5*dY), (0.5*(args.limits[2]+args.limits[3])+0.5*dY) ]
+
+    Ntot = args.N[0]*args.N[1]
+    args.N[0] = int(dX*np.sqrt(Ntot/(dX*dY))+0.5)
+    args.N[1] = int(dY*np.sqrt(Ntot/(dX*dY))+0.5)
+
+    mxpx = nmx*args.N[0]
+    mypx = nmy*args.N[1]
+
+    if ( float(mxpx)*float(mypx) > 1e8 ) :
+        print("WARNING: You have requested a VERY large image (>10,000 x 10,000 pixels).\n"
+              "         Cowardly refusing to continue.  If you know what you are doing, you\n"
+              "         can override this message by passing the --big option.")
+        if (not args.big) :
+            quit()
+
+
+        
+    # Get a random sample
+    # If likelihoods are passed, get the best fit
+    if (not (args.lklhd is None)) :
+        print("Reading likelihood file %s"%(args.lklhd))
+        print("Reading chain file %s"%(args.chain))
+        best_chain,best_lklhd = ty.chain.most_likely_erun(args.chain,args.lklhd,parameter_list=range(model_image.size))
+        print(("Highest likelihood is" + " %f"*len(best_lklhd))%tuple(best_lklhd))
+
+        chain,lklhd = ty.chain.sample_erun(args.chain,args.lklhd,args.samples,burn_fraction=args.burn_fraction,parameter_list=range(model_image.size))
+
+        chain[0,:] = best_chain
+        lklhd[0] = best_lklhd
+        
+    else :
+        best_lklhd=0
+        chain = ty.chain.sample_chain(args.chain,args.samples,burn_fraction=args.burn_fraction,parameter_list=range(model_image.size))
+
+    # Add smoothing if desired
+    uas2rad = np.pi/(180.0*3600e6)
+    if (not (args.smooth is None)) :
+        model_image_unsmoothed = copy.deepcopy(model_image)
+        model_image = ty.vis.model_image_smooth(model_image_unsmoothed)
+        uas2rad = np.pi/(180.0*3600e6)
+        smooth_chain = np.zeros((chain.shape[0],3))
+        smooth_chain[:,0] = args.smooth[0]*uas2rad/np.sqrt(8.0*np.log(2.0))
+        chain = np.hstack([chain,smooth_chain])
+        
+
+    # Save image as desired
+    if (args.out is None) :
+        args.out = ['mosaic.png']
+
+
+
+    # Read in or construct large image
+    x,y = np.mgrid[args.limits[0]:args.limits[1]:nmx*1j,args.limits[2]:args.limits[3]:nmy*1j]
+    if (args.background is None) :
+        stats_image = ty.vis.model_image_single_point_statistics(model_image,['mean'])
+        Ibig = stats_image.intensity_map(x,y,chain,verbosity=int(args.verbose))
+    else :
+        _,ext = os.path.splitext(args.background)
+        if (ext.upper()==".FITS") :
+            img = ty.vis.image.eh.image.load_fits(args.background)
+            imgx = np.linspace(-img.fovx() / 2, img.fovx() / 2, img.xdim) / uas2rad
+            imgy = np.linspace(-img.fovy() / 2, img.fovy() / 2, img.ydim) / uas2rad
+            interpfunc = si.interp2d(imgy, imgx, np.reshape(img.imvec, (img.ydim, img.xdim)), kind='linear')
+            Ibig = interpfunc(x[:,0], y[0,:]) #, x[:,0])
+            Ibig[np.abs(x[:,0]) > img.fovx() / 2./uas2rad, :] = 1e-20
+            Ibig[:, np.abs(y[0,:]) > img.fovy() / 2./uas2rad] = 1e-20
+            Ibig = np.fliplr(Ibig.T)
+        else :
+            print("ERROR: Imagine file type %s must be implemented!"%(ext))
+            quit()
+        
+    Ibigmax = np.max(Ibig)
+    Ibig = Ibig/Ibigmax
+        
+            
+    # Allocate memory for the image
+    Imos = np.zeros((mxpx,mypx))
+    
+    # Sort out title stuff (we may want such a thing)
+    #########################
+    #########################
+    #########################
+    #########################
+    if (args.title is None) :
+        mtitle = 0
+    else :
+        mtitle = dY/dX * args.page_width / 8.0 * 0.75
+        title_font_size = int(mtitle/0.75 * 48)
+        
+
+
+    # Create figure
+    axx = args.page_width
+    axy = dY/dX * args.page_width
+    mg = min(1.5,max(0.25,axx/32.0))
+    fgx = axx+2*mg
+    fgy = axy+2*mg + mtitle
+    axx = axx/fgx
+    axy = axy/fgy
+    mgx = mg/fgx
+    mgy = mg/fgy
+    tpos = 1.0 - 0.5*(mg+mtitle)/fgy
+
+    plt.figure(figsize=(fgx,fgy))
+    plt.axes([mgx,mgy,axx,axy])
+
+    # Generate a set of pixels
+    x,y = np.mgrid[args.limits[0]:args.limits[1]:args.N[0]*1j,args.limits[2]:args.limits[3]:args.N[1]*1j]
+
+    # Generate the mosaic
+    pb = ty.utils.progress_bar('Generating mosaic',length=40)
+    pb.start()
+    k = 0
+    for ib in range(nmx) :
+        for jb in range(nmy) :
+            # Get the local image
+            Isub = model_image.intensity_map(x,y,chain[k],verbosity=int(args.verbose))
+            # Normalize to be the right range
+            Isub = (Isub/Ibigmax*args.mosaic_dynamic_range_factor + (1.0-args.mosaic_dynamic_range_factor)) * Ibig[ib,jb]
+            # Insert into mosaic
+            Imos[ib*args.N[0]:(ib+1)*args.N[0],jb*args.N[1]:(jb+1)*args.N[1]] = Isub
+            k+=1
+            
+        pb.increment((ib*jb)/float(args.samples))
+            
+
+    pb.finish()
+    plt.imshow(Imos.T,origin='lower',cmap='afmhot',vmin=0,vmax=1)
+
+    # Add a title if desired
+    if (not (args.title is None)) :
+        plt.text(0.5,tpos,args.title,fontsize=title_font_size,color='w',ha='center',va='center',transform=plt.gcf().transFigure)
+
+    if (args.themage) :
+        if (args.usetex) :
+            themis_string = r"{\sc Themis}"
+        else :
+            themis_string = "THEMIS"
+
+        Themis_line_bank = ["not just an image, but every image.",
+                            "truth in imaging.",
+                            "passing judgment on the image.",
+                            "illuminating the truth image."]
+            
+        plt.text(0.5,0.015,themis_string+": "+np.random.choice(Themis_line_bank),color='w',ha='center',va='center',transform=plt.gcf().transFigure,fontsize=0.25*title_font_size)
+        
+    # Set the background colors
+    plt.axis('off')
+    plt.gca().set_facecolor('k')
+    plt.gcf().set_facecolor('k')
+
+    for outfile in flatten(args.out) :
+        if (args.verbose):
+            print("Saving file %s"%(outfile))
+        plt.savefig(outfile,dpi=300)
+
+    plt.close()
+    
