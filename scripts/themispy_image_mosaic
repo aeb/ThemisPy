@@ -408,7 +408,7 @@ if __name__ == "__main__" :
     for outfile in flatten(args.out) :
         if (args.verbose):
             print("Saving file %s"%(outfile))
-        plt.savefig(outfile,dpi=300)
+        plt.savefig(outfile,facecolor=plt.gcf().get_facecolor(),dpi=300)
 
     plt.close()
     
