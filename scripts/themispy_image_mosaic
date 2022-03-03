@@ -10,7 +10,7 @@ $ themispy_image_mosaic -c Chain.dat -l Lklhd.dat --samples 9
 """
 
 from matplotlib import use,rc
-# use('Agg')
+use('Agg')
 
 import numpy as np
 import argparse as ap
@@ -312,7 +312,9 @@ if __name__ == "__main__" :
     if (args.background is None) :
         xb,yb = np.mgrid[(1.5*args.limits[0]-0.5*args.limits[1]):(1.5*args.limits[1]-0.5*args.limits[0]):2*nmx*1j,(1.5*args.limits[2]-0.5*args.limits[3]):(1.5*args.limits[3]-0.5*args.limits[2]):2*nmy*1j]
         stats_image = ty.vis.model_image_single_point_statistics(model_image,['mean'])
-        Itmp = stats_image.intensity_map(xb,yb,chain,verbosity=int(args.verbose))
+        index_list = np.arange(args.samples)
+        np.random.shuffle(index_list)
+        Itmp = stats_image.intensity_map(xb,yb,chain[index_list[:min(chain.shape[0],1024)]],verbosity=int(args.verbose))
         Ibig = Itmp[nmx//2:nmx//2+nmx,nmy//2:nmy//2+nmy]
         Ibigmax = np.max(Ibig)
         Ibig = Ibig/Ibigmax
