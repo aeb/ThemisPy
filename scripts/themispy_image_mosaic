@@ -180,6 +180,11 @@ def set_parser():
                         default=False,
                         help=("If set, prints the themage line at the bottom."))
     
+    parser.add_argument("--footer",
+                        type=str,
+                        action='store',
+                        default=None,
+                        help=("Sets the footer string, applied in the margin across the bottom.  Default: None."))
     
     return parser
 
@@ -443,6 +448,9 @@ if __name__ == "__main__" :
                             "illuminating the truth image."]
             
         plt.text(0.5,0.015,themis_string+": "+np.random.choice(Themis_line_bank),color='w',ha='center',va='center',transform=plt.gcf().transFigure,fontsize=0.25*title_font_size)
+    elif (not (args.footer is None)) :
+        plt.text(0.5,0.015,args.footer,color='w',ha='center',va='center',transform=plt.gcf().transFigure,fontsize=0.25*title_font_size)
+
         
     # Set the background colors
     plt.axis('off')
