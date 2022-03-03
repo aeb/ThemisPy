@@ -10,7 +10,7 @@ $ themispy_image_mosaic -c Chain.dat -l Lklhd.dat --samples 9
 """
 
 from matplotlib import use,rc
-use('Agg')
+# use('Agg')
 
 import numpy as np
 import argparse as ap
@@ -19,6 +19,8 @@ import numpy as np
 from matplotlib.cbook import flatten
 import os
 import copy
+
+from PIL import Image, ImageOps
 
 from scipy import interpolate as si
 
@@ -101,11 +103,11 @@ def set_parser():
                               " A value of 0.0 sets Imax to the median, 1.0 sets Imax to the maximum."
                               " Default 1."))
 
-    parser.add_argument("-t","--transfer",
-                        type=str,
-                        action='store',
-                        default='linear',
-                        help=("Set the transfer function ('linear','sqrt','log'). Default: 'linear'"))
+    # parser.add_argument("-t","--transfer",
+    #                     type=str,
+    #                     action='store',
+    #                     default='linear',
+    #                     help=("Set the transfer function ('linear','sqrt','log'). Default: 'linear'"))
 
     
     parser.add_argument("-o","--out",
@@ -308,8 +310,12 @@ if __name__ == "__main__" :
     # Read in or construct large image
     x,y = np.mgrid[args.limits[0]:args.limits[1]:nmx*1j,args.limits[2]:args.limits[3]:nmy*1j]
     if (args.background is None) :
+        xb,yb = np.mgrid[(1.5*args.limits[0]-0.5*args.limits[1]):(1.5*args.limits[1]-0.5*args.limits[0]):2*nmx*1j,(1.5*args.limits[2]-0.5*args.limits[3]):(1.5*args.limits[3]-0.5*args.limits[2]):2*nmy*1j]
         stats_image = ty.vis.model_image_single_point_statistics(model_image,['mean'])
-        Ibig = stats_image.intensity_map(x,y,chain,verbosity=int(args.verbose))
+        Itmp = stats_image.intensity_map(xb,yb,chain,verbosity=int(args.verbose))
+        Ibig = Itmp[nmx//2:nmx//2+nmx,nmy//2:nmy//2+nmy]
+        Ibigmax = np.max(Ibig)
+        Ibig = Ibig/Ibigmax
     else :
         _,ext = os.path.splitext(args.background)
         if (ext.upper()==".FITS") :
@@ -317,16 +323,48 @@ if __name__ == "__main__" :
             imgx = np.linspace(-img.fovx() / 2, img.fovx() / 2, img.xdim) / uas2rad
             imgy = np.linspace(-img.fovy() / 2, img.fovy() / 2, img.ydim) / uas2rad
             interpfunc = si.interp2d(imgy, imgx, np.reshape(img.imvec, (img.ydim, img.xdim)), kind='linear')
-            Ibig = interpfunc(x[:,0], y[0,:]) #, x[:,0])
+            Itmp = interpfunc(x[:,0], y[0,:]) #, x[:,0])
             Ibig[np.abs(x[:,0]) > img.fovx() / 2./uas2rad, :] = 1e-20
             Ibig[:, np.abs(y[0,:]) > img.fovy() / 2./uas2rad] = 1e-20
             Ibig = np.fliplr(Ibig.T)
+            Ibigmax = np.max(Ibig)
+            Ibig = Ibig/Ibigmax
         else :
-            print("ERROR: Imagine file type %s must be implemented!"%(ext))
-            quit()
-        
-    Ibigmax = np.max(Ibig)
-    Ibig = Ibig/Ibigmax
+
+            # # Read image with matplotlib
+            # img = plt.imread(args.background)
+            # if (len(img.shape)==2) :
+            #     I = img
+            # elif (len(img.shape)==3) :
+            #     # Perceptually corrected a la https://www.kdnuggets.com/2019/12/convert-rgb-image-grayscale.html
+            #     I = 0.2126*img[:,:,0] + 0.7152*img[:,:,1] + 0.0722*img[:,:,2]  
+            # elif (len(img.shape)==4) :
+            #     # Perceptually corrected a la https://www.kdnuggets.com/2019/12/convert-rgb-image-grayscale.html
+            #     I = (0.2126*img[:,:,0] + 0.7152*img[:,:,1] + 0.0722*img[:,:,2])*img[:,:,3]
+            # # Center the image
+            # imgn = np.min(I.shape)
+            # I = I[(I.shape[0]-imgn)//2:(I.shape[0]-imgn)//2+imgn,(I.shape[1]-imgn)//2:(I.shape[1]-imgn)//2+imgn]
+            # I = np.fliplr(I.T)
+            # imgx = np.linspace(args.limits[0],args.limits[1],I.shape[0])
+            # imgy = np.linspace(args.limits[2],args.limits[3],I.shape[1])
+            # interpfunc = si.interp2d(imgx, imgy, I, kind='cubic')
+            # Ibig = interpfunc(x[:,0],y[0,:])
+            # Ibig = Ibig/np.max(Ibig)
+
+            # Read image with PIL
+            img_orig = Image.open(args.background)
+            imgn = min(img_orig.size[0],img_orig.size[1])
+            img_crop = img_orig.crop((img_orig.size[0]//2-imgn//2,img_orig.size[1]//2-imgn//2,img_orig.size[0]//2-imgn//2+imgn,img_orig.size[1]//2-imgn//2+imgn))
+            img = ImageOps.grayscale(img_crop.resize((nmx,nmy),resample=Image.LANCZOS))
+            Ibig = np.array(img)
+            Ibig = np.fliplr(Ibig.T)
+            Ibig = Ibig/np.max(Ibig)
+            
+            # Get actual scale
+            stats_image = ty.vis.model_image_single_point_statistics(model_image,['mean'])
+            Itmp = stats_image.intensity_map(x,y,chain[:100],verbosity=int(args.verbose))
+            Ibigmax = np.max(Itmp)
+            
         
             
     # Allocate memory for the image
@@ -367,10 +405,14 @@ if __name__ == "__main__" :
     pb = ty.utils.progress_bar('Generating mosaic',length=40)
     pb.start()
     k = 0
+    index_list = np.arange(args.samples)
+    np.random.shuffle(index_list)
+    xb,yb = np.mgrid[(1.5*args.limits[0]-0.5*args.limits[1]):(1.5*args.limits[1]-0.5*args.limits[0]):2*args.N[0]*1j,(1.5*args.limits[2]-0.5*args.limits[3]):(1.5*args.limits[3]-0.5*args.limits[2]):2*args.N[1]*1j]
     for ib in range(nmx) :
         for jb in range(nmy) :
             # Get the local image
-            Isub = model_image.intensity_map(x,y,chain[k],verbosity=int(args.verbose))
+            Itmp = model_image.intensity_map(xb,yb,chain[index_list[k]],verbosity=int(args.verbose))
+            Isub = Itmp[args.N[0]//2:args.N[0]//2+args.N[0],args.N[1]//2:args.N[1]//2+args.N[1]]
             # Normalize to be the right range
             Isub = (Isub/Ibigmax*args.mosaic_dynamic_range_factor + (1.0-args.mosaic_dynamic_range_factor)) * Ibig[ib,jb]
             # Insert into mosaic
