@@ -185,6 +185,12 @@ def set_parser():
                         action='store',
                         default=None,
                         help=("Sets the footer string, applied in the margin across the bottom.  Default: None."))
+
+    parser.add_argument("--dpi",
+                        type=int,
+                        action='store',
+                        default=300,
+                        help=("Sets the print resolution in dots per inch.  Default: 300"))
     
     return parser
 
@@ -460,7 +466,7 @@ if __name__ == "__main__" :
     for outfile in flatten(args.out) :
         if (args.verbose):
             print("Saving file %s"%(outfile))
-        plt.savefig(outfile,facecolor=plt.gcf().get_facecolor(),dpi=300)
+        plt.savefig(outfile,facecolor=plt.gcf().get_facecolor(),dpi=args.dpi)
 
     plt.close()
     
