@@ -109,7 +109,7 @@ if __name__ == "__main__" :
         for c in gplist :
             if (not c in gain_plots_list):
                 gain_plots_list = gain_plots_list + c
-    print("Gain plots to be generaed:",gain_plots_list)
+    print("Gain plots to be generated:",gain_plots_list)
 
 
     # Read in the gain file
