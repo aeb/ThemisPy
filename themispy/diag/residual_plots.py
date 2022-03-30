@@ -805,7 +805,7 @@ def plot_log_closure_amplitude_residuals(resdata, plot_type='perimeter', gain_da
     plt.sca(axs_comp)
     plt.errorbar(x,resdata_local['data'],yerr=resdata_local['error'],fmt=datafmt,color=datacolor,markersize=4,zorder=10)
     plt.plot(x,resdata_local['model'],modelfmt,color=modelcolor,markersize=2,zorder=20)
-    plt.ylabel(r'Log Closure Amplitudes')
+    plt.ylabel(r'Log Closure Amplitude')
     plt.grid(grid)
     axs_comp.set_xscale(xscale)
     axs_comp.set_yscale(yscale)

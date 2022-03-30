@@ -151,8 +151,14 @@ def set_parser() :
                         action='store',
                         nargs=2,
                         type=float,
-                        help=("Overrides default vertical axis limits.  Default: None."))
+                        help=("Overrides default vertical axis limits for top plot.  Default: None."))
 
+    parser.add_argument("--ylabel",
+                        type=str,
+                        action="store",
+                        default=None,
+                        help="Label to place on the top horizontal axis.")
+    
     
     parser.add_argument("-m","--model",
                         type=str,
@@ -181,7 +187,7 @@ if __name__ == "__main__" :
 
     # Use LaTex or not
     if (args.usetex) :
-        rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
+        #rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
         rc('text', usetex=True)
 
     if (args.log) :
@@ -311,10 +317,14 @@ if __name__ == "__main__" :
 
         if (not args.xlim is None) :
             axs[0].set_xlim(args.xlim)
+            axs[1].set_xlim(args.xlim)
 
         if (not args.ylim is None) :
             axs[0].set_ylim(args.ylim)
-        
+
+        if (not args.ylabel is None) :
+            axs[0].set_ylabel(args.ylabel)
+            
         # Save figure
         if (index[resdata['type']]<2) :
             outfile = resdata['type'].replace(' ','_')+'_'+outname+ext
