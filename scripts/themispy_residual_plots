@@ -234,7 +234,7 @@ if __name__ == "__main__" :
     # Sort out name
     outname,ext = os.path.splitext(args.out)    
     index={}
-    for restype in ['amplitude','closure phase','visibility','crosshand'] :
+    for restype in ['amplitude','closure phase','visibility','crosshand','log closure amplitude'] :
         index[restype]=0
 
 
@@ -275,6 +275,10 @@ if __name__ == "__main__" :
             if (args.plot_type is None) :
                 args.plot_type='perimeter'
             ty.diag.plot_closure_phase_residuals(resdata,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist,yscale=yscale)
+        elif (resdata['type']=='log closure amplitude') : 
+            if (args.plot_type is None) :
+                args.plot_type='perimeter'
+            ty.diag.plot_log_closure_amplitude_residuals(resdata,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist,yscale=yscale)
         elif (resdata['type']=='visibility') : 
             if (args.plot_type is None) :
                 args.plot_type='uvamp'
@@ -285,7 +289,7 @@ if __name__ == "__main__" :
             ty.diag.plot_crosshand_residuals(resdata,gain_data=gain_data,dterms=dterms,crosshand=args.crosshand,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist,yscale=yscale)
         else :
             # Not a type of data that we know how to plot yet
-            print("ERROR: Not an implemented data type for residual plots.  Currently acceptable data typesa are visibility amplitudes, closure phases, visibility, and crosshand.")
+            print("ERROR: Not an implemented data type for residual plots.  Currently acceptable data typesa are visibility amplitudes, closure phases, log closure amplitude, visibility, and crosshand.")
             quit()
 
         index[resdata['type']] += 1

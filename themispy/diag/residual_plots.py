@@ -185,7 +185,7 @@ def read_residuals(resfile_name, datafile_list=None, datafile=None, verbosity=0)
 
     elif (restype=='likelihood_closure_amplitude') :
         d = np.loadtxt(resfile_name)
-        resdata['type']='closure phase'
+        resdata['type']='closure amplitude'
         resdata['u1']=d[:,0]
         resdata['v1']=d[:,1]
         resdata['u2']=d[:,2]
@@ -201,6 +201,8 @@ def read_residuals(resfile_name, datafile_list=None, datafile=None, verbosity=0)
 
         # Read in data files
         if (not datafile_list is None) :
+            raise RuntimeError("Reading closure amplitude data has not been implemented.")
+            
             for k,datafile in enumerate(datafile_list) :
                 datasub = tydata.read_closure_amplitudes(datafile)
                 if (k==0) :
@@ -218,6 +220,43 @@ def read_residuals(resfile_name, datafile_list=None, datafile=None, verbosity=0)
         #for key in resdata.keys() :
         #    resdata[key] = np.array(resdata[key])    
 
+    elif (restype=='likelihood_log_closure_amplitude') :
+        d = np.loadtxt(resfile_name)
+        resdata['type']='log closure amplitude'
+        resdata['u1']=d[:,0]
+        resdata['v1']=d[:,1]
+        resdata['u2']=d[:,2]
+        resdata['v2']=d[:,3]
+        resdata['u3']=d[:,4]
+        resdata['v3']=d[:,5]
+        resdata['u4']=d[:,6]
+        resdata['v4']=d[:,7]
+        resdata['data']=d[:,8]
+        resdata['error']=d[:,9]
+        resdata['model']=d[:,10]
+        resdata['residual']=d[:,11]
+
+        # Read in data files
+        if (not datafile_list is None) :
+            raise RuntimeError("Reading log closure amplitude data has not been implemented.")
+            
+            for k,datafile in enumerate(datafile_list) :
+                datasub = tydata.read_log_closure_amplitudes(datafile)
+                if (k==0) :
+                    data = datasub
+                else :
+                    for key in data.keys() :
+                        data[key] = data[key].append(data[key],datasub[key])
+                        
+            if (len(resdata['residual'])!=len(data['source'])) :
+                raise RuntimeError("Number of points in data file does not match number of points in residual file.  Expected %i, found %i."%(len(resdata['residual']),len(data['source'])))
+
+            for key in ['source','year','day','time','baseline'] :
+                resdata[key] = data[key]
+
+        #for key in resdata.keys() :
+        #    resdata[key] = np.array(resdata[key])    
+        
     else :
         raise RuntimeError("Unrecognized residual file type %s"%(restype))
 
@@ -252,6 +291,21 @@ def _station_codes_from_triangle(triangle) :
 
     snl = len(triangle)//3
     return triangle[:snl],triangle[snl:2*snl],triangle[2*snl:]
+
+
+def _station_codes_from_quadangle(quadangle) :
+    """
+    Returns station names from triangle glob.
+
+    Args:
+      baseline (str): Name of baseline (e.g., 'AAAP')
+    
+    Returns:
+      (str,str): 
+    """
+
+    snl = len(triangle)//4
+    return quadangle[:snl],quadangle[snl:2*snl],quadangle[2*snl:3*snl],quadangle[3*snl:]
 
 
 def plot_amplitude_residuals(resdata, plot_type='uvamp', gain_data=None, station_list=None, residuals=True, resdist=2, datafmt='o', datacolor='b', modelfmt='.', modelcolor='r', grid=True, xscale='linear', yscale='linear') :
@@ -569,6 +623,189 @@ def plot_closure_phase_residuals(resdata, plot_type='perimeter', gain_data=None,
     plt.errorbar(x,resdata_local['data'],yerr=resdata_local['error'],fmt=datafmt,color=datacolor,markersize=4,zorder=10)
     plt.plot(x,resdata_local['model'],modelfmt,color=modelcolor,markersize=2,zorder=20)
     plt.ylabel(r'Closure Phase (deg)')
+    plt.grid(grid)
+    axs_comp.set_xscale(xscale)
+    axs_comp.set_yscale(yscale)
+
+    # Plot the residuals if desired
+    if (residuals) :
+        axs_comp.xaxis.set_ticklabels([])
+        plt.sca(axs_res)
+        # Sigma guides
+        plt.axhline(0,linestyle='-',color='r')
+        plt.axhline(1.0,linestyle=':',color='r')
+        plt.axhline(-1.0,linestyle=':',color='r')
+        # plot the markers
+        plt.plot(x,resdata_local['residual']/resdata_local['error'],datafmt,color=datacolor,markersize=4)
+        plt.ylabel(r'Res.')
+        plt.grid(grid)
+        axs_res.set_xscale(xscale)
+
+        if (resdist) :
+            rr = resdata_local['residual']/resdata_local['error']
+            ylim = axs_res.get_ylim()
+            plt.sca(axs_resdist)
+            xtmp = np.linspace(ylim[0],ylim[1],256)
+            ytmp = np.exp(-xtmp**2/2.0)/np.sqrt(2*np.pi)
+            plt.plot(ytmp,xtmp,'-r',alpha=0.5)
+            var = np.var(rr)
+            mean = np.average(rr)
+            ytmp = np.exp(-(xtmp-mean)**2/(2.0*var))/np.sqrt(2*np.pi*var)
+            plt.plot(ytmp,xtmp,':g',alpha=0.5)
+            bins=np.arange(int(np.floor(ylim[0]*resdist_numbins)),int(np.ceil(ylim[1]*resdist_numbins)))/resdist_numbins
+            plt.hist(rr,bins=bins,density=True,orientation="horizontal",color=datacolor,alpha=0.5)
+            plt.ylim(ylim)
+            plt.gca().yaxis.set_ticklabels([])
+            plt.gca().xaxis.set_ticklabels([])            
+            plt.grid(grid)
+            plt.sca(axs_res)
+            
+    # Add the xlabels
+    plt.xlabel(xlbl)
+
+    return plt.gcf(),axs_list
+
+
+
+def plot_log_closure_amplitude_residuals(resdata, plot_type='perimeter', gain_data=None, station_list=None, residuals=True, resdist=2, resdist_numbins=2, datafmt='o', datacolor='b', modelfmt='.', modelcolor='r', grid=True, xscale='linear', yscale='linear') :
+    """
+    Plots comparison between the log closure amplitudes from the data and model in a variety of possible formats.
+
+    Args:
+      resdata (dict): Dictionary object containing the residual data as generated, e.g., by :func:`read_residuals`.
+      plot_type (str): Type of residual plot to generate. Options are 'perimeter', 'arear', 'uvmax', 'uvmin', 'umax', 'umin', 'vmax', 'vmin', 'time', 'snr'. Default: 'perimeter'.
+      station_list (list,str): Station or list of stations to either exclude or restrict the residual plot to. Requires resdata to contain a key 'baselines'.  Station names prepended with '!' will be excluded.  If any station names without '!' are given, will show *only* those stations. Default: None.
+      residuals (bool): If True produces a sub-panel with the error-weighted residuals plotted underneath the comparison plot. Default: True.
+      resdist (int): If not None, produces a sub-panel with the distribution of residuals compared to a unit-variance Gaussian. If an int value is passed, it will set the number of bins per unit standard deviation. Default: 2.
+      datafmt (str): Format specifier for the data points. Default: 'o'.
+      datacolor (str,list): Color of the data points in acceptable color type as specified in :mod:`matplotlib.colors`. Default: 'b'.
+      modelfmt (str): Format specifier for the model points. Default: '.'.
+      modelcolor (str,list): Color of the model points in acceptable color type as specified in :mod:`matplotlib.colors`. Default: 'r'.
+      grid (bool): Flag that determines whether or not to plot a background grid. Default: True.    
+      xscale (str): The x-axis scaling. May be specified via any value accepted by :func:`matplotlib.axes.Axes.set_xscale`.  Default: 'linear'.
+      yscale (str): The y-axis scaling. May be specified via any value accepted by :func:`matplotlib.axes.Axes.set_xscale`.  Default: 'linear'.
+
+    Returns:
+      (matplotlib.figure.Figure, list): Figure and list of axes handles.
+
+    """
+
+    # Create local copy so that we can modify it
+    resdata_local = copy.deepcopy(resdata)
+    
+    
+    # Apply station list flagging
+    if (not station_list is None) :
+        if (not 'quadrangle' in resdata_local.keys()) :
+            raise RuntimeError("Residual data does not include quadrangles")
+        if (not isinstance(station_list,list)) :
+            station_list = [station_list]
+
+        station_include_list = []
+        station_exclude_list = []
+        for station in station_list :
+            if (station[0]=='!') :
+                station_exclude_list.append(station[1:])
+            else :
+                station_include_list.append(station)
+
+
+        keep = np.array([False]*len(resdata_local['quadrangle']))
+
+        for j in range(len(resdata_local['quadrangle'])) :
+            station1,station2,station3,station4 = _station_codes_from_quadangle(resdata_local['quadangle'][j])
+            
+            if (len(station_include_list)==0) :
+                keep[j] = True
+            else :
+                keep[j] = ((station1 in station_include_list) or (station2 in station_include_list) or (station3 in station_include_list) or (station4 in station_include_list))
+
+            if (len(station_exclude_list)>0) :
+                keep[j] = keep[j] and not ((station1 in station_exclude_list) or (station2 in station_exclude_list) or (station3 in station_exclude_list) or (station4 in station_exclude_list))
+
+        for key in ['time','u1','v1','u2','v2','u3','v3','u4','v4','data','model','residual','error'] :
+            resdata_local[key] = resdata_local[key][keep]
+
+    # Select coordinate
+    if (plot_type=='perimeter') :
+        x=np.sqrt(resdata_local['u1']**2+resdata_local['v1']**2+resdata_local['u2']**2+resdata_local['v2']**2+resdata_local['u3']**2+resdata_local['v3']**2+resdata_local['u4']**2+resdata_local['v4']**2)
+        xlbl=r'Perimeter (G$\lambda$)'
+    elif (plot_type=='area') :
+        raise RuntimeError("area is not yet implmented for log closure amplitude quadrangles.")
+        # u1amp = np.sqrt(resdata_local['u1']**2+resdata_local['v1']**2)
+        # u2amp = np.sqrt(resdata_local['u2']**2+resdata_local['v2']**2)
+        # u1du2 = resdata_local['u1']*resdata_local['u2']+resdata_local['v1']*resdata_local['v2']
+        # x = 0.5*np.sqrt( (u1amp*u2amp)**2 - u1du2**2 )
+        # xlbl=r'Area (G$\lambda^2$)'
+    elif (plot_type=='uvmax') :
+        u1amp = np.sqrt(resdata_local['u1']**2+resdata_local['v1']**2)
+        u2amp = np.sqrt(resdata_local['u2']**2+resdata_local['v2']**2)
+        u3amp = np.sqrt(resdata_local['u3']**2+resdata_local['v3']**2)
+        u4amp = np.sqrt(resdata_local['u4']**2+resdata_local['v4']**2)
+        x = np.maximum(u1amp,np.maximum(u2amp,np.maximum(u3amp,u4amp)))
+        xlbl=r'$|u|_{max}$ (G$\lambda$)'
+    elif (plot_type=='uvmin') :
+        u1amp = np.sqrt(resdata_local['u1']**2+resdata_local['v1']**2)
+        u2amp = np.sqrt(resdata_local['u2']**2+resdata_local['v2']**2)
+        u3amp = np.sqrt(resdata_local['u3']**2+resdata_local['v3']**2)
+        u4amp = np.sqrt(resdata_local['u4']**2+resdata_local['v4']**2)
+        x = np.minimum(u1amp,np.minimum(u2amp,np.minimum(u3amp,u4amp)))
+        xlbl=r'$|u|_{min}$ (G$\lambda$)'
+    elif (plot_type=='umax') :
+        x=np.maximum(resdata_local['u1'],np.maximum(resdata_local['u2'],np.maximum(resdata_local['u3'],resdata_local['u4'])))
+        xlbl=r'$u_{max}$ (G$\lambda$)'
+    elif (plot_type=='umin') :
+        x=np.minimum(resdata_local['u1'],np.minimum(resdata_local['u2'],np.minimum(resdata_local['u3'],resdata_local['u4'])))
+        xlbl=r'$u_{min}$ (G$\lambda$)'
+    elif (plot_type=='vmax') :
+        x=np.maximum(resdata_local['v1'],np.maximum(resdata_local['v2'],np.maximum(resdata_local['v3'],resdata_local['v4'])))
+        xlbl=r'$v_{max}$ (G$\lambda$)'
+    elif (plot_type=='vmin') :
+        x=np.minimum(resdata_local['v1'],np.minimum(resdata_local['v2'],np.minimum(resdata_local['v3'],resdata_local['v4'])))
+        xlbl=r'$v_{min}$ (G$\lambda$)'
+    elif (plot_type=='time') :
+        if (not 'time' in resdata_local.keys()) :
+            raise RuntimeError("Residual data does not include time")
+        x=resdata_local['time']
+        xlbl=r'$t$ (UTC)'
+    elif (plot_type=='snr') :
+        x=np.abs(resdata_local['model']/resdata_local['error'])
+        xlbl=r'$S/N$'
+    else :
+        raise RuntimeError("Unrecognized plot type %s"%(plot_type))
+
+    # Check if a residual distribution is desired and set defaults
+    if (resdist is None) :
+        resdist_numbins=2
+        resdist = False
+    else :
+        resdist_numbins=resdist
+        resdist = True
+    
+    # Create figure and axes objects
+    if (residuals) :
+        if (not resdist) :
+            fig = plt.figure(figsize=[6.,5.])
+            axs_res = plt.axes([0.15,0.10,0.83,0.25])
+            axs_comp = plt.axes([0.15,0.38,0.83,0.57])
+            axs_list = [axs_comp,axs_res]
+        else :
+            fig = plt.figure(figsize=[6.5,5.])
+            axs_res = plt.axes([0.1385,0.10,0.7662,0.25])
+            axs_comp = plt.axes([0.1385,0.38,0.7662,0.57])
+            axs_resdist = plt.axes([0.915,0.10,0.07,0.25])
+            axs_list = [axs_comp,axs_res,axs_resdist]
+            
+    else :
+        fig = plt.figure(figsize=[6.,5.])
+        axs_comp = plt.axes([0.15, 0.10, 0.83, 0.83])
+        axs_list = [axs_comp]
+
+    # Plot the data comparision
+    plt.sca(axs_comp)
+    plt.errorbar(x,resdata_local['data'],yerr=resdata_local['error'],fmt=datafmt,color=datacolor,markersize=4,zorder=10)
+    plt.plot(x,resdata_local['model'],modelfmt,color=modelcolor,markersize=2,zorder=20)
+    plt.ylabel(r'Log Closure Amplitudes')
     plt.grid(grid)
     axs_comp.set_xscale(xscale)
     axs_comp.set_yscale(yscale)
