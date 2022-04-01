@@ -1000,8 +1000,8 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
     plt.sca(axs_comp)
 
     if (plot_type_y=='complex') :
-        plt.errorbar(x,resdata_local['data'].real,yerr=resdata_local['error'].real,fmt=datafmt,color=datacolor,markersize=4,alpha=alpha,zorder=10,label='Re(V)')
-        plt.errorbar(x,resdata_local['data'].imag,yerr=resdata_local['error'].imag,fmt=datafmt,color=datacolor,markersize=4,alpha=alpha,zorder=10,fillstyle='none',label='Im(V)')
+        plt.errorbar(x,resdata_local['data'].real,yerr=resdata_local['error'].real,fmt=datafmt,color=datacolor,markersize=4,alpha=alpha,zorder=10,label=r'Re($V$)')
+        plt.errorbar(x,resdata_local['data'].imag,yerr=resdata_local['error'].imag,fmt=datafmt,color=datacolor,markersize=4,alpha=alpha,zorder=10,fillstyle='none',label=r'Im($V$)')
         plt.plot(x,resdata_local['model'].real,modelfmt,color=modelcolor,markersize=2,zorder=20)
         plt.plot(x,resdata_local['model'].imag,modelfmt,color=modelcolor,markersize=2,zorder=20)
         plt.ylabel(r'$V$ (Jy)')

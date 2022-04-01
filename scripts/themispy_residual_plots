@@ -145,6 +145,12 @@ def set_parser() :
                         nargs=2,
                         type=float,
                         help=("Overrides default horizontal axis limits.  Default: None."))
+
+    parser.add_argument("--xlabel",
+                        type=str,
+                        action="store",
+                        default=None,
+                        help="Label to place on the top horizontal axis.")
     
 
     parser.add_argument("--ylim",
@@ -157,7 +163,13 @@ def set_parser() :
                         type=str,
                         action="store",
                         default=None,
-                        help="Label to place on the top horizontal axis.")
+                        help="Label to place on the top vertical axis.")
+
+    parser.add_argument("--label",
+                        type=str,
+                        action="store",
+                        default=None,
+                        help="Label to place in upper corner.")
     
     
     parser.add_argument("-m","--model",
@@ -189,7 +201,9 @@ if __name__ == "__main__" :
     if (args.usetex) :
         #rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
         rc('text', usetex=True)
+        plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
 
+        
     if (args.log) :
         yscale='log'
     else :
@@ -324,6 +338,14 @@ if __name__ == "__main__" :
 
         if (not args.ylabel is None) :
             axs[0].set_ylabel(args.ylabel)
+
+        if (not args.xlabel is None) :
+            axs[1].set_xlabel(args.xlabel)
+
+        if (not args.label is None) :
+            #axs[0].get_legend().set_title(args.label)
+            axs[0].text(0.025,1.025,args.label,transform=axs[0].transAxes)
+            
             
         # Save figure
         if (index[resdata['type']]<2) :
