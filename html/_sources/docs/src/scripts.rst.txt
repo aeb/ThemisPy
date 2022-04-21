@@ -75,6 +75,15 @@ themispy_image_fit
    :nodefault:
 
 
+themispy_image_mosaic
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_image_mosaic
+   :func: set_parser
+   :prog: themispy_image_mosaic
+   :nodefault:
+
+
 themispy_image_stats
 ----------------------------------
 .. argparse::

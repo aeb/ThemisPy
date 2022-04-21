@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>data.data &mdash; ThemisPy 0.3.0+71.g0923b95.dirty documentation</title>
+  <title>data.data &mdash; ThemisPy 0.3.0+86.gb6ddcce.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+71.g0923b95.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+86.gb6ddcce.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.0+71.g0923b95.dirty
+                0.3.0+86.gb6ddcce.dirty
               </div>
             
           
@@ -1266,8 +1266,8 @@
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">gain_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
         <span class="c1"># Flip gains from corrections to the model to adjust data, i.e., G -&gt; 1/G</span>
             <span class="n">gain_station_names</span> <span class="o">=</span> <span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;stations&#39;</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">sn</span> <span class="ow">in</span> <span class="n">gain_station_names</span> <span class="p">:</span>
-                <span class="n">gain_data</span><span class="p">[</span><span class="n">sn</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">gain_data</span><span class="p">[</span><span class="n">sn</span><span class="p">]</span>
+            <span class="c1"># for sn in gain_station_names :</span>
+            <span class="c1">#     gain_data[sn] = 1.0/gain_data[sn]  # Not sure what the defn is.</span>
 
             <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Gain data:&quot;</span><span class="p">,</span><span class="n">gain_data</span><span class="p">)</span>
@@ -1335,8 +1335,8 @@
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">gain_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
             <span class="c1"># Flip gains from corrections to the model to adjust data, i.e., G -&gt; 1/G</span>
             <span class="n">gain_station_names</span> <span class="o">=</span> <span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;stations&#39;</span><span class="p">]</span>
-            <span class="k">for</span> <span class="n">sn</span> <span class="ow">in</span> <span class="n">gain_station_names</span> <span class="p">:</span>
-                <span class="n">gain_data</span><span class="p">[</span><span class="n">sn</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">gain_data</span><span class="p">[</span><span class="n">sn</span><span class="p">]</span>
+            <span class="c1"># for sn in gain_station_names :</span>
+            <span class="c1">#     gain_data[sn] = 1.0/gain_data[sn] # Not sure what defn is</span>
 
             <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Gain data:&quot;</span><span class="p">,</span><span class="n">gain_data</span><span class="p">)</span>
@@ -1382,7 +1382,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+71.g0923b95.dirty',
+            VERSION:'0.3.0+86.gb6ddcce.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
