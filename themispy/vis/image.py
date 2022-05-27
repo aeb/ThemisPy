@@ -1211,7 +1211,7 @@ class model_image_stretch(model_image):
         #I = self.image.generate_intensity_map(x,y,verbosity=verbosity)
 
         if (verbosity>0) :
-            print('Stretched:',sr1,sr2,sphi,self.parameters)
+            print('Stretched:',srmaj,srmin,sphi,self.parameters)
             
         return I
 
