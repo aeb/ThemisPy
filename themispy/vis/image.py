@@ -263,7 +263,7 @@ class model_image_crescent(model_image) :
 
     * parameters[0] ... Total intensity :math:`I_0` (Jy)
     * parameters[1] ... Outer radius :math:`R` (rad)
-    * parameters[2] ... Width paramter :math:`\\psi` in (0,1)
+    * parameters[2] ... Width parameter :math:`\\psi` in (0,1)
     * parameters[3] ... Asymmetry parmaeter :math:`\\tau` in (0,1)
     * parameters[4] ... Position angle :math:`\\phi` (rad)
 
@@ -295,7 +295,7 @@ class model_image_crescent(model_image) :
         dx = 1.5*max(abs(x[1,1]-x[0,0]),abs(y[1,1]-y[0,0]))
         self.parameters[2] = max(self.parameters[2],dx/(self.parameters[1]*rad2uas))
 
-        I0 = max(1e-8,self.paramters[0])
+        I0 = max(1e-8,self.parameters[0])
         Rp = max(1e-20,self.parameters[1]) * rad2uas
         Rn = min( max(1e-4,1-self.parameters[2]), 0.9999 ) * Rp
         d = min(max(self.parameters[3],1e-4),0.9999) * (Rp - Rn)
@@ -436,7 +436,6 @@ class model_image_xsringauss(model_image) :
         # Make sure that delta ring is resolvable
         dx = 1.5*max(abs(x[1,1]-x[0,0]),abs(y[1,1]-y[0,0]))
         self.parameters[2] = max(self.parameters[2],dx/(self.parameters[1]*rad2uas))
-
         I0 = max(1e-8,self.parameters[0])
         Rp = max(1e-20,self.parameters[1]) * rad2uas
         Rin = min( max(1e-4,1-self.parameters[2]), 0.9999 ) * Rp
@@ -477,6 +476,273 @@ class model_image_xsringauss(model_image) :
         """
 
         return [ r'$I_0$ (Jy)', r'$R_{\rm out}$ (rad)', r'$\psi$', r'$\epsilon$', r'$f$', r'$g_{ax}$', r'$a_q$', r'$g_q$', r'$\phi$ (rad)']
+
+
+class model_image_mring(model_image) :
+    """
+    fourier mode delta mring model that is a mirror of :cpp:class:`themis::model_image_mring`.
+    has parameters:
+
+    * parameters[0] ... total intensity :math:`i_0` (jy)
+    * parameters[1] ... radius :math:`r` (rad)
+    * parameters[2,3] ... coefficients (amp,phase) for first mring mode 
+    * parameters[4,5] ... coefficients (amp,phase) for second mring mode
+    * parameters[2n,2n+1] ... coefficients for (re,im) for n mring mode 
+
+    and size=2+2*n.
+
+    args:
+      themis_fft_sign (bool): if true will assume the themis-default fft sign convention, which reflects the reconstructed image through the origin. default: true.
+    """
+
+    def __init__(self, nmodes, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+        self.size=2+nmodes*2
+        self.nmodes = nmodes
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        internal generation of the intensity map. in practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        args:
+          x (numpy.ndarray): array of -ra offsets in microarcseconds (usually plaid 2d).
+          y (numpy.ndarray): array of dec offsets in microarcseconds (usually plaid 2d).
+          verbosity (int): verbosity parameter. if nonzero, prints information about model properties. default: 0.
+
+        returns:
+          (numpy.ndarray) array of intensity values at positions (x,y) in :math:`jy/\\mu as^2`.
+        """
+
+        # make sure that delta ring is resolvable
+        dx = 1.5*max(abs(x[1,1]-x[0,0]),abs(y[1,1]-y[0,0]))
+        line_thickness=2
+
+        i0 = max(1e-8,self.parameters[0])
+        r = max(1e-20,self.parameters[1]) * rad2uas
+
+        phases = self.parameters[3:2*self.nmodes+4:2]
+        amps = self.parameters[2:2*self.nmodes+3:2]
+        alphas = amps*np.cos(phases)
+        betas = amps*np.sin(phases)
+        beta_factor = 1
+        #This is because I don't include the -x in Themis and I used to opposite phase like
+        #a dummy PT
+        phi = np.arctan2(x,-y)
+        for i in range(self.nmodes):
+            c = np.cos((i+1)*phi)
+            s = np.sin((i+1)*phi)
+            beta_factor += alphas[i]*c - betas[i]*s
+
+        val = (i0*dx**2/(2*np.pi*r*dx*line_thickness)
+                * beta_factor
+                * (r - dx*line_thickness/2 < np.sqrt((x)**2 + (y)**2))
+                * (r + dx*line_thickness/2 > np.sqrt((x)**2 + (y)**2)))
+
+
+
+        if (verbosity>0) :
+            print('mring:',i0, r, betalist)
+
+        return (val)
+
+
+    def parameter_name_list(self) :
+        """
+        producess a lists parameter names.
+
+        returns:
+          (list) list of strings of variable names.
+        """
+        nr = [r"$\rm{re}(c_%d)$"%i for i in range(1,self.nmodes+1)]
+        ni = [r"$\rm{im}(c_%d)$"%i for i in range(1,self.nmodes+1)]
+
+        names =[r'$i_0$ (jy)', r'$r_{\rm delta}$ (rad)']
+        for i in range(self.nmodes):
+            names.append(nr[i])
+            names.append(ni[i])
+
+        return names
+
+class model_image_mring_floor(model_image) :
+    """
+    fourier mode delta mring model with floor that is a mirror of :cpp:class:`themis::model_image_mring_floor`.
+    has parameters:
+
+    * parameters[0] ... total intensity :math:`i_0` (jy)
+    * parameters[1] ... radius :math:`r` (rad)
+    * parameters[2] ... fraction of disk flux floor
+    * parameters[3,4] ... coefficients (re,im) for first mring mode 
+    * parameters[5,6] ... coefficients (re,im) for second mring mode
+    * parameters[3+2n,3_2n+1] ... coefficients for (re,im) for n mring mode 
+
+    and size=3+2*n.
+
+    args:
+      themis_fft_sign (bool): if true will assume the themis-default fft sign convention, which reflects the reconstructed image through the origin. default: true.
+    """
+
+    def __init__(self, nmodes, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+        self.size=3+nmodes*2
+        self.nmodes = nmodes
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        internal generation of the intensity map. in practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        args:
+          x (numpy.ndarray): array of -ra offsets in microarcseconds (usually plaid 2d).
+          y (numpy.ndarray): array of dec offsets in microarcseconds (usually plaid 2d).
+          verbosity (int): verbosity parameter. if nonzero, prints information about model properties. default: 0.
+
+        returns:
+          (numpy.ndarray) array of intensity values at positions (x,y) in :math:`jy/\\mu as^2`.
+        """
+
+        # make sure that delta ring is resolvable
+        dx = 1.5*max(abs(x[1,1]-x[0,0]),abs(y[1,1]-y[0,0]))
+        line_thickness=2
+
+        floor = self.parameters[2]
+        ir = max(1e-8,self.parameters[0])*(1-floor)
+        id =max(1e-8,self.parameters[0])*floor 
+        r = max(1e-20,self.parameters[1]) * rad2uas
+
+        phases = self.parameters[4:2*self.nmodes+5:2]
+        amps = self.parameters[3:2*self.nmodes+4:2]
+        alphas = amps*np.cos(phases)
+        betas = amps*np.sin(phases)
+        beta_factor = 1
+        #This is because I don't include the -x in Themis and I used to opposite phase like
+        #a dummy PT
+        phi = np.arctan2(x,-y)
+        for i in range(self.nmodes):
+            c = np.cos((i+1)*phi)
+            s = np.sin((i+1)*phi)
+            beta_factor += alphas[i]*c - betas[i]*s
+        
+
+        val = (ir*dx**2/(2*np.pi*r*dx*line_thickness)
+                * beta_factor
+                * (r - dx*line_thickness/2 < np.sqrt((x)**2 + (y)**2))
+                * (r + dx*line_thickness/2 > np.sqrt((x)**2 + (y)**2)))
+
+        val += id*dx**2/(np.pi*r**2)*(x**2+y**2 < r**2)
+
+
+
+
+        if (verbosity>0) :
+            print('mring:',ir+id, r, floor, betalist)
+
+        return (val)
+
+
+    def parameter_name_list(self) :
+        """
+        producess a lists parameter names.
+
+        returns:
+          (list) list of strings of variable names.
+        """
+        nr = [r"$|c_%d|$"%i for i in range(1,self.nmodes+1)]
+        ni = [r"$\rm{arg}(c_%d)$"%i for i in range(1,self.nmodes+1)]
+
+        names =[r'$i_0$ (jy)', r'$r_{\rm delta}$ (rad)', "floor"]
+        for i in range(self.nmodes):
+            names.append(nr[i])
+            names.append(ni[i])
+        return names
+
+
+
+class model_image_xsring_ellip(model_image) :
+    """
+    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_xsring_ellip`.
+    Has parameters:
+
+    * parameters[0] ... Total intensity :math:`I_0` (Jy)
+    * parameters[1] ... Outer radius :math:`R` (rad)
+    * parameters[2] ... Width parameter :math:`\\psi` in (0,1)
+    * parameters[3] ... Eccentricity parameter :math:`\\epsilon` in (0,1)
+    * parameters[4] ... Ellipticity parameter, ration of semi-minor to semi-major in (0,1)
+    * parameters[5] ... Ellipticity orientation, (rad)
+    * parameters[6] ... Linear fade parameter math:`f` in (0,1)
+    * parameters[7] ... Position angle :math:`\\phi` (rad)
+
+    and size=8.
+
+    Args:
+      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
+    """
+
+    def __init__(self, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+        self.size=8
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+
+        # Make sure that delta ring is resolvable
+        dx = 1.5*max(abs(x[1,1]-x[0,0]),abs(y[1,1]-y[0,0]))
+        self.parameters[2] = max(self.parameters[2],dx/(self.parameters[1]*rad2uas))
+
+        I0 = max(1e-8,self.parameters[0])
+        Rp = max(1e-20,self.parameters[1]) * rad2uas
+        Rin = min( max(1e-4,1-self.parameters[2]), 0.9999 ) * Rp
+        d = min(max(self.parameters[3],1e-4),0.9999) * (Rp - Rin)
+        tau = max(self.parameters[4], 1e-4)
+        xit = self.parameters[5]
+        f = min(max(self.parameters[6],1e-4),0.9999);
+        phi = self.parameters[7]
+        scale = 1.0/(1.0-tau)
+        c = np.cos(xit)
+        s = np.sin(xit)
+        ddx = (x*c + y*s)*scale
+        ddy = (-x*s + y*c)/scale
+
+        Iring0 = (2.*I0/np.pi) *1.0/((1.0+f)*(Rp**2 - Rin**2) - (1.0-f)*d*Rin**2/Rp);
+
+        c = np.cos(phi)
+        s = np.sin(phi)
+        dx = ddx*c - ddy*s
+        dy = ddx*s + ddy*c
+
+        Iring = Iring0*(0.5*(1.0-dx/Rp) + 0.5*f*(1.0+dx/Rp)) 
+
+        Iring *= ((dx**2+dy**2)<=Rp**2)
+        Iring *= (((dx-d)**2+(dy)**2)>Rin**2)
+
+        if (verbosity>0) :
+            print('xsring_ellip:',I0, Rp, Rin, d, tau, xit, f, phi)
+
+        return (Iring)
+
+
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        return [ r'$I_0$ (Jy)', r'$R_{\rm out}$ (rad)', r'$\psi$', r'$\epsilon$', r'$\tau$', r'$\xi$ (rad)', r'$f$', r'$g_{ax}$', r'$a_q$', r'$g_q$', r'$\phi$ (rad)']
+
+
 
 
 def direct_cubic_spline_1d(x,f,xx,a=-0.5) :
@@ -695,11 +961,14 @@ class model_image_splined_raster(model_image) :
           (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
 
-        f = np.transpose(np.exp(np.array(self.parameters).reshape([self.Nx,self.Ny]))) * uas2rad**2
-
+        #f = np.transpose(np.exp(np.array(self.parameters).reshape([self.Nx,self.Ny]))) * uas2rad**2
+        #xtmp = np.linspace(-0.5*self.fovx,0.5*self.fovx,self.Nx)
+        #ytmp = np.linspace(-0.5*self.fovy,0.5*self.fovy,self.Ny)
+        
+        f = np.transpose(np.exp(np.array(self.parameters).reshape([self.Ny,self.Nx]))) * uas2rad**2
         xtmp = np.linspace(-0.5*self.fovx,0.5*self.fovx,self.Nx)
         ytmp = np.linspace(-0.5*self.fovy,0.5*self.fovy,self.Ny)
-
+        
         # Determine the proper transposition based on if the reshaped x is fastest or slowest
         xtest = x.reshape([-1])
         if (xtest[1]==xtest[0]) :
@@ -712,7 +981,9 @@ class model_image_splined_raster(model_image) :
             yy=y[:,0]
 
         
-        if (self.spline_method=='fft') :
+        if ( (abs(xx[1]-xx[0])>abs(xtmp[-1]-xtmp[0])) and (abs(yy[1]-yy[0])>abs(ytmp[-1]-ytmp[0])) ) :
+            I = 0*x
+        elif (self.spline_method=='fft') :
             I = fft_cubic_spline_2d(xtmp,ytmp,f,xx,yy,a=self.a)
         elif (self.spline_method=='direct') :
             I = direct_cubic_spline_2d(xtmp,ytmp,f,xx,yy,a=self.a)
@@ -801,7 +1072,8 @@ class model_image_adaptive_splined_raster(model_image) :
           (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
 
-        f = np.transpose(np.exp(np.array(self.parameters[:-3]).reshape([self.Nx,self.Ny]))) * uas2rad**2
+        #f = np.transpose(np.exp(np.array(self.parameters[:-3]).reshape([self.Nx,self.Ny]))) * uas2rad**2
+        f = np.transpose(np.exp(np.array(self.parameters[:-3]).reshape([self.Ny,self.Nx]))) * uas2rad**2
         #f = np.fliplr(f)
         f = np.flipud(f)
         
@@ -825,7 +1097,9 @@ class model_image_adaptive_splined_raster(model_image) :
             yy=y[:,0]
 
         
-        if (self.spline_method=='fft') :
+        if ( (abs(xx[1]-xx[0])>abs(xtmp[-1]-xtmp[0])) and (abs(yy[1]-yy[0])>abs(ytmp[-1]-ytmp[0])) ) :
+            I = 0*x
+        elif (self.spline_method=='fft') :
             I = fft_cubic_spline_2d(xtmp,ytmp,f,xx,yy,PA,a=self.a)
         elif (self.spline_method=='direct') :
             I = direct_cubic_spline_2d(xtmp,ytmp,f,xx,yy,PA,a=self.a)
@@ -855,6 +1129,107 @@ class model_image_adaptive_splined_raster(model_image) :
         names.append('fovy (rad)')
         names.append(r'$\phi$ (rad)')
         return names
+
+
+
+class model_image_stretch(model_image):
+    """
+    Smoothed image class that is a mirror of :cpp:class:`Themis::model_image_stretch`. Generates a smoothed 
+    image from an existing image using an asymmetric Gaussian smoothing kernel.
+    Has parameters:
+
+    * parameters[0] ............. First parameter of underlying image
+    
+    ...
+
+    * parameters[image.size-1] .. Last parameter of underlying image
+    * parameters[image.size] .... stretch parameter :math:`\\tau = 1 - b/a` where b is semi-minor and a is semi-major
+    * parameters[image.size+1] .. Position angle of stretch :math:`\\phi` (rad)
+
+    and size=image.size+3.
+
+    Args:
+      image (model_image): :class:`model_image` object that will be smoothed.
+      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
+
+    Attributes:
+      image (model_image): A preexisting :class:`model_image` object to be stretched.
+    """
+
+    def __init__(self, image, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+        self.size=image.size+2
+        self.image = image
+
+        
+    def generate(self,parameters) :
+        """
+        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_stretch::generate_model`, 
+        a similar function within the :cpp:class:`Themis::model_image_stretch` class.  Effectively 
+        simply copies the parameters into the local list with some additional run-time checking.
+
+        Args:
+          parameters (list): Parameter list.
+
+        Returns:
+          None        
+        """
+        
+        self.parameters = np.copy(parameters)
+        if (len(self.parameters)<self.size) :
+            raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
+
+        self.image.generate(parameters[:-2])
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+
+        # Doesn't to boundary checking here.  Probably not a major problem, but consider it in the future.
+        srmaj = 1.0/np.sqrt(1-self.parameters[-2]) 
+        srmin = np.sqrt(1-self.parameters[-2]) 
+        sphi = self.parameters[-1]
+
+        # Re-orient the grind along major and minor axes of the smoothing kernel
+        xMinor = np.cos(sphi)*x - np.sin(sphi)*y
+        xMajor = np.sin(sphi)*x + np.cos(sphi)*y
+        px = x[1,1]-x[0,0]
+        py = y[1,1]-y[0,0]
+
+        self.image.generate(self.parameters[:-2])
+        I = self.image.generate_intensity_map(xMinor*srmin,xMajor*srmaj,verbosity=verbosity)
+        #I = self.image.generate_intensity_map(x,y,verbosity=verbosity)
+
+        if (verbosity>0) :
+            print('Stretched:',srmaj,srmin,sphi,self.parameters)
+            
+        return I
+
+    
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        names = self.image.parameter_name_list()
+        names.append(r'$\tau$')
+        names.append(r'$\phi_\tau$ (rad)')
+        return names
+
+    
 
 
 
@@ -940,8 +1315,8 @@ class model_image_smooth(model_image):
         exponent = 0.5*(xMajor**2/sr1**2 + xMinor**2/sr2**2)
         K = 1.0/(2*np.pi*sr1*sr2)*np.exp(-exponent) 
     
-        px = x[1,1]-x[0,0]
-        py = y[1,1]-y[0,0]
+        px = abs(x[1,1]-x[0,0])
+        py = abs(y[1,1]-y[0,0])
 
         self.image.generate(self.parameters[:-3])
         I = self.image.generate_intensity_map(x,y,verbosity=verbosity)
@@ -1254,7 +1629,197 @@ class model_image_polynomial_variable(model_image) :
         self.image.set_time(time)
 
         self.parameters = None
+ 
+class model_image_fourier_variable(model_image) :
+    """
+    Generates a :class:`model_image` object with parameters whose Fourier coefficients vary with 
+    time from an initially static :class:`model_image` object.
+
+    Args:
+      image (model_image): Static image from which to generate a dynamic image.
+      orders (list): List of integer orders of the Fourier series in time of each parameter.
+      reference_time (list): Reference time that defines the time origin.
+      end_time (list): Reference time that defines the time end.
+    """    
+    def __init__(self, image, orders, reference_time, end_time, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+
+        self.image = image
+        self.orders = orders
+        if (len(self.orders)<self.image.size) :
+            raise RuntimeError("Length of orders list must match number of parameters in static image.")
         
+        self.reference_time = reference_time/3600.0 # Reference time in hr, but provided in s
+        self.end_time = end_time/3600.0 # End time in hr, but provided in s
+        self.size = 2*np.sum(orders)+len(orders)
+        
+    def generate(self,parameters) :
+        """
+        Sets the model parameter list.  Mirrors :cpp:func:`Themis::model_image_fourier_variable::generate_model`, 
+        a similar function within the :cpp:class:`Themis::model_image_fourier_variable` class.  
+
+        Args:
+          parameters (list): Parameter list.
+
+        Returns:
+          None        
+        """
+        
+            
+        self.parameters = np.copy(parameters)
+        if (len(self.parameters)<self.size) :
+            raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
+
+        q = np.zeros(self.image.size)
+        j = 0
+        dt = np.pi*(self.time-self.reference_time)/(self.end_time-self.reference_time)*3600.0 # hr to s
+        for k in range(self.image.size) :
+            q[k] = q[k] + self.parameters[j]
+            j += 1
+            for order in range(1,self.orders[k]+1) :
+                q[k] = q[k] + self.parameters[j] * np.cos(dt*order)
+                j += 1
+                q[k] = q[k] + self.parameters[j] * np.sin(dt*order)
+                j += 1
+
+        self.image.generate(q)
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+
+        if (verbosity>0) :
+            print("FourierVariable:",self.time,self.reference_time,self.image.parameters[:3])
+        
+        return self.image.generate_intensity_map(x,y,verbosity=verbosity)
+
+    def parameter_name_list(self) :
+        """
+        Produces a list of parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        static_names = image.parameter_name_list()
+        names = []
+        for k in range(self.image.size) :
+            names.extend(static_names[k])
+            if (orders[k]>0) :
+                for order in range(1,orders[k],2) :
+                    names.extend('Cos(%i dt) %s'%(order,static_names[k]))
+                    names.extend('Sin(%i dt) %s'%(order,static_names[k]))
+                 
+        return names
+
+
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
+
+        self.image.set_time(time)
+
+        self.parameters = None
+ 
+     
+     
+class model_image_themaussian(model_image) :
+    """
+    Themaussian image class that is a mirror of :cpp:class:`Themis::model_image_themaussian`.
+    A themaussian is a sum of asymmetric gaussians.
+    Has parameters:
+
+    * parameters[0,6,12...] ... Total intensity :math:`I_0` (Jy) for p0. For all others, a ratio of total intensity to the previous gaussian in (0,1).
+    * parameters[1,7,13...] ... Symmetrized standard deviation :math:`\\sigma` (rad)
+    * parameters[2,8,14...] ... Asymmetry parameter :math:`A` in (0,1)
+    * parameters[3,9,15...] ... Position angle :math:`\\phi` (rad)
+    * parameters[4,10,16...] ... x-position of first gaussian for p4. For all others, a difference from the first gaussian.
+    * parameters[5,11,17...] ... y-position of first gaussian for p4. For all others, a difference from the first gaussian.
+
+    and size=6*Num_gauss. Plotting fixes first gaussian to origin.
+
+    Args:
+      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
+    """
+
+    def __init__(self,Num_gauss, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+        self.Num_gauss=Num_gauss
+        self.size=6*Num_gauss
+
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+        I=np.zeros(x.shape)
+        F=self.parameters[0]
+        xi=self.parameters[4]*rad2uas
+        yi=self.parameters[5]*rad2uas
+        #xi=0
+        #yi=0
+        for i in range(self.Num_gauss):
+            if i!=0:
+                xi=(self.parameters[4+6*i]+self.parameters[4])*rad2uas
+                yi=(self.parameters[5+6*i]+self.parameters[5])*rad2uas
+                F=F*self.parameters[0+6*i]
+        
+            s = abs(self.parameters[1+6*i]) * rad2uas
+            A = max(min(self.parameters[2+6*i],0.99),0.0)
+            sm = s/np.sqrt(1.+A)
+            sM = s/np.sqrt(1.-A)
+            I0 = abs(F) / (2.*np.pi*sm*sM)
+            phi = self.parameters[3+6*i]
+
+            c = np.cos(phi)
+            s = np.sin(phi)
+            dxm = c*(x-xi) - s*(y-yi)
+            dxM = s*(x-xi) + c*(y-yi)
+
+            I += I0 * np.exp( - 0.5*( dxm**2/sm**2 + dxM**2/sM**2 ) )
+
+            if (verbosity>0) :
+                print("Asymmetric Gaussian:",F,sm,sM,phi,xi,yi)
+
+        return I
+ 
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+        parameter_name=[ r'$I_0$ (Jy)', r'$\sigma_0$ (rad)', r'$A_0$', r'$\phi_0$ (rad)', r'$x_0 (rad)$', r'$y_0 (rad)$']
+        for i in range(self.Num_gauss):
+            parameter_name.extend([ r'$I_%s/I_%s$'%(i,i-1), r'$\sigma_%s$ (rad)'%i, r'$A_%s$'%i, r'$\phi_%s$ (rad)'%i, r'$x_%s-x_0 (rad)$'%s, r'$y_%s-y_0 (rad)$'%s])
+        return parameter_name
+    
+ 
     
 class model_image_single_point_statistics(model_image) :
     """
@@ -1782,6 +2347,7 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
     Returns:
       (model_image, list) : The first :class:`model_image` object fully described within the tag; the remaining tag lines.
     """
+    #print(tag)
 
     if (verbosity>0) :
         for j,l in enumerate(tag) :
@@ -1800,17 +2366,39 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
     elif (tag[0]=='model_image_xsring') :
         return model_image_xsring(),tag[1:]
 
+    elif (tag[0].split()[0]=='model_image_mring') :
+        toks = tag[0].split()
+        return model_image_mring(int(toks[1])),tag[1:]
+    
+    elif (tag[0].split()[0]=='model_image_mring_floor') :
+        toks = tag[0].split()
+        return model_image_mring_floor(int(toks[1])),tag[1:]
+    
     elif (tag[0]=='model_image_xsringauss') :
         return model_image_xsringauss(),tag[1:]
+    
+    elif (tag[0]=="model_image_xsring_ellip") :
+        return model_image_xsring_ellip(),tag[1:]
 
+    elif (tag[0].split()[0]=='model_image_themaussian') :
+        toks = tag[0].split()
+        return model_image_themaussian(int(toks[1])),tag[1:]
+ 
     elif (tag[0].split()[0]=='model_image_splined_raster') :
         toks = tag[0].split()
-        return model_image_splined_raster(float(toks[1]),float(toks[2]),int(toks[3]),float(toks[4]),float(toks[5]),int(toks[6]),float(toks[7])),tag[1:]
+        # return model_image_splined_raster(float(toks[1]),float(toks[2]),int(toks[3]),float(toks[4]),float(toks[5]),int(toks[6]),float(toks[7])),tag[1:]
+        # return model_image_splined_raster(int(toks[1]),int(toks[2]),float(toks[3]),float(toks[4]),float(toks[5])),tag[1:]
+        return model_image_splined_raster(int(toks[3]),int(toks[6]),float(toks[2])-float(toks[1]),float(toks[5])-float(toks[4]),float(toks[7])),tag[1:]
 
     elif (tag[0].split()[0]=='model_image_adaptive_splined_raster') :
         toks = tag[0].split()
         return model_image_adaptive_splined_raster(int(toks[1]),int(toks[2]),float(toks[3])),tag[1:]
 
+    elif (tag[0]=='model_image_stretch') :
+        subtag = tagv1_find_subtag(tag[1:])
+        subimage,_ = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
+        return model_image_stretch(subimage),tag[(len(subtag)+3):]
+    
     elif (tag[0]=='model_image_smooth') :
         subtag = tagv1_find_subtag(tag[1:])
         subimage,_ = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
@@ -1832,6 +2420,15 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
         subtag = tagv1_find_subtag(tag[1:])
         subimage,_ = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
         return model_image_polynomial_variable(subimage,orders,reference_time),tag[(len(subtag)+3):]
+
+    elif (tag[0].split()[0]=='model_image_fourier_variable') :
+        reference_time = float(tag[0].split()[1])
+        end_time = float(tag[0].split()[2])
+        orders = [ int(order) for order in tag[0].split()[3:]]
+        subtag = tagv1_find_subtag(tag[1:])
+        subimage,_ = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
+        return model_image_fourier_variable(subimage,orders,reference_time,end_time),tag[(len(subtag)+3):]
+
 
     else :
         raise RuntimeError("Unrecognized model tag %s"%(tag[0]))
@@ -1971,7 +2568,7 @@ def plot_intensity_map(model_image, parameters, limits=None, shape=None, colorma
     plt.gca().set_facecolor(cmap(0.0))
 
     # Make plot
-    h = plt.pcolor(x,y,tI,cmap=colormap,vmin=Imin,vmax=Imax)
+    h = plt.pcolormesh(x,y,tI,cmap=colormap,vmin=Imin,vmax=Imax,shading='auto')
     
     # Add labels
     plt.xlabel(xlabel)

@@ -61,7 +61,7 @@ def read_gain_amplitude_correction_file(gainfile,deprecated_timestamp=False) :
         time_offset = t0
         
     # Read correction information
-    d = np.loadtxt(gainfile,skiprows=3)
+    d = np.loadtxt(gainfile,skiprows=3,ndmin=2)
     ts=d[:,0]/3600. # Epoch start time, converted to hours
     te=d[:,1]/3600. # Epoch end time, converted to hours
     gains=d[:,2:] # Gain corrections
@@ -114,7 +114,7 @@ def read_complex_gain_file(gainfile,deprecated_timestamp=False) :
         time_offset = t0
     
     # Read correction information
-    d = np.loadtxt(gainfile,skiprows=3)
+    d = np.loadtxt(gainfile,skiprows=3,ndmin=2)
     ts=d[:,0]/3600. # Epoch start time, converted to hours
     te=d[:,1]/3600. # Epoch end time, converted to hours
     gains=d[:,2::2]+1.j*d[:,3::2] # Gain corrections

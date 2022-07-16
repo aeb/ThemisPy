@@ -31,12 +31,18 @@ def set_parser():
                         type=str,
                         action='store',
                         default='lf',
-                        help=("Sets type of polarized image plot to generate.  Options are 'lf', 'ef', 'lL'."
-                              "In detail: 'lf' produces linear polarization ticks, color-coded by linear"
-                              "polarization fraction, on top of total flux; 'ef' produces elliptical polarization"
-                              "ticks, color-coded by total polarization fraction, on top of total flux; 'lL'"
-                              "produces linear polarization ticks on top of linear polarized flux, with total"
-                              "flux contours superimposed.  Default: 'lf'."))
+                        help=("Sets type of polarized image plot to generate.  Options are:"
+                              "  lf ... linear polarization ticks, color-coded by linear"
+                              "         polarization fraction, on top of total flux."
+                              "  ef ... elliptical polarization ticks, color-coded by total"
+                              "         polarization fraction."
+                              "  lL ... linear polarization ticks on top of linear polarized"
+                              "         flux, with total flux contours superimposed."
+                              "  I .... Stokes I with Stokes I contours. (Silly!)"
+                              "  Q .... Stokes Q with Stokes I contours."
+                              "  U .... Stokes U with Stokes I contours."
+                              "  V .... Stokes V with Stokes I contours."
+                              " Default: lf."))
 
     parser.add_argument("-c","--chain",
                         type=str,
@@ -161,9 +167,13 @@ def set_parser():
 
     parser.add_argument("--smooth",
                         type=float,
+                        nargs="*",
                         action='store',
                         default=None,
-                        help=("If passed, will smooth the image with a symmetric Gaussian filter with FWHM given in microarcseconds."))
+                        help=("If set, will smooth the image with a Gaussian filter.  Either one or three"
+                              "arguments are required: either the FWHM of a symmetric Gaussian in"
+                              "microarcseconds, or the major axis FWHM, minor axis FWHM, both in microarcseconds,"
+                              "and major axis position angle measured east of north in degrees."))
 
     parser.add_argument("-ms","--mscale",
                         type=float,
@@ -277,8 +287,7 @@ if __name__ == "__main__" :
     if (not (args.smooth is None)) :
         model_image_unsmoothed = copy.deepcopy(model_image)
         model_image = ty.vis.model_polarized_image_smooth(model_image_unsmoothed)
-            
-        
+                
         
     # Save image as desired
     if (args.out is None) :
@@ -324,8 +333,17 @@ if __name__ == "__main__" :
 
         # Add smoothing if desired
         if (not (args.smooth is None)) :
-            parameters = np.append(parameters,[args.smooth*uas2rad/np.sqrt(8.0*np.log(2.0)), 0, 0])
-
+            if (len(args.smooth)==1) :            
+                parameters = np.append(parameters,[args.smooth[0]*uas2rad/np.sqrt(8.0*np.log(2.0)), 0, 0])
+            elif (len(args.smooth)==3) :
+                ssig = 1.0/np.sqrt( 1.0/args.smooth[0]**2 + 1.0/args.smooth[1]**2 ) * uas2rad/np.sqrt(8.0*np.log(2.0))
+                sA = (args.smooth[0]**2-args.smooth[1]**2)/(args.smooth[0]**2+args.smooth[1]**2)
+                sPA = np.pi/180.0 * (args.smooth[2] + 90.0)
+                parameters = np.append(parameters,[ssig,sA,sPA])
+            else :
+                print("ERROR: --smooth, -s takes one or three arguments.  Try -h for more information.")
+                quit()
+            
         if (args.verbose):
             print("Smoothed parameters:",parameters)            
 
@@ -336,6 +354,8 @@ if __name__ == "__main__" :
             ty.vis.plot_polarized_image(model_image, parameters, limits=args.limits, shape=args.N, tick_shape=args.tN, mscale=args.mscale, transfer_function=args.transfer, tick_fractional_intensity_floor=args.tick_intensity_floor, colorbar=False, elliptical=True, verbosity=int(args.verbose))
         elif (args.plot_type=='lL') :
             ty.vis.plot_linear_polarization_map(model_image, parameters, limits=args.limits, shape=args.N, tick_shape=args.tN, colormap='plasma', intensity_contours=True, intensity_colors=[[0.75,0.75,0.75]], mscale=0.5, colorbar=None, transfer_function=args.transfer, tick_fractional_intensity_floor=args.tick_intensity_floor, verbosity=int(args.verbose))
+        elif (args.plot_type in ['I','Q','U','V'] ) :
+            ty.vis.plot_stokes_map(model_image, parameters, stokes=args.plot_type, limits=args.limits, shape=args.N, colormap='bwr', intensity_contours=True, intensity_colors=['k'], colorbar=None, stokes_fractional_intensity_floor=args.tick_intensity_floor, verbosity=int(args.verbose))
         else :
             raise RuntimeError("Plot type %s is not recognized.  See help for options."%(args.plot_type))
 

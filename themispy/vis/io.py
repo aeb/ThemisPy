@@ -109,7 +109,9 @@ def write_fits(x,y,img,fits_filename,uvfits_filename=None,time=None,verbosity=0)
     if (isinstance(img,model_polarized_image)) :
         if (time is None) :
             time = img.time
+        x = -x # RA vs x
         S = img.stokes_map(x,y,kind='all',verbosity=verbosity)
+        x = -x # RA vs x
         I = S[0]
         Q = S[1]
         U = S[2]
@@ -118,11 +120,21 @@ def write_fits(x,y,img,fits_filename,uvfits_filename=None,time=None,verbosity=0)
     elif (isinstance(img,model_image)) :
         if (time is None) :
             time = img.time
+        x = -x # RA vs x
         I = img.intensity_map(x,y,verbosity=verbosity)
+        x = -x # RA vs x
     elif (isinstance(img,np.ndarray)) :
         if (time is None) :
             time = 0
         I = img
+    elif (isinstance(img,list)) :
+        if (time is None) :
+            time = 0
+        I=img[0]
+        Q=img[1]
+        U=img[2]
+        V=img[3]
+            
     else :
         raise NotImplementedError("ERROR: Requies either an image or numpy.ndarray of values.")
 

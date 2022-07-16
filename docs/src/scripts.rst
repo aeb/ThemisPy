@@ -75,6 +75,15 @@ themispy_image_fit
    :nodefault:
 
 
+themispy_image_mosaic
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_image_mosaic
+   :func: set_parser
+   :prog: themispy_image_mosaic
+   :nodefault:
+
+
 themispy_image_stats
 ----------------------------------
 .. argparse::
@@ -144,6 +153,15 @@ themispy_triangle_plot
    :filename: ../scripts/themispy_triangle_plot
    :func: set_parser
    :prog: themispy_triangle_plot
+   :nodefault:
+
+
+themispy_write_caltables
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_write_caltables
+   :func: set_parser
+   :prog: themispy_write_caltables
    :nodefault:
 
 

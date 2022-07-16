@@ -184,16 +184,6 @@ if __name__ == "__main__" :
         
     if (args.verbose):
         print("Model type and size:",type(model_image),model_image.size)
-
-    # Add smoothing if desired
-    if (not (args.smooth is None)) :
-        uas2rad = np.pi/(180.0*3600e6)
-        model_image_unsmoothed = copy.deepcopy(model_image)
-        model_image = ty.vis.model_image_smooth(model_image_unsmoothed)
-        parameters = np.append(parameters,[args.smooth*uas2rad/np.sqrt(8.0*np.log(2.0)), 0, 0])
-
-        if (args.verbose):
-            print("Smoothed parameters:",parameters)            
         
     # Check limits
     if (not (args.N is None) ):
@@ -227,12 +217,20 @@ if __name__ == "__main__" :
             
     if (args.verbose) :
         print("Generating the following statistics:",stats_list)
-
         
-    stats_image = ty.vis.model_image_single_point_statistics(model_image,stats_list,32)
-
     # Run through checkdown for different ways of specifying parameters
     chain = ty.chain.sample_chain(args.chain,args.samples,burn_fraction=args.burn_fraction,parameter_list=range(model_image.size))
+
+    # Add smoothing if desired
+    if (not (args.smooth is None)) :
+        model_image_unsmoothed = copy.deepcopy(model_image)
+        model_image = ty.vis.model_image_smooth(model_image_unsmoothed)
+        uas2rad = np.pi/(180.0*3600e6)
+        smooth_chain = np.zeros((chain.shape[0],3))
+        smooth_chain[:,0] = args.smooth*uas2rad/np.sqrt(8.0*np.log(2.0))
+        chain = np.hstack([chain,smooth_chain])
+
+    stats_image = ty.vis.model_image_single_point_statistics(model_image,stats_list,32)
 
     
     # Save image as desired
@@ -259,7 +257,8 @@ if __name__ == "__main__" :
 
         # Set the proper normalization
         if (stat=='mean') :
-            Imed = np.median(I)
+            # Imed = np.median(I)
+            Imed = np.abs(np.median(I)) + 1e-20
             Imax = np.max(I)
             if (args.transfer=='linear') :
                 vmax = (Imed) * 10**( args.norm*np.log10(Imax/Imed) )

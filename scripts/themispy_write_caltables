@@ -5,7 +5,7 @@ Reads in a Themis gain file of any type and the matching uvfits data file and
 writes the self-calibrated data file.
 
 Example:
-$ themispy_selfcal_uvfits -g gain_corrections.d -d data.uvfits
+$ themispy_write_caltables -g complex_gains.d
 """
 
 
@@ -29,18 +29,18 @@ except:
     
 def set_parser() :
     # Create a parser object to manage command line options
-    parser = ap.ArgumentParser(prog='themispy_gain_plots',description=__doc__)
+    parser = ap.ArgumentParser(prog='themispy_write_caltables',description=__doc__)
 
     parser.add_argument('-d','--uvfits',	
                         type=str,
                         action='store',	
-			required=True,
-                        help=("<Required> Name of uvfits data file."))
+			required=False,
+                        help=("Name of uvfits data file (will use ehtim functionality to generate caltables)."))
 
     parser.add_argument('-g',	
                         type=str,
                         action='store',	
-                        help=("Applies gain calibration from gain file to provided."))
+                        help=("Complex gain file from which to obtain gains."))
 
     parser.add_argument("-s","--scan-avg",
                         action='store_true',
@@ -126,7 +126,8 @@ def set_parser() :
     parser.add_argument("-o","--out",
                         type=str,
                         action="store",
-                        help="Output file name. Default: gain_plot.png")
+                        default="caltable",
+                        help="Output directory name in which to write caltable. Default: caltable")
 
     parser.add_argument("-v","--verbose",
                         type=int,
@@ -144,55 +145,56 @@ if __name__ == "__main__" :
     args = set_parser().parse_args()
 
     # load in the data
-    obs = eh.obsdata.load_uvfits(args.uvfits)
+    if (not args.uvfits is None) :
+        obs = eh.obsdata.load_uvfits(args.uvfits)
 
-    # Load in tarr file if passed
-    if (not args.telescope_array_file is None) :
-        print("Reading telescope array file %s."%(args.telescope_array_file))
-        obs.tarr = eh.array.load_txt(args.telescope_array_file).tarr
-    elif (args.eht2017==True) :
-        print("Using 2017 EHT telescope array.")
-        obs.tarr = np.array([('AA',  2.22506081360e+06, -5.44005959994e+06, -2481681.15054, 0., 0., 0.+0.j, 0.+0.j, 1.,  0.,  0.),
-                             ('AP',  2.22503952970e+06, -5.44119762920e+06, -2479303.35970, 0., 0., 0.+0.j, 0.+0.j, 1.,  1.,  0.),
-                             ('AZ', -1.82879620000e+06, -5.05440680000e+06,  3427865.20000, 0., 0., 0.+0.j, 0.+0.j, 1.,  1.,  0.),
-                             ('JC', -5.46458467600e+06, -2.49300117000e+06,  2150653.98200, 0., 0., 0.+0.j, 0.+0.j, 1.,  0.,  0.),
-                             ('LM', -7.68715632000e+05, -5.98850707200e+06,  2063354.85200, 0., 0., 0.+0.j, 0.+0.j, 1., -1.,  0.),
-                             ('PV',  5.08896774544e+06, -3.01681185860e+05,  3825012.20561, 0., 0., 0.+0.j, 0.+0.j, 1., -1.,  0.),
-                             ('SM', -5.46455549300e+06, -2.49292798900e+06,  2150797.17600, 0., 0., 0.+0.j, 0.+0.j, 1., -1., 45.),
-                             ('SR', -5.46455549300e+06, -2.49292798900e+06,  2150797.17600, 0., 0., 0.+0.j, 0.+0.j, 0.,  0.,  0.),
-                             ('SP',  1.00000000000e-02,  1.00000000000e-02, -6359609.70000, 0., 0., 0.+0.j, 0.+0.j, 0.,  0.,  0.)],
-                            dtype=[('site', '<U32'), ('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('sefdr', '<f8'), ('sefdl', '<f8'), ('dr', '<c16'), ('dl', '<c16'), ('fr_par', '<f8'), ('fr_elev', '<f8'), ('fr_off', '<f8')])
-        args.noteht=False
-    elif (args.eht2018==True) :
-        args.noteht=False
-        raise RuntimeError("2018 array not implemented yet!")
+        # Load in tarr file if passed
+        if (not args.telescope_array_file is None) :
+            print("Reading telescope array file %s."%(args.telescope_array_file))
+            obs.tarr = eh.array.load_txt(args.telescope_array_file).tarr
+        elif (args.eht2017==True) :
+            print("Using 2017 EHT telescope array.")
+            obs.tarr = np.array([('AA',  2.22506081360e+06, -5.44005959994e+06, -2481681.15054, 0., 0., 0.+0.j, 0.+0.j, 1.,  0.,  0.),
+                                 ('AP',  2.22503952970e+06, -5.44119762920e+06, -2479303.35970, 0., 0., 0.+0.j, 0.+0.j, 1.,  1.,  0.),
+                                 ('AZ', -1.82879620000e+06, -5.05440680000e+06,  3427865.20000, 0., 0., 0.+0.j, 0.+0.j, 1.,  1.,  0.),
+                                 ('JC', -5.46458467600e+06, -2.49300117000e+06,  2150653.98200, 0., 0., 0.+0.j, 0.+0.j, 1.,  0.,  0.),
+                                 ('LM', -7.68715632000e+05, -5.98850707200e+06,  2063354.85200, 0., 0., 0.+0.j, 0.+0.j, 1., -1.,  0.),
+                                 ('PV',  5.08896774544e+06, -3.01681185860e+05,  3825012.20561, 0., 0., 0.+0.j, 0.+0.j, 1., -1.,  0.),
+                                 ('SM', -5.46455549300e+06, -2.49292798900e+06,  2150797.17600, 0., 0., 0.+0.j, 0.+0.j, 1., -1., 45.),
+                                 ('SR', -5.46455549300e+06, -2.49292798900e+06,  2150797.17600, 0., 0., 0.+0.j, 0.+0.j, 0.,  0.,  0.),
+                                 ('SP',  1.00000000000e-02,  1.00000000000e-02, -6359609.70000, 0., 0., 0.+0.j, 0.+0.j, 0.,  0.,  0.)],
+                                dtype=[('site', '<U32'), ('x', '<f8'), ('y', '<f8'), ('z', '<f8'), ('sefdr', '<f8'), ('sefdl', '<f8'), ('dr', '<c16'), ('dl', '<c16'), ('fr_par', '<f8'), ('fr_elev', '<f8'), ('fr_off', '<f8')])
+            args.noteht=False
+        elif (args.eht2018==True) :
+            args.noteht=False
+            raise RuntimeError("2018 array not implemented yet!")
     
-    # exclude stations
-    if (not args.exclude_station is None) :
-        obs = obs.flag_sites(list(flatten(args.exclude_station)))
+        # exclude stations
+        if (not args.exclude_station is None) :
+            obs = obs.flag_sites(list(flatten(args.exclude_station)))
 
-    # (scan) average the data
-    if (args.scan_avg) :
-        obs.add_scans()
-        obs = obs.avg_coherent(0.0, scan_avg=True)
-    elif (not args.avg_time is None) :
-        obs = obs.avg_coherent(args.avg_time)
+        # (scan) average the data
+        if (args.scan_avg) :
+            obs.add_scans()
+            obs = obs.avg_coherent(0.0, scan_avg=True)
+        elif (not args.avg_time is None) :
+            obs = obs.avg_coherent(args.avg_time)
 
-    # add systematic noise
-    if (not args.fractional_systematic_error is None) :
-        obs = obs.add_fractional_noise(args.fractional_systematic_error/100.0)
+        # add systematic noise
+        if (not args.fractional_systematic_error is None) :
+            obs = obs.add_fractional_noise(args.fractional_systematic_error/100.0)
 
-    # add threshold
-    if (not args.threshold_systematic_error is None):
-        if (obs.polrep=='stokes') :
-            obs.data['sigma'] = np.sqrt(obs.data['sigma']**2 + (args.threshold_systematic_error/1.0e3)**2)
-        else :
-            for sigtype in ['rrsigma','llsigma','rlsigma','lrsigma'] :
-                obs.data[sigtype] = np.sqrt(obs.data[sigtype]**2 + (args.threshold_systematic_error/1.0e3)**2)
+        # add threshold
+        if (not args.threshold_systematic_error is None):
+            if (obs.polrep=='stokes') :
+                obs.data['sigma'] = np.sqrt(obs.data['sigma']**2 + (args.threshold_systematic_error/1.0e3)**2)
+            else :
+                for sigtype in ['rrsigma','llsigma','rlsigma','lrsigma'] :
+                    obs.data[sigtype] = np.sqrt(obs.data[sigtype]**2 + (args.threshold_systematic_error/1.0e3)**2)
 
-    # remove baselines below cutoff
-    if (not args.minimum_baseline is None) :
-        obs.flag_uvdist(args.minimum_baseline)
+        # remove baselines below cutoff
+        if (not args.minimum_baseline is None) :
+            obs.flag_uvdist(args.minimum_baseline)
 
     # Read in the gain file, if desired
     if (not args.g is None) :
@@ -240,5 +242,11 @@ if __name__ == "__main__" :
     if (args.out is None) :
         args.out = 'selfcal_'+args.uvfits.split('/')[-1]
     
-    # Apply the gains and write the calibrated uvfits file
-    ty.data.write_uvfits(obs,args.out,gain_data=gain_data,dterm_data=dterm_data,relative_timestamps=args.relative_timestamps,verbosity=args.verbose)
+
+    if (not args.uvfits is None) :
+        # Apply the gains and write the calibrated uvfits file
+        ty.data.write_caltables(outdir=args.out,gain_data=gain_data,dterm_data=dterm_data,relative_timestamps=args.relative_timestamps,verbosity=args.verbose)
+    else :
+        # Write without going through ehtim (doesn't write dterms)
+        ty.data.write_caltables(outdir=args.out,gain_data=gain_data,verbosity=args.verbose)
+        

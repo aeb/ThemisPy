@@ -134,6 +134,44 @@ def set_parser() :
                               " within.  If an index is given with -i,--index will plot the corresponding"
                               " line; otherwise plots the first line."))
 
+    parser.add_argument("--log",
+                        action='store_true',
+                        default=False,
+                        help=("Sets the vertical axis to be logarithmically spaced.  Default: linear."))
+
+
+    parser.add_argument("--xlim",
+                        action='store',
+                        nargs=2,
+                        type=float,
+                        help=("Overrides default horizontal axis limits.  Default: None."))
+
+    parser.add_argument("--xlabel",
+                        type=str,
+                        action="store",
+                        default=None,
+                        help="Label to place on the top horizontal axis.")
+    
+
+    parser.add_argument("--ylim",
+                        action='store',
+                        nargs=2,
+                        type=float,
+                        help=("Overrides default vertical axis limits for top plot.  Default: None."))
+
+    parser.add_argument("--ylabel",
+                        type=str,
+                        action="store",
+                        default=None,
+                        help="Label to place on the top vertical axis.")
+
+    parser.add_argument("--label",
+                        type=str,
+                        action="store",
+                        default=None,
+                        help="Label to place in upper corner.")
+    
+    
     parser.add_argument("-m","--model",
                         type=str,
                         action='store',
@@ -161,10 +199,17 @@ if __name__ == "__main__" :
 
     # Use LaTex or not
     if (args.usetex) :
-        rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
+        #rc('font',**{'family':'serif','serif':['Times','Palatino','Computer Modern Roman']})
         rc('text', usetex=True)
+        plt.rcParams['text.latex.preamble']=[r"\usepackage{amsmath}"]
 
+        
+    if (args.log) :
+        yscale='log'
+    else :
+        yscale='linear'
 
+        
     # Read in gain file if passed
     if (args.gainfile is None) :
         gain_data = None
@@ -224,7 +269,7 @@ if __name__ == "__main__" :
     # Sort out name
     outname,ext = os.path.splitext(args.out)    
     index={}
-    for restype in ['amplitude','closure phase','visibility','crosshand'] :
+    for restype in ['amplitude','closure phase','visibility','crosshand','log closure amplitude'] :
         index[restype]=0
 
 
@@ -260,25 +305,47 @@ if __name__ == "__main__" :
         if (resdata['type']=='amplitude') :
             if (args.plot_type is None) :
                 args.plot_type='uvamp'
-            ty.diag.plot_amplitude_residuals(resdata,gain_data=gain_data,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
+            fig,axs = ty.diag.plot_amplitude_residuals(resdata,gain_data=gain_data,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist,yscale=yscale)
         elif (resdata['type']=='closure phase') : 
             if (args.plot_type is None) :
                 args.plot_type='perimeter'
-            ty.diag.plot_closure_phase_residuals(resdata,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
+            fig,axs = ty.diag.plot_closure_phase_residuals(resdata,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist,yscale=yscale)
+        elif (resdata['type']=='log closure amplitude') : 
+            if (args.plot_type is None) :
+                args.plot_type='perimeter'
+            fig,axs = ty.diag.plot_log_closure_amplitude_residuals(resdata,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist,yscale=yscale)
         elif (resdata['type']=='visibility') : 
             if (args.plot_type is None) :
                 args.plot_type='uvamp'
-            ty.diag.plot_visibility_residuals(resdata,gain_data=gain_data,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
+            fig,axs = ty.diag.plot_visibility_residuals(resdata,gain_data=gain_data,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist,yscale=yscale)
         elif (resdata['type']=='crosshand') : 
             if (args.plot_type is None) :
                 args.plot_type='uvamp'
-            ty.diag.plot_crosshand_residuals(resdata,gain_data=gain_data,dterms=dterms,crosshand=args.crosshand,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist)
+            fig,axs = ty.diag.plot_crosshand_residuals(resdata,gain_data=gain_data,dterms=dterms,crosshand=args.crosshand,plot_type=args.plot_type,station_list=station_list,grid=args.no_grid,residuals=args.no_res,resdist=args.no_resdist,yscale=yscale)
         else :
             # Not a type of data that we know how to plot yet
-            print("ERROR: Not an implemented data type for residual plots.  Currently acceptable data typesa are visibility amplitudes, closure phases, visibility, and crosshand.")
+            print("ERROR: Not an implemented data type for residual plots.  Currently acceptable data typesa are visibility amplitudes, closure phases, log closure amplitude, visibility, and crosshand.")
             quit()
 
         index[resdata['type']] += 1
+
+        if (not args.xlim is None) :
+            axs[0].set_xlim(args.xlim)
+            axs[1].set_xlim(args.xlim)
+
+        if (not args.ylim is None) :
+            axs[0].set_ylim(args.ylim)
+
+        if (not args.ylabel is None) :
+            axs[0].set_ylabel(args.ylabel)
+
+        if (not args.xlabel is None) :
+            axs[1].set_xlabel(args.xlabel)
+
+        if (not args.label is None) :
+            #axs[0].get_legend().set_title(args.label)
+            axs[0].text(0.025,1.025,args.label,transform=axs[0].transAxes)
+            
             
         # Save figure
         if (index[resdata['type']]<2) :
