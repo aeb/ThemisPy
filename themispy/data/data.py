@@ -960,9 +960,9 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
                 print(od_time_list[-1],gain_data['tend'][-1]+gain_time_offset_hour+time_precision_slop)
                 raise RuntimeError("gain_data does not cover the observation times. Cowardly refusing to continue.")
 
-        print(gain_data)
+        # print(gain_data)
         # Generate Caltable object
-        if (verbosity > -1) :
+        if (verbosity > 1) :
             print("Sites:",gain_station_names)
             print("Times:",od_time_list)
         #for k in range(len(gain_station_names)):
@@ -973,7 +973,7 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
             datatables[station] = np.array(datatable)
 
     if (not dterm_data is None) :
-        print(dterm_data)
+        # print(dterm_data)
         # Fix obs.tarr to include dterms
         for s in range(0,len(obs.tarr)) :
             station = obs.tarr[s]['site']
@@ -986,8 +986,8 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
 
     # Calibrate the observation data (Yikes!!)
     obs_cal = cal.applycal(obs, extrapolate=True)
-    print("Here")
-    print(obs_cal.unpack("time"))
+    # print("Here")
+    # print(obs_cal.unpack("time"))
 
     # Apply dterms
     if (not dterm_data is None) :
@@ -995,9 +995,9 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
         # Get the field rotation angles
         fr1,fr2=reconstruct_field_rotation_angles(obs_cal)
 
-        print("Field rotation angles:")
-        print(fr1)
-        print(fr2)
+        # print("Field rotation angles:")
+        # print(fr1)
+        # print(fr2)
 
         
         # Make a copy that generates the circular basis
