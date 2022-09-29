@@ -134,6 +134,10 @@ def set_parser() :
                         default=0,
                         action="store",
                         help="Sets verbosity level in :fun:`write_uvfits`. Level 1 outputs values, level 4 generates multiple plots.")
+    parser.add_argument("--scan-avg-pedantic",
+                        action='store_true',
+                        default=False,
+                        help=("Keep ehtim time stamps which may not be unique for each scan."))
 
     return parser
 
@@ -177,6 +181,14 @@ if __name__ == "__main__" :
         if (args.scan_avg) :
             obs.add_scans()
             obs = obs.avg_coherent(0.0, scan_avg=True)
+            if (args.scan_avg_pedantic==False) :
+                print("WARNING: Homogenizing scan times.  To avoid this use --scan-avg-pedantic.")
+                index_all = np.arange(len(obs.data))
+                for [tlo,thi] in obs.scans :
+                    index_scan = index_all[(obs.data['time']>tlo)*(obs.data['time']<=thi)]
+                    for j in index_scan :
+                        obs.data[j]['time'] = 0.5*(tlo+thi)
+                print("  # of scans / unique times: ",len(obs.scans),len(np.unique(obs.data['time'])))
         elif (not args.avg_time is None) :
             obs = obs.avg_coherent(args.avg_time)
 

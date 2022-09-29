@@ -19,13 +19,17 @@ warnings.formatwarning = _warning_on_one_line
 
 
 # Read in ehtim, if possible
-import io
+import io, sys
 from contextlib import redirect_stdout
 try:
-    trap=io.StringIO()
-    with redirect_stdout(trap) :
-        import ehtim as eh
-    ehtim_found = True
+    if ( ('skip_ehtim' in dir(sys)) and sys.skip_ehtim==True) :
+        ehtim_found = False
+        warnings.warn("Skipping ehtim import.  If ehtim is required, either undefine sys.skip_ehtim or set sys.skip_ehtim=False.", Warning)
+    else :
+        trap=io.StringIO()
+        with redirect_stdout(trap) :
+            import ehtim as eh
+        ehtim_found = True
 except:
     warnings.warn("Package ehtim not found.  Some functionality will not be available.  If this is necessary, please ensure ehtim is installed.", Warning)
     ehtim_found = False

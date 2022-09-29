@@ -17,7 +17,8 @@ from matplotlib.cbook import flatten
 
 # We don't need ehtim, so don't import it
 import sys
-sys.modules['ehtim'] = None
+# sys.modules['ehtim'] = None
+sys.skip_ehtim = True
 import themispy as ty
 
 def set_parser() :

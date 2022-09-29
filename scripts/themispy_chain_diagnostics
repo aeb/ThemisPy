@@ -20,7 +20,8 @@ import argparse
 
 # We don't need ehtim, so don't import it
 import sys
-sys.modules['ehtim'] = None
+# sys.modules['ehtim'] = None
+sys.skip_ehtim = True
 from themispy import diag as td
 from themispy import chain as tc
 
