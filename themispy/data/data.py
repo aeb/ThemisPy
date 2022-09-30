@@ -953,7 +953,8 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
             if ( int(gain_data['toffset'].mjd) != obs.mjd ) :
                 raise RuntimeError("Observation and gain reconstruction dates differ (mjd %i vs %i). Cowardly refusing to continue."%(obs.mjd,int(gain_data['toffset'].mjd)))
             gain_time_offset_hour = 24.0 * (gain_data['toffset'].mjd%1)
-            gain_time_list = gain_data['tstart'] + gain_time_offset_hour
+            # gain_time_list = gain_data['tstart'] + gain_time_offset_hour
+            gain_time_list = 0.5*(gain_data['tstart'] + gain_data['tend']) + gain_time_offset_hour
             time_precision_slop = 1e-3/3600.0 # Permit a slop of 1 ms in the time comparisons
             if ( od_time_list[0]<gain_data['tstart'][0]+gain_time_offset_hour-time_precision_slop or od_time_list[-1]>gain_data['tend'][-1]+gain_time_offset_hour+time_precision_slop ) :
                 print(od_time_list[0], gain_data['tstart'][0]+gain_time_offset_hour-time_precision_slop)
@@ -965,6 +966,9 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
         if (verbosity > 1) :
             print("Sites:",gain_station_names)
             print("Times:",od_time_list)
+            print("Gain time list:",gain_time_list)
+            print("Gain epoch starts:",gain_data['tstart'])
+            print("Gain epoch ends:",gain_data['tend'])
         #for k in range(len(gain_station_names)):
         for station in gain_station_names :
             datatable = []
@@ -981,11 +985,11 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
                 obs.tarr[s]['dr'] = dterm_data[station][0]
                 obs.tarr[s]['dl'] = dterm_data[station][1]
 
-    # Generaet caltable object
+    # Generate caltable object
     cal=eh.caltable.Caltable(obs.ra, obs.dec, obs.rf, obs.bw, datatables, obs.tarr, source=obs.source, mjd=obs.mjd, timetype=obs.timetype)
 
     # Calibrate the observation data (Yikes!!)
-    obs_cal = cal.applycal(obs, extrapolate=True)
+    obs_cal = cal.applycal(obs, interp='nearest', extrapolate=True)
     # print("Here")
     # print(obs_cal.unpack("time"))
 

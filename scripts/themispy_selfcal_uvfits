@@ -2,7 +2,8 @@
 
 """
 Reads in a Themis gain file of any type and the matching uvfits data file and
-writes the self-calibrated data file.
+writes the self-calibrated data file.  By default, it will assume that the number
+of scans matches the number of gain epochs.
 
 Example:
 $ themispy_selfcal_uvfits -g gain_corrections.d -d data.uvfits
