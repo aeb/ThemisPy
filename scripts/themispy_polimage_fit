@@ -313,7 +313,7 @@ if __name__ == "__main__" :
     if (not (args.RM is None)) :
         model_image_underotated = copy.deepcopy(model_image)
         model_image = ty.vis.model_polarized_image_Faraday_derotated(model_image_underotated,args.RM,args.wavelength)
-
+        
         if (args.verbose):
             print("Faraday derotating:",args.RM,args.wavelength)
             

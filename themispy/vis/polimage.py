@@ -559,6 +559,7 @@ class model_polarized_image_sum(model_polarized_image) :
 
         q = self.parameters
         for k,image in enumerate(self.image_list) :
+
             image.generate(q[:image.size])
 
             if (self.offset_coordinates=='Cartesian') :
@@ -809,15 +810,21 @@ class model_polarized_image_Faraday_derotated(model_polarized_image):
     """
 
     def __init__(self, image, RM=0.0, wavelength=1.3e-3, station_names=None, themis_fft_sign=True) :
-        super().__init__(station_names,themis_fft_sign)
 
+        super().__init__(image.dterm_dict['station_names'],image.themis_fft_sign)
         self.image = image
         self.RM = RM
         self.wavelength = wavelength
         self.image_size = image.image_size
-        self.size = image.size
+        self.size += image.image_size
+        
+        # Strip out D-terms on image level to avoid double counting
+        self.image.dterm_dict = {}
+        self.image.dterm_dict['station_names'] = []
+        self.image.size = self.image.image_size
+        self.image.number_of_dterms = 0
 
-
+        
     def set_RM(self, RM) :
         """
         Sets the Faraday rotation measure in :math:`rad m^{-2}`.
@@ -858,7 +865,7 @@ class model_polarized_image_Faraday_derotated(model_polarized_image):
         Returns:
           None        
         """
-        
+
         self.parameters = np.copy(parameters)
         if (len(self.parameters)<self.size) :
             raise RuntimeError("Parameter list is inconsistent with the number of parameters expected.")
