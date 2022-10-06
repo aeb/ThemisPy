@@ -364,12 +364,12 @@ if __name__ == "__main__" :
         if (stat=='mean') :
             #plt.clim(vmin=vmin,vmax=vmax)
             #plt.set_cmap('afmhot')
-            plt.text(0.025,0.975,'Mean',color='w',transform=plt.gca().transAxes,ha='left',va='top')
+            plt.text(0.025,0.975,'Mean',color='gray',transform=plt.gca().transAxes,ha='left',va='top')
 
         if (stat=='median') :
             #plt.clim(vmin=vmin,vmax=vmax)
             #plt.set_cmap('afmhot')
-            plt.text(0.025,0.975,'Median',color='w',transform=plt.gca().transAxes,ha='left',va='top')
+            plt.text(0.025,0.975,'Median',color='gray',transform=plt.gca().transAxes,ha='left',va='top')
             
         if (stat=='stddev') :
             # SDmax = np.max(I)/vmax
@@ -385,20 +385,20 @@ if __name__ == "__main__" :
             #     SDmax = 1
             # print("SDmax:",SDmax)
             # plt.clim(vmin=vmin*SDmax,vmax=vmax*SDmax)
-            plt.text(0.025,0.975,'Std Dev',color='w',transform=plt.gca().transAxes,ha='left',va='top')
+            plt.text(0.025,0.975,'Std Dev',color='gray',transform=plt.gca().transAxes,ha='left',va='top')
             
         if (stat=='skewness') :
             # Sminmax = max(abs(np.min(I)),abs(np.max(I)))
             # plt.clim(vmin=-Sminmax,vmax=Sminmax)
             # plt.set_cmap('seismic')
-            plt.text(0.025,0.975,'Skewness',color='k',transform=plt.gca().transAxes,ha='left',va='top')
+            plt.text(0.025,0.975,'Skewness',color='gray',transform=plt.gca().transAxes,ha='left',va='top')
             plt.colorbar()
             
         if (stat=='kurtosis') :
             # Kminmax = max(abs(np.min(I)),abs(np.max(I)))
             # plt.clim(vmin=0,vmax=Kminmax)
             # plt.set_cmap('seismic')
-            plt.text(0.025,0.975,'Kurtosis',color='k',transform=plt.gca().transAxes,ha='left',va='top')
+            plt.text(0.025,0.975,'Kurtosis',color='gray',transform=plt.gca().transAxes,ha='left',va='top')
             plt.colorbar()
                 
         for outfile in flatten(args.out) :
