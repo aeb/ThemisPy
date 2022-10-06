@@ -571,6 +571,7 @@ class model_polarized_image_sum(model_polarized_image) :
                 
             q = q[(image.size+2):]
 
+            
         self.set_dterms(q)
             
         if (not (self.reference_component is None)) :
@@ -929,7 +930,262 @@ class model_polarized_image_Faraday_derotated(model_polarized_image):
         self.time = time
         self.image.set_time(time)
 
+
+class model_polarized_image_single_point_statistics(model_polarized_image) :
+    """
+    Generates a :class:`model_image` object that is filed with a desired set of 
+    single-point statistics (mean, median, standard deviation, kurtosis, etc.) given
+    a specified model_image object and appropriate chain data.
+    
+    Args:
+      image (model_image): Static image from which to generate a dynamic image.
+      stats_list (list): List of strings of the statistics to generate.  Options are limited to subsets of ['mean','median','stddev','skewness','kurtosis'].
+      median_store_size (int): Number of instances about the middle to save in the construction of the median.  This is bounded from above by half of the number of chain samples.
+    """
+
+    def __init__(self,image, stats_list=None, median_store_size=16, station_names=None, themis_fft_sign=True) :
+        super().__init__(image.dterm_dict['station_names'],image.themis_fft_sign)
+
+        self.image = image
+        self.image_size = image.image_size
+        self.size += image.image_size
         
+        # Strip out D-terms on image level to avoid double counting
+        self.image.dterm_dict = {}
+        self.image.dterm_dict['station_names'] = []
+        self.image.size = self.image.image_size
+        self.image.number_of_dterms = 0
+
+        if (stats_list is None) :
+            self.stats_list = ['mean', 'stddev']
+        else :
+            self.stats_list = stats_list
+            
+        self.default_stat = self.stats_list[0]
+            
+        self.Sdict={}
+        for S in ['I','Q','U','V'] :
+            self.Sdict[S] = {}
+            for stat in self.stats_list :
+                self.Sdict[S][stat] = None
+            
+        self.stats_generated = False
+
+        self.median_store_size = median_store_size
+
+        self.chain = None
+                
+            
+    def generate(self,chain) :
+        """
+        Sets the chain from which to compute image statistics and the statistic of interest
+        to be returned on the next call to :func:`intensity_map`.
+
+        Args:
+          chain (numpy.ndarray): MCMC chain of parameters ordered [samples,parameters].
+        """
+
+        if (np.all(self.chain==chain)) :
+            return
+
+        self.chain = chain
+        
+        self.stats_generated = False
+        self.x = None
+        self.y = None
+
+
+    def set_default_stat(self,stat) :
+        """
+        Sets the statistic to be returned on the next call to :func:`intensity_map`.
+
+        Args:
+          stat (str): A statistic in the stats_list.
+        """
+
+        if (not (stat in self.stats_list)) :
+            raise RuntimeError(("Requested statistic %s is not in currently computed statistic list:"+len(self.stats_list)*" %s")%(stat,tuple(self.stats_list)))
+        else :
+            self.default_stat = stat
+
+
+    def set_median_store_size(self,median_store_size) :
+        """
+        Sets the number of images to remember in the computation of the median.  If 
+        set to None, will store all images in the chain, possibly running afoul of 
+        system memory constraints.
+
+        Args:
+          median_store_size(int): Number of images to store.
+        """
+        self.median_store_size = size
+
+        
+    def generate_stokes_map(self,x,y,kind='all',verbosity=0) :
+
+        # If new place, regenerate
+        if (np.any(self.x!=x) or np.any(self.y!=y)) :
+            self.x=x
+            self.y=y
+            self.stats_generated = False
+
+
+        if (kind=='all') :
+            Slist = ['I','Q','U','V']
+        else :
+            Slist = [kind]
+            
+        # If not generated, generate the relevant bits
+        if (self.stats_generated==False) :
+            
+            for S in Slist :
+                for stat in self.Sdict[S].keys() :
+                    self.Sdict[S][stat] = np.zeros(x.shape)
+            
+            nparams = self.chain.shape[-1]
+            # nparams = self.image_size
+            flattened_chain = self.chain.reshape([-1,nparams])
+            flattened_chain = flattened_chain[:,:self.image_size]
+
+            if (verbosity) :
+                print("Number of parameters is %i"%(nparams))
+                print("Size of chain / flattened chain :",self.chain.shape,flattened_chain.shape)
+
+            
+            # Generate room for keeping track of images for median computation.
+            if ('median' in self.stats_list) :
+                if ( self.median_store_size is None ) :
+                    nmedstore = flattened_chain.shape[0]
+                else :
+                    nmedstore = self.median_store_size
+                S_median_list = {}
+                S_median_boundary_count = {}
+                for S in Slist :
+                    S_median_list[S] = np.zeros((nmedstore+1,)+x.shape)
+                    S_median_boundary_count[S] = np.zeros((2,)+x.shape).astype(int)
+
+            # Determine which things to computes
+            compute_median = ( 'median' in self.stats_list )
+            compute_kurtosis = ( 'kurtosis' in self.stats_list )
+            compute_skewness = ( 'skewness' in self.stats_list ) or compute_kurtosis
+            compute_stddev = ( 'stddev' in self.stats_list ) or compute_skewness
+            compute_mean = ( 'mean' in self.stats_list ) or compute_stddev
+
+            
+            # Loop over chain elmenets and accumulate quantities that will be turned into the desired statisics
+            if (verbosity==0) :
+                pb = progress_bar('Stats Computation:',length=40)
+                pb.start()
+                
+            for k in range(flattened_chain.shape[0]) :
+
+                if (verbosity>0) :
+                    print("  On frame k = %i"%(k))
+                else :
+                    pb.increment(k/float(flattened_chain.shape[0]))
+                
+                self.image.generate(flattened_chain[k,:])
+                Sm = self.image.generate_stokes_map(x,y,kind=kind,verbosity=verbosity)
+                
+                if ( compute_mean ) :
+                    for j,S in enumerate(Slist) :
+                        self.Sdict[S]['mean'] = self.Sdict[S]['mean'] + Sm[j]
+
+                if ( compute_stddev ) :
+                    for j,S in enumerate(Slist) :
+                        self.Sdict[S]['stddev'] = self.Sdict[S]['stddev'] + Sm[j]**2
+
+                if ( compute_skewness ) :
+                    for j,S in enumerate(Slist) :
+                        self.Sdict[S]['skewness'] = self.Sdict[S]['skewness'] + Sm[j]**3
+
+                if ( compute_kurtosis ) :
+                    for j,S in enumerate(Slist) :
+                        self.Sdict[S]['kurtosis'] = self.Sdict[S]['kurtosis'] + Sm[j]**4
+
+                if ( compute_median ) :
+                    if (k<nmedstore) :
+                        # Just store
+                        for j,S in enumerate(Slist) :
+                            S_median_list[S][k,:,:] = Sm[j]
+                    else :
+                        for j,S in enumerate(Slist) :
+                            # Store new image
+                            S_median_list[S][-1,:,:] = Sm[j]
+                            # Sort the new list
+                            S_median_list[S] = np.sort(S_median_list[S],axis=0)
+                            # Find the new median with the boundary shifts
+                            index_median = (S_median_boundary_count[S][1,:,:]-S_median_boundary_count[S][0,:,:] + nmedstore )//2
+                            # Remove the side furthest from the median
+                            shift_median = (index_median>0.5*nmedstore).astype(int)
+                            for ix in range(x.shape[0]) :
+                                for iy in range(x.shape[1]) :
+                                    S_median_list[S][0:nmedstore,ix,iy] = S_median_list[S][(shift_median[ix,iy]):(nmedstore+shift_median[ix,iy]),ix,iy]
+                                    
+                            # Accumulate the lost side
+                            S_median_boundary_count[S][0,:,:] += (shift_median==1)
+                            S_median_boundary_count[S][1,:,:] += (shift_median==0)
+
+
+            # Finish the computation of the statistics
+            if ( compute_mean ) :
+                for S in Slist :
+                    self.Sdict[S]['mean'] = self.Sdict[S]['mean'] / float(flattened_chain.shape[0])
+
+            if ( compute_stddev ) :
+                for S in Slist :
+                    self.Sdict[S]['stddev'] = np.sqrt( self.Sdict[S]['stddev'] / float(flattened_chain.shape[0]) - self.Sdict[S]['mean']**2 )
+                
+            if ( compute_skewness ) :
+                for S in Slist :
+                    self.Sdict[S]['skewness'] = ( self.Sdict[S]['skewness'] / float(flattened_chain.shape[0]) - 3.0*self.Sdict[S]['mean']*self.Sdict[S]['stddev']**2 - self.Sdict[S]['mean']**3 )/(self.Sdict[S]['stddev']**3)
+                
+            if ( compute_kurtosis ) :
+                for S in Slist :
+                    self.Sdict[S]['kurtosis'] = ( self.Sdict[S]['kurtosis'] / float(flattened_chain.shape[0]) - 4.0*self.Sdict[S]['mean']*(self.Sdict[S]['stddev']**3)*self.Sdict[S]['skewness'] - 6.0*(self.Sdict[S]['mean']**2)*(self.Sdict[S]['stddev']**2)  - self.Sdict[S]['mean']**4 )/(self.Sdict[S]['stddev']**4)
+
+            if ( compute_median ) :
+                for S in Slist :
+                    S_median_list[S] = np.sort(S_median_list[S][:-1,:,:],axis=0)
+                    index_median = (S_median_boundary_count[S][1,:,:]-S_median_boundary_count[S][0,:,:] + nmedstore )//2
+                    for ix in range(x.shape[0]) :
+                        for iy in range(x.shape[1]) :
+                            self.Sdict[S]['median'][ix,iy] = S_median_list[S][index_median[ix,iy],ix,iy]
+            
+            if (verbosity==0) :
+                pb.finish()
+
+            self.stats_generated = True
+
+            
+        # Return desired quantities
+        S = []
+        if (('I' in kind) or (kind=='all')) :
+            S.append(self.Sdict['I'][self.default_stat])
+        if (('Q' in kind) or (kind=='all')) :
+            S.append(self.Sdict['Q'][self.default_stat])
+        if (('U' in kind) or (kind=='all')) :
+            S.append(self.Sdict['U'][self.default_stat])
+        if (('V' in kind) or (kind=='all')) :
+            S.append(self.Sdict['V'][self.default_stat])
+            
+        return S
+
+    
+    def parameter_name_list(self) :
+        return self.image.parameter_name_list()
+
+    
+    def set_time(self,time) :
+        """
+        Sets time.
+
+        Args:
+          time (float): Time in hours.
+        """
+        
+        self.time = time
+        self.image.set_time(time)
 
             
 
