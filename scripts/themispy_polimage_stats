@@ -299,7 +299,7 @@ if __name__ == "__main__" :
     # Add smoothing if desired
     if (not (args.smooth is None)) :
         model_image_unsmoothed = copy.deepcopy(model_image)
-        model_image = ty.vis.model_image_smooth(model_image_unsmoothed)
+        model_image = ty.vis.model_polarized_image_smooth(model_image_unsmoothed)
         uas2rad = np.pi/(180.0*3600e6)
         smooth_chain = np.zeros((chain.shape[0],3))
         smooth_chain[:,0] = args.smooth*uas2rad/np.sqrt(8.0*np.log(2.0))
