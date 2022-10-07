@@ -411,7 +411,8 @@ if __name__ == "__main__" :
             if (ext=='.fits' or ext=='.FITS') :
                 if (args.verbose):
                     print("  Saving FITS file.")
-                ty.vis.write_fits(x,y,I,outfile_name,args.uvfits)
+                ty.vis.write_fits(x,y,S,outfile_name,args.uvfits,verbosity=args.verbose)
+                # ty.vis.write_fits(x,y,I,outfile_name,args.uvfits)
             else :
                 if (args.verbose):
                     print("  Saving non-FITS file.")
