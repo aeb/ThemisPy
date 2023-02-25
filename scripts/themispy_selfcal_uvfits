@@ -187,6 +187,7 @@ if __name__ == "__main__" :
                 index_scan = index_all[(obs.data['time']>tlo)*(obs.data['time']<=thi)]
                 for j in index_scan :
                     obs.data[j]['time'] = 0.5*(tlo+thi)
+            obs.reorder_baselines() # Reorder the baselines now that we have fixed time stamps
             print("  # of scans / unique times: ",len(obs.scans),len(np.unique(obs.data['time'])))
     elif (not args.avg_time is None) :
         obs = obs.avg_coherent(args.avg_time)
