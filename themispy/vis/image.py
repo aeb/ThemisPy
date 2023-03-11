@@ -2130,7 +2130,7 @@ class model_image_vae_interepolated_riaf(model_image) :
         maxmins = np.loadtxt(filename)
         primitive_max = maxmins[:len(maxmins)//2]
         primitive_min = maxmins[len(maxmins)//2:]
-        primitive_names = np.array(['a','cos(theta)','h/r','nnth','kappa'])
+        primitive_names = np.array([r'$a$',r'$\cos(\theta)$',r'$h/r$',r'$n_{\rm nth}$',r'$\kappa$'])
         if (verbosity>0) :
             print("  range limits:",primitive_names,primitive_max,primitive_min)
         return np.rec.fromarrays([primitive_names,primitive_max,primitive_min],dtype=[('name',primitive_names.dtype),('max',float),('min',float)])
@@ -2218,11 +2218,11 @@ class model_image_vae_interepolated_riaf(model_image) :
         Returns:
           (numpy.ndarray): Array of primitive variables.  Note that the input and output array dimensions may differ.
         """
-        z = torch.from_numpy(self.parameters[:self.zsize].reshape((1,self.zsize))).float()
+        z = torch.from_numpy(zvals[:self.zsize].reshape((1,self.zsize))).float()
         torch.manual_seed(42)
         with torch.no_grad() :
             output = self.decoder(z)
-            pval = torch.sigmoid(output[1])
+            pval = np.array(np.squeeze(torch.sigmoid(output[1])))
         return (self.primitive_ranges['max']-self.primitive_ranges['min'])*pval + self.primitive_ranges['min']
 
     def get_primitive_chain(self,zchain,verbosity=0) :
@@ -2236,9 +2236,8 @@ class model_image_vae_interepolated_riaf(model_image) :
           (numpy.ndarray): Chain of primitive variables.  Note that the input and output array dimensions may differ.
         """
         pchain = np.zeros([zchain.shape[0],self.primitive_ranges.shape[0]])
-        k=0
-        for z in zchain :
-            pchain[k,:] = get_primitive_values(z,verbosity=verbosity)
+        for k,z in enumerate(zchain) :
+            pchain[k,:] = self.get_primitive_values(z,verbosity=verbosity)
         return pchain
                        
         
