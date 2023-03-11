@@ -50,7 +50,7 @@ def closure_phase_covariance_ordering(obs, snrcut=0, verbosity=0) :
       (numpy.recarray): An ehtim closure phase array.
     """
 
-    if (ehtim_found is False) :
+    if (ehtim_found==False) :
         raise NotImplementedError
     
     # make a copy
@@ -287,7 +287,7 @@ def reconstruct_field_rotation_angles(obs, isER5=False) :
       (numpy.ndarray,numpy.ndarray): Field rotation angles for station1 and station2 for the full data set in obs.
     """
 
-    if (ehtim_found is False) :
+    if (ehtim_found==False) :
         raise NotImplementedError
     
     
@@ -370,10 +370,10 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
       None.
     """
 
-    if (ehtim_found is False) :
+    if (ehtim_found==False) :
         raise NotImplementedError
 
-    if (astropy_found is False) :
+    if (astropy_found==False) :
         raise NotImplementedError
 
     # Check polrep
@@ -474,10 +474,10 @@ def write_visibilities(obs, outname, snrcut=0, writeFrequency=False) :
       None.
     """
 
-    if (ehtim_found is False) :
+    if (ehtim_found==False) :
         raise NotImplementedError
 
-    if (astropy_found is False) :
+    if (astropy_found==False) :
         raise NotImplementedError
 
     # Check polrep
@@ -534,10 +534,10 @@ def write_amplitudes(obs, outname, debias_amplitudes=True, snrcut=0) :
       None.
     """
 
-    if (ehtim_found is False) :
+    if (ehtim_found==False) :
         raise NotImplementedError
     
-    if (astropy_found is False) :
+    if (astropy_found==False) :
         raise NotImplementedError
 
     # Check polrep
@@ -589,10 +589,10 @@ def write_closure_phases(obs, outname, snrcut=0, keep_trivial_triangles=False, c
       None.
     """
 
-    if (ehtim_found is False) :
+    if (ehtim_found==False) :
         raise NotImplementedError
     
-    if (astropy_found is False) :
+    if (astropy_found==False) :
         raise NotImplementedError
 
     # Check polrep
