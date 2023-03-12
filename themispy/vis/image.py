@@ -2203,7 +2203,6 @@ class model_image_vae_interepolated_riaf(model_image) :
         for iz in range(self.zsize) :
             names.append(r'$z_{%i}$'%(iz))
         names.append(r'$\ln(I/I_0)$')
-        # names.append(r'\ln({\rm flux factor})')
         names.append(r'$\ln(M/M_0)$')
         names.append(r'$\phi$ (rad)')
         return names
@@ -2223,6 +2222,7 @@ class model_image_vae_interepolated_riaf(model_image) :
         with torch.no_grad() :
             output = self.decoder(z)
             pval = np.array(np.squeeze(torch.sigmoid(output[1])))
+            #pval = np.array(np.squeeze(output[1]))
         return (self.primitive_ranges['max']-self.primitive_ranges['min'])*pval + self.primitive_ranges['min']
 
     def get_primitive_chain(self,zchain,verbosity=0) :
