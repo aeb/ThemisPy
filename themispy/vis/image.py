@@ -143,7 +143,70 @@ class model_image :
         
         self.time = time
     
+
+class model_image_fits(model_image) :
+    """
+    Constructs an interface model image from a fits file to facilitate plotting comparisons.
+    Has no parameter and size=0.
+
+    Args:
+      fits_file_name (str): Name of the fits file to read.
+      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
+    """
+
+    def __init__(self, fits_file_name, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+        self.size=0
+        
+        if (ehtim_found==False) :
+            raise NotImplementedError("ERROR: model_image_fits requires ehtim to be installed.")
+
+        img = eh.image.load_fits(fits_file_name)
+        # I is intensity/uas^2
+        I = img.imarr('I') / (img.psize*rad2uas)**2
+        # x is -RA in uas
+        x = img.psize*( np.arange(img.xdim) - 0.5*(img.xdim-1) ) * rad2uas
+        # y is Dec in uas
+        y = img.psize*( np.arange(img.ydim) - 0.5*(img.ydim-1) ) * rad2uas
+
+        self.interp_obj = sint.RectBivariateSpline(x,y,I)
+        
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+        
+        I = 0*x
+        for i in range(x.shape[0]) :
+            for j in range(x.shape[1]) :
+                I[i,j] = self.interp_obj(x[i,j],y[i,j])
+        
+        if (verbosity>0) :
+            print("Filled image from fits.")
+            
+        return I
+
     
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        return [ r'$I_0$ (Jy)', r'$\sigma$ (rad)']
+
+        
 class model_image_symmetric_gaussian(model_image) :
     """
     Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_symmetric_gaussian`.
@@ -501,6 +564,7 @@ class model_image_mring(model_image) :
     and size=2+2*n.
 
     args:
+      nmodes (int): Number of modes in the mring.
       themis_fft_sign (bool): if true will assume the themis-default fft sign convention, which reflects the reconstructed image through the origin. default: true.
     """
 
@@ -588,6 +652,7 @@ class model_image_mring_floor(model_image) :
     and size=3+2*n.
 
     args:
+      nmodes (int): Number of modes in the mring.
       themis_fft_sign (bool): if true will assume the themis-default fft sign convention, which reflects the reconstructed image through the origin. default: true.
     """
 
@@ -2186,6 +2251,8 @@ class model_image_vae_interepolated_riaf(model_image) :
                     I[i,j] = interp_obj(-xxr,-yyr)
         #I = np.fliplr(I)
         I = np.fliplr(np.flipud(I.T))
+
+        I = I.astype(float)
                 
         return I
 
@@ -2221,8 +2288,8 @@ class model_image_vae_interepolated_riaf(model_image) :
         torch.manual_seed(42)
         with torch.no_grad() :
             output = self.decoder(z)
-            pval = np.array(np.squeeze(torch.sigmoid(output[1])))
-            #pval = np.array(np.squeeze(output[1]))
+            #pval = np.array(np.squeeze(torch.sigmoid(output[1])))
+            pval = np.array(np.squeeze(output[1]))
         return (self.primitive_ranges['max']-self.primitive_ranges['min'])*pval + self.primitive_ranges['min']
 
     def get_primitive_chain(self,zchain,verbosity=0) :
