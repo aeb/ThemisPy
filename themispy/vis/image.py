@@ -163,7 +163,7 @@ class model_image_fits(model_image) :
 
         img = eh.image.load_fits(fits_file_name)
         # I is intensity/uas^2
-        I = img.imarr('I') / (img.psize*rad2uas)**2
+        I = np.flipud(np.transpose(img.imarr('I'))) / (img.psize*rad2uas)**2
         # x is -RA in uas
         x = img.psize*( np.arange(img.xdim) - 0.5*(img.xdim-1) ) * rad2uas
         # y is Dec in uas
