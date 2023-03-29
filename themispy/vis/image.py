@@ -18,6 +18,15 @@ from scipy.signal import fftconvolve
 import matplotlib.pyplot as plt
 from matplotlib import cm
 
+# Read in astropy, if possible
+try:
+    import torch
+    torch_found = True
+except:
+    warnings.warn("Package torch not found.  Some functionality will not be available.  If this is necessary, please ensure torch is installed.", Warning)
+    torch_found = False
+
+
 # Some constants
 rad2uas = 180.0/np.pi * 3600 * 1e6
 uas2rad = np.pi/(180.0 * 3600 * 1e6)
@@ -134,7 +143,70 @@ class model_image :
         
         self.time = time
     
+
+class model_image_fits(model_image) :
+    """
+    Constructs an interface model image from a fits file to facilitate plotting comparisons.
+    Has no parameter and size=0.
+
+    Args:
+      fits_file_name (str): Name of the fits file to read.
+      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
+    """
+
+    def __init__(self, fits_file_name, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+        self.size=0
+        
+        if (ehtim_found==False) :
+            raise NotImplementedError("ERROR: model_image_fits requires ehtim to be installed.")
+
+        img = eh.image.load_fits(fits_file_name)
+        # I is intensity/uas^2
+        I = np.flipud(np.transpose(img.imarr('I'))) / (img.psize*rad2uas)**2
+        # x is -RA in uas
+        x = img.psize*( np.arange(img.xdim) - 0.5*(img.xdim-1) ) * rad2uas
+        # y is Dec in uas
+        y = img.psize*( np.arange(img.ydim) - 0.5*(img.ydim-1) ) * rad2uas
+
+        self.interp_obj = sint.RectBivariateSpline(x,y,I)
+        
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+        
+        I = 0*x
+        for i in range(x.shape[0]) :
+            for j in range(x.shape[1]) :
+                I[i,j] = self.interp_obj(x[i,j],y[i,j])
+        
+        if (verbosity>0) :
+            print("Filled image from fits.")
+            
+        return I
+
     
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        return [ r'$I_0$ (Jy)', r'$\sigma$ (rad)']
+
+        
 class model_image_symmetric_gaussian(model_image) :
     """
     Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_symmetric_gaussian`.
@@ -492,6 +564,7 @@ class model_image_mring(model_image) :
     and size=2+2*n.
 
     args:
+      nmodes (int): Number of modes in the mring.
       themis_fft_sign (bool): if true will assume the themis-default fft sign convention, which reflects the reconstructed image through the origin. default: true.
     """
 
@@ -579,6 +652,7 @@ class model_image_mring_floor(model_image) :
     and size=3+2*n.
 
     args:
+      nmodes (int): Number of modes in the mring.
       themis_fft_sign (bool): if true will assume the themis-default fft sign convention, which reflects the reconstructed image through the origin. default: true.
     """
 
@@ -2038,6 +2112,202 @@ class model_image_single_point_statistics(model_image) :
 
         
     
+class model_image_vae_interepolated_riaf(model_image) :
+    """
+    Machine-learning-based raster image class that is a mirror of :cpp:class:`Themis::model_image_vae_interpolated_riaf`.
+    Has parameters:
+
+    * parameters[0] ........ First latent variable
+    * parameters[1] ........ Second latent variable
+    
+    ...
+
+    * parameters[zsize-1] .. Last latent variable
+    * parameters[zsize] .... Logarithm of the flux rescaling
+    * parameters[zsize+1] .. Logarithm of the size (mass) rescaling
+    * parameters[zsize+2] .. Orientation of the x direction (rad)
+
+    and size=zsize+3, set by model definition and found in metadata.
+
+    Warning:
+      * Makes extensive use of PyTorch and will not be available if it is not installed.  Raises a NotImplementedError if unavailable.
+
+    Args:
+      metafile (str): Metadata file with image and model specification information.
+      rangefile (str): Parameter range rescaling file with limits after sigmoid renormalization.
+      modelfile (str): PyTorch model name.
+      mass (float): Default black hole mass.
+      distance (float): Fiducial black hole distance.
+      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True
+
+    Attributes:
+      (tuple,tuple,int): Image dimensions, fields of view in :math:`\\theta_g', and number of latent parameters (zsize).
+      Nx (int): Number of control points in the -RA direction.
+
+    """
+
+    def __init__(self, metafile, rangefile, modelfile, mass, distance, themis_fft_sign=True, verbosity=0) :
+        super().__init__(themis_fft_sign)
+
+        if (torch_found==False) :
+            raise NotImplementedError
+
+        self.imgsize,self.fov,self.zsize = self.read_metadata(metafile,verbosity=verbosity)
+        self.primitive_ranges = self.read_rangedata(rangefile,verbosity=verbosity)
+        self.decoder = torch.jit.load(modelfile)
+        self.mass = mass
+        self.thetag = mass/distance * rad2uas
+        self.size = self.zsize+3
+
+    def read_metadata(self, filename, verbosity=0) :
+        """
+        Reads metadata file, containing image size, fields of view, and dimension of latent space.
+        
+        Args:
+          filename (str): Name of file to read.
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (tuple,tuple,int): Image dimensions, fields of view in :math:`\\theta_g', and number of latent parameters (zsize).
+        """
+
+        if (verbosity>0) :
+            print("Reading model metadata from %s"%(filename))
+        model_vals = np.loadtxt(filename)
+        if (verbosity>0) :
+            print("  found:",model_vals)
+
+        return (int(model_vals[2]),int(model_vals[3])),(model_vals[0],model_vals[1]),int(model_vals[4])
+    
+    def read_rangedata(self, filename, verbosity=0) :
+        """
+        Reads parameter range data file, containing parameter labels, min value and max value for rescaling.
+        
+        Args:
+          filename (str): Name of file to read.
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.recarray): Structured array with primitive parameter labels, minimum value, and maximum value.
+        """
+        if (verbosity>0) :
+            print("Reading model range data from %s"%(filename))
+        maxmins = np.loadtxt(filename)
+        primitive_max = maxmins[:len(maxmins)//2]
+        primitive_min = maxmins[len(maxmins)//2:]
+        primitive_names = np.array([r'$a$',r'$\cos(\theta)$',r'$h/r$',r'$n_{\rm nth}$',r'$\kappa$'])
+        if (verbosity>0) :
+            print("  range limits:",primitive_names,primitive_max,primitive_min)
+        return np.rec.fromarrays([primitive_names,primitive_max,primitive_min],dtype=[('name',primitive_names.dtype),('max',float),('min',float)])
+
+
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+
+        # Select the latent variables
+        z = torch.from_numpy(self.parameters[:self.zsize].reshape((1,self.zsize))).float()
+
+        # Fix random seed for vae
+        torch.manual_seed(42)
+
+        # Run decoder w/o grad (for speed)
+        with torch.no_grad() :
+            output = self.decoder(z)
+            img = np.array(np.squeeze(output[0]))
+
+        # Generate native grid and normalize flux
+        xx = np.linspace(-0.5*self.fov[0],0.5*self.fov[0],self.imgsize[0]) * self.thetag * np.exp(self.parameters[self.zsize+1])
+        yy = np.linspace(-0.5*self.fov[1],0.5*self.fov[1],self.imgsize[1]) * self.thetag * np.exp(self.parameters[self.zsize+1])
+        norm = np.exp(self.parameters[self.zsize])/(np.sum(img)*(xx[1]-xx[0])*(yy[1]-yy[0]))
+        ff = norm*img
+
+        # Rotate and interpolate to desired grid
+        rotation_angle = self.parameters[self.zsize+2]
+        interp_obj = sint.RectBivariateSpline(xx,yy,ff)
+        cpa = np.cos(rotation_angle)
+        spa = np.sin(rotation_angle)
+        I = np.zeros((x.shape[0],y.shape[0]))
+        xxmin = np.min(xx)
+        xxmax = np.max(xx)
+        yymin = np.min(yy)
+        yymax = np.max(yy)
+        for i in range(x.shape[0]) :
+            for j in range(y.shape[0]) :
+                xxr = cpa*x[i,j] + spa*y[i,j]
+                yyr = -spa*x[i,j] + cpa*y[i,j]
+                if ( (xxr<xxmin) or (xxr>xxmax) or (yyr<yymin) or (yyr>yymax) ) :
+                    I[i,j] = 0
+                else :
+                    I[i,j] = interp_obj(-xxr,-yyr)
+        #I = np.fliplr(I)
+        I = np.fliplr(np.flipud(I.T))
+
+        I = I.astype(float)
+                
+        return I
+
+
+    
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        names = []
+        for iz in range(self.zsize) :
+            names.append(r'$z_{%i}$'%(iz))
+        names.append(r'$\ln(I/I_0)$')
+        names.append(r'$\ln(M/M_0)$')
+        names.append(r'$\phi$ (rad)')
+        return names
+
+    def get_primitive_values(self,zvals,verbosity=0) :
+        """
+        Transforms the latent parameters into the desired primitive parameters.
+
+        Args:
+          zvals (numpy.ndarray): Array of latent variable values of length zsize.
+
+        Returns:
+          (numpy.ndarray): Array of primitive variables.  Note that the input and output array dimensions may differ.
+        """
+        z = torch.from_numpy(zvals[:self.zsize].reshape((1,self.zsize))).float()
+        torch.manual_seed(42)
+        with torch.no_grad() :
+            output = self.decoder(z)
+            #pval = np.array(np.squeeze(torch.sigmoid(output[1])))
+            pval = np.array(np.squeeze(output[1]))
+        return (self.primitive_ranges['max']-self.primitive_ranges['min'])*pval + self.primitive_ranges['min']
+
+    def get_primitive_chain(self,zchain,verbosity=0) :
+        """
+        Transforms a chain of the latent parameters into a chain of the desired primitive parameters.
+
+        Args:
+          zchain (numpy.ndarray): Chain of latent variable values of length zsize.
+
+        Returns:
+          (numpy.ndarray): Chain of primitive variables.  Note that the input and output array dimensions may differ.
+        """
+        pchain = np.zeros([zchain.shape[0],self.primitive_ranges.shape[0]])
+        for k,z in enumerate(zchain) :
+            pchain[k,:] = self.get_primitive_values(z,verbosity=verbosity)
+        return pchain
+                       
+        
 def expand_model_glob_ccm_mexico(model_glob) :
     """
     Expands an abbreviated model glob as produced by the ccm_mexico driver 
@@ -2429,7 +2699,10 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
         subimage,_ = construct_model_image_from_tagv1(subtag,verbosity=verbosity)
         return model_image_fourier_variable(subimage,orders,reference_time,end_time),tag[(len(subtag)+3):]
 
-
+    elif (tag[0].split()[0]=='model_image_vae_interpolated_riaf') :
+        toks = tag[0].split()
+        return model_image_vae_interepolated_riaf(toks[4],toks[5],toks[6],float(toks[2]),float(toks[3])),tag[1:]
+    
     else :
         raise RuntimeError("Unrecognized model tag %s"%(tag[0]))
 
