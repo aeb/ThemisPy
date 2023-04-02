@@ -111,6 +111,15 @@ themispy_polimage_fit
    :nodefault:
 
 
+themispy_polimage_stats
+----------------------------------
+.. argparse::
+   :filename: ../scripts/themispy_polimage_stats
+   :func: set_parser
+   :prog: themispy_polimage_stats
+   :nodefault:
+
+
 themispy_resample
 ----------------------------------
 .. argparse::

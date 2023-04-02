@@ -15,6 +15,8 @@ modvis
    Model image visulalization
 chain
    Tools for navigating and modifying chains
+scoring
+   Tools for manipulating the results of library scoring analyses
 """
 
 __author__="Themis Development Team"
@@ -23,7 +25,7 @@ __bibtex__ = r"""@Article{Themis:2020,
 }"""
 
 
-__all__=['chain', 'diag', 'data', 'vis']
+__all__=['chain', 'diag', 'data', 'vis', 'scoring']
 from . import *
 
 

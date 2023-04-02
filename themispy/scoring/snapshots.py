@@ -68,8 +68,8 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
     Args:
       ais_name (str): Name of a file containing the AIS fit information. If None, some functions will not be available. Default: None.
       snapshot_scoring_name (str): Name of a file containing the snapshot scoring fit information. If None, some functions will not be available. Default: None.
-      flux_scale (float): The total image flux assumed during GRMHD library construction. Default: 0.6.
-      mass_scale (float): The black hole mass in 1e9 solar masses assumed during GRMHD library construction. Default: 6.5.
+      eht_data_type (str): Type of EHT data being fitted. Options include 'V' (complex visibilities) and 'VACP' (visibility amplitudes and closure phases). Default: 'V'.
+      themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.
       verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.
 
     Attributes:
@@ -190,7 +190,7 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
 
         Args:
           method (str): Scoring method. Availiable options are listed in AIS_score.
-          ais_quality_statistic (str): Name of the quality statistic on which to cut. Acceptable names are listed in AIS_score. Default: 'ChiSquared'.
+          ais_quality_statistic (str): Name of the quality statistic on which to cut. Acceptable names are listed in :func:`AIS_score`. Default: 'ChiSquared'.
           binary_ais_cut (float): If not None, the evidence will be a step function in the AIS score, zero below the cut and unity above it.  If None, the evidence will be set to the AIS score. Default: None.
           ebpc_quality_cut (float): A number between (0,1] indicating the fraction of data to keep. Default: 0.5.
           ebpc_quality_statistic (str): Name of the quality statistic on which to cut. Acceptable names are 'Likelihood' and 'ChiSquared'. Default: 'Likelihood'.
@@ -231,7 +231,7 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
         Computes and returns the AIS score using the prescribed method.
 
         Warning:
-          * Two-sample KS tests with one samples is poorly defined and may not lead to sensible behavior.  Generally, the KS test appears to be a poor metric for assessing ifthe recovered quality statistic (e.g., reduced chi-squared) is drawn from the theoretical distribution.  Because the theoretical distribution is (u,v)-coverage-dependent, combiining multiple observations is not a viable path to improving the applicability of the KS test.
+          * The two-sample KS test with one sample is poorly defined and may not lead to sensible behavior.  Generally, the KS test appears to be a poor metric for assessing if the recovered quality statistic (e.g., reduced chi-squared) is drawn from the theoretical distribution.  Because the theoretical distribution is (u,v)-coverage-dependent, combining multiple observations is not a viable path to improving the applicability of the KS test.
 
         Args:
           method (str): Scoring method, availiable types are 'double' (double-sided p-value), 'high' (high-sided p-value), and 'KS' (Kolmogorov-Smirnov test).
@@ -430,7 +430,6 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
           p1 (float,numpy.array): List of first variable values at which to evaluate the posterior.
           p2 (float,numpy.array): List of second variable values at which to evaluate the posterior, if >1D. Default: None.
           p3 (float,numpy.array): List of third variable values at which to evaluate the posterior, if >2D. Default: None.
-          norm_size (int): Number of points at which to evaluate the posterior along each direction to normalize. If None, will use 1024 in 1D and 512 along each dimension in 2D. Default: None.
           verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.
 
         Returns:
@@ -527,7 +526,7 @@ class MultiEpochSnapshotPosterior(SnapshotPosterior) :
     Fixes the (spin) PA and M to be constant across all epochs (i.e., no precession).
 
     Args:
-      single_epoch_list (SingleEpochSnapshotPosterior): A list of single-epoch snapshot posterior objects containing the comparisons to be combined.
+      single_epoch_list (SingleEpochSnapshotPosterior): A list of :class:`SingleEpochSnapshotPosterior` objects containing the comparisons to be combined.
       verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.
 
     """
@@ -544,13 +543,13 @@ class MultiEpochSnapshotPosterior(SnapshotPosterior) :
         one step.  These are then returned using access functionis.
 
         Warning:
-          * Two-sample KS tests with one samples is poorly defined and may not lead to sensible behavior.  Generally, the KS test appears to be a poor metric for assessing ifthe recovered quality statistic (e.g., reduced chi-squared) is drawn from the theoretical distribution.  Because the theoretical distribution is (u,v)-coverage-dependent, combiining multiple observations is not a viable path to improving the applicability of the KS test.
+          * The two-sample KS test with one sample is poorly defined and may not lead to sensible behavior.  Generally, the KS test appears to be a poor metric for assessing if the recovered quality statistic (e.g., reduced chi-squared) is drawn from the theoretical distribution.  Because the theoretical distribution is (u,v)-coverage-dependent, combining multiple observations is not a viable path to improving the applicability of the KS test.
           * By default, combines AIS scores from single-epoch as if they are proportional to the Bayesian evidence.  If a binary choice is desired, set binary_ais_cut to appropriate value.
           * Treats ensemble-based posterior estimates as true posterior.
 
         Args:
           PA_size (int): Number of PA values with which to span [-180,180).
-          M_size (int): Number of M values with which to span [0,10) x 1e9 Msun.
+          M_size (int): Number of M values with which to span [0,10) uas.
           generate_single_epochs (bool): If True, will generate the single-epoch snapshot posteriors.  This should be the desired behavior.  However, if the single-epoch snapshot posteriors must be separately generated, this argument may be set to False. Default: True.
           verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.
           **kwargs (dict): Dictionary of key-word arguments to be passed to the SingleEpochSnapshotPosterior objects generate function.
@@ -678,7 +677,7 @@ class MultiModelSnapshotPosterior(SnapshotPosterior) :
     over it.
     
     Args:
-      snapshot_list (SingleEpochSnapshotPosterior): A list of single-epoch snapshot posterior objects containing the comparisons to be combined.
+      snapshot_list (:class:`SnapshotPosterior`): A list of single-epoch or multi-epoch snapshot posterior objects containing the comparisons to be combined.
       verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.
     
     """
@@ -700,7 +699,7 @@ class MultiModelSnapshotPosterior(SnapshotPosterior) :
 
         Args:
           PA_size (int): Number of PA values with which to span [-180,180).
-          M_size (int): Number of M values with which to span [0,10) x 1e9 Msun.
+          M_size (int): Number of M values with which to span [0,10) uas.
           generate_snapshots (bool): If True, will generate the snapshot posteriors.  This should be the desired behavior.  However, if the snapshot posteriors must be separately generated, this argument may be set to False. Default: True.
           verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.
           **kwargs (dict): Dictionary of key-word arguments to be passed to the SnapshotPosterior objects generate function.
@@ -760,7 +759,6 @@ class MultiModelSnapshotPosterior(SnapshotPosterior) :
     def model_evidences(self,relative_to_max=False,verbosity=0,**kwargs) :
         """
         Access to individual model evidence list.
-
 
         Args:
           relative_to_max (bool): If True, normalizes relative to the maximum value. Default: False.
