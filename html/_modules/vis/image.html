@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.image &mdash; ThemisPy 0.3.0+88.g1039f7b documentation</title>
+  <title>vis.image &mdash; ThemisPy 0.3.0+112.g7d69368.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+88.g1039f7b documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+112.g7d69368.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.0+88.g1039f7b
+                0.3.0+112.g7d69368.dirty
               </div>
             
           
@@ -166,6 +166,15 @@
 <span class="kn">from</span> <span class="nn">scipy.signal</span> <span class="kn">import</span> <span class="n">fftconvolve</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
+
+<span class="c1"># Read in astropy, if possible</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">torch</span>
+    <span class="n">torch_found</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Package torch not found.  Some functionality will not be available.  If this is necessary, please ensure torch is installed.&quot;</span><span class="p">,</span> <span class="ne">Warning</span><span class="p">)</span>
+    <span class="n">torch_found</span> <span class="o">=</span> <span class="kc">False</span>
+
 
 <span class="c1"># Some constants</span>
 <span class="n">rad2uas</span> <span class="o">=</span> <span class="mf">180.0</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mi">3600</span> <span class="o">*</span> <span class="mf">1e6</span>
@@ -283,7 +292,70 @@
         
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span></div></div>
     
+
+<div class="viewcode-block" id="model_image_fits"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_fits">[docs]</a><span class="k">class</span> <span class="nc">model_image_fits</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constructs an interface model image from a fits file to facilitate plotting comparisons.</span>
+<span class="sd">    Has no parameter and size=0.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      fits_file_name (str): Name of the fits file to read.</span>
+<span class="sd">      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fits_file_name</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">themis_fft_sign</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="o">=</span><span class="mi">0</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;ERROR: model_image_fits requires ehtim to be installed.&quot;</span><span class="p">)</span>
+
+        <span class="n">img</span> <span class="o">=</span> <span class="n">eh</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">load_fits</span><span class="p">(</span><span class="n">fits_file_name</span><span class="p">)</span>
+        <span class="c1"># I is intensity/uas^2</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">imarr</span><span class="p">(</span><span class="s1">&#39;I&#39;</span><span class="p">)))</span> <span class="o">/</span> <span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">psize</span><span class="o">*</span><span class="n">rad2uas</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+        <span class="c1"># x is -RA in uas</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">psize</span><span class="o">*</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">xdim</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">xdim</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">)</span> <span class="o">*</span> <span class="n">rad2uas</span>
+        <span class="c1"># y is Dec in uas</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">psize</span><span class="o">*</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">ydim</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">ydim</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">)</span> <span class="o">*</span> <span class="n">rad2uas</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">interp_obj</span> <span class="o">=</span> <span class="n">sint</span><span class="o">.</span><span class="n">RectBivariateSpline</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">I</span><span class="p">)</span>
+        
+        
+<div class="viewcode-block" id="model_image_fits.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_fits.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="n">I</span> <span class="o">=</span> <span class="mi">0</span><span class="o">*</span><span class="n">x</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">:</span>
+                <span class="n">I</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interp_obj</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">],</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">])</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Filled image from fits.&quot;</span><span class="p">)</span>
+            
+        <span class="k">return</span> <span class="n">I</span></div>
+
     
+<div class="viewcode-block" id="model_image_fits.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_fits.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producess a lists parameter names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">return</span> <span class="p">[</span> <span class="sa">r</span><span class="s1">&#39;$I_0$ (Jy)&#39;</span><span class="p">,</span> <span class="sa">r</span><span class="s1">&#39;$\sigma$ (rad)&#39;</span><span class="p">]</span></div></div>
+
+        
 <div class="viewcode-block" id="model_image_symmetric_gaussian"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_symmetric_gaussian">[docs]</a><span class="k">class</span> <span class="nc">model_image_symmetric_gaussian</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_symmetric_gaussian`.</span>
@@ -641,6 +713,7 @@
 <span class="sd">    and size=2+2*n.</span>
 
 <span class="sd">    args:</span>
+<span class="sd">      nmodes (int): Number of modes in the mring.</span>
 <span class="sd">      themis_fft_sign (bool): if true will assume the themis-default fft sign convention, which reflects the reconstructed image through the origin. default: true.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -728,6 +801,7 @@
 <span class="sd">    and size=3+2*n.</span>
 
 <span class="sd">    args:</span>
+<span class="sd">      nmodes (int): Number of modes in the mring.</span>
 <span class="sd">      themis_fft_sign (bool): if true will assume the themis-default fft sign convention, which reflects the reconstructed image through the origin. default: true.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
@@ -2187,6 +2261,202 @@
 
         
     
+<div class="viewcode-block" id="model_image_vae_interepolated_riaf"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_vae_interepolated_riaf">[docs]</a><span class="k">class</span> <span class="nc">model_image_vae_interepolated_riaf</span><span class="p">(</span><span class="n">model_image</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Machine-learning-based raster image class that is a mirror of :cpp:class:`Themis::model_image_vae_interpolated_riaf`.</span>
+<span class="sd">    Has parameters:</span>
+
+<span class="sd">    * parameters[0] ........ First latent variable</span>
+<span class="sd">    * parameters[1] ........ Second latent variable</span>
+<span class="sd">    </span>
+<span class="sd">    ...</span>
+
+<span class="sd">    * parameters[zsize-1] .. Last latent variable</span>
+<span class="sd">    * parameters[zsize] .... Logarithm of the flux rescaling</span>
+<span class="sd">    * parameters[zsize+1] .. Logarithm of the size (mass) rescaling</span>
+<span class="sd">    * parameters[zsize+2] .. Orientation of the x direction (rad)</span>
+
+<span class="sd">    and size=zsize+3, set by model definition and found in metadata.</span>
+
+<span class="sd">    Warning:</span>
+<span class="sd">      * Makes extensive use of PyTorch and will not be available if it is not installed.  Raises a NotImplementedError if unavailable.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      metafile (str): Metadata file with image and model specification information.</span>
+<span class="sd">      rangefile (str): Parameter range rescaling file with limits after sigmoid renormalization.</span>
+<span class="sd">      modelfile (str): PyTorch model name.</span>
+<span class="sd">      mass (float): Default black hole mass.</span>
+<span class="sd">      distance (float): Fiducial black hole distance.</span>
+<span class="sd">      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">      (tuple,tuple,int): Image dimensions, fields of view in :math:`\\theta_g&#39;, and number of latent parameters (zsize).</span>
+<span class="sd">      Nx (int): Number of control points in the -RA direction.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">metafile</span><span class="p">,</span> <span class="n">rangefile</span><span class="p">,</span> <span class="n">modelfile</span><span class="p">,</span> <span class="n">mass</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">themis_fft_sign</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">torch_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">imgsize</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">zsize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_metadata</span><span class="p">(</span><span class="n">metafile</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">primitive_ranges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_rangedata</span><span class="p">(</span><span class="n">rangefile</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">jit</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">modelfile</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mass</span> <span class="o">=</span> <span class="n">mass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thetag</span> <span class="o">=</span> <span class="n">mass</span><span class="o">/</span><span class="n">distance</span> <span class="o">*</span> <span class="n">rad2uas</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">zsize</span><span class="o">+</span><span class="mi">3</span>
+
+<div class="viewcode-block" id="model_image_vae_interepolated_riaf.read_metadata"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_vae_interepolated_riaf.read_metadata">[docs]</a>    <span class="k">def</span> <span class="nf">read_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads metadata file, containing image size, fields of view, and dimension of latent space.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">          filename (str): Name of file to read.</span>
+<span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (tuple,tuple,int): Image dimensions, fields of view in :math:`\\theta_g&#39;, and number of latent parameters (zsize).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reading model metadata from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+        <span class="n">model_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  found:&quot;</span><span class="p">,</span><span class="n">model_vals</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">model_vals</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">model_vals</span><span class="p">[</span><span class="mi">3</span><span class="p">])),(</span><span class="n">model_vals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">model_vals</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span><span class="nb">int</span><span class="p">(</span><span class="n">model_vals</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span></div>
+    
+<div class="viewcode-block" id="model_image_vae_interepolated_riaf.read_rangedata"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_vae_interepolated_riaf.read_rangedata">[docs]</a>    <span class="k">def</span> <span class="nf">read_rangedata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads parameter range data file, containing parameter labels, min value and max value for rescaling.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">          filename (str): Name of file to read.</span>
+<span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (numpy.recarray): Structured array with primitive parameter labels, minimum value, and maximum value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reading model range data from </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">filename</span><span class="p">))</span>
+        <span class="n">maxmins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        <span class="n">primitive_max</span> <span class="o">=</span> <span class="n">maxmins</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">maxmins</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">primitive_min</span> <span class="o">=</span> <span class="n">maxmins</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">maxmins</span><span class="p">)</span><span class="o">//</span><span class="mi">2</span><span class="p">:]</span>
+        <span class="n">primitive_names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="sa">r</span><span class="s1">&#39;$a$&#39;</span><span class="p">,</span><span class="sa">r</span><span class="s1">&#39;$\cos(\theta)$&#39;</span><span class="p">,</span><span class="sa">r</span><span class="s1">&#39;$h/r$&#39;</span><span class="p">,</span><span class="sa">r</span><span class="s1">&#39;$n_{\rm nth}$&#39;</span><span class="p">,</span><span class="sa">r</span><span class="s1">&#39;$\kappa$&#39;</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  range limits:&quot;</span><span class="p">,</span><span class="n">primitive_names</span><span class="p">,</span><span class="n">primitive_max</span><span class="p">,</span><span class="n">primitive_min</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">rec</span><span class="o">.</span><span class="n">fromarrays</span><span class="p">([</span><span class="n">primitive_names</span><span class="p">,</span><span class="n">primitive_max</span><span class="p">,</span><span class="n">primitive_min</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="p">[(</span><span class="s1">&#39;name&#39;</span><span class="p">,</span><span class="n">primitive_names</span><span class="o">.</span><span class="n">dtype</span><span class="p">),(</span><span class="s1">&#39;max&#39;</span><span class="p">,</span><span class="nb">float</span><span class="p">),(</span><span class="s1">&#39;min&#39;</span><span class="p">,</span><span class="nb">float</span><span class="p">)])</span></div>
+
+
+<div class="viewcode-block" id="model_image_vae_interepolated_riaf.generate_intensity_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_vae_interepolated_riaf.generate_intensity_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_intensity_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).</span>
+<span class="sd">          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Select the latent variables</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">zsize</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">zsize</span><span class="p">)))</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+
+        <span class="c1"># Fix random seed for vae</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+        <span class="c1"># Run decoder w/o grad (for speed)</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span> <span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">output</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="c1"># Generate native grid and normalize flux</span>
+        <span class="n">xx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">imgsize</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetag</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">zsize</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="mf">0.5</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">fov</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">imgsize</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">thetag</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">zsize</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">zsize</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">xx</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">xx</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">yy</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">yy</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">ff</span> <span class="o">=</span> <span class="n">norm</span><span class="o">*</span><span class="n">img</span>
+
+        <span class="c1"># Rotate and interpolate to desired grid</span>
+        <span class="n">rotation_angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">zsize</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">interp_obj</span> <span class="o">=</span> <span class="n">sint</span><span class="o">.</span><span class="n">RectBivariateSpline</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">,</span><span class="n">ff</span><span class="p">)</span>
+        <span class="n">cpa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
+        <span class="n">spa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">rotation_angle</span><span class="p">)</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">xxmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+        <span class="n">xxmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">xx</span><span class="p">)</span>
+        <span class="n">yymin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">yy</span><span class="p">)</span>
+        <span class="n">yymax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">yy</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="p">:</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="p">:</span>
+                <span class="n">xxr</span> <span class="o">=</span> <span class="n">cpa</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">spa</span><span class="o">*</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">yyr</span> <span class="o">=</span> <span class="o">-</span><span class="n">spa</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">cpa</span><span class="o">*</span><span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="n">xxr</span><span class="o">&lt;</span><span class="n">xxmin</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">xxr</span><span class="o">&gt;</span><span class="n">xxmax</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">yyr</span><span class="o">&lt;</span><span class="n">yymin</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">yyr</span><span class="o">&gt;</span><span class="n">yymax</span><span class="p">)</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="n">I</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">else</span> <span class="p">:</span>
+                    <span class="n">I</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">interp_obj</span><span class="p">(</span><span class="o">-</span><span class="n">xxr</span><span class="p">,</span><span class="o">-</span><span class="n">yyr</span><span class="p">)</span>
+        <span class="c1">#I = np.fliplr(I)</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fliplr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">T</span><span class="p">))</span>
+
+        <span class="n">I</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+                
+        <span class="k">return</span> <span class="n">I</span></div>
+
+
+    
+<div class="viewcode-block" id="model_image_vae_interepolated_riaf.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_vae_interepolated_riaf.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Producess a lists parameter names.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (list) List of strings of variable names.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">iz</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">zsize</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$z_{</span><span class="si">%i</span><span class="s1">}$&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">iz</span><span class="p">))</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\ln(I/I_0)$&#39;</span><span class="p">)</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\ln(M/M_0)$&#39;</span><span class="p">)</span>
+        <span class="n">names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\phi$ (rad)&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">names</span></div>
+
+<div class="viewcode-block" id="model_image_vae_interepolated_riaf.get_primitive_values"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_vae_interepolated_riaf.get_primitive_values">[docs]</a>    <span class="k">def</span> <span class="nf">get_primitive_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zvals</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transforms the latent parameters into the desired primitive parameters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          zvals (numpy.ndarray): Array of latent variable values of length zsize.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (numpy.ndarray): Array of primitive variables.  Note that the input and output array dimensions may differ.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">zvals</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">zsize</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">zsize</span><span class="p">)))</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span> <span class="p">:</span>
+            <span class="n">output</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+            <span class="c1">#pval = np.array(np.squeeze(torch.sigmoid(output[1])))</span>
+            <span class="n">pval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="n">output</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">primitive_ranges</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">]</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">primitive_ranges</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">])</span><span class="o">*</span><span class="n">pval</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">primitive_ranges</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="model_image_vae_interepolated_riaf.get_primitive_chain"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.model_image_vae_interepolated_riaf.get_primitive_chain">[docs]</a>    <span class="k">def</span> <span class="nf">get_primitive_chain</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">zchain</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Transforms a chain of the latent parameters into a chain of the desired primitive parameters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          zchain (numpy.ndarray): Chain of latent variable values of length zsize.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (numpy.ndarray): Chain of primitive variables.  Note that the input and output array dimensions may differ.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pchain</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">zchain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">primitive_ranges</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">z</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">zchain</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">pchain</span><span class="p">[</span><span class="n">k</span><span class="p">,:]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_primitive_values</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pchain</span></div></div>
+                       
+        
 <div class="viewcode-block" id="expand_model_glob_ccm_mexico"><a class="viewcode-back" href="../../docs/src/vis.html#vis.image.expand_model_glob_ccm_mexico">[docs]</a><span class="k">def</span> <span class="nf">expand_model_glob_ccm_mexico</span><span class="p">(</span><span class="n">model_glob</span><span class="p">)</span> <span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Expands an abbreviated model glob as produced by the ccm_mexico driver </span>
@@ -2578,7 +2848,10 @@
         <span class="n">subimage</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">construct_model_image_from_tagv1</span><span class="p">(</span><span class="n">subtag</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">model_image_fourier_variable</span><span class="p">(</span><span class="n">subimage</span><span class="p">,</span><span class="n">orders</span><span class="p">,</span><span class="n">reference_time</span><span class="p">,</span><span class="n">end_time</span><span class="p">),</span><span class="n">tag</span><span class="p">[(</span><span class="nb">len</span><span class="p">(</span><span class="n">subtag</span><span class="p">)</span><span class="o">+</span><span class="mi">3</span><span class="p">):]</span>
 
-
+    <span class="k">elif</span> <span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;model_image_vae_interpolated_riaf&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">toks</span> <span class="o">=</span> <span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">model_image_vae_interepolated_riaf</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span><span class="n">toks</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span><span class="n">toks</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span><span class="n">tag</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+    
     <span class="k">else</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Unrecognized model tag </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">tag</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span></div>
 
@@ -2769,7 +3042,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+88.g1039f7b',
+            VERSION:'0.3.0+112.g7d69368.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

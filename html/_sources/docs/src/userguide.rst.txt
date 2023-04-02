@@ -29,6 +29,7 @@ Individual package documentation organized by area.
    ./data
    ./diag
    ./vis
+   ./scoring
    ./utils
 
 

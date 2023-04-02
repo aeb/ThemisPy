@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>vis.polimage &mdash; ThemisPy 0.3.0+88.g1039f7b documentation</title>
+  <title>vis.polimage &mdash; ThemisPy 0.3.0+112.g7d69368.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+88.g1039f7b documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+112.g7d69368.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.0+88.g1039f7b
+                0.3.0+112.g7d69368.dirty
               </div>
             
           
@@ -708,6 +708,7 @@
 
         <span class="n">q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">image</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_list</span><span class="p">)</span> <span class="p">:</span>
+
             <span class="n">image</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">q</span><span class="p">[:</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">])</span>
 
             <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">offset_coordinates</span><span class="o">==</span><span class="s1">&#39;Cartesian&#39;</span><span class="p">)</span> <span class="p">:</span>
@@ -719,6 +720,7 @@
                 
             <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[(</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">2</span><span class="p">):]</span>
 
+            
         <span class="bp">self</span><span class="o">.</span><span class="n">set_dterms</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
             
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_component</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">))</span> <span class="p">:</span>
@@ -958,15 +960,21 @@
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">,</span> <span class="n">RM</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">wavelength</span><span class="o">=</span><span class="mf">1.3e-3</span><span class="p">,</span> <span class="n">station_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">station_names</span><span class="p">,</span><span class="n">themis_fft_sign</span><span class="p">)</span>
 
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">dterm_dict</span><span class="p">[</span><span class="s1">&#39;station_names&#39;</span><span class="p">],</span><span class="n">image</span><span class="o">.</span><span class="n">themis_fft_sign</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">RM</span> <span class="o">=</span> <span class="n">RM</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">wavelength</span> <span class="o">=</span> <span class="n">wavelength</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">image_size</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">image_size</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">+=</span> <span class="n">image</span><span class="o">.</span><span class="n">image_size</span>
+        
+        <span class="c1"># Strip out D-terms on image level to avoid double counting</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">dterm_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">dterm_dict</span><span class="p">[</span><span class="s1">&#39;station_names&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">number_of_dterms</span> <span class="o">=</span> <span class="mi">0</span>
 
-
+        
 <div class="viewcode-block" id="model_polarized_image_Faraday_derotated.set_RM"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.model_polarized_image_Faraday_derotated.set_RM">[docs]</a>    <span class="k">def</span> <span class="nf">set_RM</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">RM</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Sets the Faraday rotation measure in :math:`rad m^{-2}`.</span>
@@ -1007,7 +1015,7 @@
 <span class="sd">        Returns:</span>
 <span class="sd">          None        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        
+
         <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span><span class="o">&lt;</span><span class="bp">self</span><span class="o">.</span><span class="n">size</span><span class="p">)</span> <span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Parameter list is inconsistent with the number of parameters expected.&quot;</span><span class="p">)</span>
@@ -1071,7 +1079,262 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="n">time</span><span class="p">)</span></div></div>
 
+
+<div class="viewcode-block" id="model_polarized_image_single_point_statistics"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.model_polarized_image_single_point_statistics">[docs]</a><span class="k">class</span> <span class="nc">model_polarized_image_single_point_statistics</span><span class="p">(</span><span class="n">model_polarized_image</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Generates a :class:`model_image` object that is filed with a desired set of </span>
+<span class="sd">    single-point statistics (mean, median, standard deviation, kurtosis, etc.) given</span>
+<span class="sd">    a specified model_image object and appropriate chain data.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">      image (model_image): Static image from which to generate a dynamic image.</span>
+<span class="sd">      stats_list (list): List of strings of the statistics to generate.  Options are limited to subsets of [&#39;mean&#39;,&#39;median&#39;,&#39;stddev&#39;,&#39;skewness&#39;,&#39;kurtosis&#39;].</span>
+<span class="sd">      median_store_size (int): Number of instances about the middle to save in the construction of the median.  This is bounded from above by half of the number of chain samples.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">image</span><span class="p">,</span> <span class="n">stats_list</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">median_store_size</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">station_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">themis_fft_sign</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">dterm_dict</span><span class="p">[</span><span class="s1">&#39;station_names&#39;</span><span class="p">],</span><span class="n">image</span><span class="o">.</span><span class="n">themis_fft_sign</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_size</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">image_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">+=</span> <span class="n">image</span><span class="o">.</span><span class="n">image_size</span>
         
+        <span class="c1"># Strip out D-terms on image level to avoid double counting</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">dterm_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">dterm_dict</span><span class="p">[</span><span class="s1">&#39;station_names&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">image_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">number_of_dterms</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">stats_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">,</span> <span class="s1">&#39;stddev&#39;</span><span class="p">]</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats_list</span> <span class="o">=</span> <span class="n">stats_list</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_stat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="o">=</span><span class="p">{}</span>
+        <span class="k">for</span> <span class="n">S</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;I&#39;</span><span class="p">,</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span><span class="s1">&#39;U&#39;</span><span class="p">,</span><span class="s1">&#39;V&#39;</span><span class="p">]</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats_list</span> <span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="n">stat</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats_generated</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">median_store_size</span> <span class="o">=</span> <span class="n">median_store_size</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">chain</span> <span class="o">=</span> <span class="kc">None</span>
+                
+            
+<div class="viewcode-block" id="model_polarized_image_single_point_statistics.generate"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.model_polarized_image_single_point_statistics.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">chain</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the chain from which to compute image statistics and the statistic of interest</span>
+<span class="sd">        to be returned on the next call to :func:`intensity_map`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          chain (numpy.ndarray): MCMC chain of parameters ordered [samples,parameters].</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chain</span><span class="o">==</span><span class="n">chain</span><span class="p">))</span> <span class="p">:</span>
+            <span class="k">return</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">chain</span> <span class="o">=</span> <span class="n">chain</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats_generated</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="model_polarized_image_single_point_statistics.set_default_stat"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.model_polarized_image_single_point_statistics.set_default_stat">[docs]</a>    <span class="k">def</span> <span class="nf">set_default_stat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">stat</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the statistic to be returned on the next call to :func:`intensity_map`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          stat (str): A statistic in the stats_list.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="p">(</span><span class="n">stat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats_list</span><span class="p">))</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">((</span><span class="s2">&quot;Requested statistic </span><span class="si">%s</span><span class="s2"> is not in currently computed statistic list:&quot;</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats_list</span><span class="p">)</span><span class="o">*</span><span class="s2">&quot; </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">%</span><span class="p">(</span><span class="n">stat</span><span class="p">,</span><span class="nb">tuple</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats_list</span><span class="p">)))</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">default_stat</span> <span class="o">=</span> <span class="n">stat</span></div>
+
+
+<div class="viewcode-block" id="model_polarized_image_single_point_statistics.set_median_store_size"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.model_polarized_image_single_point_statistics.set_median_store_size">[docs]</a>    <span class="k">def</span> <span class="nf">set_median_store_size</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">median_store_size</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets the number of images to remember in the computation of the median.  If </span>
+<span class="sd">        set to None, will store all images in the chain, possibly running afoul of </span>
+<span class="sd">        system memory constraints.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          median_store_size(int): Number of images to store.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">median_store_size</span> <span class="o">=</span> <span class="n">size</span></div>
+
+        
+<div class="viewcode-block" id="model_polarized_image_single_point_statistics.generate_stokes_map"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.model_polarized_image_single_point_statistics.generate_stokes_map">[docs]</a>    <span class="k">def</span> <span class="nf">generate_stokes_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">kind</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+
+        <span class="c1"># If new place, regenerate</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">!=</span><span class="n">x</span><span class="p">)</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">!=</span><span class="n">y</span><span class="p">))</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="o">=</span><span class="n">x</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="o">=</span><span class="n">y</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats_generated</span> <span class="o">=</span> <span class="kc">False</span>
+
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">kind</span><span class="o">==</span><span class="s1">&#39;all&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">Slist</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;I&#39;</span><span class="p">,</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span><span class="s1">&#39;U&#39;</span><span class="p">,</span><span class="s1">&#39;V&#39;</span><span class="p">]</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">Slist</span> <span class="o">=</span> <span class="p">[</span><span class="n">kind</span><span class="p">]</span>
+            
+        <span class="c1"># If not generated, generate the relevant bits</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats_generated</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+            
+            <span class="k">for</span> <span class="n">S</span> <span class="ow">in</span> <span class="n">Slist</span> <span class="p">:</span>
+                <span class="k">for</span> <span class="n">stat</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="n">stat</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            
+            <span class="n">nparams</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># nparams = self.image_size</span>
+            <span class="n">flattened_chain</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">nparams</span><span class="p">])</span>
+            <span class="n">flattened_chain</span> <span class="o">=</span> <span class="n">flattened_chain</span><span class="p">[:,:</span><span class="bp">self</span><span class="o">.</span><span class="n">image_size</span><span class="p">]</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="p">)</span> <span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Number of parameters is </span><span class="si">%i</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">nparams</span><span class="p">))</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Size of chain / flattened chain :&quot;</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">chain</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">flattened_chain</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+            
+            <span class="c1"># Generate room for keeping track of images for median computation.</span>
+            <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;median&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats_list</span><span class="p">)</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">median_store_size</span> <span class="ow">is</span> <span class="kc">None</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="n">nmedstore</span> <span class="o">=</span> <span class="n">flattened_chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="k">else</span> <span class="p">:</span>
+                    <span class="n">nmedstore</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">median_store_size</span>
+                <span class="n">S_median_list</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">S_median_boundary_count</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">S</span> <span class="ow">in</span> <span class="n">Slist</span> <span class="p">:</span>
+                    <span class="n">S_median_list</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">nmedstore</span><span class="o">+</span><span class="mi">1</span><span class="p">,)</span><span class="o">+</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+                    <span class="n">S_median_boundary_count</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,)</span><span class="o">+</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+            <span class="c1"># Determine which things to computes</span>
+            <span class="n">compute_median</span> <span class="o">=</span> <span class="p">(</span> <span class="s1">&#39;median&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats_list</span> <span class="p">)</span>
+            <span class="n">compute_kurtosis</span> <span class="o">=</span> <span class="p">(</span> <span class="s1">&#39;kurtosis&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats_list</span> <span class="p">)</span>
+            <span class="n">compute_skewness</span> <span class="o">=</span> <span class="p">(</span> <span class="s1">&#39;skewness&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats_list</span> <span class="p">)</span> <span class="ow">or</span> <span class="n">compute_kurtosis</span>
+            <span class="n">compute_stddev</span> <span class="o">=</span> <span class="p">(</span> <span class="s1">&#39;stddev&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats_list</span> <span class="p">)</span> <span class="ow">or</span> <span class="n">compute_skewness</span>
+            <span class="n">compute_mean</span> <span class="o">=</span> <span class="p">(</span> <span class="s1">&#39;mean&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats_list</span> <span class="p">)</span> <span class="ow">or</span> <span class="n">compute_stddev</span>
+
+            
+            <span class="c1"># Loop over chain elmenets and accumulate quantities that will be turned into the desired statisics</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">pb</span> <span class="o">=</span> <span class="n">progress_bar</span><span class="p">(</span><span class="s1">&#39;Stats Computation:&#39;</span><span class="p">,</span><span class="n">length</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+                <span class="n">pb</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+                
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">flattened_chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="p">:</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  On frame k = </span><span class="si">%i</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">k</span><span class="p">))</span>
+                <span class="k">else</span> <span class="p">:</span>
+                    <span class="n">pb</span><span class="o">.</span><span class="n">increment</span><span class="p">(</span><span class="n">k</span><span class="o">/</span><span class="nb">float</span><span class="p">(</span><span class="n">flattened_chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                
+                <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">flattened_chain</span><span class="p">[</span><span class="n">k</span><span class="p">,:])</span>
+                <span class="n">Sm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">generate_stokes_map</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="p">(</span> <span class="n">compute_mean</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">S</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Slist</span><span class="p">)</span> <span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">Sm</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
+                <span class="k">if</span> <span class="p">(</span> <span class="n">compute_stddev</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">S</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Slist</span><span class="p">)</span> <span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;stddev&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;stddev&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">Sm</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+
+                <span class="k">if</span> <span class="p">(</span> <span class="n">compute_skewness</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">S</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Slist</span><span class="p">)</span> <span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;skewness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;skewness&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">Sm</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">**</span><span class="mi">3</span>
+
+                <span class="k">if</span> <span class="p">(</span> <span class="n">compute_kurtosis</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">S</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Slist</span><span class="p">)</span> <span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;kurtosis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;kurtosis&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">Sm</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">**</span><span class="mi">4</span>
+
+                <span class="k">if</span> <span class="p">(</span> <span class="n">compute_median</span> <span class="p">)</span> <span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">k</span><span class="o">&lt;</span><span class="n">nmedstore</span><span class="p">)</span> <span class="p">:</span>
+                        <span class="c1"># Just store</span>
+                        <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">S</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Slist</span><span class="p">)</span> <span class="p">:</span>
+                            <span class="n">S_median_list</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="n">k</span><span class="p">,:,:]</span> <span class="o">=</span> <span class="n">Sm</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                    <span class="k">else</span> <span class="p">:</span>
+                        <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">S</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">Slist</span><span class="p">)</span> <span class="p">:</span>
+                            <span class="c1"># Store new image</span>
+                            <span class="n">S_median_list</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">,:,:]</span> <span class="o">=</span> <span class="n">Sm</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                            <span class="c1"># Sort the new list</span>
+                            <span class="n">S_median_list</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">S_median_list</span><span class="p">[</span><span class="n">S</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                            <span class="c1"># Find the new median with the boundary shifts</span>
+                            <span class="n">index_median</span> <span class="o">=</span> <span class="p">(</span><span class="n">S_median_boundary_count</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="mi">1</span><span class="p">,:,:]</span><span class="o">-</span><span class="n">S_median_boundary_count</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="mi">0</span><span class="p">,:,:]</span> <span class="o">+</span> <span class="n">nmedstore</span> <span class="p">)</span><span class="o">//</span><span class="mi">2</span>
+                            <span class="c1"># Remove the side furthest from the median</span>
+                            <span class="n">shift_median</span> <span class="o">=</span> <span class="p">(</span><span class="n">index_median</span><span class="o">&gt;</span><span class="mf">0.5</span><span class="o">*</span><span class="n">nmedstore</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="p">:</span>
+                                <span class="k">for</span> <span class="n">iy</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">:</span>
+                                    <span class="n">S_median_list</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="mi">0</span><span class="p">:</span><span class="n">nmedstore</span><span class="p">,</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">]</span> <span class="o">=</span> <span class="n">S_median_list</span><span class="p">[</span><span class="n">S</span><span class="p">][(</span><span class="n">shift_median</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">]):(</span><span class="n">nmedstore</span><span class="o">+</span><span class="n">shift_median</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">]),</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">]</span>
+                                    
+                            <span class="c1"># Accumulate the lost side</span>
+                            <span class="n">S_median_boundary_count</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="mi">0</span><span class="p">,:,:]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">shift_median</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span>
+                            <span class="n">S_median_boundary_count</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="mi">1</span><span class="p">,:,:]</span> <span class="o">+=</span> <span class="p">(</span><span class="n">shift_median</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+
+
+            <span class="c1"># Finish the computation of the statistics</span>
+            <span class="k">if</span> <span class="p">(</span> <span class="n">compute_mean</span> <span class="p">)</span> <span class="p">:</span>
+                <span class="k">for</span> <span class="n">S</span> <span class="ow">in</span> <span class="n">Slist</span> <span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">flattened_chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="k">if</span> <span class="p">(</span> <span class="n">compute_stddev</span> <span class="p">)</span> <span class="p">:</span>
+                <span class="k">for</span> <span class="n">S</span> <span class="ow">in</span> <span class="n">Slist</span> <span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;stddev&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;stddev&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">flattened_chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span>
+                
+            <span class="k">if</span> <span class="p">(</span> <span class="n">compute_skewness</span> <span class="p">)</span> <span class="p">:</span>
+                <span class="k">for</span> <span class="n">S</span> <span class="ow">in</span> <span class="n">Slist</span> <span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;skewness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;skewness&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">flattened_chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mf">3.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;stddev&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">3</span> <span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;stddev&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+                
+            <span class="k">if</span> <span class="p">(</span> <span class="n">compute_kurtosis</span> <span class="p">)</span> <span class="p">:</span>
+                <span class="k">for</span> <span class="n">S</span> <span class="ow">in</span> <span class="n">Slist</span> <span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;kurtosis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;kurtosis&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">flattened_chain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="mf">4.0</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;stddev&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;skewness&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mf">6.0</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;stddev&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>  <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">4</span> <span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;stddev&#39;</span><span class="p">]</span><span class="o">**</span><span class="mi">4</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="p">(</span> <span class="n">compute_median</span> <span class="p">)</span> <span class="p">:</span>
+                <span class="k">for</span> <span class="n">S</span> <span class="ow">in</span> <span class="n">Slist</span> <span class="p">:</span>
+                    <span class="n">S_median_list</span><span class="p">[</span><span class="n">S</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">S_median_list</span><span class="p">[</span><span class="n">S</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">,:,:],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">index_median</span> <span class="o">=</span> <span class="p">(</span><span class="n">S_median_boundary_count</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="mi">1</span><span class="p">,:,:]</span><span class="o">-</span><span class="n">S_median_boundary_count</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="mi">0</span><span class="p">,:,:]</span> <span class="o">+</span> <span class="n">nmedstore</span> <span class="p">)</span><span class="o">//</span><span class="mi">2</span>
+                    <span class="k">for</span> <span class="n">ix</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="p">:</span>
+                        <span class="k">for</span> <span class="n">iy</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="s1">&#39;median&#39;</span><span class="p">][</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">]</span> <span class="o">=</span> <span class="n">S_median_list</span><span class="p">[</span><span class="n">S</span><span class="p">][</span><span class="n">index_median</span><span class="p">[</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">],</span><span class="n">ix</span><span class="p">,</span><span class="n">iy</span><span class="p">]</span>
+            
+            <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">pb</span><span class="o">.</span><span class="n">finish</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats_generated</span> <span class="o">=</span> <span class="kc">True</span>
+
+            
+        <span class="c1"># Return desired quantities</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="p">((</span><span class="s1">&#39;I&#39;</span> <span class="ow">in</span> <span class="n">kind</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">kind</span><span class="o">==</span><span class="s1">&#39;all&#39;</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">S</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="s1">&#39;I&#39;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">default_stat</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">((</span><span class="s1">&#39;Q&#39;</span> <span class="ow">in</span> <span class="n">kind</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">kind</span><span class="o">==</span><span class="s1">&#39;all&#39;</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">S</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="s1">&#39;Q&#39;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">default_stat</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">((</span><span class="s1">&#39;U&#39;</span> <span class="ow">in</span> <span class="n">kind</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">kind</span><span class="o">==</span><span class="s1">&#39;all&#39;</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">S</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="s1">&#39;U&#39;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">default_stat</span><span class="p">])</span>
+        <span class="k">if</span> <span class="p">((</span><span class="s1">&#39;V&#39;</span> <span class="ow">in</span> <span class="n">kind</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">kind</span><span class="o">==</span><span class="s1">&#39;all&#39;</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">S</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Sdict</span><span class="p">[</span><span class="s1">&#39;V&#39;</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">default_stat</span><span class="p">])</span>
+            
+        <span class="k">return</span> <span class="n">S</span></div>
+
+    
+<div class="viewcode-block" id="model_polarized_image_single_point_statistics.parameter_name_list"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.model_polarized_image_single_point_statistics.parameter_name_list">[docs]</a>    <span class="k">def</span> <span class="nf">parameter_name_list</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">parameter_name_list</span><span class="p">()</span></div>
+
+    
+<div class="viewcode-block" id="model_polarized_image_single_point_statistics.set_time"><a class="viewcode-back" href="../../docs/src/vis.html#vis.polimage.model_polarized_image_single_point_statistics.set_time">[docs]</a>    <span class="k">def</span> <span class="nf">set_time</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">time</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Sets time.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          time (float): Time in hours.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="n">time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="n">time</span><span class="p">)</span></div></div>
 
             
 
@@ -1089,7 +1352,7 @@
     
     <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="n">S</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">p</span> <span class="o">=</span> <span class="n">L</span><span class="o">/</span><span class="n">S</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">muV</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">L</span>
+    <span class="n">muV</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">/</span><span class="n">L</span>
     <span class="n">EVPA</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">S</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
 
     <span class="n">epsilon</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">muV</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span><span class="o">/</span><span class="n">muV</span>
@@ -2460,7 +2723,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+88.g1039f7b',
+            VERSION:'0.3.0+112.g7d69368.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

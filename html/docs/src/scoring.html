@@ -1,0 +1,686 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Scoring &mdash; ThemisPy 0.3.0+112.g7d69368.dirty documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+112.g7d69368.dirty documentation" href="../../index.html"/>
+        <link rel="up" title="User’s Guide" href="userguide.html"/>
+        <link rel="next" title="Utils" href="utils.html"/>
+        <link rel="prev" title="Vis" href="vis.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> ThemisPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0+112.g7d69368.dirty
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="userguide.html">User’s Guide</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="userguide.html#structure-and-philosphy">Structure and philosphy</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="userguide.html#packages">Packages</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="chain.html">Chain</a></li>
+<li class="toctree-l3"><a class="reference internal" href="data.html">Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="diag.html">Diag</a></li>
+<li class="toctree-l3"><a class="reference internal" href="vis.html">Vis</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Scoring</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#module-scoring.snapshots">Snapshot Scoring</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="utils.html">Utils</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="userguide.html#command-line-tools">Command line tools</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="devel.html">Developer’s Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">ThemisPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="userguide.html">User’s Guide</a> &raquo;</li>
+        
+      <li>Scoring</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/docs/src/scoring.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <span class="target" id="module-scoring"></span><div class="section" id="scoring">
+<span id="id1"></span><h1>Scoring<a class="headerlink" href="#scoring" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="module-scoring.snapshots">
+<span id="snapshot-scoring"></span><h2>Snapshot Scoring<a class="headerlink" href="#module-scoring.snapshots" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="scoring.snapshots.MultiEpochSnapshotPosterior">
+<em class="property">class </em><code class="sig-prename descclassname">scoring.snapshots.</code><code class="sig-name descname">MultiEpochSnapshotPosterior</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">single_epoch_list</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#MultiEpochSnapshotPosterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.MultiEpochSnapshotPosterior" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Python class that encapsulates and accomodates the combination of
+multiple single-epoch snapshot analyses for a single model.</p>
+<p>Assumes that the joint flux prior is uninformative.</p>
+<p>Fixes the (spin) PA and M to be constant across all epochs (i.e., no precession).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>single_epoch_list</strong> (<a class="reference internal" href="#scoring.snapshots.SingleEpochSnapshotPosterior" title="scoring.snapshots.SingleEpochSnapshotPosterior"><em>SingleEpochSnapshotPosterior</em></a>) – A list of single-epoch snapshot posterior objects containing the comparisons to be combined.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="scoring.snapshots.MultiEpochSnapshotPosterior.evidence">
+<code class="sig-name descname">evidence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#MultiEpochSnapshotPosterior.evidence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.MultiEpochSnapshotPosterior.evidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access to combined score computed by generate function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>AIS score.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scoring.snapshots.MultiEpochSnapshotPosterior.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">PA_size</span><span class="o">=</span><span class="default_value">360</span></em>, <em class="sig-param"><span class="n">M_size</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">generate_single_epochs</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#MultiEpochSnapshotPosterior.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.MultiEpochSnapshotPosterior.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility function to compute the combined AIS score and posterior in
+one step.  These are then returned using access functionis.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>Two-sample KS tests with one samples is poorly defined and may not lead to sensible behavior.  Generally, the KS test appears to be a poor metric for assessing ifthe recovered quality statistic (e.g., reduced chi-squared) is drawn from the theoretical distribution.  Because the theoretical distribution is (u,v)-coverage-dependent, combiining multiple observations is not a viable path to improving the applicability of the KS test.</p></li>
+<li><p>By default, combines AIS scores from single-epoch as if they are proportional to the Bayesian evidence.  If a binary choice is desired, set binary_ais_cut to appropriate value.</p></li>
+<li><p>Treats ensemble-based posterior estimates as true posterior.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>PA_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of PA values with which to span [-180,180).</p></li>
+<li><p><strong>M_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of M values with which to span [0,10) x 1e9 Msun.</p></li>
+<li><p><strong>generate_single_epochs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, will generate the single-epoch snapshot posteriors.  This should be the desired behavior.  However, if the single-epoch snapshot posteriors must be separately generated, this argument may be set to False. Default: True.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Dictionary of key-word arguments to be passed to the SingleEpochSnapshotPosterior objects generate function.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scoring.snapshots.MultiEpochSnapshotPosterior.posterior">
+<code class="sig-name descname">posterior</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dim</span></em>, <em class="sig-param"><span class="n">p1</span></em>, <em class="sig-param"><span class="n">p2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#MultiEpochSnapshotPosterior.posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.MultiEpochSnapshotPosterior.posterior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access to the normalized 1D or 2D posterior listed in params.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – Lists of strings of parameter names for which to evaluate the posterior.</p></li>
+<li><p><strong>p1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>,</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a>) – Value of first dimension parameter at which to evaluate the posterior.</p></li>
+<li><p><strong>p2</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>,</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a>) – Value of second dimension parameter at which to evaluate the posterior, if 2D posterior.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Value of posterior at desired parameter locations.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a>,<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="scoring.snapshots.MultiModelSnapshotPosterior">
+<em class="property">class </em><code class="sig-prename descclassname">scoring.snapshots.</code><code class="sig-name descname">MultiModelSnapshotPosterior</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">snapshot_posterior_list</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#MultiModelSnapshotPosterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.MultiModelSnapshotPosterior" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Python class that encapsulates and accomodates the combination of
+the posteriors from multiple models.  This may be done either for a
+set of single-epoch or multi-epoch models (or both, though this makes
+less sense).</p>
+<p>Assumes that the joint flux prior is uninformative and marginalizes
+over it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>snapshot_list</strong> (<a class="reference internal" href="#scoring.snapshots.SingleEpochSnapshotPosterior" title="scoring.snapshots.SingleEpochSnapshotPosterior"><em>SingleEpochSnapshotPosterior</em></a>) – A list of single-epoch snapshot posterior objects containing the comparisons to be combined.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="scoring.snapshots.MultiModelSnapshotPosterior.evidence">
+<code class="sig-name descname">evidence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#MultiModelSnapshotPosterior.evidence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.MultiModelSnapshotPosterior.evidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access to combined score computed by generate function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>AIS score.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scoring.snapshots.MultiModelSnapshotPosterior.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">PA_size</span><span class="o">=</span><span class="default_value">360</span></em>, <em class="sig-param"><span class="n">M_size</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">generate_snapshots</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#MultiModelSnapshotPosterior.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.MultiModelSnapshotPosterior.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Utility function to compute the combined evidence and posterior in
+one step.  These are then returned using access functionis.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>Treats evidence and posteriors estimates of snapshot posteriors as if they are formally real.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>PA_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of PA values with which to span [-180,180).</p></li>
+<li><p><strong>M_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of M values with which to span [0,10) x 1e9 Msun.</p></li>
+<li><p><strong>generate_snapshots</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, will generate the snapshot posteriors.  This should be the desired behavior.  However, if the snapshot posteriors must be separately generated, this argument may be set to False. Default: True.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+<li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Dictionary of key-word arguments to be passed to the SnapshotPosterior objects generate function.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scoring.snapshots.MultiModelSnapshotPosterior.model_evidences">
+<code class="sig-name descname">model_evidences</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">relative_to_max</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#MultiModelSnapshotPosterior.model_evidences"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.MultiModelSnapshotPosterior.model_evidences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access to individual model evidence list.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>relative_to_max</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, normalizes relative to the maximum value. Default: False.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>List of evidence values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(numpy.array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scoring.snapshots.MultiModelSnapshotPosterior.posterior">
+<code class="sig-name descname">posterior</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dim</span></em>, <em class="sig-param"><span class="n">p1</span></em>, <em class="sig-param"><span class="n">p2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#MultiModelSnapshotPosterior.posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.MultiModelSnapshotPosterior.posterior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access to the normalized 1D or 2D posterior listed in params.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – Lists of strings of parameter names for which to evaluate the posterior.</p></li>
+<li><p><strong>p1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>,</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a>) – Value of first dimension parameter at which to evaluate the posterior.</p></li>
+<li><p><strong>p2</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>,</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a>) – Value of second dimension parameter at which to evaluate the posterior, if 2D posterior.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Value of posterior at desired parameter locations.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a>,<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="scoring.snapshots.SingleEpochSnapshotPosterior">
+<em class="property">class </em><code class="sig-prename descclassname">scoring.snapshots.</code><code class="sig-name descname">SingleEpochSnapshotPosterior</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ais_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">snapshot_scoring_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">eht_data_type</span><span class="o">=</span><span class="default_value">'V'</span></em>, <em class="sig-param"><span class="n">themis_pa_fix</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SingleEpochSnapshotPosterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior" title="Permalink to this definition">¶</a></dt>
+<dd><p>A Python class that encapsulates the post-Themis analysis of the
+Average Image Scoring (AIS) and Ensemble-based Posterior Construction (EBPC)
+methods for the analyses EHT data with a single GRMHD simulation (and
+the associated collection of snapshot images).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>Formats of AIS and snapshot files must be settled upon.  Currently assumes fit_summary style.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ais_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of a file containing the AIS fit information. If None, some functions will not be available. Default: None.</p></li>
+<li><p><strong>snapshot_scoring_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of a file containing the snapshot scoring fit information. If None, some functions will not be available. Default: None.</p></li>
+<li><p><strong>flux_scale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – The total image flux assumed during GRMHD library construction. Default: 0.6.</p></li>
+<li><p><strong>mass_scale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – The black hole mass in 1e9 solar masses assumed during GRMHD library construction. Default: 6.5.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt id="scoring.snapshots.SingleEpochSnapshotPosterior.TBD">
+<code class="sig-name descname">TBD</code><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior.TBD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="scoring.snapshots.SingleEpochSnapshotPosterior.AIS_score">
+<code class="sig-name descname">AIS_score</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'double'</span></em>, <em class="sig-param"><span class="n">ais_quality_statistic</span><span class="o">=</span><span class="default_value">'ChiSquared'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SingleEpochSnapshotPosterior.AIS_score"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior.AIS_score" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes and returns the AIS score using the prescribed method.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>Two-sample KS tests with one samples is poorly defined and may not lead to sensible behavior.  Generally, the KS test appears to be a poor metric for assessing ifthe recovered quality statistic (e.g., reduced chi-squared) is drawn from the theoretical distribution.  Because the theoretical distribution is (u,v)-coverage-dependent, combiining multiple observations is not a viable path to improving the applicability of the KS test.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Scoring method, availiable types are ‘double’ (double-sided p-value), ‘high’ (high-sided p-value), and ‘KS’ (Kolmogorov-Smirnov test).</p></li>
+<li><p><strong>ais_quality_statistic</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of the quality statistic on which to cut. Acceptable names are ‘Likelihood’ and ‘ChiSquared’. Default: ‘ChiSquared’.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>AIS score.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scoring.snapshots.SingleEpochSnapshotPosterior.evidence">
+<code class="sig-name descname">evidence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SingleEpochSnapshotPosterior.evidence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior.evidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access to the AIS as a proxy for the Bayesian evidence. If a binary_ais_cut is set, will return 0 or 1 based on AIS score.
+The generate function must be run before evidence values can be computed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Bayesian evidence (or proxy).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scoring.snapshots.SingleEpochSnapshotPosterior.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">method</span><span class="o">=</span><span class="default_value">'double'</span></em>, <em class="sig-param"><span class="n">ais_quality_statistic</span><span class="o">=</span><span class="default_value">'ChiSquared'</span></em>, <em class="sig-param"><span class="n">binary_ais_cut</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ebpc_quality_cut</span><span class="o">=</span><span class="default_value">0.5</span></em>, <em class="sig-param"><span class="n">ebpc_quality_statistic</span><span class="o">=</span><span class="default_value">'Likelihood'</span></em>, <em class="sig-param"><span class="n">norm_size_1d</span><span class="o">=</span><span class="default_value">1024</span></em>, <em class="sig-param"><span class="n">norm_size_2d</span><span class="o">=</span><span class="default_value">512</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SingleEpochSnapshotPosterior.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that generates the necessary internal data from which to obtain
+posteriors and Bayesian evidences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Scoring method. Availiable options are listed in AIS_score.</p></li>
+<li><p><strong>ais_quality_statistic</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of the quality statistic on which to cut. Acceptable names are listed in AIS_score. Default: ‘ChiSquared’.</p></li>
+<li><p><strong>binary_ais_cut</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – If not None, the evidence will be a step function in the AIS score, zero below the cut and unity above it.  If None, the evidence will be set to the AIS score. Default: None.</p></li>
+<li><p><strong>ebpc_quality_cut</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – A number between (0,1] indicating the fraction of data to keep. Default: 0.5.</p></li>
+<li><p><strong>ebpc_quality_statistic</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of the quality statistic on which to cut. Acceptable names are ‘Likelihood’ and ‘ChiSquared’. Default: ‘Likelihood’.</p></li>
+<li><p><strong>norm_size_1d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of points at which to evaluate the posterior along each direction to normalize. Default: 1024.</p></li>
+<li><p><strong>norm_size_2d</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of points at which to evaluate the posterior along each direction to normalize. Default: 512.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scoring.snapshots.SingleEpochSnapshotPosterior.plot_AIS_cumulative_probability">
+<code class="sig-name descname">plot_AIS_cumulative_probability</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">show_data</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">ais_quality_statistic</span><span class="o">=</span><span class="default_value">'ChiSquared'</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SingleEpochSnapshotPosterior.plot_AIS_cumulative_probability"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior.plot_AIS_cumulative_probability" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots cumulative probability, possibly with the data indicated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>show_data</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, shows the data value on the plot via a vertical line. Default: True.</p></li>
+<li><p><strong>ais_quality_statistic</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of the quality statistic on which to cut. Acceptable names are ‘Likelihood’ and ‘ChiSquared’. Default: ‘Likelihood’.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scoring.snapshots.SingleEpochSnapshotPosterior.posterior">
+<code class="sig-name descname">posterior</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dim</span></em>, <em class="sig-param"><span class="n">p1</span></em>, <em class="sig-param"><span class="n">p2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p3</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SingleEpochSnapshotPosterior.posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior.posterior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluates the posterior after marginalizing over all but one dimension at specified parameter locations.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<ul class="simple">
+<li><p>3D not yet implemented.</p></li>
+<li><p>Should handle a variety of types for p1,p2, but only tested on floats, numpy.arrays, and numpy.ndarrays.</p></li>
+</ul>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of variable to include in the posterior. Acceptable names include ‘F’,’PA’, and ‘M’.</p></li>
+<li><p><strong>p1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>,</em><em>numpy.array</em>) – List of first variable values at which to evaluate the posterior.</p></li>
+<li><p><strong>p2</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>,</em><em>numpy.array</em>) – List of second variable values at which to evaluate the posterior, if &gt;1D. Default: None.</p></li>
+<li><p><strong>p3</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>,</em><em>numpy.array</em>) – List of third variable values at which to evaluate the posterior, if &gt;2D. Default: None.</p></li>
+<li><p><strong>norm_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of points at which to evaluate the posterior along each direction to normalize. If None, will use 1024 in 1D and 512 along each dimension in 2D. Default: None.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Values of the normalized posterior at the parameter values.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(numpy.array)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scoring.snapshots.SingleEpochSnapshotPosterior.read_ais_summary">
+<code class="sig-name descname">read_ais_summary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fsfile</span></em>, <em class="sig-param"><span class="n">eht_data_type</span><span class="o">=</span><span class="default_value">'V'</span></em>, <em class="sig-param"><span class="n">themis_pa_fix</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SingleEpochSnapshotPosterior.read_ais_summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior.read_ais_summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the output of an AIS run, assuming a fit_summaries file format with the fit to data last.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fsfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of file containing AIS fit information.</p></li>
+<li><p><strong>eht_data_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Type of EHT data being fitted. Options include ‘V’ (complex visibilities) and ‘VACP’ (visibility amplitudes and closure phases). Default: ‘V’.</p></li>
+<li><p><strong>themis_pa_fix</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A dictionary with two numpy.recarrays containing the values of the flux, mass/distance, position angle, likelihood, and chi-squared of the fits to simulated data and the real data.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scoring.snapshots.SingleEpochSnapshotPosterior.read_scoring_summary">
+<code class="sig-name descname">read_scoring_summary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fsfile</span></em>, <em class="sig-param"><span class="n">eht_data_type</span><span class="o">=</span><span class="default_value">'V'</span></em>, <em class="sig-param"><span class="n">themis_pa_fix</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SingleEpochSnapshotPosterior.read_scoring_summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior.read_scoring_summary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads the output of a scoring run, assuming a fit_summaries file format.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fsfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of file containing AIS fit information.</p></li>
+<li><p><strong>eht_data_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Type of EHT data being fitted. Options include ‘V’ (complex visibilities) and ‘VACP’ (visibility amplitudes and closure phases). Default: ‘V’.</p></li>
+<li><p><strong>themis_pa_fix</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Structured numpy array of the values of the flux, mass/distance, position angle, likelihood, and chi-squared of the fits.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.recarray.html#numpy.recarray" title="(in NumPy v1.24)">numpy.recarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="scoring.snapshots.SnapshotPosterior">
+<em class="property">class </em><code class="sig-prename descclassname">scoring.snapshots.</code><code class="sig-name descname">SnapshotPosterior</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SnapshotPosterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SnapshotPosterior" title="Permalink to this definition">¶</a></dt>
+<dd><p>A base class that defines generic scoring and posterior generation.</p>
+<p>Args:</p>
+<p>Attributes:</p>
+<dl class="py method">
+<dt id="scoring.snapshots.SnapshotPosterior.evidence">
+<code class="sig-name descname">evidence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SnapshotPosterior.evidence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SnapshotPosterior.evidence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access to the Bayesian evidence or an appropriate proxy.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Bayesian evidence (or proxy).</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scoring.snapshots.SnapshotPosterior.generate">
+<code class="sig-name descname">generate</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SnapshotPosterior.generate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SnapshotPosterior.generate" title="Permalink to this definition">¶</a></dt>
+<dd><p>A function that generates the necessary internal data from which to obtain
+posteriors and Bayesian evidences.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="scoring.snapshots.SnapshotPosterior.posterior">
+<code class="sig-name descname">posterior</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">params</span></em>, <em class="sig-param"><span class="n">p1</span></em>, <em class="sig-param"><span class="n">p2</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SnapshotPosterior.posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SnapshotPosterior.posterior" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access to the normalized 1D or 2D posterior listed in params.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – Lists of strings of parameter names for which to evaluate the posterior.</p></li>
+<li><p><strong>p1</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>,</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a>) – Value of first dimension parameter at which to evaluate the posterior.</p></li>
+<li><p><strong>p2</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a><em>,</em><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)"><em>numpy.ndarray</em></a>) – Value of second dimension parameter at which to evaluate the posterior, if 2D posterior.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Value of posterior at desired parameter locations.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)">float</a>,<a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v1.24)">numpy.ndarray</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+</div>
+
+
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="utils.html" class="btn btn-neutral float-right" title="Utils" accesskey="n">Next →</a>
+      
+      
+        <a href="vis.html" class="btn btn-neutral" title="Vis" accesskey="p">← Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Themis Development Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.3.0+112.g7d69368.dirty',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            LINK_SUFFIX:'.html', 
+            HAS_SOURCE: 'true'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/language_data.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

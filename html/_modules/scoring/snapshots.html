@@ -1,0 +1,1054 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>scoring.snapshots &mdash; ThemisPy 0.3.0+112.g7d69368.dirty documentation</title>
+  
+
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Search" href="../../search.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+112.g7d69368.dirty documentation" href="../../index.html"/>
+        <link rel="up" title="Module code" href="../index.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../docs/src/index.html" class="icon icon-home"> ThemisPy
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                0.3.0+112.g7d69368.dirty
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+                <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/src/installation.html">Installation Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/src/userguide.html">User’s Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../docs/src/devel.html">Developer’s Guide</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../docs/src/index.html">ThemisPy</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../docs/src/index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>scoring.snapshots</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+        
+      </li>
+    
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for scoring.snapshots</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">scipy.interpolate</span> <span class="k">as</span> <span class="nn">sint</span>
+<span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">sstat</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<div class="viewcode-block" id="SnapshotPosterior"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SnapshotPosterior">[docs]</a><span class="k">class</span> <span class="nc">SnapshotPosterior</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A base class that defines generic scoring and posterior generation.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">    </span>
+<span class="sd">    Attributes:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">pass</span>
+    
+<div class="viewcode-block" id="SnapshotPosterior.generate"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SnapshotPosterior.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A function that generates the necessary internal data from which to obtain</span>
+<span class="sd">        posteriors and Bayesian evidences.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This must be implemented in child classes.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SnapshotPosterior.evidence"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SnapshotPosterior.evidence">[docs]</a>    <span class="k">def</span> <span class="nf">evidence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Access to the Bayesian evidence or an appropriate proxy.</span>
+
+<span class="sd">        Args: </span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (float): Bayesian evidence (or proxy).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This must be implemented in child classes.&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SnapshotPosterior.posterior"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SnapshotPosterior.posterior">[docs]</a>    <span class="k">def</span> <span class="nf">posterior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">params</span><span class="p">,</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Access to the normalized 1D or 2D posterior listed in params.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          params (list): Lists of strings of parameter names for which to evaluate the posterior.</span>
+<span class="sd">          p1 (float,numpy.ndarray): Value of first dimension parameter at which to evaluate the posterior.</span>
+<span class="sd">          p2 (float,numpy.ndarray): Value of second dimension parameter at which to evaluate the posterior, if 2D posterior.</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (float,numpy.ndarray): Value of posterior at desired parameter locations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;This must be implemented in child classes.&quot;</span><span class="p">)</span></div></div>
+
+        
+
+<div class="viewcode-block" id="SingleEpochSnapshotPosterior"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SingleEpochSnapshotPosterior">[docs]</a><span class="k">class</span> <span class="nc">SingleEpochSnapshotPosterior</span><span class="p">(</span><span class="n">SnapshotPosterior</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Python class that encapsulates the post-Themis analysis of the</span>
+<span class="sd">    Average Image Scoring (AIS) and Ensemble-based Posterior Construction (EBPC)</span>
+<span class="sd">    methods for the analyses EHT data with a single GRMHD simulation (and</span>
+<span class="sd">    the associated collection of snapshot images).</span>
+
+<span class="sd">    Warning:</span>
+<span class="sd">      * Formats of AIS and snapshot files must be settled upon.  Currently assumes fit_summary style.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      ais_name (str): Name of a file containing the AIS fit information. If None, some functions will not be available. Default: None.</span>
+<span class="sd">      snapshot_scoring_name (str): Name of a file containing the snapshot scoring fit information. If None, some functions will not be available. Default: None.</span>
+<span class="sd">      flux_scale (float): The total image flux assumed during GRMHD library construction. Default: 0.6.</span>
+<span class="sd">      mass_scale (float): The black hole mass in 1e9 solar masses assumed during GRMHD library construction. Default: 6.5.</span>
+<span class="sd">      verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">      TBD</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ais_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">snapshot_scoring_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">eht_data_type</span><span class="o">=</span><span class="s1">&#39;V&#39;</span><span class="p">,</span><span class="n">themis_pa_fix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">snapshot_scoring_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_scoring_summary</span><span class="p">(</span><span class="n">snapshot_scoring_name</span><span class="p">,</span><span class="n">eht_data_type</span><span class="o">=</span><span class="n">eht_data_type</span><span class="p">,</span><span class="n">themis_pa_fix</span><span class="o">=</span><span class="n">themis_pa_fix</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_summary_cut</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ebpc_defined</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">ais_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ais_summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_ais_summary</span><span class="p">(</span><span class="n">ais_name</span><span class="p">,</span><span class="n">eht_data_type</span><span class="o">=</span><span class="n">eht_data_type</span><span class="p">,</span><span class="n">themis_pa_fix</span><span class="o">=</span><span class="n">themis_pa_fix</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ais_defined</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ais_method</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ais_quality_statistic</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_quality_cut</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_quality_statistic</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+        
+            
+<div class="viewcode-block" id="SingleEpochSnapshotPosterior.read_scoring_summary"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SingleEpochSnapshotPosterior.read_scoring_summary">[docs]</a>    <span class="k">def</span> <span class="nf">read_scoring_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fsfile</span><span class="p">,</span><span class="n">eht_data_type</span><span class="o">=</span><span class="s1">&#39;V&#39;</span><span class="p">,</span><span class="n">themis_pa_fix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads the output of a scoring run, assuming a fit_summaries file format.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">          fsfile (str): Name of file containing AIS fit information.</span>
+<span class="sd">          eht_data_type (str): Type of EHT data being fitted. Options include &#39;V&#39; (complex visibilities) and &#39;VACP&#39; (visibility amplitudes and closure phases). Default: &#39;V&#39;.</span>
+<span class="sd">          themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">          (numpy.recarray): Structured numpy array of the values of the flux, mass/distance, position angle, likelihood, and chi-squared of the fits.</span>
+<span class="sd">          </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Choose columns based on eht data type</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">eht_data_type</span><span class="o">==</span><span class="s1">&#39;V&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">eht_data_type</span><span class="o">==</span><span class="s1">&#39;VACP&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized eht_data_type, </span><span class="si">%s</span><span class="s2">. Expects either &#39;V&#39; or &#39;VACP&#39;.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">eht_data_type</span><span class="p">))</span>
+        
+        <span class="c1"># index flux mass pa chisq likelihood</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+
+        <span class="c1"># Adjust to flux, mass and PA in relevant units</span>
+        <span class="n">flux</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Jy</span>
+        <span class="n">mass</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># uas</span>
+        <span class="n">PA</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># deg</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">themis_pa_fix</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">PA</span> <span class="o">=</span> <span class="mf">180.0</span> <span class="o">-</span> <span class="n">PA</span>
+        <span class="n">csq</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]</span>
+
+        <span class="n">PA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">PA</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">PA</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">))</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ebpc_defined</span> <span class="o">=</span> <span class="kc">True</span>
+        
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">rec</span><span class="o">.</span><span class="n">fromarrays</span><span class="p">([</span><span class="n">flux</span><span class="p">,</span><span class="n">PA</span><span class="p">,</span><span class="n">mass</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">csq</span><span class="p">],</span><span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="s1">&#39;PA&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;Likelihood&#39;</span><span class="p">,</span><span class="s1">&#39;ChiSquared&#39;</span><span class="p">])</span></div>
+    
+
+<div class="viewcode-block" id="SingleEpochSnapshotPosterior.read_ais_summary"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SingleEpochSnapshotPosterior.read_ais_summary">[docs]</a>    <span class="k">def</span> <span class="nf">read_ais_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fsfile</span><span class="p">,</span><span class="n">eht_data_type</span><span class="o">=</span><span class="s1">&#39;V&#39;</span><span class="p">,</span><span class="n">themis_pa_fix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads the output of an AIS run, assuming a fit_summaries file format with the fit to data last.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">          fsfile (str): Name of file containing AIS fit information.</span>
+<span class="sd">          eht_data_type (str): Type of EHT data being fitted. Options include &#39;V&#39; (complex visibilities) and &#39;VACP&#39; (visibility amplitudes and closure phases). Default: &#39;V&#39;.</span>
+<span class="sd">          themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">          (dict): A dictionary with two numpy.recarrays containing the values of the flux, mass/distance, position angle, likelihood, and chi-squared of the fits to simulated data and the real data.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Choose columns based on eht data type</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">eht_data_type</span><span class="o">==</span><span class="s1">&#39;V&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">eht_data_type</span><span class="o">==</span><span class="s1">&#39;VACP&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized eht_data_type, </span><span class="si">%s</span><span class="s2">. Expects either &#39;V&#39; or &#39;VACP&#39;.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">eht_data_type</span><span class="p">))</span>
+
+        <span class="c1"># index flux mass pa chisq likelihood</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+
+        <span class="c1"># Adjust to flux, mass and PA in relevant units</span>
+        <span class="n">flux</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Jy</span>
+        <span class="n">mass</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># uas</span>
+        <span class="n">PA</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># deg</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">themis_pa_fix</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">PA</span> <span class="o">=</span> <span class="mf">180.0</span> <span class="o">-</span> <span class="n">PA</span>
+        <span class="n">csq</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]</span>
+
+        <span class="n">PA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">PA</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">PA</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">))</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+        <span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rec</span><span class="o">.</span><span class="n">fromarrays</span><span class="p">([</span><span class="n">flux</span><span class="p">,</span><span class="n">PA</span><span class="p">,</span><span class="n">mass</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">csq</span><span class="p">],</span><span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="s1">&#39;PA&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;Likelihood&#39;</span><span class="p">,</span><span class="s1">&#39;ChiSquared&#39;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ais_defined</span> <span class="o">=</span> <span class="kc">True</span>
+        
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;simulation&#39;</span><span class="p">:</span><span class="n">arr</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="s1">&#39;data&#39;</span><span class="p">:</span><span class="n">arr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]}</span></div>
+
+
+<div class="viewcode-block" id="SingleEpochSnapshotPosterior.generate"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SingleEpochSnapshotPosterior.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;double&#39;</span><span class="p">,</span><span class="n">ais_quality_statistic</span><span class="o">=</span><span class="s1">&#39;ChiSquared&#39;</span><span class="p">,</span><span class="n">binary_ais_cut</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">ebpc_quality_cut</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">ebpc_quality_statistic</span><span class="o">=</span><span class="s1">&#39;Likelihood&#39;</span><span class="p">,</span><span class="n">norm_size_1d</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span><span class="n">norm_size_2d</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A function that generates the necessary internal data from which to obtain</span>
+<span class="sd">        posteriors and Bayesian evidences.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          method (str): Scoring method. Availiable options are listed in AIS_score.</span>
+<span class="sd">          ais_quality_statistic (str): Name of the quality statistic on which to cut. Acceptable names are listed in AIS_score. Default: &#39;ChiSquared&#39;.</span>
+<span class="sd">          binary_ais_cut (float): If not None, the evidence will be a step function in the AIS score, zero below the cut and unity above it.  If None, the evidence will be set to the AIS score. Default: None.</span>
+<span class="sd">          ebpc_quality_cut (float): A number between (0,1] indicating the fraction of data to keep. Default: 0.5.</span>
+<span class="sd">          ebpc_quality_statistic (str): Name of the quality statistic on which to cut. Acceptable names are &#39;Likelihood&#39; and &#39;ChiSquared&#39;. Default: &#39;Likelihood&#39;.</span>
+<span class="sd">          norm_size_1d (int): Number of points at which to evaluate the posterior along each direction to normalize. Default: 1024.</span>
+<span class="sd">          norm_size_2d (int): Number of points at which to evaluate the posterior along each direction to normalize. Default: 512.        </span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ais_method</span> <span class="o">=</span> <span class="n">method</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ais_quality_statistic</span> <span class="o">=</span> <span class="n">ais_quality_statistic</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">binary_ais_cut</span> <span class="o">=</span> <span class="n">binary_ais_cut</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_quality_cut</span> <span class="o">=</span> <span class="n">ebpc_quality_cut</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_quality_statistic</span> <span class="o">=</span> <span class="n">ebpc_quality_statistic</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_norm_size_1d</span> <span class="o">=</span> <span class="n">norm_size_1d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_norm_size_2d</span> <span class="o">=</span> <span class="n">norm_size_2d</span></div>
+
+<div class="viewcode-block" id="SingleEpochSnapshotPosterior.evidence"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SingleEpochSnapshotPosterior.evidence">[docs]</a>    <span class="k">def</span> <span class="nf">evidence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Access to the AIS as a proxy for the Bayesian evidence. If a binary_ais_cut is set, will return 0 or 1 based on AIS score.</span>
+<span class="sd">        The generate function must be run before evidence values can be computed.</span>
+
+<span class="sd">        Args: </span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (float): Bayesian evidence (or proxy).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ais_method</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;The generate(...) function must be called before evidence can be provided.&quot;</span><span class="p">)</span>
+
+        <span class="n">ais_score</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">AIS_score</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ais_method</span><span class="p">,</span><span class="n">ais_quality_statistic</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ais_quality_statistic</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">binary_ais_cut</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="n">ais_score</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">ais_score</span><span class="o">&gt;</span><span class="bp">self</span><span class="o">.</span><span class="n">binary_ais_cut</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SingleEpochSnapshotPosterior.AIS_score"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SingleEpochSnapshotPosterior.AIS_score">[docs]</a>    <span class="k">def</span> <span class="nf">AIS_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;double&#39;</span><span class="p">,</span><span class="n">ais_quality_statistic</span><span class="o">=</span><span class="s1">&#39;ChiSquared&#39;</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Computes and returns the AIS score using the prescribed method.</span>
+
+<span class="sd">        Warning:</span>
+<span class="sd">          * Two-sample KS tests with one samples is poorly defined and may not lead to sensible behavior.  Generally, the KS test appears to be a poor metric for assessing ifthe recovered quality statistic (e.g., reduced chi-squared) is drawn from the theoretical distribution.  Because the theoretical distribution is (u,v)-coverage-dependent, combiining multiple observations is not a viable path to improving the applicability of the KS test.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          method (str): Scoring method, availiable types are &#39;double&#39; (double-sided p-value), &#39;high&#39; (high-sided p-value), and &#39;KS&#39; (Kolmogorov-Smirnov test).</span>
+<span class="sd">          ais_quality_statistic (str): Name of the quality statistic on which to cut. Acceptable names are &#39;Likelihood&#39; and &#39;ChiSquared&#39;. Default: &#39;ChiSquared&#39;.</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (float): AIS score.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ais_defined</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Because no AIS file was read, AIS-based functionality is not available.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">ais_quality_statistic</span><span class="o">==</span><span class="s1">&#39;ChiSquared&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">qsign</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">ais_quality_statistic</span><span class="o">==</span><span class="s1">&#39;Likelihood&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">qsign</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized ais_quality_statistic found, </span><span class="si">%s</span><span class="s2">.  Allowed options are &#39;ChiSquared&#39; or &#39;Likelihood&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">ais_quality_statistic</span><span class="p">))</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">qsign</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ais_summary</span><span class="p">[</span><span class="s1">&#39;simulation&#39;</span><span class="p">][</span><span class="n">ais_quality_statistic</span><span class="p">])</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">qsign</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">ais_summary</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="n">ais_quality_statistic</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="n">method</span><span class="o">==</span><span class="s1">&#39;high&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">q</span><span class="o">&gt;=</span><span class="n">Q</span><span class="p">))</span><span class="o">/</span><span class="n">q</span><span class="o">.</span><span class="n">size</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">method</span><span class="o">==</span><span class="s1">&#39;double&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">qmed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+            <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">q</span><span class="o">-</span><span class="n">qmed</span><span class="p">)</span><span class="o">&gt;=</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Q</span><span class="o">-</span><span class="n">qmed</span><span class="p">)))</span><span class="o">/</span><span class="n">q</span><span class="o">.</span><span class="n">size</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">method</span><span class="o">==</span><span class="s1">&#39;KS&#39;</span> <span class="ow">or</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;KolmogorovSmirnov&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="c1"># Note that for a single sample, there is a minimum p-value that can be excluded!</span>
+            <span class="c1">#ksobj = sstat.ks_2samp([Q],q)</span>
+            <span class="c1">#print(&quot;KS report: D=%15.8g p=%15.8g&quot;%(ksobj.statistic,ksobj.pvalue))</span>
+            <span class="k">return</span> <span class="n">sstat</span><span class="o">.</span><span class="n">ks_2samp</span><span class="p">([</span><span class="n">Q</span><span class="p">],</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">pvalue</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized method found, </span><span class="si">%s</span><span class="s2">.  Allowed options are &#39;high&#39;, &#39;double&#39;, or &#39;KS&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">method</span><span class="p">))</span></div>
+        
+<div class="viewcode-block" id="SingleEpochSnapshotPosterior.plot_AIS_cumulative_probability"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SingleEpochSnapshotPosterior.plot_AIS_cumulative_probability">[docs]</a>    <span class="k">def</span> <span class="nf">plot_AIS_cumulative_probability</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">show_data</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">ais_quality_statistic</span><span class="o">=</span><span class="s1">&#39;ChiSquared&#39;</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Plots cumulative probability, possibly with the data indicated.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          show_data (bool): If True, shows the data value on the plot via a vertical line. Default: True.</span>
+<span class="sd">          ais_quality_statistic (str): Name of the quality statistic on which to cut. Acceptable names are &#39;Likelihood&#39; and &#39;ChiSquared&#39;. Default: &#39;Likelihood&#39;.</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ais_defined</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Because no AIS file was read, AIS-based functionality is not available.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">ais_quality_statistic</span><span class="o">==</span><span class="s1">&#39;ChiSquared&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">xlbl</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$\chi^2_\nu$&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">ais_quality_statistic</span><span class="o">==</span><span class="s1">&#39;Likelihood&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">xlbl</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$\log L$&#39;</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized ais_quality_statistic found, </span><span class="si">%s</span><span class="s2">.  Allowed options are &#39;ChiSquared&#39; or &#39;Likelihood&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">ais_quality_statistic</span><span class="p">))</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ais_summary</span><span class="p">[</span><span class="s1">&#39;simulation&#39;</span><span class="p">][</span><span class="n">ais_quality_statistic</span><span class="p">])</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ais_summary</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="n">ais_quality_statistic</span><span class="p">]</span>
+
+        <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+        <span class="n">qcum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">size</span><span class="p">)</span><span class="o">/</span><span class="n">q</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">qcum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">qcum</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span>
+        
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">q</span><span class="p">,</span><span class="n">qcum</span><span class="p">,</span><span class="s1">&#39;-k&#39;</span><span class="p">,</span><span class="n">ds</span><span class="o">=</span><span class="s1">&#39;steps-pre&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">show_data</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">Q</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlbl</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Cumulative Prob.&#39;</span><span class="p">)</span></div>
+        
+    <span class="k">def</span> <span class="nf">_create_unormalized_posterior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">scoring_summary</span><span class="p">,</span><span class="n">quality_cut</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">scott_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span><span class="n">ebpc_quality_statistic</span><span class="o">=</span><span class="s1">&#39;Likelihood&#39;</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructs a KDE-smoothed posterior function, possibly marginalized over some dimension(s).</span>
+
+<span class="sd">        Warning:</span>
+<span class="sd">          This is an internal utility function and almost certainly not what you want to access posterior data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          scoring_summary (numpy.recarray): The output of read_scoring_summary, containing the recovered fit parameters and quality statistics.</span>
+<span class="sd">          quality_cut (float): A number between (0,1] indicating the fraction of data to keep. Default: 0.5.</span>
+<span class="sd">          dims (list): List of names of variables to include in the posterior. Acceptable names include &#39;F&#39;,&#39;PA&#39;, and &#39;M&#39;.</span>
+<span class="sd">          scott_factor (float): A scaling of the KDE bandwidth. The KDE is very sensitive to this number, which should usually be of order unity. Default: 1.</span>
+<span class="sd">          ebpc_quality_statistic (str): Name of the quality statistic on which to cut. Acceptable names are &#39;Likelihood&#39; and &#39;ChiSquared&#39;. Default: &#39;Likelihood&#39;.</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">          (scipy.stats.gaussian_kde): A KDE object that may be evaluated at arbitrary positions (with some effort).</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebpc_defined</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Because no snapshot scoring file was read, EBPC-based functionality is not available.&quot;</span><span class="p">)</span>
+
+        <span class="n">ss</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">scoring_summary</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">quality_cut</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">ebpc_quality_statistic</span><span class="o">==</span><span class="s1">&#39;Likelihood&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">cut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">ss</span><span class="p">[</span><span class="n">ebpc_quality_statistic</span><span class="p">],</span><span class="n">q</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">quality_cut</span><span class="p">))</span>
+                <span class="n">ss</span> <span class="o">=</span> <span class="n">ss</span><span class="p">[(</span><span class="n">ss</span><span class="p">[</span><span class="n">ebpc_quality_statistic</span><span class="p">]</span><span class="o">&gt;</span><span class="n">cut</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Applied quantile cut of </span><span class="si">%g</span><span class="s2"> in posterior construction,</span><span class="se">\n\t</span><span class="s2">correpsonding to quality cut of log(L)&gt;</span><span class="si">%g</span><span class="s2">, leaving </span><span class="si">%i</span><span class="s2">/</span><span class="si">%i</span><span class="s2"> snapshot fits.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">quality_cut</span><span class="p">,</span><span class="n">cut</span><span class="p">,</span><span class="n">ss</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">scoring_summary</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">ebpc_quality_statistic</span><span class="o">==</span><span class="s1">&#39;ChiSquared&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">cut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="n">ss</span><span class="p">[</span><span class="n">ebpc_quality_statistic</span><span class="p">],</span><span class="n">q</span><span class="o">=</span><span class="n">quality_cut</span><span class="p">)</span>
+                <span class="n">ss</span> <span class="o">=</span> <span class="n">ss</span><span class="p">[(</span><span class="n">ss</span><span class="p">[</span><span class="n">ebpc_quality_statistic</span><span class="p">]</span><span class="o">&lt;</span><span class="n">cut</span><span class="p">)]</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Applied quantile cut of </span><span class="si">%g</span><span class="s2"> in posterior construction,</span><span class="se">\n\t</span><span class="s2">correpsonding to quality cut of reduced chi-squared&lt;</span><span class="si">%g</span><span class="s2">, leaving </span><span class="si">%i</span><span class="s2">/</span><span class="si">%i</span><span class="s2"> snapshot fits.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">quality_cut</span><span class="p">,</span><span class="n">cut</span><span class="p">,</span><span class="n">ss</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">scoring_summary</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized ais_quality_statistic found, </span><span class="si">%s</span><span class="s2">.  Allowed options are &#39;ChiSquared&#39; or &#39;Likelihood&#39;&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">ais_quality_statistic</span><span class="p">))</span>
+
+        <span class="c1"># Center PAs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PA_offset</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ss</span><span class="p">[</span><span class="s1">&#39;PA&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">)),</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ss</span><span class="p">[</span><span class="s1">&#39;PA&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">)))</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+        <span class="n">ss</span><span class="p">[</span><span class="s1">&#39;PA&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ss</span><span class="p">[</span><span class="s1">&#39;PA&#39;</span><span class="p">]</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">PA_offset</span>
+        
+        <span class="c1"># Make sure the PA is in the range [-180, 180)</span>
+        <span class="n">ss</span><span class="p">[</span><span class="s1">&#39;PA&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">ss</span><span class="p">[</span><span class="s1">&#39;PA&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">ss</span><span class="p">[</span><span class="s1">&#39;PA&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">))</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+        <span class="c1"># Save for future access</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_summary_cut</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">ss</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_summary_cut</span><span class="p">[</span><span class="s1">&#39;PA&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PA_offset</span>
+
+        <span class="c1"># Combine the results into a list of points that include repetitions of the PA</span>
+        <span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">ss</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">],</span><span class="n">ss</span><span class="p">[</span><span class="s1">&#39;PA&#39;</span><span class="p">],</span><span class="n">ss</span><span class="p">[</span><span class="s1">&#39;M&#39;</span><span class="p">]],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># for PA_shift in [-360,360] :</span>
+        <span class="c1">#     pts = np.concatenate((pts,np.stack([ss[&#39;F&#39;],ss[&#39;PA&#39;]+PA_shift,ss[&#39;M&#39;]],axis=1)),axis=0)</span>
+
+        <span class="c1"># Extract only those parameters we want to consider, marginalizing over the others</span>
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">dims</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">dim_map</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;F&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;PA&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">}</span>
+            <span class="n">keep_dims</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">dims</span> <span class="p">:</span>
+                <span class="n">keep_dims</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dim_map</span><span class="p">[</span><span class="n">d</span><span class="p">])</span>
+            <span class="n">pts</span> <span class="o">=</span> <span class="n">pts</span><span class="p">[:,</span><span class="n">keep_dims</span><span class="p">]</span>
+
+        <span class="c1"># Choose a KDE factor (using Scott&#39;s rule, but with a prefactor that may be set).</span>
+        <span class="c1"># bw = scott_factor * (3*len(ss[&#39;PA&#39;]))**(-1./(pts.shape[1]+4))</span>
+        <span class="n">bw</span> <span class="o">=</span> <span class="n">scott_factor</span> <span class="o">*</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ss</span><span class="p">[</span><span class="s1">&#39;PA&#39;</span><span class="p">]))</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="n">pts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mi">4</span><span class="p">))</span>
+
+        <span class="c1"># Return a gaussian_kde object</span>
+        <span class="k">return</span> <span class="n">sstat</span><span class="o">.</span><span class="n">gaussian_kde</span><span class="p">(</span><span class="n">pts</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">bw_method</span><span class="o">=</span><span class="n">bw</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_parameter_limits</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns parameter limits for the specified quantity.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          dim (str): A parameter name.</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (float,float): The min and max that should contain the posterior, clipped to parameter-specific default values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebpc_defined</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Because no snapshot scoring file was read, EBPC-based functionality is not available.&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Find min/max from sampling</span>
+        <span class="n">pmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_summary</span><span class="p">[</span><span class="n">dim</span><span class="p">])</span>
+        <span class="n">pmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_summary</span><span class="p">[</span><span class="n">dim</span><span class="p">])</span>
+
+        <span class="c1"># Expand by 10% in each direction</span>
+        <span class="n">dp</span> <span class="o">=</span> <span class="n">pmax</span><span class="o">-</span><span class="n">pmin</span>
+        <span class="n">pmin</span> <span class="o">-=</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">dp</span>
+        <span class="n">pmax</span> <span class="o">+=</span> <span class="mf">0.1</span><span class="o">*</span><span class="n">dp</span>
+
+        <span class="c1"># Clip to parameter-specific values</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dim</span><span class="o">==</span><span class="s1">&#39;F&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">pmin</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="n">pmin</span><span class="p">)</span>
+            <span class="n">pmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span><span class="n">pmax</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dim</span><span class="o">==</span><span class="s1">&#39;M&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">pmin</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="n">pmin</span><span class="p">)</span>
+            <span class="n">pmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span><span class="n">pmax</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dim</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">pmin</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="mf">180.0</span><span class="p">,</span><span class="n">pmin</span><span class="p">)</span>
+            <span class="n">pmax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mf">180.0</span><span class="p">,</span><span class="n">pmax</span><span class="p">)</span>
+
+            <span class="n">pmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">180.0</span>
+            <span class="n">pmax</span> <span class="o">=</span> <span class="mf">180.0</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized parameter name </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dim</span><span class="p">))</span>            
+        
+        <span class="k">return</span> <span class="n">pmin</span><span class="p">,</span><span class="n">pmax</span>
+            
+
+<div class="viewcode-block" id="SingleEpochSnapshotPosterior.posterior"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SingleEpochSnapshotPosterior.posterior">[docs]</a>    <span class="k">def</span> <span class="nf">posterior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">p3</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Evaluates the posterior after marginalizing over all but one dimension at specified parameter locations.</span>
+
+<span class="sd">        Warning:</span>
+<span class="sd">          * 3D not yet implemented.</span>
+<span class="sd">          * Should handle a variety of types for p1,p2, but only tested on floats, numpy.arrays, and numpy.ndarrays.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          dim (str): Name of variable to include in the posterior. Acceptable names include &#39;F&#39;,&#39;PA&#39;, and &#39;M&#39;.</span>
+<span class="sd">          p1 (float,numpy.array): List of first variable values at which to evaluate the posterior.</span>
+<span class="sd">          p2 (float,numpy.array): List of second variable values at which to evaluate the posterior, if &gt;1D. Default: None.</span>
+<span class="sd">          p3 (float,numpy.array): List of third variable values at which to evaluate the posterior, if &gt;2D. Default: None.</span>
+<span class="sd">          norm_size (int): Number of points at which to evaluate the posterior along each direction to normalize. If None, will use 1024 in 1D and 512 along each dimension in 2D. Default: None.</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (numpy.array): Values of the normalized posterior at the parameter values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ais_method</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;The generate(...) function must be called before posteriors can be provided.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ebpc_defined</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Because no snapshot scoring file was read, EBPC-based functionality is not available.&quot;</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span><span class="nb">str</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">dim</span> <span class="o">=</span> <span class="p">[</span><span class="n">dim</span><span class="p">]</span>
+        
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="n">p1val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span>
+            
+            <span class="c1"># Lazy construction ...</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="p">:</span>
+                <span class="c1"># Create KDE object</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;kde&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_unormalized_posterior</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_summary</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="p">[</span><span class="n">key</span><span class="p">],</span><span class="n">quality_cut</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_quality_cut</span><span class="p">,</span><span class="n">ebpc_quality_statistic</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_quality_statistic</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)}</span>
+                <span class="c1"># Normalize</span>
+                <span class="n">pmin</span><span class="p">,</span><span class="n">pmax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_parameter_limits</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">ptmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">pmin</span><span class="p">,</span><span class="n">pmax</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_norm_size_1d</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;kde&#39;</span><span class="p">](</span><span class="n">ptmp</span><span class="p">))</span><span class="o">*</span><span class="p">(</span><span class="n">ptmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">ptmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Evaluated 1D </span><span class="si">%s</span><span class="s2"> Posterior&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="c1"># Center PA for KDE</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p1val</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PA_offset</span>
+                <span class="n">p1val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p1val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">p1val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">))</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+            <span class="c1"># Return values</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;kde&#39;</span><span class="p">](</span><span class="n">p1val</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span> <span class="p">:</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">p2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Two parameters must be given to evaluate a 2D posterior.&quot;</span><span class="p">)</span>
+
+            <span class="n">p1val</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span>
+            <span class="n">p2val</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">p2</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">p1val</span><span class="p">)</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p1val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p1val</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">p2val</span><span class="p">)</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p2val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p2val</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p1val</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">p2val</span><span class="o">.</span><span class="n">ravel</span><span class="p">()))</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Shapes and types of the two parameters must be identical.&quot;</span><span class="p">)</span>
+            
+            <span class="n">key</span> <span class="o">=</span> <span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;-&#39;</span><span class="o">+</span><span class="n">dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># Lazy construction ...</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="p">:</span>
+                <span class="c1"># Create KDE object</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;kde&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">_create_unormalized_posterior</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_summary</span><span class="p">,</span><span class="n">dims</span><span class="o">=</span><span class="n">dim</span><span class="p">,</span><span class="n">quality_cut</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_quality_cut</span><span class="p">,</span><span class="n">ebpc_quality_statistic</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_quality_statistic</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)}</span>
+                <span class="c1"># Normalize</span>
+                <span class="n">p1min</span><span class="p">,</span><span class="n">p1max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_parameter_limits</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="n">p1tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">p1min</span><span class="p">,</span><span class="n">p1max</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_norm_size_2d</span><span class="p">)</span>
+                <span class="n">p2min</span><span class="p">,</span><span class="n">p2max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_parameter_limits</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="n">p2tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">p2min</span><span class="p">,</span><span class="n">p2max</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_norm_size_2d</span><span class="p">)</span>
+                <span class="n">X</span><span class="p">,</span><span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">p1tmp</span><span class="p">,</span><span class="n">p2tmp</span><span class="p">)</span>
+                <span class="n">ptmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">X</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">Y</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;kde&#39;</span><span class="p">](</span><span class="n">ptmp</span><span class="p">))</span><span class="o">*</span><span class="p">(</span><span class="n">p1tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">p1tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">p2tmp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">p2tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Evaluated 1D </span><span class="si">%s</span><span class="s2"> Posterior&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
+            <span class="c1"># Center PA for KDE</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p1val</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PA_offset</span>
+                <span class="n">p1val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p1val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">p1val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">))</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>                
+            <span class="k">if</span> <span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p2val</span> <span class="o">-=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PA_offset</span>
+                <span class="n">p2val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p2val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">p2val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">))</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>                
+            <span class="c1"># Reformat data into a sequence of points</span>
+            <span class="n">ptmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">([</span><span class="n">p1val</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">p2val</span><span class="o">.</span><span class="n">ravel</span><span class="p">()])</span>
+            <span class="c1"># Return values after reshaping to match input data structures</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p1val</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;kde&#39;</span><span class="p">](</span><span class="n">ptmp</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">p1val</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;norm&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;kde&#39;</span><span class="p">](</span><span class="n">ptmp</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">p1val</span><span class="o">.</span><span class="n">shape</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>                
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Only 1D and 2D posteriors are defined at this time.&quot;</span><span class="p">)</span></div></div>
+        
+
+
+<div class="viewcode-block" id="MultiEpochSnapshotPosterior"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.MultiEpochSnapshotPosterior">[docs]</a><span class="k">class</span> <span class="nc">MultiEpochSnapshotPosterior</span><span class="p">(</span><span class="n">SnapshotPosterior</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Python class that encapsulates and accomodates the combination of</span>
+<span class="sd">    multiple single-epoch snapshot analyses for a single model.</span>
+
+<span class="sd">    Assumes that the joint flux prior is uninformative.</span>
+<span class="sd">    </span>
+<span class="sd">    Fixes the (spin) PA and M to be constant across all epochs (i.e., no precession).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      single_epoch_list (SingleEpochSnapshotPosterior): A list of single-epoch snapshot posterior objects containing the comparisons to be combined.</span>
+<span class="sd">      verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">single_epoch_list</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">single_epoch_list</span> <span class="o">=</span> <span class="n">single_epoch_list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        
+<div class="viewcode-block" id="MultiEpochSnapshotPosterior.generate"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.MultiEpochSnapshotPosterior.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">PA_size</span><span class="o">=</span><span class="mi">360</span><span class="p">,</span><span class="n">M_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span><span class="n">generate_single_epochs</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function to compute the combined AIS score and posterior in</span>
+<span class="sd">        one step.  These are then returned using access functionis.</span>
+
+<span class="sd">        Warning:</span>
+<span class="sd">          * Two-sample KS tests with one samples is poorly defined and may not lead to sensible behavior.  Generally, the KS test appears to be a poor metric for assessing ifthe recovered quality statistic (e.g., reduced chi-squared) is drawn from the theoretical distribution.  Because the theoretical distribution is (u,v)-coverage-dependent, combiining multiple observations is not a viable path to improving the applicability of the KS test.</span>
+<span class="sd">          * By default, combines AIS scores from single-epoch as if they are proportional to the Bayesian evidence.  If a binary choice is desired, set binary_ais_cut to appropriate value.</span>
+<span class="sd">          * Treats ensemble-based posterior estimates as true posterior.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          PA_size (int): Number of PA values with which to span [-180,180).</span>
+<span class="sd">          M_size (int): Number of M values with which to span [0,10) x 1e9 Msun.</span>
+<span class="sd">          generate_single_epochs (bool): If True, will generate the single-epoch snapshot posteriors.  This should be the desired behavior.  However, if the single-epoch snapshot posteriors must be separately generated, this argument may be set to False. Default: True.</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+<span class="sd">          **kwargs (dict): Dictionary of key-word arguments to be passed to the SingleEpochSnapshotPosterior objects generate function.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">          None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1"># Make a set of PA&#39;s and M&#39;s over which to grid the posteriors for</span>
+        <span class="c1"># integration</span>
+        <span class="n">PA</span><span class="p">,</span> <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span><span class="mi">180</span><span class="p">,</span><span class="n">PA_size</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="n">M_size</span><span class="p">))</span>
+        
+        <span class="c1"># Accumulate the evidence and the combined posteriors.  This is simply a product over the list of single-epoch snapshot posteriors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">PA</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">sesp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">single_epoch_list</span> <span class="p">:</span>
+
+            <span class="c1"># Generate the relevant information in the</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">generate_single_epochs</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">sesp</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="o">*=</span> <span class="n">sesp</span><span class="o">.</span><span class="n">evidence</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="n">ptmp</span> <span class="o">=</span> <span class="n">sesp</span><span class="o">.</span><span class="n">posterior</span><span class="p">([</span><span class="s1">&#39;PA&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">],</span><span class="n">PA</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;sesp norm:&quot;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ptmp</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">PA</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">PA</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">p</span> <span class="o">*=</span> <span class="n">ptmp</span>
+
+        <span class="c1"># Integrate over the parameter space and normalize</span>
+        <span class="n">pnorm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">PA</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">PA</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="o">*=</span> <span class="n">pnorm</span>
+        <span class="n">p</span> <span class="o">*=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">pnorm</span>
+
+        <span class="c1"># Construct interpolation objects for posterior</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="p">[</span><span class="s1">&#39;PA-M&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sint</span><span class="o">.</span><span class="n">RectBivariateSpline</span><span class="p">(</span><span class="n">PA</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span><span class="n">M</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">p</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="p">[</span><span class="s1">&#39;M-PA&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sint</span><span class="o">.</span><span class="n">RectBivariateSpline</span><span class="p">(</span><span class="n">M</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">PA</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span><span class="n">p</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="p">[</span><span class="s1">&#39;PA&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sint</span><span class="o">.</span><span class="n">interp1d</span><span class="p">(</span><span class="n">PA</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span><span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="p">[</span><span class="s1">&#39;M&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sint</span><span class="o">.</span><span class="n">interp1d</span><span class="p">(</span><span class="n">M</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">PA</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">PA</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span><span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="MultiEpochSnapshotPosterior.evidence"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.MultiEpochSnapshotPosterior.evidence">[docs]</a>    <span class="k">def</span> <span class="nf">evidence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Access to combined score computed by generate function.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (float): AIS score.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: combined AIS score not yet computed.  You should run generate(...) first.&quot;</span><span class="p">)</span>
+            
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span></div>
+
+
+<div class="viewcode-block" id="MultiEpochSnapshotPosterior.posterior"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.MultiEpochSnapshotPosterior.posterior">[docs]</a>    <span class="k">def</span> <span class="nf">posterior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Access to the normalized 1D or 2D posterior listed in params.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          dim (list): Lists of strings of parameter names for which to evaluate the posterior.</span>
+<span class="sd">          p1 (float,numpy.ndarray): Value of first dimension parameter at which to evaluate the posterior.</span>
+<span class="sd">          p2 (float,numpy.ndarray): Value of second dimension parameter at which to evaluate the posterior, if 2D posterior.</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (float,numpy.ndarray): Value of posterior at desired parameter locations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: combined posterior not yet computed.  You should run generate(...) first.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span><span class="nb">str</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">dim</span> <span class="o">=</span> <span class="p">[</span><span class="n">dim</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+            <span class="c1"># Wrap PA into tabulated ranges</span>
+            <span class="n">p1val</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">p1val</span><span class="p">)</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p1val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p1val</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p1val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p1val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">p1val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">))</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+            <span class="c1"># Return the posterior evaluated at the proper points</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">](</span><span class="n">p1val</span><span class="p">)</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized parameter name </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dim</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span> <span class="p">:</span>
+            <span class="c1"># Wrap PA into tabulated ranges</span>
+            <span class="n">p1val</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span>
+            <span class="n">p2val</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">p2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">p1val</span><span class="p">)</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p1val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p1val</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">p2val</span><span class="p">)</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p2val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p2val</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p1val</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">p2val</span><span class="o">.</span><span class="n">ravel</span><span class="p">()))</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Shapes and types of the two parameters must be identical.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p1val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p1val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">p1val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">))</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p2val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p2val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">p2val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">))</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+            <span class="c1"># Return the posterior evaluated at the proper points</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;-&#39;</span><span class="o">+</span><span class="n">dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>            
+            <span class="k">if</span> <span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="p">:</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">](</span><span class="n">p1val</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span><span class="n">p2val</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span><span class="n">grid</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span><span class="n">p1val</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized parameter name </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Only 1D and 2D posteriors are defined at this time.&quot;</span><span class="p">)</span></div></div>
+    
+
+<div class="viewcode-block" id="MultiModelSnapshotPosterior"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.MultiModelSnapshotPosterior">[docs]</a><span class="k">class</span> <span class="nc">MultiModelSnapshotPosterior</span><span class="p">(</span><span class="n">SnapshotPosterior</span><span class="p">)</span> <span class="p">:</span>        
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A Python class that encapsulates and accomodates the combination of</span>
+<span class="sd">    the posteriors from multiple models.  This may be done either for a</span>
+<span class="sd">    set of single-epoch or multi-epoch models (or both, though this makes</span>
+<span class="sd">    less sense).</span>
+
+<span class="sd">    Assumes that the joint flux prior is uninformative and marginalizes</span>
+<span class="sd">    over it.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">      snapshot_list (SingleEpochSnapshotPosterior): A list of single-epoch snapshot posterior objects containing the comparisons to be combined.</span>
+<span class="sd">      verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">snapshot_posterior_list</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">snapshot_posterior_list</span> <span class="o">=</span> <span class="n">snapshot_posterior_list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Zlist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<div class="viewcode-block" id="MultiModelSnapshotPosterior.generate"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.MultiModelSnapshotPosterior.generate">[docs]</a>    <span class="k">def</span> <span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">PA_size</span><span class="o">=</span><span class="mi">360</span><span class="p">,</span><span class="n">M_size</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span><span class="n">generate_snapshots</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Utility function to compute the combined evidence and posterior in</span>
+<span class="sd">        one step.  These are then returned using access functionis.</span>
+
+<span class="sd">        Warning:</span>
+<span class="sd">          * Treats evidence and posteriors estimates of snapshot posteriors as if they are formally real.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          PA_size (int): Number of PA values with which to span [-180,180).</span>
+<span class="sd">          M_size (int): Number of M values with which to span [0,10) x 1e9 Msun.</span>
+<span class="sd">          generate_snapshots (bool): If True, will generate the snapshot posteriors.  This should be the desired behavior.  However, if the snapshot posteriors must be separately generated, this argument may be set to False. Default: True.</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+<span class="sd">          **kwargs (dict): Dictionary of key-word arguments to be passed to the SnapshotPosterior objects generate function.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">          None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Make a set of PA&#39;s and M&#39;s over which to grid the posteriors for</span>
+        <span class="c1"># integration</span>
+        <span class="n">PA</span><span class="p">,</span> <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span><span class="mi">180</span><span class="p">,</span><span class="n">PA_size</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="n">M_size</span><span class="p">))</span>
+
+        <span class="c1"># Accumulate the evidence and the combined posteriors.  This is simply a product over the list of single-epoch snapshot posteriors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Zlist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot_posterior_list</span><span class="p">))</span>
+
+        <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">PA</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">sp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">snapshot_posterior_list</span><span class="p">)</span> <span class="p">:</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">generate_snapshots</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;PA_size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">PA_size</span>
+                <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;M_size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">M_size</span>
+                <span class="n">sp</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">Zlist</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">evidence</span><span class="p">(</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="n">p</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Zlist</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">sp</span><span class="o">.</span><span class="n">posterior</span><span class="p">([</span><span class="s1">&#39;PA&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">],</span><span class="n">PA</span><span class="p">,</span><span class="n">M</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Integrate over the parameter space and normalize</span>
+        <span class="n">pnorm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">PA</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">PA</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="o">=</span> <span class="n">pnorm</span>
+        <span class="n">p</span> <span class="o">*=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">pnorm</span>
+
+
+        <span class="c1"># Construct interpolation objects for posterior</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="p">[</span><span class="s1">&#39;PA-M&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sint</span><span class="o">.</span><span class="n">RectBivariateSpline</span><span class="p">(</span><span class="n">PA</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span><span class="n">M</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">p</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="p">[</span><span class="s1">&#39;M-PA&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sint</span><span class="o">.</span><span class="n">RectBivariateSpline</span><span class="p">(</span><span class="n">M</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">PA</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span><span class="n">p</span><span class="p">)</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="p">[</span><span class="s1">&#39;PA&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sint</span><span class="o">.</span><span class="n">interp1d</span><span class="p">(</span><span class="n">PA</span><span class="p">[</span><span class="mi">0</span><span class="p">,:],</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">M</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">M</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span><span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="p">[</span><span class="s1">&#39;M&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sint</span><span class="o">.</span><span class="n">interp1d</span><span class="p">(</span><span class="n">M</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">PA</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">PA</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]),</span><span class="n">fill_value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="MultiModelSnapshotPosterior.evidence"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.MultiModelSnapshotPosterior.evidence">[docs]</a>    <span class="k">def</span> <span class="nf">evidence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Access to combined score computed by generate function.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (float): AIS score.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: combined AIS score not yet computed.  You should run generate(...) first.&quot;</span><span class="p">)</span>
+            
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">Z</span></div>
+
+    
+<div class="viewcode-block" id="MultiModelSnapshotPosterior.model_evidences"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.MultiModelSnapshotPosterior.model_evidences">[docs]</a>    <span class="k">def</span> <span class="nf">model_evidences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">relative_to_max</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Access to individual model evidence list.</span>
+
+
+<span class="sd">        Args:</span>
+<span class="sd">          relative_to_max (bool): If True, normalizes relative to the maximum value. Default: False.</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (numpy.array): List of evidence values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: combined model evidences ot yet computed.  You should run generate(...) first.&quot;</span><span class="p">)</span>
+
+        <span class="n">model_Zs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Zlist</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">relative_to_max</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">model_Zs</span> <span class="o">=</span> <span class="n">model_Zs</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">model_Zs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">model_Zs</span></div>
+        
+
+<div class="viewcode-block" id="MultiModelSnapshotPosterior.posterior"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.MultiModelSnapshotPosterior.posterior">[docs]</a>    <span class="k">def</span> <span class="nf">posterior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dim</span><span class="p">,</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Access to the normalized 1D or 2D posterior listed in params.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">          dim (list): Lists of strings of parameter names for which to evaluate the posterior.</span>
+<span class="sd">          p1 (float,numpy.ndarray): Value of first dimension parameter at which to evaluate the posterior.</span>
+<span class="sd">          p2 (float,numpy.ndarray): Value of second dimension parameter at which to evaluate the posterior, if 2D posterior.</span>
+<span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">          (float,numpy.ndarray): Value of posterior at desired parameter locations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Z</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: combined posterior not yet computed.  You should run generate(...) first.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span><span class="nb">str</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">dim</span> <span class="o">=</span> <span class="p">[</span><span class="n">dim</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+            <span class="c1"># Wrap PA into tabulated ranges</span>
+            <span class="n">p1val</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">p1val</span><span class="p">)</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p1val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p1val</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p1val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p1val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">p1val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">))</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+            <span class="c1"># Return the posterior evaluated at the proper points</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">](</span><span class="n">p1val</span><span class="p">)</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized parameter name </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dim</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dim</span><span class="p">)</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span> <span class="p">:</span>
+            <span class="c1"># Wrap PA into tabulated ranges</span>
+            <span class="n">p1val</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">p1</span><span class="p">)</span>
+            <span class="n">p2val</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">p2</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">p1val</span><span class="p">)</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p1val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p1val</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">p2val</span><span class="p">)</span> <span class="ow">is</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p2val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">p2val</span><span class="p">])</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p1val</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">p2val</span><span class="o">.</span><span class="n">ravel</span><span class="p">()))</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Shapes and types of the two parameters must be identical.&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p1val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p1val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">p1val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">))</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">p2val</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p2val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">p2val</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.</span><span class="p">))</span><span class="o">*</span><span class="mf">180.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+
+            <span class="c1"># Return the posterior evaluated at the proper points</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;-&#39;</span><span class="o">+</span><span class="n">dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>            
+            <span class="k">if</span> <span class="p">(</span><span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="p">:</span>
+                <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">posteriors</span><span class="p">[</span><span class="n">key</span><span class="p">](</span><span class="n">p1val</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span><span class="n">p2val</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span><span class="n">grid</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span><span class="n">p1val</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized parameter name </span><span class="si">%s</span><span class="s2"> </span><span class="si">%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dim</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">dim</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Only 1D and 2D posteriors are defined at this time.&quot;</span><span class="p">)</span></div></div>
+    
+
+        
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Themis Development Team.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.3.0+112.g7d69368.dirty',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            LINK_SUFFIX:'.html', 
+            HAS_SOURCE: 'true'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/language_data.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>data.data &mdash; ThemisPy 0.3.0+88.g1039f7b documentation</title>
+  <title>data.data &mdash; ThemisPy 0.3.0+112.g7d69368.dirty documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+88.g1039f7b documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+112.g7d69368.dirty documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.0+88.g1039f7b
+                0.3.0+112.g7d69368.dirty
               </div>
             
           
@@ -199,7 +199,7 @@
 <span class="sd">      (numpy.recarray): An ehtim closure phase array.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
     
     <span class="c1"># make a copy</span>
@@ -436,7 +436,7 @@
 <span class="sd">      (numpy.ndarray,numpy.ndarray): Field rotation angles for station1 and station2 for the full data set in obs.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
     
     
@@ -519,10 +519,10 @@
 <span class="sd">      None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">astropy_found</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">astropy_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="c1"># Check polrep</span>
@@ -576,7 +576,7 @@
             <span class="n">LR</span> <span class="o">=</span> <span class="n">LR</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">efr1</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">conj</span><span class="p">(</span><span class="n">efr2</span><span class="p">)</span>
             
         <span class="n">SNR</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">RR</span><span class="p">)</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">LL</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="n">RRerr</span><span class="o">+</span><span class="n">LLerr</span><span class="p">)</span>
-        
+
         <span class="c1"># If we want to still use only partial-hand visibilities, </span>
         <span class="k">if</span> <span class="p">(</span><span class="n">keep_partial_hands</span><span class="p">)</span> <span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">RR</span><span class="p">))</span> <span class="p">:</span>
@@ -598,6 +598,8 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">([</span><span class="n">RR</span><span class="p">,</span><span class="n">LL</span><span class="p">,</span><span class="n">RL</span><span class="p">,</span><span class="n">LR</span><span class="p">])</span><span class="o">.</span><span class="n">any</span><span class="p">()</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">SNR</span><span class="o">&gt;</span><span class="n">snrcut</span><span class="p">)</span> <span class="p">:</span>
                 <span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%25s</span><span class="s1"> </span><span class="si">%4i</span><span class="s1"> </span><span class="si">%4i</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%4s</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="s1"> </span><span class="si">%15.8f</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">%</span><span class="p">(</span><span class="n">src</span><span class="p">,</span><span class="n">year</span><span class="p">,</span><span class="n">day</span><span class="p">,</span><span class="n">time</span><span class="p">,</span><span class="n">bl</span><span class="p">,</span><span class="n">u</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">fr1</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span><span class="n">fr2</span><span class="p">[</span><span class="n">ii</span><span class="p">],</span><span class="n">RR</span><span class="o">.</span><span class="n">real</span><span class="p">,</span><span class="n">RRerr</span><span class="p">,</span><span class="n">RR</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span><span class="n">RRerr</span><span class="p">,</span><span class="n">LL</span><span class="o">.</span><span class="n">real</span><span class="p">,</span><span class="n">LLerr</span><span class="p">,</span><span class="n">LL</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span><span class="n">LLerr</span><span class="p">,</span><span class="n">RL</span><span class="o">.</span><span class="n">real</span><span class="p">,</span><span class="n">RLerr</span><span class="p">,</span><span class="n">RL</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span><span class="n">RLerr</span><span class="p">,</span><span class="n">LR</span><span class="o">.</span><span class="n">real</span><span class="p">,</span><span class="n">LRerr</span><span class="p">,</span><span class="n">LR</span><span class="o">.</span><span class="n">imag</span><span class="p">,</span><span class="n">LRerr</span><span class="p">))</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Data point failing SNR cut found on </span><span class="si">%4s</span><span class="s2"> bseline with SNR </span><span class="si">%g</span><span class="s2"> with snrcut </span><span class="si">%g</span><span class="s2">.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">bl</span><span class="p">,</span><span class="n">SNR</span><span class="p">,</span><span class="n">snrcut</span><span class="p">),</span> <span class="ne">Warning</span><span class="p">)</span>
         <span class="k">else</span> <span class="p">:</span>
             <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;NaN crosshand visibilities found on </span><span class="si">%4s</span><span class="s2"> baseline, perhaps one hand is missing?&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">bl</span><span class="p">),</span> <span class="ne">Warning</span><span class="p">)</span>
 
@@ -623,10 +625,10 @@
 <span class="sd">      None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">astropy_found</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">astropy_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="c1"># Check polrep</span>
@@ -683,10 +685,10 @@
 <span class="sd">      None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
     
-    <span class="k">if</span> <span class="p">(</span><span class="n">astropy_found</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">astropy_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="c1"># Check polrep</span>
@@ -738,10 +740,10 @@
 <span class="sd">      None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">ehtim_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
     
-    <span class="k">if</span> <span class="p">(</span><span class="n">astropy_found</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">astropy_found</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="c1"># Check polrep</span>
@@ -1102,18 +1104,22 @@
             <span class="k">if</span> <span class="p">(</span> <span class="nb">int</span><span class="p">(</span><span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;toffset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mjd</span><span class="p">)</span> <span class="o">!=</span> <span class="n">obs</span><span class="o">.</span><span class="n">mjd</span> <span class="p">)</span> <span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Observation and gain reconstruction dates differ (mjd </span><span class="si">%i</span><span class="s2"> vs </span><span class="si">%i</span><span class="s2">). Cowardly refusing to continue.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">mjd</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;toffset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mjd</span><span class="p">)))</span>
             <span class="n">gain_time_offset_hour</span> <span class="o">=</span> <span class="mf">24.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;toffset&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">mjd</span><span class="o">%</span><span class="mi">1</span><span class="p">)</span>
-            <span class="n">gain_time_list</span> <span class="o">=</span> <span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;tstart&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">gain_time_offset_hour</span>
+            <span class="c1"># gain_time_list = gain_data[&#39;tstart&#39;] + gain_time_offset_hour</span>
+            <span class="n">gain_time_list</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;tstart&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;tend&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">gain_time_offset_hour</span>
             <span class="n">time_precision_slop</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="o">/</span><span class="mf">3600.0</span> <span class="c1"># Permit a slop of 1 ms in the time comparisons</span>
             <span class="k">if</span> <span class="p">(</span> <span class="n">od_time_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&lt;</span><span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;tstart&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">gain_time_offset_hour</span><span class="o">-</span><span class="n">time_precision_slop</span> <span class="ow">or</span> <span class="n">od_time_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">&gt;</span><span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;tend&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">gain_time_offset_hour</span><span class="o">+</span><span class="n">time_precision_slop</span> <span class="p">)</span> <span class="p">:</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">od_time_list</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;tstart&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">gain_time_offset_hour</span><span class="o">-</span><span class="n">time_precision_slop</span><span class="p">)</span>
                 <span class="nb">print</span><span class="p">(</span><span class="n">od_time_list</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;tend&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">gain_time_offset_hour</span><span class="o">+</span><span class="n">time_precision_slop</span><span class="p">)</span>
                 <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;gain_data does not cover the observation times. Cowardly refusing to continue.&quot;</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="n">gain_data</span><span class="p">)</span>
+        <span class="c1"># print(gain_data)</span>
         <span class="c1"># Generate Caltable object</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">verbosity</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span> <span class="p">:</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Sites:&quot;</span><span class="p">,</span><span class="n">gain_station_names</span><span class="p">)</span>
             <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Times:&quot;</span><span class="p">,</span><span class="n">od_time_list</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Gain time list:&quot;</span><span class="p">,</span><span class="n">gain_time_list</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Gain epoch starts:&quot;</span><span class="p">,</span><span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;tstart&#39;</span><span class="p">])</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Gain epoch ends:&quot;</span><span class="p">,</span><span class="n">gain_data</span><span class="p">[</span><span class="s1">&#39;tend&#39;</span><span class="p">])</span>
         <span class="c1">#for k in range(len(gain_station_names)):</span>
         <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">gain_station_names</span> <span class="p">:</span>
             <span class="n">datatable</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1122,7 +1128,7 @@
             <span class="n">datatables</span><span class="p">[</span><span class="n">station</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">datatable</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">dterm_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">dterm_data</span><span class="p">)</span>
+        <span class="c1"># print(dterm_data)</span>
         <span class="c1"># Fix obs.tarr to include dterms</span>
         <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">tarr</span><span class="p">))</span> <span class="p">:</span>
             <span class="n">station</span> <span class="o">=</span> <span class="n">obs</span><span class="o">.</span><span class="n">tarr</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="s1">&#39;site&#39;</span><span class="p">]</span>
@@ -1130,13 +1136,13 @@
                 <span class="n">obs</span><span class="o">.</span><span class="n">tarr</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="s1">&#39;dr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dterm_data</span><span class="p">[</span><span class="n">station</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
                 <span class="n">obs</span><span class="o">.</span><span class="n">tarr</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="s1">&#39;dl&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dterm_data</span><span class="p">[</span><span class="n">station</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
 
-    <span class="c1"># Generaet caltable object</span>
+    <span class="c1"># Generate caltable object</span>
     <span class="n">cal</span><span class="o">=</span><span class="n">eh</span><span class="o">.</span><span class="n">caltable</span><span class="o">.</span><span class="n">Caltable</span><span class="p">(</span><span class="n">obs</span><span class="o">.</span><span class="n">ra</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">dec</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">rf</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">bw</span><span class="p">,</span> <span class="n">datatables</span><span class="p">,</span> <span class="n">obs</span><span class="o">.</span><span class="n">tarr</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">mjd</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">mjd</span><span class="p">,</span> <span class="n">timetype</span><span class="o">=</span><span class="n">obs</span><span class="o">.</span><span class="n">timetype</span><span class="p">)</span>
 
     <span class="c1"># Calibrate the observation data (Yikes!!)</span>
-    <span class="n">obs_cal</span> <span class="o">=</span> <span class="n">cal</span><span class="o">.</span><span class="n">applycal</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Here&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">obs_cal</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">))</span>
+    <span class="n">obs_cal</span> <span class="o">=</span> <span class="n">cal</span><span class="o">.</span><span class="n">applycal</span><span class="p">(</span><span class="n">obs</span><span class="p">,</span> <span class="n">interp</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">,</span> <span class="n">extrapolate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1"># print(&quot;Here&quot;)</span>
+    <span class="c1"># print(obs_cal.unpack(&quot;time&quot;))</span>
 
     <span class="c1"># Apply dterms</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">dterm_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
@@ -1144,9 +1150,9 @@
         <span class="c1"># Get the field rotation angles</span>
         <span class="n">fr1</span><span class="p">,</span><span class="n">fr2</span><span class="o">=</span><span class="n">reconstruct_field_rotation_angles</span><span class="p">(</span><span class="n">obs_cal</span><span class="p">)</span>
 
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Field rotation angles:&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">fr1</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">fr2</span><span class="p">)</span>
+        <span class="c1"># print(&quot;Field rotation angles:&quot;)</span>
+        <span class="c1"># print(fr1)</span>
+        <span class="c1"># print(fr2)</span>
 
         
         <span class="c1"># Make a copy that generates the circular basis</span>
@@ -1382,7 +1388,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+88.g1039f7b',
+            VERSION:'0.3.0+112.g7d69368.dirty',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
