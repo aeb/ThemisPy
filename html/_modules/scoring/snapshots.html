@@ -217,8 +217,8 @@
 <span class="sd">    Args:</span>
 <span class="sd">      ais_name (str): Name of a file containing the AIS fit information. If None, some functions will not be available. Default: None.</span>
 <span class="sd">      snapshot_scoring_name (str): Name of a file containing the snapshot scoring fit information. If None, some functions will not be available. Default: None.</span>
-<span class="sd">      flux_scale (float): The total image flux assumed during GRMHD library construction. Default: 0.6.</span>
-<span class="sd">      mass_scale (float): The black hole mass in 1e9 solar masses assumed during GRMHD library construction. Default: 6.5.</span>
+<span class="sd">      eht_data_type (str): Type of EHT data being fitted. Options include &#39;V&#39; (complex visibilities) and &#39;VACP&#39; (visibility amplitudes and closure phases). Default: &#39;V&#39;.</span>
+<span class="sd">      themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</span>
 <span class="sd">      verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
 
 <span class="sd">    Attributes:</span>
@@ -339,7 +339,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">          method (str): Scoring method. Availiable options are listed in AIS_score.</span>
-<span class="sd">          ais_quality_statistic (str): Name of the quality statistic on which to cut. Acceptable names are listed in AIS_score. Default: &#39;ChiSquared&#39;.</span>
+<span class="sd">          ais_quality_statistic (str): Name of the quality statistic on which to cut. Acceptable names are listed in :func:`AIS_score`. Default: &#39;ChiSquared&#39;.</span>
 <span class="sd">          binary_ais_cut (float): If not None, the evidence will be a step function in the AIS score, zero below the cut and unity above it.  If None, the evidence will be set to the AIS score. Default: None.</span>
 <span class="sd">          ebpc_quality_cut (float): A number between (0,1] indicating the fraction of data to keep. Default: 0.5.</span>
 <span class="sd">          ebpc_quality_statistic (str): Name of the quality statistic on which to cut. Acceptable names are &#39;Likelihood&#39; and &#39;ChiSquared&#39;. Default: &#39;Likelihood&#39;.</span>
@@ -676,7 +676,7 @@
 <span class="sd">    Fixes the (spin) PA and M to be constant across all epochs (i.e., no precession).</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">      single_epoch_list (SingleEpochSnapshotPosterior): A list of single-epoch snapshot posterior objects containing the comparisons to be combined.</span>
+<span class="sd">      single_epoch_list (SingleEpochSnapshotPosterior): A list of :class:`SingleEpochSnapshotPosterior` objects containing the comparisons to be combined.</span>
 <span class="sd">      verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -699,7 +699,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">          PA_size (int): Number of PA values with which to span [-180,180).</span>
-<span class="sd">          M_size (int): Number of M values with which to span [0,10) x 1e9 Msun.</span>
+<span class="sd">          M_size (int): Number of M values with which to span [0,10) uas.</span>
 <span class="sd">          generate_single_epochs (bool): If True, will generate the single-epoch snapshot posteriors.  This should be the desired behavior.  However, if the single-epoch snapshot posteriors must be separately generated, this argument may be set to False. Default: True.</span>
 <span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
 <span class="sd">          **kwargs (dict): Dictionary of key-word arguments to be passed to the SingleEpochSnapshotPosterior objects generate function.</span>
@@ -827,7 +827,7 @@
 <span class="sd">    over it.</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
-<span class="sd">      snapshot_list (SingleEpochSnapshotPosterior): A list of single-epoch snapshot posterior objects containing the comparisons to be combined.</span>
+<span class="sd">      snapshot_list (:class:`SnapshotPosterior`): A list of single-epoch or multi-epoch snapshot posterior objects containing the comparisons to be combined.</span>
 <span class="sd">      verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -849,7 +849,7 @@
 
 <span class="sd">        Args:</span>
 <span class="sd">          PA_size (int): Number of PA values with which to span [-180,180).</span>
-<span class="sd">          M_size (int): Number of M values with which to span [0,10) x 1e9 Msun.</span>
+<span class="sd">          M_size (int): Number of M values with which to span [0,10) uas.</span>
 <span class="sd">          generate_snapshots (bool): If True, will generate the snapshot posteriors.  This should be the desired behavior.  However, if the snapshot posteriors must be separately generated, this argument may be set to False. Default: True.</span>
 <span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
 <span class="sd">          **kwargs (dict): Dictionary of key-word arguments to be passed to the SnapshotPosterior objects generate function.</span>
@@ -909,7 +909,6 @@
 <div class="viewcode-block" id="MultiModelSnapshotPosterior.model_evidences"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.MultiModelSnapshotPosterior.model_evidences">[docs]</a>    <span class="k">def</span> <span class="nf">model_evidences</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">relative_to_max</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Access to individual model evidence list.</span>
-
 
 <span class="sd">        Args:</span>
 <span class="sd">          relative_to_max (bool): If True, normalizes relative to the maximum value. Default: False.</span>

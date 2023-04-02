@@ -180,7 +180,7 @@ multiple single-epoch snapshot analyses for a single model.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>single_epoch_list</strong> (<a class="reference internal" href="#scoring.snapshots.SingleEpochSnapshotPosterior" title="scoring.snapshots.SingleEpochSnapshotPosterior"><em>SingleEpochSnapshotPosterior</em></a>) – A list of single-epoch snapshot posterior objects containing the comparisons to be combined.</p></li>
+<li><p><strong>single_epoch_list</strong> (<a class="reference internal" href="#scoring.snapshots.SingleEpochSnapshotPosterior" title="scoring.snapshots.SingleEpochSnapshotPosterior"><em>SingleEpochSnapshotPosterior</em></a>) – A list of <a class="reference internal" href="#scoring.snapshots.SingleEpochSnapshotPosterior" title="scoring.snapshots.SingleEpochSnapshotPosterior"><code class="xref py py-class docutils literal notranslate"><span class="pre">SingleEpochSnapshotPosterior</span></code></a> objects containing the comparisons to be combined.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
 </ul>
 </dd>
@@ -219,7 +219,7 @@ one step.  These are then returned using access functionis.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>PA_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of PA values with which to span [-180,180).</p></li>
-<li><p><strong>M_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of M values with which to span [0,10) x 1e9 Msun.</p></li>
+<li><p><strong>M_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of M values with which to span [0,10) uas.</p></li>
 <li><p><strong>generate_single_epochs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, will generate the single-epoch snapshot posteriors.  This should be the desired behavior.  However, if the single-epoch snapshot posteriors must be separately generated, this argument may be set to False. Default: True.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
 <li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Dictionary of key-word arguments to be passed to the SingleEpochSnapshotPosterior objects generate function.</p></li>
@@ -267,7 +267,7 @@ over it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>snapshot_list</strong> (<a class="reference internal" href="#scoring.snapshots.SingleEpochSnapshotPosterior" title="scoring.snapshots.SingleEpochSnapshotPosterior"><em>SingleEpochSnapshotPosterior</em></a>) – A list of single-epoch snapshot posterior objects containing the comparisons to be combined.</p></li>
+<li><p><strong>snapshot_list</strong> (<a class="reference internal" href="#scoring.snapshots.SnapshotPosterior" title="scoring.snapshots.SnapshotPosterior"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnapshotPosterior</span></code></a>) – A list of single-epoch or multi-epoch snapshot posterior objects containing the comparisons to be combined.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
 </ul>
 </dd>
@@ -304,7 +304,7 @@ one step.  These are then returned using access functionis.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>PA_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of PA values with which to span [-180,180).</p></li>
-<li><p><strong>M_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of M values with which to span [0,10) x 1e9 Msun.</p></li>
+<li><p><strong>M_size</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of M values with which to span [0,10) uas.</p></li>
 <li><p><strong>generate_snapshots</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, will generate the snapshot posteriors.  This should be the desired behavior.  However, if the snapshot posteriors must be separately generated, this argument may be set to False. Default: True.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
 <li><p><strong>**kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><em>dict</em></a>) – Dictionary of key-word arguments to be passed to the SnapshotPosterior objects generate function.</p></li>
@@ -378,8 +378,8 @@ the associated collection of snapshot images).</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ais_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of a file containing the AIS fit information. If None, some functions will not be available. Default: None.</p></li>
 <li><p><strong>snapshot_scoring_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of a file containing the snapshot scoring fit information. If None, some functions will not be available. Default: None.</p></li>
-<li><p><strong>flux_scale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – The total image flux assumed during GRMHD library construction. Default: 0.6.</p></li>
-<li><p><strong>mass_scale</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – The black hole mass in 1e9 solar masses assumed during GRMHD library construction. Default: 6.5.</p></li>
+<li><p><strong>eht_data_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Type of EHT data being fitted. Options include ‘V’ (complex visibilities) and ‘VACP’ (visibility amplitudes and closure phases). Default: ‘V’.</p></li>
+<li><p><strong>themis_pa_fix</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
 </ul>
 </dd>
@@ -443,7 +443,7 @@ posteriors and Bayesian evidences.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>method</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Scoring method. Availiable options are listed in AIS_score.</p></li>
-<li><p><strong>ais_quality_statistic</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of the quality statistic on which to cut. Acceptable names are listed in AIS_score. Default: ‘ChiSquared’.</p></li>
+<li><p><strong>ais_quality_statistic</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of the quality statistic on which to cut. Acceptable names are listed in <a class="reference internal" href="#scoring.snapshots.SingleEpochSnapshotPosterior.AIS_score" title="scoring.snapshots.SingleEpochSnapshotPosterior.AIS_score"><code class="xref py py-func docutils literal notranslate"><span class="pre">AIS_score()</span></code></a>. Default: ‘ChiSquared’.</p></li>
 <li><p><strong>binary_ais_cut</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – If not None, the evidence will be a step function in the AIS score, zero below the cut and unity above it.  If None, the evidence will be set to the AIS score. Default: None.</p></li>
 <li><p><strong>ebpc_quality_cut</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – A number between (0,1] indicating the fraction of data to keep. Default: 0.5.</p></li>
 <li><p><strong>ebpc_quality_statistic</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of the quality statistic on which to cut. Acceptable names are ‘Likelihood’ and ‘ChiSquared’. Default: ‘Likelihood’.</p></li>
