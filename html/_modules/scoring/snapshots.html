@@ -380,7 +380,7 @@
 <span class="sd">        Computes and returns the AIS score using the prescribed method.</span>
 
 <span class="sd">        Warning:</span>
-<span class="sd">          * Two-sample KS tests with one samples is poorly defined and may not lead to sensible behavior.  Generally, the KS test appears to be a poor metric for assessing ifthe recovered quality statistic (e.g., reduced chi-squared) is drawn from the theoretical distribution.  Because the theoretical distribution is (u,v)-coverage-dependent, combiining multiple observations is not a viable path to improving the applicability of the KS test.</span>
+<span class="sd">          * The two-sample KS tests with one sample is poorly defined and may not lead to sensible behavior.  Generally, the KS test appears to be a poor metric for assessing if the recovered quality statistic (e.g., reduced chi-squared) is drawn from the theoretical distribution.  Because the theoretical distribution is (u,v)-coverage-dependent, combining multiple observations is not a viable path to improving the applicability of the KS test.</span>
 
 <span class="sd">        Args:</span>
 <span class="sd">          method (str): Scoring method, availiable types are &#39;double&#39; (double-sided p-value), &#39;high&#39; (high-sided p-value), and &#39;KS&#39; (Kolmogorov-Smirnov test).</span>
@@ -693,7 +693,7 @@
 <span class="sd">        one step.  These are then returned using access functionis.</span>
 
 <span class="sd">        Warning:</span>
-<span class="sd">          * Two-sample KS tests with one samples is poorly defined and may not lead to sensible behavior.  Generally, the KS test appears to be a poor metric for assessing ifthe recovered quality statistic (e.g., reduced chi-squared) is drawn from the theoretical distribution.  Because the theoretical distribution is (u,v)-coverage-dependent, combiining multiple observations is not a viable path to improving the applicability of the KS test.</span>
+<span class="sd">          * The two-sample KS tests with one sample is poorly defined and may not lead to sensible behavior.  Generally, the KS test appears to be a poor metric for assessing if the recovered quality statistic (e.g., reduced chi-squared) is drawn from the theoretical distribution.  Because the theoretical distribution is (u,v)-coverage-dependent, combining multiple observations is not a viable path to improving the applicability of the KS test.</span>
 <span class="sd">          * By default, combines AIS scores from single-epoch as if they are proportional to the Bayesian evidence.  If a binary choice is desired, set binary_ais_cut to appropriate value.</span>
 <span class="sd">          * Treats ensemble-based posterior estimates as true posterior.</span>
 
