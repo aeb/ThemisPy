@@ -783,7 +783,7 @@ class MultiModelSnapshotPosterior(SnapshotPosterior) :
 
         model_Zs = np.copy(self.Zlist)
         if (relative_to_max) :
-            model_Zs = model_Zs - np.max(model_Zs)
+            model_Zs = model_Zs/np.max(model_Zs)
         return model_Zs
         
 
