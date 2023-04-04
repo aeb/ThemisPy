@@ -145,7 +145,7 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
         Reads the output of an AIS run, assuming a fit_summaries file format with the fit to data last.
         
         Args:
-          fsfile (str): Name of file containing AIS fit information.
+          fsfile (str,list): Name of file, or list of names of files, containing AIS fit information.  If single file, expects data fit to be the last entry.  If a list of file names, expects the first to be the simulation fits and the second to be the data fit.
           eht_data_type (str): Type of EHT data being fitted. Options include 'V' (complex visibilities) and 'VACP' (visibility amplitudes and closure phases). Default: 'V'.
           themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.
           verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.
@@ -163,7 +163,13 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
             raise ValueError("Unrecognized eht_data_type, %s. Expects either 'V' or 'VACP'."%(eht_data_type))
 
         # index flux mass pa chisq likelihood
-        vals = np.loadtxt(fsfile,skiprows=1,usecols=cols)
+        if (isinstance(fsfile,list)):
+            vals_sim = np.loadtxt(fsfile[0],skiprows=1,usecols=cols)
+            vals_obs = np.loadtxt(fsfile[1],skiprows=1,usecols=cols).reshape([1,len(cols)]) # Expects exactly one record
+            vals = np.concatenate((vals_sim,vals_obs),axis=0)
+        else :
+            vals = np.loadtxt(fsfile,skiprows=1,usecols=cols)
+            
 
         # Adjust to flux, mass and PA in relevant units
         flux = vals[:,0] # Jy
