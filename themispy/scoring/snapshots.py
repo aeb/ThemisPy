@@ -234,7 +234,7 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
           * The two-sample KS test with one sample is poorly defined and may not lead to sensible behavior.  Generally, the KS test appears to be a poor metric for assessing if the recovered quality statistic (e.g., reduced chi-squared) is drawn from the theoretical distribution.  Because the theoretical distribution is (u,v)-coverage-dependent, combining multiple observations is not a viable path to improving the applicability of the KS test.
 
         Args:
-          method (str): Scoring method, availiable types are 'double' (double-sided p-value), 'high' (high-sided p-value), and 'KS' (Kolmogorov-Smirnov test).
+          method (str): Scoring method, availiable types are 'double' (double-sided p-value), 'high' (high-sided p-value), 'median' (fraction of models further from the median), and 'KS' (Kolmogorov-Smirnov test).
           ais_quality_statistic (str): Name of the quality statistic on which to cut. Acceptable names are 'Likelihood' and 'ChiSquared'. Default: 'ChiSquared'.
           verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.
 
@@ -257,6 +257,9 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
         if (method=='high') :
             return max(0.5,np.sum(q>=Q))/q.size
         elif (method=='double') :
+            plo = max(0.5,np.sum(q>=Q))/q.size
+            return 2*min(plo,1-plo)
+        elif (method=='median') :
             qmed = np.median(q)
             return max(0.5,np.sum(np.abs(q-qmed)>=np.abs(Q-qmed)))/q.size
         elif (method=='KS' or method=='KolmogorovSmirnov') : # Note that for a single sample, there is a minimum p-value that can be excluded!
