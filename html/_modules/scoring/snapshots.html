@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>scoring.snapshots &mdash; ThemisPy 0.3.0+112.g7d69368.dirty documentation</title>
+  <title>scoring.snapshots &mdash; ThemisPy 0.3.0+114.g97ac0e4 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+112.g7d69368.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+114.g97ac0e4 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.0+112.g7d69368.dirty
+                0.3.0+114.g97ac0e4
               </div>
             
           
@@ -383,7 +383,7 @@
 <span class="sd">          * The two-sample KS test with one sample is poorly defined and may not lead to sensible behavior.  Generally, the KS test appears to be a poor metric for assessing if the recovered quality statistic (e.g., reduced chi-squared) is drawn from the theoretical distribution.  Because the theoretical distribution is (u,v)-coverage-dependent, combining multiple observations is not a viable path to improving the applicability of the KS test.</span>
 
 <span class="sd">        Args:</span>
-<span class="sd">          method (str): Scoring method, availiable types are &#39;double&#39; (double-sided p-value), &#39;high&#39; (high-sided p-value), and &#39;KS&#39; (Kolmogorov-Smirnov test).</span>
+<span class="sd">          method (str): Scoring method, availiable types are &#39;double&#39; (double-sided p-value), &#39;high&#39; (high-sided p-value), &#39;median&#39; (fraction of models further from the median), and &#39;KS&#39; (Kolmogorov-Smirnov test).</span>
 <span class="sd">          ais_quality_statistic (str): Name of the quality statistic on which to cut. Acceptable names are &#39;Likelihood&#39; and &#39;ChiSquared&#39;. Default: &#39;ChiSquared&#39;.</span>
 <span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
 
@@ -406,6 +406,9 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">method</span><span class="o">==</span><span class="s1">&#39;high&#39;</span><span class="p">)</span> <span class="p">:</span>
             <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">q</span><span class="o">&gt;=</span><span class="n">Q</span><span class="p">))</span><span class="o">/</span><span class="n">q</span><span class="o">.</span><span class="n">size</span>
         <span class="k">elif</span> <span class="p">(</span><span class="n">method</span><span class="o">==</span><span class="s1">&#39;double&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">plo</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">q</span><span class="o">&gt;=</span><span class="n">Q</span><span class="p">))</span><span class="o">/</span><span class="n">q</span><span class="o">.</span><span class="n">size</span>
+            <span class="k">return</span> <span class="mi">2</span><span class="o">*</span><span class="nb">min</span><span class="p">(</span><span class="n">plo</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span><span class="n">plo</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">method</span><span class="o">==</span><span class="s1">&#39;median&#39;</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">qmed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">q</span><span class="o">-</span><span class="n">qmed</span><span class="p">)</span><span class="o">&gt;=</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Q</span><span class="o">-</span><span class="n">qmed</span><span class="p">)))</span><span class="o">/</span><span class="n">q</span><span class="o">.</span><span class="n">size</span>
         <span class="k">elif</span> <span class="p">(</span><span class="n">method</span><span class="o">==</span><span class="s1">&#39;KS&#39;</span> <span class="ow">or</span> <span class="n">method</span><span class="o">==</span><span class="s1">&#39;KolmogorovSmirnov&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="c1"># Note that for a single sample, there is a minimum p-value that can be excluded!</span>
@@ -1019,7 +1022,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+112.g7d69368.dirty',
+            VERSION:'0.3.0+114.g97ac0e4',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
