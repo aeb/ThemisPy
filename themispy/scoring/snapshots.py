@@ -257,8 +257,9 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
         if (method=='high') :
             return max(0.5,np.sum(q>=Q))/q.size
         elif (method=='double') :
-            plo = max(0.5,np.sum(q>=Q))/q.size
-            return 2*min(plo,1-plo)
+            # plo = max(0.5,np.sum(q>=Q))/q.size
+            plo = np.sum(q>=Q)/q.size
+            return 2*max(min(plo,1-plo),0.5/q.size)
         elif (method=='median') :
             qmed = np.median(q)
             return max(0.5,np.sum(np.abs(q-qmed)>=np.abs(Q-qmed)))/q.size
