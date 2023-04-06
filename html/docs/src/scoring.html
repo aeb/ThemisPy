@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Scoring &mdash; ThemisPy 0.3.0+114.g97ac0e4 documentation</title>
+  <title>Scoring &mdash; ThemisPy 0.3.0+118.g0db03fb documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+114.g97ac0e4 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+118.g0db03fb documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Utils" href="utils.html"/>
         <link rel="prev" title="Vis" href="vis.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.3.0+114.g97ac0e4
+                0.3.0+118.g0db03fb
               </div>
             
           
@@ -510,7 +510,7 @@ posteriors and Bayesian evidences.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fsfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of file containing AIS fit information.</p></li>
+<li><p><strong>fsfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – Name of file, or list of names of files, containing AIS fit information.  If single file, expects data fit to be the last entry.  If a list of file names, expects the first to be the simulation fits and the second to be the data fit.</p></li>
 <li><p><strong>eht_data_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Type of EHT data being fitted. Options include ‘V’ (complex visibilities) and ‘VACP’ (visibility amplitudes and closure phases). Default: ‘V’.</p></li>
 <li><p><strong>themis_pa_fix</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
@@ -608,6 +608,94 @@ posteriors and Bayesian evidences.</p>
 
 </dd></dl>
 
+<dl class="py function">
+<dt id="scoring.snapshots.plot_odds_ratios">
+<code class="sig-prename descclassname">scoring.snapshots.</code><code class="sig-name descname">plot_odds_ratios</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">posterior</span></em>, <em class="sig-param"><span class="n">colors</span><span class="o">=</span><span class="default_value">'k'</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">cutoff</span><span class="o">=</span><span class="default_value">0.05</span></em>, <em class="sig-param"><span class="n">fig</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">norm</span><span class="o">=</span><span class="default_value">'max'</span></em>, <em class="sig-param"><span class="n">scale</span><span class="o">=</span><span class="default_value">'log'</span></em>, <em class="sig-param"><span class="n">show_all</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#plot_odds_ratios"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.plot_odds_ratios" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots Bayesian odds ratios associated with <code class="xref py py-class docutils literal notranslate"><span class="pre">MultiModelSnapshotPosteriors</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>posterior</strong> (<a class="reference internal" href="#scoring.snapshots.MultiModelSnapshotPosterior" title="scoring.snapshots.MultiModelSnapshotPosterior"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiModelSnapshotPosterior</span></code></a>,list) – A <a class="reference internal" href="#scoring.snapshots.MultiModelSnapshotPosterior" title="scoring.snapshots.MultiModelSnapshotPosterior"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiModelSnapshotPosterior</span></code></a> object or child class, or list of such objects, for which to plot the odds ratios.</p></li>
+<li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – Color, or list of colors. Accepts any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/stable/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.7.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>. Default: ‘k’.</p></li>
+<li><p><strong>cutoff</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Odds ratio relative to the maximum in a given <a class="reference internal" href="#scoring.snapshots.MultiModelSnapshotPosterior" title="scoring.snapshots.MultiModelSnapshotPosterior"><code class="xref py py-class docutils literal notranslate"><span class="pre">MultiModelSnapshotPosterior</span></code></a> at which to define ‘passing’.  Results a horizontal line and a bar indicating passing models across the top.</p></li>
+<li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – List of labels to placed in a legend. If None, no legend will be produced. If not None, should have one label for each <a class="reference internal" href="#scoring.snapshots.SnapshotPosterior" title="scoring.snapshots.SnapshotPosterior"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnapshotPosterior</span></code></a> object. Default: None.</p></li>
+<li><p><strong>fig</strong> (<a class="reference external" href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.7.1)"><em>matplotlib.figure.Figure</em></a>) – Handle of figure to modify. If None, use the current figure object. Default: None.</p></li>
+<li><p><strong>axes</strong> (<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.7.1)"><em>matplotlib.axes.Axes</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – Handle of axes to modify (if show_projections is False) or list of handles to axes (if show_projections is True). If None, creates axes. Default: None.</p></li>
+<li><p><strong>norm</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Normalization to apply. If ‘max’ uses the maximum.  If None, no normalization will be performed. Default: ‘max’.</p></li>
+<li><p><strong>scale</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Scale of the y-axis. Accepts any argument to <a href="#id2"><span class="problematic" id="id3">:fun:`axes.Axes.set_yscale`</span></a>. Default: ‘log’.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>TBD</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scoring.snapshots.plot_snapshot_posterior_1D">
+<code class="sig-prename descclassname">scoring.snapshots.</code><code class="sig-name descname">plot_snapshot_posterior_1D</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dim</span></em>, <em class="sig-param"><span class="n">posterior</span></em>, <em class="sig-param"><span class="n">pvals</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colors</span><span class="o">=</span><span class="default_value">'k'</span></em>, <em class="sig-param"><span class="n">filled</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">fig</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xlabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ylabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">orientation</span><span class="o">=</span><span class="default_value">'vertical'</span></em>, <em class="sig-param"><span class="n">grid</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#plot_snapshot_posterior_1D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.plot_snapshot_posterior_1D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the posterior associated with a single or multiple snapshot posteriors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dim</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The parameter to plot.  Acceptable values are those recognized by the posterior <a class="reference internal" href="#scoring.snapshots.SnapshotPosterior" title="scoring.snapshots.SnapshotPosterior"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnapshotPosterior</span></code></a> object.  For ‘F’, ‘M’, and ‘PA’, automatic labels will be generated.</p></li>
+<li><p><strong>posterior</strong> (<a class="reference internal" href="#scoring.snapshots.SnapshotPosterior" title="scoring.snapshots.SnapshotPosterior"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnapshotPosterior</span></code></a>,list) – A <a class="reference internal" href="#scoring.snapshots.SnapshotPosterior" title="scoring.snapshots.SnapshotPosterior"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnapshotPosterior</span></code></a> object or child class, or list of such objects, for which to plot the desired posterior.</p></li>
+<li><p><strong>pvals</strong> (<em>np.array</em>) – Array of parameter values at which to evaluate the posterior. If None, will attempt to guess based on the parameter to plot (currently defined for ‘F’, ‘M’, and ‘PA’). Default: None.</p></li>
+<li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – Color, or list of colors. Accepts any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/stable/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.7.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>. Default: ‘k’.</p></li>
+<li><p><strong>filled</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, fills the posterior. Default: True.</p></li>
+<li><p><strong>fig</strong> (<a class="reference external" href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.7.1)"><em>matplotlib.figure.Figure</em></a>) – Handle of figure to modify. If None, use the current figure object. Default: None.</p></li>
+<li><p><strong>axes</strong> (<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.7.1)"><em>matplotlib.axes.Axes</em></a>) – Handle of axes to modify. If None, use the current axes object. Default: None.</p></li>
+<li><p><strong>xlabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Parameter label (i.e., x-axis label if orientation is ‘vertical’). If None, will attempt to guess. Default: None.</p></li>
+<li><p><strong>ylabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Posterior label (i.e., y-axis label if orientation is ‘vertical’). If None, will attempt to guess. Default: None.</p></li>
+<li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – List of labels to placed in a legend. If None, no legend will be produced. If not None, should have one label for each <a class="reference internal" href="#scoring.snapshots.SnapshotPosterior" title="scoring.snapshots.SnapshotPosterior"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnapshotPosterior</span></code></a> object. Default: None.</p></li>
+<li><p><strong>orientation</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Orientation of the plot. Options are ‘vertical’/’v’ and ‘horizontal’/’h’, corresponding placing the parameter axis on the x-axis and y-axis, respectively.</p></li>
+<li><p><strong>grid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, plots a grid. Default: True.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure handle, axes handle, and list of handles to individual plot objects.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.7.1)">matplotlib.figure.Figure</a>,<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.7.1)">matplotlib.axes.Axes</a>,<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="scoring.snapshots.plot_snapshot_posterior_2D">
+<code class="sig-prename descclassname">scoring.snapshots.</code><code class="sig-name descname">plot_snapshot_posterior_2D</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">dims</span></em>, <em class="sig-param"><span class="n">posterior</span></em>, <em class="sig-param"><span class="n">p1vals</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">p2vals</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">colors</span><span class="o">=</span><span class="default_value">'k'</span></em>, <em class="sig-param"><span class="n">colormaps</span><span class="o">=</span><span class="default_value">'Greys'</span></em>, <em class="sig-param"><span class="n">filled</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">fig</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">axes</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">xlabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">ylabel</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">labels</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">grid</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">quantiles</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">show_projections</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#plot_snapshot_posterior_2D"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.plot_snapshot_posterior_2D" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plots the joint posterior associated with a single or multiple snapshot posteriors, with or without marginalized 1D posterior projections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dims</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – A liist of two parameters to plot.  Acceptable values are those recognized by the posterior <a class="reference internal" href="#scoring.snapshots.SnapshotPosterior" title="scoring.snapshots.SnapshotPosterior"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnapshotPosterior</span></code></a> object.  For ‘F’, ‘M’, and ‘PA’, automatic labels will be generated.</p></li>
+<li><p><strong>posterior</strong> (<a class="reference internal" href="#scoring.snapshots.SnapshotPosterior" title="scoring.snapshots.SnapshotPosterior"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnapshotPosterior</span></code></a>,list) – A <a class="reference internal" href="#scoring.snapshots.SnapshotPosterior" title="scoring.snapshots.SnapshotPosterior"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnapshotPosterior</span></code></a> object or child class, or list of such objects, for which to plot the desired posterior.</p></li>
+<li><p><strong>p1vals</strong> (<em>np.array</em>) – Array of parameter values associated with dims[0] at which to evaluate the posterior. If None, will attempt to guess based on the parameter to plot (currently defined for ‘F’, ‘M’, and ‘PA’). Default: None.</p></li>
+<li><p><strong>p2vals</strong> (<em>np.array</em>) – Array of parameter values associated with dims[1] at which to evaluate the posterior. If None, will attempt to guess based on the parameter to plot (currently defined for ‘F’, ‘M’, and ‘PA’). Default: None.</p></li>
+<li><p><strong>color</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – Color, or list of colors. Accepts any acceptable color type as specified in <a class="reference external" href="https://matplotlib.org/stable/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.7.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>. Default: ‘k’.</p></li>
+<li><p><strong>colormaps</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – Colormap, or list of colormaps. Accepts any acceptable colormap as specified in <a class="reference external" href="https://matplotlib.org/stable/api/colors_api.html#module-matplotlib.colors" title="(in Matplotlib v3.7.1)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">matplotlib.colors</span></code></a>. Default: ‘k’.</p></li>
+<li><p><strong>filled</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, fills the posterior. Default: True.</p></li>
+<li><p><strong>fig</strong> (<a class="reference external" href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.7.1)"><em>matplotlib.figure.Figure</em></a>) – Handle of figure to modify. If None, use the current figure object. Default: None.</p></li>
+<li><p><strong>axes</strong> (<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.7.1)"><em>matplotlib.axes.Axes</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – Handle of axes to modify (if show_projections is False) or list of handles to axes (if show_projections is True). If None, creates axes. Default: None.</p></li>
+<li><p><strong>xlabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Parameter label (i.e., x-axis label if orientation is ‘vertical’). If None, will attempt to guess. Default: None.</p></li>
+<li><p><strong>ylabel</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Posterior label (i.e., y-axis label if orientation is ‘vertical’). If None, will attempt to guess. Default: None.</p></li>
+<li><p><strong>labels</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – List of labels to placed in a legend. If None, no legend will be produced. If not None, should have one label for each <a class="reference internal" href="#scoring.snapshots.SnapshotPosterior" title="scoring.snapshots.SnapshotPosterior"><code class="xref py py-class docutils literal notranslate"><span class="pre">SnapshotPosterior</span></code></a> object. Default: None.</p></li>
+<li><p><strong>grid</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, plots a grid. Default: True.</p></li>
+<li><p><strong>quantiles</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – List of quantiles at which to draw contours. Default: [0.99,0.90,0.50]</p></li>
+<li><p><strong>show_projections</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, 1D projections will be plotted above and to the right. Default: True.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Figure handle, axes handle, and list of handles to individual plot objects.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://matplotlib.org/stable/api/figure_api.html#matplotlib.figure.Figure" title="(in Matplotlib v3.7.1)">matplotlib.figure.Figure</a>,<a class="reference external" href="https://matplotlib.org/stable/api/_as_gen/matplotlib.axes.Axes.html#matplotlib.axes.Axes" title="(in Matplotlib v3.7.1)">matplotlib.axes.Axes</a>,<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)">list</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
 </div>
 </div>
 
@@ -652,7 +740,7 @@ posteriors and Bayesian evidences.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+114.g97ac0e4',
+            VERSION:'0.3.0+118.g0db03fb',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

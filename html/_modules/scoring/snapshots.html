@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>scoring.snapshots &mdash; ThemisPy 0.3.0+114.g97ac0e4 documentation</title>
+  <title>scoring.snapshots &mdash; ThemisPy 0.3.0+118.g0db03fb documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+114.g97ac0e4 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+118.g0db03fb documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.0+114.g97ac0e4
+                0.3.0+118.g0db03fb
               </div>
             
           
@@ -147,7 +147,19 @@
            <div itemprop="articleBody">
             
   <h1>Source code for scoring.snapshots</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="c1">###########################</span>
+<span class="c1">#</span>
+<span class="c1"># Package:</span>
+<span class="c1">#   snapshots</span>
+<span class="c1">#</span>
+<span class="c1"># Provides:</span>
+<span class="c1">#   Provides tools for generating and visualizing snapshot posteriors</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">themispy.vis.typlot</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">themispy.vis.typlot</span> <span class="kn">import</span> <span class="n">_cdf</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">scipy.interpolate</span> <span class="k">as</span> <span class="nn">sint</span>
 <span class="kn">import</span> <span class="nn">scipy.stats</span> <span class="k">as</span> <span class="nn">sstat</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -294,7 +306,7 @@
 <span class="sd">        Reads the output of an AIS run, assuming a fit_summaries file format with the fit to data last.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
-<span class="sd">          fsfile (str): Name of file containing AIS fit information.</span>
+<span class="sd">          fsfile (str,list): Name of file, or list of names of files, containing AIS fit information.  If single file, expects data fit to be the last entry.  If a list of file names, expects the first to be the simulation fits and the second to be the data fit.</span>
 <span class="sd">          eht_data_type (str): Type of EHT data being fitted. Options include &#39;V&#39; (complex visibilities) and &#39;VACP&#39; (visibility amplitudes and closure phases). Default: &#39;V&#39;.</span>
 <span class="sd">          themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</span>
 <span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
@@ -312,7 +324,13 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized eht_data_type, </span><span class="si">%s</span><span class="s2">. Expects either &#39;V&#39; or &#39;VACP&#39;.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">eht_data_type</span><span class="p">))</span>
 
         <span class="c1"># index flux mass pa chisq likelihood</span>
-        <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="nb">list</span><span class="p">)):</span>
+            <span class="n">vals_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+            <span class="n">vals_obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)])</span> <span class="c1"># Expects exactly one record</span>
+            <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">vals_sim</span><span class="p">,</span><span class="n">vals_obs</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+            
 
         <span class="c1"># Adjust to flux, mass and PA in relevant units</span>
         <span class="n">flux</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Jy</span>
@@ -406,8 +424,9 @@
         <span class="k">if</span> <span class="p">(</span><span class="n">method</span><span class="o">==</span><span class="s1">&#39;high&#39;</span><span class="p">)</span> <span class="p">:</span>
             <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">q</span><span class="o">&gt;=</span><span class="n">Q</span><span class="p">))</span><span class="o">/</span><span class="n">q</span><span class="o">.</span><span class="n">size</span>
         <span class="k">elif</span> <span class="p">(</span><span class="n">method</span><span class="o">==</span><span class="s1">&#39;double&#39;</span><span class="p">)</span> <span class="p">:</span>
-            <span class="n">plo</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">q</span><span class="o">&gt;=</span><span class="n">Q</span><span class="p">))</span><span class="o">/</span><span class="n">q</span><span class="o">.</span><span class="n">size</span>
-            <span class="k">return</span> <span class="mi">2</span><span class="o">*</span><span class="nb">min</span><span class="p">(</span><span class="n">plo</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span><span class="n">plo</span><span class="p">)</span>
+            <span class="c1"># plo = max(0.5,np.sum(q&gt;=Q))/q.size</span>
+            <span class="n">plo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">q</span><span class="o">&gt;=</span><span class="n">Q</span><span class="p">)</span><span class="o">/</span><span class="n">q</span><span class="o">.</span><span class="n">size</span>
+            <span class="k">return</span> <span class="mi">2</span><span class="o">*</span><span class="nb">max</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">plo</span><span class="p">,</span><span class="mi">1</span><span class="o">-</span><span class="n">plo</span><span class="p">),</span><span class="mf">0.5</span><span class="o">/</span><span class="n">q</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="n">method</span><span class="o">==</span><span class="s1">&#39;median&#39;</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">qmed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
             <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">q</span><span class="o">-</span><span class="n">qmed</span><span class="p">)</span><span class="o">&gt;=</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">Q</span><span class="o">-</span><span class="n">qmed</span><span class="p">)))</span><span class="o">/</span><span class="n">q</span><span class="o">.</span><span class="n">size</span>
@@ -925,7 +944,7 @@
 
         <span class="n">model_Zs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">Zlist</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">relative_to_max</span><span class="p">)</span> <span class="p">:</span>
-            <span class="n">model_Zs</span> <span class="o">=</span> <span class="n">model_Zs</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">model_Zs</span><span class="p">)</span>
+            <span class="n">model_Zs</span> <span class="o">=</span> <span class="n">model_Zs</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">model_Zs</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">model_Zs</span></div>
         
 
@@ -988,7 +1007,458 @@
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Only 1D and 2D posteriors are defined at this time.&quot;</span><span class="p">)</span></div></div>
     
 
+
+<span class="c1">## One-dimensional posterior, marginalized over PA</span>
+<div class="viewcode-block" id="plot_snapshot_posterior_1D"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.plot_snapshot_posterior_1D">[docs]</a><span class="k">def</span> <span class="nf">plot_snapshot_posterior_1D</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span><span class="n">posterior</span><span class="p">,</span><span class="n">pvals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="n">filled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">xlabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;vertical&#39;</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots the posterior associated with a single or multiple snapshot posteriors.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      dim (str): The parameter to plot.  Acceptable values are those recognized by the posterior :class:`SnapshotPosterior` object.  For &#39;F&#39;, &#39;M&#39;, and &#39;PA&#39;, automatic labels will be generated.</span>
+<span class="sd">      posterior (:class:`SnapshotPosterior`,list): A :class:`SnapshotPosterior` object or child class, or list of such objects, for which to plot the desired posterior.</span>
+<span class="sd">      pvals (np.array): Array of parameter values at which to evaluate the posterior. If None, will attempt to guess based on the parameter to plot (currently defined for &#39;F&#39;, &#39;M&#39;, and &#39;PA&#39;). Default: None.</span>
+<span class="sd">      color (str,list): Color, or list of colors. Accepts any acceptable color type as specified in :mod:`matplotlib.colors`. Default: &#39;k&#39;.</span>
+<span class="sd">      filled (bool): If True, fills the posterior. Default: True.</span>
+<span class="sd">      fig (matplotlib.figure.Figure): Handle of figure to modify. If None, use the current figure object. Default: None.</span>
+<span class="sd">      axes (matplotlib.axes.Axes): Handle of axes to modify. If None, use the current axes object. Default: None.</span>
+<span class="sd">      xlabel (str) : Parameter label (i.e., x-axis label if orientation is &#39;vertical&#39;). If None, will attempt to guess. Default: None.</span>
+<span class="sd">      ylabel (str) : Posterior label (i.e., y-axis label if orientation is &#39;vertical&#39;). If None, will attempt to guess. Default: None.</span>
+<span class="sd">      labels (str,list) : List of labels to placed in a legend. If None, no legend will be produced. If not None, should have one label for each :class:`SnapshotPosterior` object. Default: None.</span>
+<span class="sd">      orientation (str) : Orientation of the plot. Options are &#39;vertical&#39;/&#39;v&#39; and &#39;horizontal&#39;/&#39;h&#39;, corresponding placing the parameter axis on the x-axis and y-axis, respectively.</span>
+<span class="sd">      grid (bool): If True, plots a grid. Default: True.</span>
+<span class="sd">      verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">      (matplotlib.figure.Figure,matplotlib.axes.Axes,list) : Figure handle, axes handle, and list of handles to individual plot objects.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">fig_orig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
         
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">axes_orig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">posterior</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">posterior</span> <span class="o">=</span> <span class="p">[</span><span class="n">posterior</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">legend</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">legend</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">posterior</span><span class="p">)</span><span class="o">*</span><span class="p">[</span><span class="n">labels</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">posterior</span><span class="p">))</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;If not None or a string, one label must be given for each posterior.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">pvals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dim</span><span class="o">==</span><span class="s1">&#39;F&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">pvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">256</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dim</span><span class="o">==</span><span class="s1">&#39;M&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">pvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">256</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dim</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">pvals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span><span class="mi">180</span><span class="p">,</span><span class="mi">256</span><span class="p">)</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Default parameter value range is not available for dim=</span><span class="si">%s</span><span class="s2">. Please specify the range of values with the &#39;pvals&#39; option.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dim</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">posterior</span><span class="p">)</span><span class="o">*</span><span class="p">[</span><span class="n">colors</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">posterior</span><span class="p">))</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;If not a single color name, one color must be given for each posterior.&quot;</span><span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">xlabel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dim</span><span class="o">==</span><span class="s1">&#39;F&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$F~({\rm Jy})$&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dim</span><span class="o">==</span><span class="s1">&#39;M&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$M/D~(\mu{\rm as})$&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dim</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;${\rm PA}~({\rm deg})$&#39;</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">xlabel</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Default xlabel is not available for dim=</span><span class="si">%s</span><span class="s2">. You may specify an appropriate label with the &#39;xlabel&#39; option.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dim</span><span class="p">),</span> <span class="ne">Warning</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">ylabel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dim</span><span class="o">==</span><span class="s1">&#39;F&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$\wp(F)$&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dim</span><span class="o">==</span><span class="s1">&#39;M&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$\wp(M/D)$&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dim</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$\wp({\rm PA})$&#39;</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">ylabel</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Default ylabel is not available for dim=</span><span class="si">%s</span><span class="s2">. You may specify an appropriate label with the &#39;ylabel&#39; option.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dim</span><span class="p">),</span> <span class="ne">Warning</span><span class="p">)</span>
+            
+
+    <span class="n">plot_objs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">sp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">posterior</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="n">dim</span><span class="p">,</span><span class="n">pvals</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">orientation</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;vertical&#39;</span><span class="p">,</span><span class="s1">&#39;v&#39;</span><span class="p">])</span> <span class="p">:</span>
+            <span class="n">plot_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">pvals</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">y2</span><span class="o">=</span><span class="mi">0</span><span class="o">*</span><span class="n">pvals</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.125</span><span class="p">))</span>
+            <span class="n">plot_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">pvals</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">orientation</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;horizontal&#39;</span><span class="p">,</span><span class="s1">&#39;h&#39;</span><span class="p">])</span> <span class="p">:</span>
+            <span class="n">plot_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">fill_betweenx</span><span class="p">(</span><span class="n">pvals</span><span class="p">,</span><span class="n">p</span><span class="p">,</span><span class="n">x2</span><span class="o">=</span><span class="mi">0</span><span class="o">*</span><span class="n">pvals</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.125</span><span class="p">))</span>
+            <span class="n">plot_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">pvals</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Orientation </span><span class="si">%s</span><span class="s2"> not recognized. Available options are &#39;vertical&#39;, &#39;v&#39;, &#39;horizontal&#39;, &#39;h&#39;.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">orientation</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">orientation</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;vertical&#39;</span><span class="p">,</span><span class="s1">&#39;v&#39;</span><span class="p">])</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">pvals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pvals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">orientation</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;horizontal&#39;</span><span class="p">,</span><span class="s1">&#39;h&#39;</span><span class="p">])</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">pvals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pvals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">legend</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+    <span class="n">figh</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+    <span class="n">axsh</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fig_orig</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes_orig</span><span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">figh</span><span class="p">,</span><span class="n">axsh</span><span class="p">,</span><span class="n">plot_objs</span></div>
+
+
+<span class="c1">## Combined two-dimensional &amp; one-dimensional plots in triangle</span>
+<div class="viewcode-block" id="plot_snapshot_posterior_2D"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.plot_snapshot_posterior_2D">[docs]</a><span class="k">def</span> <span class="nf">plot_snapshot_posterior_2D</span><span class="p">(</span><span class="n">dims</span><span class="p">,</span><span class="n">posterior</span><span class="p">,</span><span class="n">p1vals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">p2vals</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="n">colormaps</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">,</span><span class="n">filled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">xlabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">ylabel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">quantiles</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">show_projections</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots the joint posterior associated with a single or multiple snapshot posteriors, with or without marginalized 1D posterior projections.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      dims (list): A liist of two parameters to plot.  Acceptable values are those recognized by the posterior :class:`SnapshotPosterior` object.  For &#39;F&#39;, &#39;M&#39;, and &#39;PA&#39;, automatic labels will be generated.</span>
+<span class="sd">      posterior (:class:`SnapshotPosterior`,list): A :class:`SnapshotPosterior` object or child class, or list of such objects, for which to plot the desired posterior.</span>
+<span class="sd">      p1vals (np.array): Array of parameter values associated with dims[0] at which to evaluate the posterior. If None, will attempt to guess based on the parameter to plot (currently defined for &#39;F&#39;, &#39;M&#39;, and &#39;PA&#39;). Default: None.</span>
+<span class="sd">      p2vals (np.array): Array of parameter values associated with dims[1] at which to evaluate the posterior. If None, will attempt to guess based on the parameter to plot (currently defined for &#39;F&#39;, &#39;M&#39;, and &#39;PA&#39;). Default: None.</span>
+<span class="sd">      color (str,list): Color, or list of colors. Accepts any acceptable color type as specified in :mod:`matplotlib.colors`. Default: &#39;k&#39;.</span>
+<span class="sd">      colormaps (str,list): Colormap, or list of colormaps. Accepts any acceptable colormap as specified in :mod:`matplotlib.colors`. Default: &#39;k&#39;.</span>
+<span class="sd">      filled (bool): If True, fills the posterior. Default: True.</span>
+<span class="sd">      fig (matplotlib.figure.Figure): Handle of figure to modify. If None, use the current figure object. Default: None.</span>
+<span class="sd">      axes (matplotlib.axes.Axes,list): Handle of axes to modify (if show_projections is False) or list of handles to axes (if show_projections is True). If None, creates axes. Default: None.</span>
+<span class="sd">      xlabel (str) : Parameter label (i.e., x-axis label if orientation is &#39;vertical&#39;). If None, will attempt to guess. Default: None.</span>
+<span class="sd">      ylabel (str) : Posterior label (i.e., y-axis label if orientation is &#39;vertical&#39;). If None, will attempt to guess. Default: None.</span>
+<span class="sd">      labels (str,list) : List of labels to placed in a legend. If None, no legend will be produced. If not None, should have one label for each :class:`SnapshotPosterior` object. Default: None.</span>
+<span class="sd">      grid (bool): If True, plots a grid. Default: True.</span>
+<span class="sd">      quantiles (list): List of quantiles at which to draw contours. Default: [0.99,0.90,0.50]</span>
+<span class="sd">      show_projections (bool): If True, 1D projections will be plotted above and to the right. Default: True.</span>
+<span class="sd">      verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">      (matplotlib.figure.Figure,matplotlib.axes.Axes,list) : Figure handle, axes handle, and list of handles to individual plot objects.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dims</span><span class="p">)</span><span class="o">!=</span><span class="mi">2</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Exactly two parameter names must be given. Received </span><span class="si">%g</span><span class="s2">.&quot;</span><span class="o">%</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dims</span><span class="p">)))</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">fig_orig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">axes_orig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">posterior</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">posterior</span> <span class="o">=</span> <span class="p">[</span><span class="n">posterior</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">legend</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">legend</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">posterior</span><span class="p">)</span><span class="o">*</span><span class="p">[</span><span class="n">labels</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">posterior</span><span class="p">))</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;If not None or a string, one label must be given for each posterior.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">p1vals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;F&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">p1vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">256</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;M&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">p1vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">256</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">p1vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span><span class="mi">180</span><span class="p">,</span><span class="mi">256</span><span class="p">)</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Default parameter value range is not available for dims[0]=</span><span class="si">%s</span><span class="s2">. Please specify the range of values with the &#39;p1vals&#39; option.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">p2vals</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;F&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">p2vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">256</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;M&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">p2vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">256</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">p2vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span><span class="mi">180</span><span class="p">,</span><span class="mi">256</span><span class="p">)</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Default parameter value range is not available for dims[1]=</span><span class="si">%s</span><span class="s2">. Please specify the range of values with the &#39;p2vals&#39; option.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">colors</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">colors</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">posterior</span><span class="p">)</span><span class="o">*</span><span class="p">[</span><span class="n">colors</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">posterior</span><span class="p">))</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;If not a single color name, one color must be given for each posterior.&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">colormaps</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">colormaps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">posterior</span><span class="p">)</span><span class="o">*</span><span class="p">[</span><span class="n">colormaps</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">colormaps</span><span class="p">)</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">posterior</span><span class="p">))</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;If not a single colormap, one colormap must be given for each posterior.&quot;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">xlabel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;F&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$F~({\rm Jy})$&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;M&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$M/D~(\mu{\rm as})$&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">xlabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;${\rm PA}~({\rm deg})$&#39;</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">xlabel</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Default xlabel is not available for dims[0]=</span><span class="si">%s</span><span class="s2">. You may specify an appropriate label with the &#39;xlabel&#39; option.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="ne">Warning</span><span class="p">)</span>
+            
+    <span class="k">if</span> <span class="p">(</span><span class="n">ylabel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;F&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$F~({\rm Jy})$&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;M&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;$M/D~(\mu{\rm as})$&#39;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;PA&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">ylabel</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;${\rm PA}~({\rm deg})$&#39;</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">ylabel</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Default ylabel is not available for dims[1]=</span><span class="si">%s</span><span class="s2">. You may specify an appropriate label with the &#39;ylabel&#39; option.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="ne">Warning</span><span class="p">)</span>
+            
+    <span class="k">if</span> <span class="p">(</span><span class="n">quantiles</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">quantiles</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.99</span><span class="p">,</span><span class="mf">0.9</span><span class="p">,</span><span class="mf">0.5</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">quantiles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">!=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">quantiles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            
+    <span class="c1"># 2D</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">show_projections</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.6</span><span class="p">])</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.85</span><span class="p">,</span><span class="mf">0.85</span><span class="p">])</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span><span class="nb">list</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span>
+    <span class="n">axslist</span> <span class="o">=</span> <span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()]</span>
+            
+            
+    <span class="n">X</span><span class="p">,</span><span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">p1vals</span><span class="p">,</span><span class="n">p2vals</span><span class="p">)</span>
+    <span class="n">plot_objs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">sp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">posterior</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="n">dims</span><span class="p">,</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">)</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">dX</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dY</span> <span class="o">=</span> <span class="n">Y</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">Y</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">*</span><span class="n">dX</span><span class="o">*</span><span class="n">dY</span>
+        <span class="n">levels</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">quantiles</span><span class="p">:</span>
+            <span class="k">try</span> <span class="p">:</span>
+                <span class="n">levels</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bisect</span><span class="p">(</span><span class="n">_cdf</span><span class="p">,</span><span class="n">points</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span><span class="n">points</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">points</span><span class="p">,</span><span class="n">dX</span><span class="p">,</span><span class="n">dY</span><span class="p">,</span><span class="n">q</span><span class="o">*</span><span class="n">norm</span><span class="p">),</span> <span class="n">xtol</span><span class="o">=</span><span class="n">points</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">*</span><span class="mf">1e-10</span><span class="p">))</span>
+            <span class="k">except</span> <span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Could not find appropriate contour for </span><span class="si">%g</span><span class="s2"> quantile.  Skipping.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">q</span><span class="p">),</span> <span class="ne">Warning</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">levels</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;No contour levels could be found for </span><span class="si">%i</span><span class="s2">-index posterior object.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">j</span><span class="p">))</span>
+        
+        <span class="n">lp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">p</span><span class="p">)</span><span class="o">+</span><span class="mf">1e-10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+        <span class="n">llevels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">levels</span><span class="o">+</span><span class="mf">1e-10</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">filled</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">plot_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">contourf</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">lp</span><span class="p">,</span><span class="n">levels</span><span class="o">=</span><span class="n">llevels</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">colormaps</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
+        <span class="n">plot_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">lp</span><span class="p">,</span><span class="n">levels</span><span class="o">=</span><span class="n">llevels</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">zorder</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+        <span class="n">plot_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([],[],</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">p1vals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">p1vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">p2vals</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">p2vals</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">xlabel</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">ylabel</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">grid</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">legend</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">show_projections</span><span class="p">)</span> <span class="p">:</span>
+        <span class="c1"># 1D (p1)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.725</span><span class="p">,</span><span class="mf">0.6</span><span class="p">,</span><span class="mf">0.25</span><span class="p">])</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span><span class="nb">list</span><span class="p">))</span> <span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">h</span> <span class="o">=</span> <span class="n">plot_snapshot_posterior_1D</span><span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">posterior</span><span class="p">,</span><span class="n">pvals</span><span class="o">=</span><span class="n">p1vals</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span><span class="n">filled</span><span class="o">=</span><span class="n">filled</span><span class="p">,</span><span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span><span class="n">axes</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
+        <span class="n">axslist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">())</span>
+        <span class="n">plot_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+
+        
+        <span class="c1"># 1D (p2)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.725</span><span class="p">,</span><span class="mf">0.1</span><span class="p">,</span><span class="mf">0.25</span><span class="p">,</span><span class="mf">0.6</span><span class="p">])</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span><span class="nb">list</span><span class="p">))</span> <span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">_</span><span class="p">,</span><span class="n">_</span><span class="p">,</span><span class="n">h</span> <span class="o">=</span> <span class="n">plot_snapshot_posterior_1D</span><span class="p">(</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">posterior</span><span class="p">,</span><span class="n">pvals</span><span class="o">=</span><span class="n">p2vals</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span><span class="n">filled</span><span class="o">=</span><span class="n">filled</span><span class="p">,</span><span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">(),</span><span class="n">axes</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">(),</span><span class="n">xlabel</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">grid</span><span class="o">=</span><span class="n">grid</span><span class="p">,</span><span class="n">orientation</span><span class="o">=</span><span class="s1">&#39;h&#39;</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">([])</span>
+        <span class="n">axslist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">())</span>
+        <span class="n">plot_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+
+    <span class="n">figh</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+        
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fig_orig</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes_orig</span><span class="p">)</span>
+
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">show_projections</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">figh</span><span class="p">,</span><span class="n">axslist</span><span class="p">,</span><span class="n">plot_objs</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="k">return</span> <span class="n">figh</span><span class="p">,</span><span class="n">axslist</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">plot_objs</span></div>
+
+
+<span class="c1">## Plot Odds Ratios</span>
+<div class="viewcode-block" id="plot_odds_ratios"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.plot_odds_ratios">[docs]</a><span class="k">def</span> <span class="nf">plot_odds_ratios</span><span class="p">(</span><span class="n">posterior</span><span class="p">,</span><span class="n">colors</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">cutoff</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span><span class="n">fig</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">axes</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">norm</span><span class="o">=</span><span class="s1">&#39;max&#39;</span><span class="p">,</span><span class="n">scale</span><span class="o">=</span><span class="s1">&#39;log&#39;</span><span class="p">,</span><span class="n">show_all</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Plots Bayesian odds ratios associated with :class:`MultiModelSnapshotPosteriors`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      posterior (:class:`MultiModelSnapshotPosterior`,list): A :class:`MultiModelSnapshotPosterior` object or child class, or list of such objects, for which to plot the odds ratios.</span>
+<span class="sd">      color (str,list): Color, or list of colors. Accepts any acceptable color type as specified in :mod:`matplotlib.colors`. Default: &#39;k&#39;.</span>
+<span class="sd">      cutoff (float): Odds ratio relative to the maximum in a given :class:`MultiModelSnapshotPosterior` at which to define &#39;passing&#39;.  Results a horizontal line and a bar indicating passing models across the top.</span>
+<span class="sd">      labels (str,list) : List of labels to placed in a legend. If None, no legend will be produced. If not None, should have one label for each :class:`SnapshotPosterior` object. Default: None.</span>
+<span class="sd">      fig (matplotlib.figure.Figure): Handle of figure to modify. If None, use the current figure object. Default: None.</span>
+<span class="sd">      axes (matplotlib.axes.Axes,list): Handle of axes to modify (if show_projections is False) or list of handles to axes (if show_projections is True). If None, creates axes. Default: None.</span>
+<span class="sd">      norm (str,float) : Normalization to apply. If &#39;max&#39; uses the maximum.  If None, no normalization will be performed. Default: &#39;max&#39;.</span>
+<span class="sd">      scale (str) : Scale of the y-axis. Accepts any argument to :fun:`axes.Axes.set_yscale`. Default: &#39;log&#39;.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      TBD</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">fig_orig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">axes_orig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">([</span><span class="mf">0.15</span><span class="p">,</span><span class="mf">0.15</span><span class="p">,</span><span class="mf">0.8</span><span class="p">,</span><span class="mf">0.8</span><span class="p">])</span>        
+        
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">posterior</span><span class="p">,</span><span class="nb">list</span><span class="p">)</span><span class="o">==</span><span class="kc">False</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">posterior</span> <span class="o">=</span> <span class="p">[</span><span class="n">posterior</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">legend</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">else</span> <span class="p">:</span>
+        <span class="n">legend</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span><span class="nb">str</span><span class="p">)</span><span class="o">==</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">labels</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">posterior</span><span class="p">)</span><span class="o">*</span><span class="p">[</span><span class="n">labels</span><span class="p">]</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">!=</span><span class="nb">len</span><span class="p">(</span><span class="n">posterior</span><span class="p">))</span> <span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;If not None or a string, one label must be given for each posterior.&quot;</span><span class="p">)</span>
+
+    <span class="n">plot_objs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">mm</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">posterior</span><span class="p">)</span> <span class="p">:</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">show_all</span><span class="o">==</span><span class="kc">False</span> <span class="ow">and</span> <span class="n">j</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">continue</span>
+        
+        <span class="n">be</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">model_evidences</span><span class="p">()</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">norm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">norm</span><span class="o">==</span><span class="s1">&#39;max&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">be</span> <span class="o">=</span> <span class="n">be</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">be</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span><span class="nb">float</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">be</span> <span class="o">=</span> <span class="n">be</span><span class="o">/</span><span class="n">norm</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized normalization </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">norm</span><span class="p">))</span>        
+            
+        <span class="k">if</span> <span class="p">(</span><span class="n">scale</span><span class="o">==</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">scale</span><span class="o">==</span><span class="s1">&#39;log&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">be</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">be</span><span class="p">)</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized scale </span><span class="si">%s</span><span class="s2">.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">scale</span><span class="p">))</span>
+            
+        <span class="n">model_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">be</span><span class="p">))</span>
+        <span class="n">plot_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_index</span><span class="p">,</span><span class="n">be</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+
+    <span class="n">ylims</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">()</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">cutoff</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">scale</span><span class="o">==</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axhspan</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">cutoff</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.125</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">cutoff</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">scale</span><span class="o">==</span><span class="s1">&#39;log&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axhspan</span><span class="p">(</span><span class="n">ylims</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cutoff</span><span class="p">),</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.125</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">cutoff</span><span class="p">),</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">mm</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">posterior</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">be</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">model_evidences</span><span class="p">()</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">norm</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+                <span class="k">pass</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">norm</span><span class="o">==</span><span class="s1">&#39;max&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">be</span> <span class="o">=</span> <span class="n">be</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">be</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">norm</span><span class="p">,</span><span class="nb">float</span><span class="p">))</span> <span class="p">:</span>
+                <span class="n">be</span> <span class="o">=</span> <span class="n">be</span><span class="o">/</span><span class="n">norm</span>
+            <span class="n">model_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">be</span><span class="p">))</span>
+            <span class="n">yval</span> <span class="o">=</span> <span class="n">ylims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">ylims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">ylims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="mf">0.05</span><span class="o">*</span><span class="n">j</span>
+            <span class="n">plot_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">model_index</span><span class="p">,(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">be</span><span class="o">&gt;</span><span class="n">cutoff</span><span class="p">))</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">yval</span><span class="p">,</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="p">:</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">model_index</span> <span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="n">be</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">&lt;</span><span class="n">cutoff</span><span class="p">)</span> <span class="p">:</span>
+                        <span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">k</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span><span class="n">k</span><span class="o">+</span><span class="mf">0.5</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.125</span><span class="p">,</span><span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+                    
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">legend</span><span class="p">)</span> <span class="p">:</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">posterior</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">plot_objs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([],[],</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">j</span><span class="p">],</span><span class="n">label</span><span class="o">=</span><span class="n">labels</span><span class="p">[</span><span class="n">j</span><span class="p">]))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Simulation Index&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">scale</span><span class="o">==</span><span class="s1">&#39;linear&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Odds Ratio&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">scale</span><span class="o">==</span><span class="s1">&#39;log&#39;</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Log Odds Ratio&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="n">ylims</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">figh</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+    <span class="n">axsh</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+        
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">fig</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fig_orig</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+        
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">axes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">sca</span><span class="p">(</span><span class="n">axes_orig</span><span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">figh</span><span class="p">,</span><span class="n">axsh</span><span class="p">,</span><span class="n">plot_objs</span></div>
+
 </pre></div>
 
            </div>
@@ -1022,7 +1492,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+114.g97ac0e4',
+            VERSION:'0.3.0+118.g0db03fb',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
