@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Scoring &mdash; ThemisPy 0.3.0+118.g0db03fb documentation</title>
+  <title>Scoring &mdash; ThemisPy 0.3.0+119.g452d5b2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+118.g0db03fb documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+119.g452d5b2 documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Utils" href="utils.html"/>
         <link rel="prev" title="Vis" href="vis.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.3.0+118.g0db03fb
+                0.3.0+119.g452d5b2
               </div>
             
           
@@ -362,7 +362,7 @@ one step.  These are then returned using access functionis.</p>
 
 <dl class="py class">
 <dt id="scoring.snapshots.SingleEpochSnapshotPosterior">
-<em class="property">class </em><code class="sig-prename descclassname">scoring.snapshots.</code><code class="sig-name descname">SingleEpochSnapshotPosterior</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ais_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">snapshot_scoring_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">eht_data_type</span><span class="o">=</span><span class="default_value">'V'</span></em>, <em class="sig-param"><span class="n">themis_pa_fix</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SingleEpochSnapshotPosterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">scoring.snapshots.</code><code class="sig-name descname">SingleEpochSnapshotPosterior</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ais_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">snapshot_scoring_name</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">eht_data_type</span><span class="o">=</span><span class="default_value">'VACP'</span></em>, <em class="sig-param"><span class="n">spin_dir</span><span class="o">=</span><span class="default_value">'N'</span></em>, <em class="sig-param"><span class="n">themis_pa_fix</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SingleEpochSnapshotPosterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior" title="Permalink to this definition">¶</a></dt>
 <dd><p>A Python class that encapsulates the post-Themis analysis of the
 Average Image Scoring (AIS) and Ensemble-based Posterior Construction (EBPC)
 methods for the analyses EHT data with a single GRMHD simulation (and
@@ -378,7 +378,8 @@ the associated collection of snapshot images).</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ais_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of a file containing the AIS fit information. If None, some functions will not be available. Default: None.</p></li>
 <li><p><strong>snapshot_scoring_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of a file containing the snapshot scoring fit information. If None, some functions will not be available. Default: None.</p></li>
-<li><p><strong>eht_data_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Type of EHT data being fitted. Options include ‘V’ (complex visibilities) and ‘VACP’ (visibility amplitudes and closure phases). Default: ‘V’.</p></li>
+<li><p><strong>eht_data_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Type of EHT data being fitted. Options include ‘V’ (complex visibilities) and ‘VACP’ (visibility amplitudes and closure phases). Default: ‘VACP’.</p></li>
+<li><p><strong>spin_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Direction of spin in fitted images..  Options are ‘N’,’S’,’E’,’W, or an angle measured east of north. Default: ‘N’.</p></li>
 <li><p><strong>themis_pa_fix</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
 </ul>
@@ -505,13 +506,13 @@ posteriors and Bayesian evidences.</p>
 
 <dl class="py method">
 <dt id="scoring.snapshots.SingleEpochSnapshotPosterior.read_ais_summary">
-<code class="sig-name descname">read_ais_summary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fsfile</span></em>, <em class="sig-param"><span class="n">eht_data_type</span><span class="o">=</span><span class="default_value">'V'</span></em>, <em class="sig-param"><span class="n">themis_pa_fix</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SingleEpochSnapshotPosterior.read_ais_summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior.read_ais_summary" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">read_ais_summary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fsfile</span></em>, <em class="sig-param"><span class="n">eht_data_type</span><span class="o">=</span><span class="default_value">'VACP'</span></em>, <em class="sig-param"><span class="n">spin_dir</span><span class="o">=</span><span class="default_value">'N'</span></em>, <em class="sig-param"><span class="n">themis_pa_fix</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SingleEpochSnapshotPosterior.read_ais_summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior.read_ais_summary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads the output of an AIS run, assuming a fit_summaries file format with the fit to data last.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fsfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – Name of file, or list of names of files, containing AIS fit information.  If single file, expects data fit to be the last entry.  If a list of file names, expects the first to be the simulation fits and the second to be the data fit.</p></li>
-<li><p><strong>eht_data_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Type of EHT data being fitted. Options include ‘V’ (complex visibilities) and ‘VACP’ (visibility amplitudes and closure phases). Default: ‘V’.</p></li>
+<li><p><strong>eht_data_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Type of EHT data being fitted. Options include ‘V’ (complex visibilities) and ‘VACP’ (visibility amplitudes and closure phases). Default: ‘VACP’.</p></li>
 <li><p><strong>themis_pa_fix</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
 </ul>
@@ -527,13 +528,13 @@ posteriors and Bayesian evidences.</p>
 
 <dl class="py method">
 <dt id="scoring.snapshots.SingleEpochSnapshotPosterior.read_scoring_summary">
-<code class="sig-name descname">read_scoring_summary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fsfile</span></em>, <em class="sig-param"><span class="n">eht_data_type</span><span class="o">=</span><span class="default_value">'V'</span></em>, <em class="sig-param"><span class="n">themis_pa_fix</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SingleEpochSnapshotPosterior.read_scoring_summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior.read_scoring_summary" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">read_scoring_summary</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fsfile</span></em>, <em class="sig-param"><span class="n">eht_data_type</span><span class="o">=</span><span class="default_value">'VACP'</span></em>, <em class="sig-param"><span class="n">spin_dir</span><span class="o">=</span><span class="default_value">'N'</span></em>, <em class="sig-param"><span class="n">themis_pa_fix</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SingleEpochSnapshotPosterior.read_scoring_summary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior.read_scoring_summary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reads the output of a scoring run, assuming a fit_summaries file format.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fsfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of file containing AIS fit information.</p></li>
-<li><p><strong>eht_data_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Type of EHT data being fitted. Options include ‘V’ (complex visibilities) and ‘VACP’ (visibility amplitudes and closure phases). Default: ‘V’.</p></li>
+<li><p><strong>eht_data_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Type of EHT data being fitted. Options include ‘V’ (complex visibilities) and ‘VACP’ (visibility amplitudes and closure phases). Default: ‘VACP’.</p></li>
 <li><p><strong>themis_pa_fix</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
 </ul>
@@ -740,7 +741,7 @@ posteriors and Bayesian evidences.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+118.g0db03fb',
+            VERSION:'0.3.0+119.g452d5b2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

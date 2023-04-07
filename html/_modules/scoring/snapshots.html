@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>scoring.snapshots &mdash; ThemisPy 0.3.0+118.g0db03fb documentation</title>
+  <title>scoring.snapshots &mdash; ThemisPy 0.3.0+119.g452d5b2 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+118.g0db03fb documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+119.g452d5b2 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.0+118.g0db03fb
+                0.3.0+119.g452d5b2
               </div>
             
           
@@ -229,23 +229,24 @@
 <span class="sd">    Args:</span>
 <span class="sd">      ais_name (str): Name of a file containing the AIS fit information. If None, some functions will not be available. Default: None.</span>
 <span class="sd">      snapshot_scoring_name (str): Name of a file containing the snapshot scoring fit information. If None, some functions will not be available. Default: None.</span>
-<span class="sd">      eht_data_type (str): Type of EHT data being fitted. Options include &#39;V&#39; (complex visibilities) and &#39;VACP&#39; (visibility amplitudes and closure phases). Default: &#39;V&#39;.</span>
+<span class="sd">      eht_data_type (str): Type of EHT data being fitted. Options include &#39;V&#39; (complex visibilities) and &#39;VACP&#39; (visibility amplitudes and closure phases). Default: &#39;VACP&#39;.</span>
+<span class="sd">      spin_dir (str,float): Direction of spin in fitted images..  Options are &#39;N&#39;,&#39;S&#39;,&#39;E&#39;,&#39;W, or an angle measured east of north. Default: &#39;N&#39;.</span>
 <span class="sd">      themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</span>
 <span class="sd">      verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">      TBD</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ais_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">snapshot_scoring_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">eht_data_type</span><span class="o">=</span><span class="s1">&#39;V&#39;</span><span class="p">,</span><span class="n">themis_pa_fix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ais_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">snapshot_scoring_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">eht_data_type</span><span class="o">=</span><span class="s1">&#39;VACP&#39;</span><span class="p">,</span><span class="n">spin_dir</span><span class="o">=</span><span class="s1">&#39;N&#39;</span><span class="p">,</span><span class="n">themis_pa_fix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">snapshot_scoring_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_scoring_summary</span><span class="p">(</span><span class="n">snapshot_scoring_name</span><span class="p">,</span><span class="n">eht_data_type</span><span class="o">=</span><span class="n">eht_data_type</span><span class="p">,</span><span class="n">themis_pa_fix</span><span class="o">=</span><span class="n">themis_pa_fix</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_scoring_summary</span><span class="p">(</span><span class="n">snapshot_scoring_name</span><span class="p">,</span><span class="n">eht_data_type</span><span class="o">=</span><span class="n">eht_data_type</span><span class="p">,</span><span class="n">spin_dir</span><span class="o">=</span><span class="n">spin_dir</span><span class="p">,</span><span class="n">themis_pa_fix</span><span class="o">=</span><span class="n">themis_pa_fix</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_summary_cut</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">else</span> <span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ebpc_defined</span> <span class="o">=</span> <span class="kc">False</span>
 
         <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">ais_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">ais_summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_ais_summary</span><span class="p">(</span><span class="n">ais_name</span><span class="p">,</span><span class="n">eht_data_type</span><span class="o">=</span><span class="n">eht_data_type</span><span class="p">,</span><span class="n">themis_pa_fix</span><span class="o">=</span><span class="n">themis_pa_fix</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ais_summary</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_ais_summary</span><span class="p">(</span><span class="n">ais_name</span><span class="p">,</span><span class="n">eht_data_type</span><span class="o">=</span><span class="n">eht_data_type</span><span class="p">,</span><span class="n">spin_dir</span><span class="o">=</span><span class="n">spin_dir</span><span class="p">,</span><span class="n">themis_pa_fix</span><span class="o">=</span><span class="n">themis_pa_fix</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="n">verbosity</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span> <span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_ais_defined</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -259,13 +260,13 @@
 
         
             
-<div class="viewcode-block" id="SingleEpochSnapshotPosterior.read_scoring_summary"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SingleEpochSnapshotPosterior.read_scoring_summary">[docs]</a>    <span class="k">def</span> <span class="nf">read_scoring_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fsfile</span><span class="p">,</span><span class="n">eht_data_type</span><span class="o">=</span><span class="s1">&#39;V&#39;</span><span class="p">,</span><span class="n">themis_pa_fix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="SingleEpochSnapshotPosterior.read_scoring_summary"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SingleEpochSnapshotPosterior.read_scoring_summary">[docs]</a>    <span class="k">def</span> <span class="nf">read_scoring_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fsfile</span><span class="p">,</span><span class="n">eht_data_type</span><span class="o">=</span><span class="s1">&#39;VACP&#39;</span><span class="p">,</span><span class="n">spin_dir</span><span class="o">=</span><span class="s1">&#39;N&#39;</span><span class="p">,</span><span class="n">themis_pa_fix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads the output of a scoring run, assuming a fit_summaries file format.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
 <span class="sd">          fsfile (str): Name of file containing AIS fit information.</span>
-<span class="sd">          eht_data_type (str): Type of EHT data being fitted. Options include &#39;V&#39; (complex visibilities) and &#39;VACP&#39; (visibility amplitudes and closure phases). Default: &#39;V&#39;.</span>
+<span class="sd">          eht_data_type (str): Type of EHT data being fitted. Options include &#39;V&#39; (complex visibilities) and &#39;VACP&#39; (visibility amplitudes and closure phases). Default: &#39;VACP&#39;.</span>
 <span class="sd">          themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</span>
 <span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
 <span class="sd">        </span>
@@ -281,6 +282,24 @@
             <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
         <span class="k">else</span> <span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized eht_data_type, </span><span class="si">%s</span><span class="s2">. Expects either &#39;V&#39; or &#39;VACP&#39;.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">eht_data_type</span><span class="p">))</span>
+
+        <span class="c1"># Choose angle offset based on spin direction in snapshot images</span>
+        <span class="n">PAoffset</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">spin_dir</span><span class="p">,</span><span class="nb">str</span><span class="p">))</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">spin_dir</span><span class="o">==</span><span class="s1">&#39;N&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">PAoffset</span> <span class="o">=</span> <span class="mf">180.0</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">spin_dir</span><span class="o">==</span><span class="s1">&#39;S&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">PAoffset</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">spin_dir</span><span class="o">==</span><span class="s1">&#39;E&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="c1">## Need to double check</span>
+                <span class="n">PAoffset</span> <span class="o">=</span> <span class="mf">270.0</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">spin_dir</span><span class="o">==</span><span class="s1">&#39;W&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="c1">## Need to double check</span>
+                <span class="n">PAoffset</span> <span class="o">=</span> <span class="mf">90.0</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized spin_dir, </span><span class="si">%s</span><span class="s2">. Expects either &#39;N&#39;,&#39;S&#39;,&#39;E&#39;,&#39;W&#39; or a float.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">spin_dir</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">spin_dir</span><span class="p">,</span><span class="nb">float</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">PAoffset</span> <span class="o">=</span> <span class="n">spin_dir</span><span class="o">+</span><span class="mf">180.0</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized spin_dir, </span><span class="si">%s</span><span class="s2">. Expects either &#39;N&#39;,&#39;S&#39;,&#39;E&#39;,&#39;W&#39; or a float.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">spin_dir</span><span class="p">))</span>            
         
         <span class="c1"># index flux mass pa chisq likelihood</span>
         <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
@@ -290,7 +309,7 @@
         <span class="n">mass</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># uas</span>
         <span class="n">PA</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># deg</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">themis_pa_fix</span><span class="p">)</span> <span class="p">:</span>
-            <span class="n">PA</span> <span class="o">=</span> <span class="mf">180.0</span> <span class="o">-</span> <span class="n">PA</span>
+            <span class="n">PA</span> <span class="o">=</span> <span class="n">PAoffset</span> <span class="o">-</span> <span class="n">PA</span>
         <span class="n">csq</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]</span>
         <span class="n">L</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]</span>
 
@@ -301,13 +320,13 @@
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">rec</span><span class="o">.</span><span class="n">fromarrays</span><span class="p">([</span><span class="n">flux</span><span class="p">,</span><span class="n">PA</span><span class="p">,</span><span class="n">mass</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">csq</span><span class="p">],</span><span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="s1">&#39;PA&#39;</span><span class="p">,</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;Likelihood&#39;</span><span class="p">,</span><span class="s1">&#39;ChiSquared&#39;</span><span class="p">])</span></div>
     
 
-<div class="viewcode-block" id="SingleEpochSnapshotPosterior.read_ais_summary"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SingleEpochSnapshotPosterior.read_ais_summary">[docs]</a>    <span class="k">def</span> <span class="nf">read_ais_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fsfile</span><span class="p">,</span><span class="n">eht_data_type</span><span class="o">=</span><span class="s1">&#39;V&#39;</span><span class="p">,</span><span class="n">themis_pa_fix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
+<div class="viewcode-block" id="SingleEpochSnapshotPosterior.read_ais_summary"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SingleEpochSnapshotPosterior.read_ais_summary">[docs]</a>    <span class="k">def</span> <span class="nf">read_ais_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">fsfile</span><span class="p">,</span><span class="n">eht_data_type</span><span class="o">=</span><span class="s1">&#39;VACP&#39;</span><span class="p">,</span><span class="n">spin_dir</span><span class="o">=</span><span class="s1">&#39;N&#39;</span><span class="p">,</span><span class="n">themis_pa_fix</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Reads the output of an AIS run, assuming a fit_summaries file format with the fit to data last.</span>
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
 <span class="sd">          fsfile (str,list): Name of file, or list of names of files, containing AIS fit information.  If single file, expects data fit to be the last entry.  If a list of file names, expects the first to be the simulation fits and the second to be the data fit.</span>
-<span class="sd">          eht_data_type (str): Type of EHT data being fitted. Options include &#39;V&#39; (complex visibilities) and &#39;VACP&#39; (visibility amplitudes and closure phases). Default: &#39;V&#39;.</span>
+<span class="sd">          eht_data_type (str): Type of EHT data being fitted. Options include &#39;V&#39; (complex visibilities) and &#39;VACP&#39; (visibility amplitudes and closure phases). Default: &#39;VACP&#39;.</span>
 <span class="sd">          themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</span>
 <span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
 <span class="sd">        </span>
@@ -323,6 +342,24 @@
         <span class="k">else</span> <span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized eht_data_type, </span><span class="si">%s</span><span class="s2">. Expects either &#39;V&#39; or &#39;VACP&#39;.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">eht_data_type</span><span class="p">))</span>
 
+        <span class="c1"># Choose angle offset based on spin direction in snapshot images</span>
+        <span class="n">PAoffset</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">spin_dir</span><span class="p">,</span><span class="nb">str</span><span class="p">))</span> <span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">spin_dir</span><span class="o">==</span><span class="s1">&#39;N&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">PAoffset</span> <span class="o">=</span> <span class="mf">180.0</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">spin_dir</span><span class="o">==</span><span class="s1">&#39;S&#39;</span><span class="p">)</span> <span class="p">:</span>
+                <span class="n">PAoffset</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">spin_dir</span><span class="o">==</span><span class="s1">&#39;E&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="c1">## Need to double check</span>
+                <span class="n">PAoffset</span> <span class="o">=</span> <span class="mf">270.0</span>
+            <span class="k">elif</span> <span class="p">(</span><span class="n">spin_dir</span><span class="o">==</span><span class="s1">&#39;W&#39;</span><span class="p">)</span> <span class="p">:</span> <span class="c1">## Need to double check</span>
+                <span class="n">PAoffset</span> <span class="o">=</span> <span class="mf">90.0</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized spin_dir, </span><span class="si">%s</span><span class="s2">. Expects either &#39;N&#39;,&#39;S&#39;,&#39;E&#39;,&#39;W&#39; or a float.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">spin_dir</span><span class="p">))</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">spin_dir</span><span class="p">,</span><span class="nb">float</span><span class="p">))</span> <span class="p">:</span>
+            <span class="n">PAoffset</span> <span class="o">=</span> <span class="n">spin_dir</span><span class="o">+</span><span class="mf">180.0</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized spin_dir, </span><span class="si">%s</span><span class="s2">. Expects either &#39;N&#39;,&#39;S&#39;,&#39;E&#39;,&#39;W&#39; or a float.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">spin_dir</span><span class="p">))</span>
+
         <span class="c1"># index flux mass pa chisq likelihood</span>
         <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="nb">list</span><span class="p">)):</span>
             <span class="n">vals_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
@@ -331,13 +368,12 @@
         <span class="k">else</span> <span class="p">:</span>
             <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
             
-
         <span class="c1"># Adjust to flux, mass and PA in relevant units</span>
         <span class="n">flux</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Jy</span>
         <span class="n">mass</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># uas</span>
         <span class="n">PA</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="c1"># deg</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">themis_pa_fix</span><span class="p">)</span> <span class="p">:</span>
-            <span class="n">PA</span> <span class="o">=</span> <span class="mf">180.0</span> <span class="o">-</span> <span class="n">PA</span>
+            <span class="n">PA</span> <span class="o">=</span> <span class="n">PAoffset</span> <span class="o">-</span> <span class="n">PA</span>
         <span class="n">csq</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]</span>
         <span class="n">L</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]</span>
 
@@ -1492,7 +1528,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+118.g0db03fb',
+            VERSION:'0.3.0+119.g452d5b2',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
