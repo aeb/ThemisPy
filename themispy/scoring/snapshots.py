@@ -80,23 +80,24 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
     Args:
       ais_name (str): Name of a file containing the AIS fit information. If None, some functions will not be available. Default: None.
       snapshot_scoring_name (str): Name of a file containing the snapshot scoring fit information. If None, some functions will not be available. Default: None.
-      eht_data_type (str): Type of EHT data being fitted. Options include 'V' (complex visibilities) and 'VACP' (visibility amplitudes and closure phases). Default: 'V'.
+      eht_data_type (str): Type of EHT data being fitted. Options include 'V' (complex visibilities) and 'VACP' (visibility amplitudes and closure phases). Default: 'VACP'.
+      spin_dir (str,float): Direction of spin in fitted images..  Options are 'N','S','E','W, or an angle measured east of north. Default: 'N'.
       themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.
       verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.
 
     Attributes:
       TBD
     """
-    def __init__(self,ais_name=None,snapshot_scoring_name=None,eht_data_type='V',themis_pa_fix=True,verbosity=0,**kwargs) :
+    def __init__(self,ais_name=None,snapshot_scoring_name=None,eht_data_type='VACP',spin_dir='N',themis_pa_fix=True,verbosity=0,**kwargs) :
 
         if (not snapshot_scoring_name is None) :
-            self.ebpc_summary = self.read_scoring_summary(snapshot_scoring_name,eht_data_type=eht_data_type,themis_pa_fix=themis_pa_fix,verbosity=verbosity,**kwargs)
+            self.ebpc_summary = self.read_scoring_summary(snapshot_scoring_name,eht_data_type=eht_data_type,spin_dir=spin_dir,themis_pa_fix=themis_pa_fix,verbosity=verbosity,**kwargs)
             self.ebpc_summary_cut = None
         else :
             self._ebpc_defined = False
 
         if (not ais_name is None) :
-            self.ais_summary = self.read_ais_summary(ais_name,eht_data_type=eht_data_type,themis_pa_fix=themis_pa_fix,verbosity=verbosity,**kwargs)
+            self.ais_summary = self.read_ais_summary(ais_name,eht_data_type=eht_data_type,spin_dir=spin_dir,themis_pa_fix=themis_pa_fix,verbosity=verbosity,**kwargs)
         else :
             self._ais_defined = False
 
@@ -110,13 +111,13 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
 
         
             
-    def read_scoring_summary(self,fsfile,eht_data_type='V',themis_pa_fix=True,verbosity=0,**kwargs) :
+    def read_scoring_summary(self,fsfile,eht_data_type='VACP',spin_dir='N',themis_pa_fix=True,verbosity=0,**kwargs) :
         """
         Reads the output of a scoring run, assuming a fit_summaries file format.
         
         Args:
           fsfile (str): Name of file containing AIS fit information.
-          eht_data_type (str): Type of EHT data being fitted. Options include 'V' (complex visibilities) and 'VACP' (visibility amplitudes and closure phases). Default: 'V'.
+          eht_data_type (str): Type of EHT data being fitted. Options include 'V' (complex visibilities) and 'VACP' (visibility amplitudes and closure phases). Default: 'VACP'.
           themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.
           verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.
         
@@ -132,6 +133,24 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
             cols = [1,2,3,6,7]
         else :
             raise ValueError("Unrecognized eht_data_type, %s. Expects either 'V' or 'VACP'."%(eht_data_type))
+
+        # Choose angle offset based on spin direction in snapshot images
+        PAoffset = 0.0
+        if (isinstance(spin_dir,str)) :
+            if (spin_dir=='N') :
+                PAoffset = 180.0
+            elif (spin_dir=='S') :
+                PAoffset = 0.0
+            elif (spin_dir=='E') : ## Need to double check
+                PAoffset = 270.0
+            elif (spin_dir=='W') : ## Need to double check
+                PAoffset = 90.0
+            else :
+                raise ValueError("Unrecognized spin_dir, %s. Expects either 'N','S','E','W' or a float."%(spin_dir))
+        elif (isinstance(spin_dir,float)) :
+            PAoffset = spin_dir+180.0
+        else :
+            raise ValueError("Unrecognized spin_dir, %s. Expects either 'N','S','E','W' or a float."%(spin_dir))            
         
         # index flux mass pa chisq likelihood
         vals = np.loadtxt(fsfile,skiprows=1,usecols=cols)
@@ -141,7 +160,7 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
         mass = vals[:,1] # uas
         PA = vals[:,2] # deg
         if (themis_pa_fix) :
-            PA = 180.0 - PA
+            PA = PAoffset - PA
         csq = vals[:,3]
         L = vals[:,4]
 
@@ -152,13 +171,13 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
         return np.rec.fromarrays([flux,PA,mass,L,csq],names=['F','PA','M','Likelihood','ChiSquared'])
     
 
-    def read_ais_summary(self,fsfile,eht_data_type='V',themis_pa_fix=True,verbosity=0,**kwargs) :
+    def read_ais_summary(self,fsfile,eht_data_type='VACP',spin_dir='N',themis_pa_fix=True,verbosity=0,**kwargs) :
         """
         Reads the output of an AIS run, assuming a fit_summaries file format with the fit to data last.
         
         Args:
           fsfile (str,list): Name of file, or list of names of files, containing AIS fit information.  If single file, expects data fit to be the last entry.  If a list of file names, expects the first to be the simulation fits and the second to be the data fit.
-          eht_data_type (str): Type of EHT data being fitted. Options include 'V' (complex visibilities) and 'VACP' (visibility amplitudes and closure phases). Default: 'V'.
+          eht_data_type (str): Type of EHT data being fitted. Options include 'V' (complex visibilities) and 'VACP' (visibility amplitudes and closure phases). Default: 'VACP'.
           themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.
           verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.
         
@@ -174,6 +193,24 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
         else :
             raise ValueError("Unrecognized eht_data_type, %s. Expects either 'V' or 'VACP'."%(eht_data_type))
 
+        # Choose angle offset based on spin direction in snapshot images
+        PAoffset = 0.0
+        if (isinstance(spin_dir,str)) :
+            if (spin_dir=='N') :
+                PAoffset = 180.0
+            elif (spin_dir=='S') :
+                PAoffset = 0.0
+            elif (spin_dir=='E') : ## Need to double check
+                PAoffset = 270.0
+            elif (spin_dir=='W') : ## Need to double check
+                PAoffset = 90.0
+            else :
+                raise ValueError("Unrecognized spin_dir, %s. Expects either 'N','S','E','W' or a float."%(spin_dir))
+        elif (isinstance(spin_dir,float)) :
+            PAoffset = spin_dir+180.0
+        else :
+            raise ValueError("Unrecognized spin_dir, %s. Expects either 'N','S','E','W' or a float."%(spin_dir))
+
         # index flux mass pa chisq likelihood
         if (isinstance(fsfile,list)):
             vals_sim = np.loadtxt(fsfile[0],skiprows=1,usecols=cols)
@@ -182,13 +219,12 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
         else :
             vals = np.loadtxt(fsfile,skiprows=1,usecols=cols)
             
-
         # Adjust to flux, mass and PA in relevant units
         flux = vals[:,0] # Jy
         mass = vals[:,1] # uas
         PA = vals[:,2] # deg
         if (themis_pa_fix) :
-            PA = 180.0 - PA
+            PA = PAoffset - PA
         csq = vals[:,3]
         L = vals[:,4]
 
