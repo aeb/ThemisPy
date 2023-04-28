@@ -378,13 +378,11 @@ the associated collection of snapshot images).</p>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>ais_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of a file containing the AIS fit information. If None, some functions will not be available. Default: None.</p></li>
 <li><p><strong>snapshot_scoring_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of a file containing the snapshot scoring fit information. If None, some functions will not be available. Default: None.</p></li>
+<li><p><strong>eht_data_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Type of EHT data being fitted. Options include ‘V’ (complex visibilities), ‘VACP’ (visibility amplitudes and closure phases), and ‘CACP’ (closure amplitudes and closure phases, uses Comrade format). Default: ‘VACP’.</p></li>
+<li><p><strong>spin_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Direction of spin in fitted images..  Options are ‘N’,’S’,’E’,’W, or an angle measured east of north. Default: ‘N’.</p></li>
+<li><p><strong>themis_pa_fix</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</p></li>
+<li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
 </ul>
-</dd>
-</dl>
-<dl class="simple">
-<dt>eht_data_type (str): Type of EHT data being fitted. Options include ‘V’ (complex visibilities), ‘VACP’ (visibility amplitudes and closure phases), and ‘CACP’ (closure amplitudes and closure phases, uses Comrade format). Default: ‘VACP’.</dt><dd><p>spin_dir (str,float): Direction of spin in fitted images..  Options are ‘N’,’S’,’E’,’W, or an angle measured east of north. Default: ‘N’.
-themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.
-verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</p>
 </dd>
 </dl>
 <dl class="py attribute">
