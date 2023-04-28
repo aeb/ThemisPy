@@ -222,10 +222,9 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
                 vals_obs[:,1:4] = valssub  # flux is zeroed out.
                 vals = np.concatenate((vals_sim,vals_obs),axis=0)
             else :
-                vals = np.loadtxt(fsfile,skiprows=1,usecols=cols)
-                valssub = np.loadtxt(fsfile,skiprows=1,usecols=cols)
+                valssub = np.loadtxt(fsfile,skiprows=1,usecols=cols,delimiter=",")
                 vals = np.zeros((valssub.shape[0],5))
-                vals[:,1:] = valssub  # flux is zeroed out.
+                vals[:,1:4] = valssub  # flux is zeroed out.
             vals[:,1] *= 180.0*3600e6/np.pi  # Convert M/D to uas
             vals[:,2] *= 180.0/np.pi # Convert PA to deg
             vals[:,4] = -0.5*vals[:,3] # L = - 0.5*csq
@@ -251,12 +250,12 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
             raise ValueError("Unrecognized spin_dir, %s. Expects either 'N','S','E','W' or a float."%(spin_dir))
 
         # index flux mass pa chisq likelihood
-        if (isinstance(fsfile,list)):
-            vals_sim = np.loadtxt(fsfile[0],skiprows=1,usecols=cols)
-            vals_obs = np.loadtxt(fsfile[1],skiprows=1,usecols=cols).reshape([1,len(cols)]) # Expects exactly one record
-            vals = np.concatenate((vals_sim,vals_obs),axis=0)
-        else :
-            vals = np.loadtxt(fsfile,skiprows=1,usecols=cols)
+        # if (isinstance(fsfile,list)):
+        #     vals_sim = np.loadtxt(fsfile[0],skiprows=1,usecols=cols)
+        #     vals_obs = np.loadtxt(fsfile[1],skiprows=1,usecols=cols).reshape([1,len(cols)]) # Expects exactly one record
+        #     vals = np.concatenate((vals_sim,vals_obs),axis=0)
+        # else :
+        #     vals = np.loadtxt(fsfile,skiprows=1,usecols=cols)
             
         # Adjust to flux, mass and PA in relevant units
         flux = vals[:,0] # Jy
