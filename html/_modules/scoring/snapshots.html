@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>scoring.snapshots &mdash; ThemisPy 0.3.0+119.g452d5b2 documentation</title>
+  <title>scoring.snapshots &mdash; ThemisPy 0.3.0+122.gd356c33 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+119.g452d5b2 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+122.gd356c33 documentation" href="../../index.html"/>
         <link rel="up" title="Module code" href="../index.html"/> 
 
   
@@ -63,7 +63,7 @@
             
             
               <div class="version">
-                0.3.0+119.g452d5b2
+                0.3.0+122.gd356c33
               </div>
             
           
@@ -266,7 +266,7 @@
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
 <span class="sd">          fsfile (str): Name of file containing AIS fit information.</span>
-<span class="sd">          eht_data_type (str): Type of EHT data being fitted. Options include &#39;V&#39; (complex visibilities) and &#39;VACP&#39; (visibility amplitudes and closure phases). Default: &#39;VACP&#39;.</span>
+<span class="sd">          eht_data_type (str): Type of EHT data being fitted. Options include &#39;V&#39; (complex visibilities), &#39;VACP&#39; (visibility amplitudes and closure phases), and &#39;CACP&#39; (closure amplitudes and closure phases, uses Comrade format). Default: &#39;VACP&#39;.</span>
 <span class="sd">          themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</span>
 <span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
 <span class="sd">        </span>
@@ -276,10 +276,21 @@
 <span class="sd">        &quot;&quot;&quot;</span>
 
         <span class="c1"># Choose columns based on eht data type</span>
+        <span class="c1"># Data read in is expected to be flux mass pa chisq likelihood</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">eht_data_type</span><span class="o">==</span><span class="s1">&#39;V&#39;</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+            <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="n">eht_data_type</span><span class="o">==</span><span class="s1">&#39;VACP&#39;</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+            <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">eht_data_type</span><span class="o">==</span><span class="s1">&#39;CACP&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+            <span class="n">valssub</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+            <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">valssub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">5</span><span class="p">))</span>
+            <span class="n">vals</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">valssub</span>  <span class="c1"># flux and likelihood are zeroed out.</span>
+            <span class="n">vals</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">180.0</span><span class="o">*</span><span class="mf">3600e6</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="c1"># Convert M/D to uas</span>
+            <span class="n">vals</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">180.0</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="c1"># Convert PA to deg</span>
+            <span class="n">vals</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">vals</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]</span> <span class="c1"># L = - 0.5*csq</span>
         <span class="k">else</span> <span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized eht_data_type, </span><span class="si">%s</span><span class="s2">. Expects either &#39;V&#39; or &#39;VACP&#39;.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">eht_data_type</span><span class="p">))</span>
 
@@ -300,9 +311,7 @@
             <span class="n">PAoffset</span> <span class="o">=</span> <span class="n">spin_dir</span><span class="o">+</span><span class="mf">180.0</span>
         <span class="k">else</span> <span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized spin_dir, </span><span class="si">%s</span><span class="s2">. Expects either &#39;N&#39;,&#39;S&#39;,&#39;E&#39;,&#39;W&#39; or a float.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">spin_dir</span><span class="p">))</span>            
-        
-        <span class="c1"># index flux mass pa chisq likelihood</span>
-        <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+
 
         <span class="c1"># Adjust to flux, mass and PA in relevant units</span>
         <span class="n">flux</span> <span class="o">=</span> <span class="n">vals</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="c1"># Jy</span>
@@ -326,7 +335,7 @@
 <span class="sd">        </span>
 <span class="sd">        Args:</span>
 <span class="sd">          fsfile (str,list): Name of file, or list of names of files, containing AIS fit information.  If single file, expects data fit to be the last entry.  If a list of file names, expects the first to be the simulation fits and the second to be the data fit.</span>
-<span class="sd">          eht_data_type (str): Type of EHT data being fitted. Options include &#39;V&#39; (complex visibilities) and &#39;VACP&#39; (visibility amplitudes and closure phases). Default: &#39;VACP&#39;.</span>
+<span class="sd">          eht_data_type (str): Type of EHT data being fitted. Options include &#39;V&#39; (complex visibilities), &#39;VACP&#39; (visibility amplitudes and closure phases), and &#39;CACP&#39; (closure amplitudes and closure phases, uses Comrade format). Default: &#39;VACP&#39;.</span>
 <span class="sd">          themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</span>
 <span class="sd">          verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.</span>
 <span class="sd">        </span>
@@ -337,8 +346,38 @@
         <span class="c1"># Choose columns based on eht data type</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">eht_data_type</span><span class="o">==</span><span class="s1">&#39;V&#39;</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="nb">list</span><span class="p">)):</span>
+                <span class="n">vals_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+                <span class="n">vals_obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)])</span> <span class="c1"># Expects exactly one record</span>
+                <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">vals_sim</span><span class="p">,</span><span class="n">vals_obs</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="n">eht_data_type</span><span class="o">==</span><span class="s1">&#39;VACP&#39;</span><span class="p">)</span> <span class="p">:</span>
             <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="nb">list</span><span class="p">)):</span>
+                <span class="n">vals_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+                <span class="n">vals_obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)])</span> <span class="c1"># Expects exactly one record</span>
+                <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">vals_sim</span><span class="p">,</span><span class="n">vals_obs</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="n">eht_data_type</span><span class="o">==</span><span class="s1">&#39;CACP&#39;</span><span class="p">)</span> <span class="p">:</span>
+            <span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="nb">list</span><span class="p">)):</span>
+                <span class="n">valssub</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+                <span class="n">vals_sim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">valssub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">5</span><span class="p">))</span>
+                <span class="n">vals_sim</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">valssub</span>  <span class="c1"># flux is zeroed out.</span>
+                <span class="n">valssub</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">cols</span><span class="p">)],</span><span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+                <span class="n">vals_obs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">valssub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">5</span><span class="p">))</span>
+                <span class="n">vals_obs</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">valssub</span>  <span class="c1"># flux is zeroed out.</span>
+                <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">vals_sim</span><span class="p">,</span><span class="n">vals_obs</span><span class="p">),</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">else</span> <span class="p">:</span>
+                <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+                <span class="n">valssub</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">fsfile</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">usecols</span><span class="o">=</span><span class="n">cols</span><span class="p">)</span>
+                <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">valssub</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">5</span><span class="p">))</span>
+                <span class="n">vals</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:]</span> <span class="o">=</span> <span class="n">valssub</span>  <span class="c1"># flux is zeroed out.</span>
+            <span class="n">vals</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">180.0</span><span class="o">*</span><span class="mf">3600e6</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>  <span class="c1"># Convert M/D to uas</span>
+            <span class="n">vals</span><span class="p">[:,</span><span class="mi">2</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">180.0</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="c1"># Convert PA to deg</span>
+            <span class="n">vals</span><span class="p">[:,</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">vals</span><span class="p">[:,</span><span class="mi">3</span><span class="p">]</span> <span class="c1"># L = - 0.5*csq</span>
         <span class="k">else</span> <span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unrecognized eht_data_type, </span><span class="si">%s</span><span class="s2">. Expects either &#39;V&#39; or &#39;VACP&#39;.&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">eht_data_type</span><span class="p">))</span>
 
@@ -407,8 +446,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_quality_cut</span> <span class="o">=</span> <span class="n">ebpc_quality_cut</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_quality_statistic</span> <span class="o">=</span> <span class="n">ebpc_quality_statistic</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_norm_size_1d</span> <span class="o">=</span> <span class="n">norm_size_1d</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_norm_size_2d</span> <span class="o">=</span> <span class="n">norm_size_2d</span></div>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_norm_size_2d</span> <span class="o">=</span> <span class="n">norm_size_2d</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ebpc_posteriors</span> <span class="o">=</span> <span class="p">{}</span></div>
+        
 <div class="viewcode-block" id="SingleEpochSnapshotPosterior.evidence"><a class="viewcode-back" href="../../docs/src/scoring.html#scoring.snapshots.SingleEpochSnapshotPosterior.evidence">[docs]</a>    <span class="k">def</span> <span class="nf">evidence</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">verbosity</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Access to the AIS as a proxy for the Bayesian evidence. If a binary_ais_cut is set, will return 0 or 1 based on AIS score.</span>
@@ -1528,7 +1568,7 @@
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+119.g452d5b2',
+            VERSION:'0.3.0+122.gd356c33',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 

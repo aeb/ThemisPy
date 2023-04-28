@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Scoring &mdash; ThemisPy 0.3.0+119.g452d5b2 documentation</title>
+  <title>Scoring &mdash; ThemisPy 0.3.0+122.gd356c33 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+119.g452d5b2 documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+122.gd356c33 documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Utils" href="utils.html"/>
         <link rel="prev" title="Vis" href="vis.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.3.0+119.g452d5b2
+                0.3.0+122.gd356c33
               </div>
             
           
@@ -512,7 +512,7 @@ posteriors and Bayesian evidences.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fsfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>,</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.11)"><em>list</em></a>) – Name of file, or list of names of files, containing AIS fit information.  If single file, expects data fit to be the last entry.  If a list of file names, expects the first to be the simulation fits and the second to be the data fit.</p></li>
-<li><p><strong>eht_data_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Type of EHT data being fitted. Options include ‘V’ (complex visibilities) and ‘VACP’ (visibility amplitudes and closure phases). Default: ‘VACP’.</p></li>
+<li><p><strong>eht_data_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Type of EHT data being fitted. Options include ‘V’ (complex visibilities), ‘VACP’ (visibility amplitudes and closure phases), and ‘CACP’ (closure amplitudes and closure phases, uses Comrade format). Default: ‘VACP’.</p></li>
 <li><p><strong>themis_pa_fix</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
 </ul>
@@ -534,7 +534,7 @@ posteriors and Bayesian evidences.</p>
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fsfile</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Name of file containing AIS fit information.</p></li>
-<li><p><strong>eht_data_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Type of EHT data being fitted. Options include ‘V’ (complex visibilities) and ‘VACP’ (visibility amplitudes and closure phases). Default: ‘VACP’.</p></li>
+<li><p><strong>eht_data_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Type of EHT data being fitted. Options include ‘V’ (complex visibilities), ‘VACP’ (visibility amplitudes and closure phases), and ‘CACP’ (closure amplitudes and closure phases, uses Comrade format). Default: ‘VACP’.</p></li>
 <li><p><strong>themis_pa_fix</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.</p></li>
 <li><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p></li>
 </ul>
@@ -741,7 +741,7 @@ posteriors and Bayesian evidences.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+119.g452d5b2',
+            VERSION:'0.3.0+122.gd356c33',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
