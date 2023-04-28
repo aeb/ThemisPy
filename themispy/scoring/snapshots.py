@@ -80,7 +80,7 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
     Args:
       ais_name (str): Name of a file containing the AIS fit information. If None, some functions will not be available. Default: None.
       snapshot_scoring_name (str): Name of a file containing the snapshot scoring fit information. If None, some functions will not be available. Default: None.
-      eht_data_type (str): Type of EHT data being fitted. Options include 'V' (complex visibilities) and 'VACP' (visibility amplitudes and closure phases). Default: 'VACP'.
+      eht_data_type (str): Type of EHT data being fitted. Options include 'V' (complex visibilities), 'VACP' (visibility amplitudes and closure phases), and 'CACP' (closure amplitudes and closure phases, uses Comrade format). Default: 'VACP'.
       spin_dir (str,float): Direction of spin in fitted images..  Options are 'N','S','E','W, or an angle measured east of north. Default: 'N'.
       themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.
       verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.
@@ -311,6 +311,11 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
         Returns:
           (float): Bayesian evidence (or proxy).
         """
+
+        if (self._ais_defined==False) :
+            warnings.warn("No AIS statistic has been provided.  Returning Z=1.0.")
+            return 1.0
+        
         if (self.ais_method is None) :
             raise RuntimeError("The generate(...) function must be called before evidence can be provided.")
 
