@@ -127,10 +127,21 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
         """
 
         # Choose columns based on eht data type
+        # Data read in is expected to be flux mass pa chisq likelihood
         if (eht_data_type=='V') :
             cols = [1,2,3,5,6]
+            vals = np.loadtxt(fsfile,skiprows=1,usecols=cols)
         elif (eht_data_type=='VACP') :
             cols = [1,2,3,6,7]
+            vals = np.loadtxt(fsfile,skiprows=1,usecols=cols)
+        elif (eht_data_type=='CACP') :
+            cols = [0,1,4]
+            valssub = np.loadtxt(fsfile,skiprows=1,usecols=cols,delimiter=",")
+            vals = np.zeros((valssub.shape[0],5))
+            vals[:,1:4] = valssub  # flux and likelihood are zeroed out.
+            vals[:,1] *= 180.0*3600e6/np.pi # Convert M/D to uas
+            vals[:,2] *= 180.0/np.pi # Convert PA to deg
+            vals[:,4] = -0.5*vals[:,3] # L = - 0.5*csq
         else :
             raise ValueError("Unrecognized eht_data_type, %s. Expects either 'V' or 'VACP'."%(eht_data_type))
 
@@ -151,9 +162,7 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
             PAoffset = spin_dir+180.0
         else :
             raise ValueError("Unrecognized spin_dir, %s. Expects either 'N','S','E','W' or a float."%(spin_dir))            
-        
-        # index flux mass pa chisq likelihood
-        vals = np.loadtxt(fsfile,skiprows=1,usecols=cols)
+
 
         # Adjust to flux, mass and PA in relevant units
         flux = vals[:,0] # Jy
@@ -188,8 +197,38 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
         # Choose columns based on eht data type
         if (eht_data_type=='V') :
             cols = [1,2,3,5,6]
+            if (isinstance(fsfile,list)):
+                vals_sim = np.loadtxt(fsfile[0],skiprows=1,usecols=cols)
+                vals_obs = np.loadtxt(fsfile[1],skiprows=1,usecols=cols).reshape([1,len(cols)]) # Expects exactly one record
+                vals = np.concatenate((vals_sim,vals_obs),axis=0)
+            else :
+                vals = np.loadtxt(fsfile,skiprows=1,usecols=cols)
         elif (eht_data_type=='VACP') :
             cols = [1,2,3,6,7]
+            if (isinstance(fsfile,list)):
+                vals_sim = np.loadtxt(fsfile[0],skiprows=1,usecols=cols)
+                vals_obs = np.loadtxt(fsfile[1],skiprows=1,usecols=cols).reshape([1,len(cols)]) # Expects exactly one record
+                vals = np.concatenate((vals_sim,vals_obs),axis=0)
+            else :
+                vals = np.loadtxt(fsfile,skiprows=1,usecols=cols)
+        elif (eht_data_type=='CACP') :
+            cols = [0,1,4]
+            if (isinstance(fsfile,list)):
+                valssub = np.loadtxt(fsfile[0],skiprows=1,usecols=cols,delimiter=",")
+                vals_sim = np.zeros((valssub.shape[0],5))
+                vals_sim[:,1:4] = valssub  # flux is zeroed out.
+                valssub = np.loadtxt(fsfile[1],skiprows=1,usecols=cols).reshape([1,len(cols)],delimiter=",")
+                vals_obs = np.zeros((valssub.shape[0],5))
+                vals_obs[:,1:4] = valssub  # flux is zeroed out.
+                vals = np.concatenate((vals_sim,vals_obs),axis=0)
+            else :
+                vals = np.loadtxt(fsfile,skiprows=1,usecols=cols)
+                valssub = np.loadtxt(fsfile,skiprows=1,usecols=cols)
+                vals = np.zeros((valssub.shape[0],5))
+                vals[:,1:] = valssub  # flux is zeroed out.
+            vals[:,1] *= 180.0*3600e6/np.pi  # Convert M/D to uas
+            vals[:,2] *= 180.0/np.pi # Convert PA to deg
+            vals[:,4] = -0.5*vals[:,3] # L = - 0.5*csq
         else :
             raise ValueError("Unrecognized eht_data_type, %s. Expects either 'V' or 'VACP'."%(eht_data_type))
 
@@ -259,7 +298,8 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
         self.ebpc_quality_statistic = ebpc_quality_statistic
         self.ebpc_norm_size_1d = norm_size_1d
         self.ebpc_norm_size_2d = norm_size_2d
-
+        self.ebpc_posteriors = {}
+        
     def evidence(self,verbosity=0,**kwargs) :
         """
         Access to the AIS as a proxy for the Bayesian evidence. If a binary_ais_cut is set, will return 0 or 1 based on AIS score.
