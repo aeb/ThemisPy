@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Scoring &mdash; ThemisPy 0.3.0+123.g9f38686.dirty documentation</title>
+  <title>Scoring &mdash; ThemisPy 0.3.0+125.g371ae47 documentation</title>
   
 
   
@@ -33,7 +33,7 @@
         <link rel="index" title="Index"
               href="../../genindex.html"/>
         <link rel="search" title="Search" href="../../search.html"/>
-    <link rel="top" title="ThemisPy 0.3.0+123.g9f38686.dirty documentation" href="../../index.html"/>
+    <link rel="top" title="ThemisPy 0.3.0+125.g371ae47 documentation" href="../../index.html"/>
         <link rel="up" title="User’s Guide" href="userguide.html"/>
         <link rel="next" title="Utils" href="utils.html"/>
         <link rel="prev" title="Vis" href="vis.html"/> 
@@ -65,7 +65,7 @@
             
             
               <div class="version">
-                0.3.0+123.g9f38686.dirty
+                0.3.0+125.g371ae47
               </div>
             
           
@@ -421,7 +421,8 @@ the associated collection of snapshot images).</p>
 <dt id="scoring.snapshots.SingleEpochSnapshotPosterior.evidence">
 <code class="sig-name descname">evidence</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">verbosity</span><span class="o">=</span><span class="default_value">0</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/scoring/snapshots.html#SingleEpochSnapshotPosterior.evidence"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#scoring.snapshots.SingleEpochSnapshotPosterior.evidence" title="Permalink to this definition">¶</a></dt>
 <dd><p>Access to the AIS as a proxy for the Bayesian evidence. If a binary_ais_cut is set, will return 0 or 1 based on AIS score.
-The generate function must be run before evidence values can be computed.</p>
+The generate function must be run before evidence values can be computed.  If no AIS score is available (e.g., no AIS file
+has been read), will return 1.0..</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>verbosity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Verbosity level. When greater than 0, various information will be provided. Default: 0.</p>
@@ -741,7 +742,7 @@ posteriors and Bayesian evidences.</p>
     <script type="text/javascript">
         var DOCUMENTATION_OPTIONS = {
             URL_ROOT:'../../',
-            VERSION:'0.3.0+123.g9f38686.dirty',
+            VERSION:'0.3.0+125.g371ae47',
             COLLAPSE_INDEX:false,
             FILE_SUFFIX:'.html',
             LINK_SUFFIX:'.html', 
