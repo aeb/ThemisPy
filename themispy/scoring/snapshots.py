@@ -1276,7 +1276,7 @@ def plot_odds_ratios(posterior,colors='k',labels=None,cutoff=0.05,fig=None,axes=
       fig (matplotlib.figure.Figure): Handle of figure to modify. If None, use the current figure object. Default: None.
       axes (matplotlib.axes.Axes,list): Handle of axes to modify (if show_projections is False) or list of handles to axes (if show_projections is True). If None, creates axes. Default: None.
       norm (str,float) : Normalization to apply. If 'max' uses the maximum.  If None, no normalization will be performed. Default: 'max'.
-      scale (str) : Scale of the y-axis. Accepts any argument to :fun:`axes.Axes.set_yscale`. Default: 'log'.
+      scale (str) : Scale of the y-axis. Accepts any argument to :func:`axes.Axes.set_yscale`. Default: 'log'.
 
     Returns:
       TBD
