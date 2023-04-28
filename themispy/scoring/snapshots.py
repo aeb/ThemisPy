@@ -303,7 +303,8 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
     def evidence(self,verbosity=0,**kwargs) :
         """
         Access to the AIS as a proxy for the Bayesian evidence. If a binary_ais_cut is set, will return 0 or 1 based on AIS score.
-        The generate function must be run before evidence values can be computed.
+        The generate function must be run before evidence values can be computed.  If no AIS score is available (e.g., no AIS file
+        has been read), will return 1.0..
 
         Args: 
           verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.
