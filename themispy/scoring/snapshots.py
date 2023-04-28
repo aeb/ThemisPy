@@ -117,7 +117,7 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
         
         Args:
           fsfile (str): Name of file containing AIS fit information.
-          eht_data_type (str): Type of EHT data being fitted. Options include 'V' (complex visibilities) and 'VACP' (visibility amplitudes and closure phases). Default: 'VACP'.
+          eht_data_type (str): Type of EHT data being fitted. Options include 'V' (complex visibilities), 'VACP' (visibility amplitudes and closure phases), and 'CACP' (closure amplitudes and closure phases, uses Comrade format). Default: 'VACP'.
           themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.
           verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.
         
@@ -186,7 +186,7 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
         
         Args:
           fsfile (str,list): Name of file, or list of names of files, containing AIS fit information.  If single file, expects data fit to be the last entry.  If a list of file names, expects the first to be the simulation fits and the second to be the data fit.
-          eht_data_type (str): Type of EHT data being fitted. Options include 'V' (complex visibilities) and 'VACP' (visibility amplitudes and closure phases). Default: 'VACP'.
+          eht_data_type (str): Type of EHT data being fitted. Options include 'V' (complex visibilities), 'VACP' (visibility amplitudes and closure phases), and 'CACP' (closure amplitudes and closure phases, uses Comrade format). Default: 'VACP'.
           themis_pa_fix (bool): If True, resets the PA to 180-PA, in accordance with the impact of the definition of PA in Themis. Default: True.
           verbosity (int): Verbosity level. When greater than 0, various information will be provided. Default: 0.
         
