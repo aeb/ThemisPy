@@ -122,8 +122,8 @@ def read_residuals(resfile_name, datafile_list=None, datafile=None, verbosity=0)
         
                     
     elif (restype=='likelihood_visibility_amplitude' \
-    or restype=='likelihood_marginalized_visibility_amplitude' \
-    or restype=='likelihood_optimal_gain_correction_visibility_amplitude') :
+        or restype=='likelihood_marginalized_visibility_amplitude' \
+        or restype=='likelihood_optimal_gain_correction_visibility_amplitude') :
         d = np.loadtxt(resfile_name)
         resdata['type']='amplitude'
         resdata['u']=d[:,0]
@@ -153,7 +153,7 @@ def read_residuals(resfile_name, datafile_list=None, datafile=None, verbosity=0)
         #    resdata[key] = np.array(resdata[key])    
                 
     elif (restype=='likelihood_closure_phase' \
-    or restype=='likelihood_marginalized_closure_phase') :
+        or restype=='likelihood_marginalized_closure_phase') :
         d = np.loadtxt(resfile_name)
         resdata['type']='closure phase'
         resdata['u1']=d[:,0]
