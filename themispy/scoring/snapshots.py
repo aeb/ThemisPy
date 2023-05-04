@@ -217,7 +217,7 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
                 valssub = np.loadtxt(fsfile[0],skiprows=1,usecols=cols,delimiter=",")
                 vals_sim = np.zeros((valssub.shape[0],5))
                 vals_sim[:,1:] = valssub  # flux is zeroed out.
-                valssub = np.loadtxt(fsfile[1],skiprows=1,usecols=cols).reshape([1,len(cols)],delimiter=",")
+                valssub = np.loadtxt(fsfile[1],skiprows=1,usecols=cols,delimiter=",").reshape([1,len(cols)])
                 vals_obs = np.zeros((valssub.shape[0],5))
                 vals_obs[:,1:] = valssub  # flux is zeroed out.
                 vals = np.concatenate((vals_sim,vals_obs),axis=0)
