@@ -135,13 +135,13 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
             cols = [1,2,3,6,7]
             vals = np.loadtxt(fsfile,skiprows=1,usecols=cols)
         elif (eht_data_type=='CACP') :
-            cols = [0,1,4]
+            cols = [0,1,4,6]
             valssub = np.loadtxt(fsfile,skiprows=1,usecols=cols,delimiter=",")
             vals = np.zeros((valssub.shape[0],5))
-            vals[:,1:4] = valssub  # flux and likelihood are zeroed out.
+            vals[:,1:] = valssub  # flux and likelihood are zeroed out.
             vals[:,1] *= 180.0*3600e6/np.pi # Convert M/D to uas
             vals[:,2] *= 180.0/np.pi # Convert PA to deg
-            vals[:,4] = -0.5*vals[:,3] # L = - 0.5*csq
+            #vals[:,4] = -0.5*vals[:,3] # L = - 0.5*csq
         else :
             raise ValueError("Unrecognized eht_data_type, %s. Expects either 'V' or 'VACP'."%(eht_data_type))
 
@@ -212,22 +212,22 @@ class SingleEpochSnapshotPosterior(SnapshotPosterior) :
             else :
                 vals = np.loadtxt(fsfile,skiprows=1,usecols=cols)
         elif (eht_data_type=='CACP') :
-            cols = [0,1,4]
+            cols = [0,1,4,6]
             if (isinstance(fsfile,list)):
                 valssub = np.loadtxt(fsfile[0],skiprows=1,usecols=cols,delimiter=",")
                 vals_sim = np.zeros((valssub.shape[0],5))
-                vals_sim[:,1:4] = valssub  # flux is zeroed out.
+                vals_sim[:,1:] = valssub  # flux is zeroed out.
                 valssub = np.loadtxt(fsfile[1],skiprows=1,usecols=cols).reshape([1,len(cols)],delimiter=",")
                 vals_obs = np.zeros((valssub.shape[0],5))
-                vals_obs[:,1:4] = valssub  # flux is zeroed out.
+                vals_obs[:,1:] = valssub  # flux is zeroed out.
                 vals = np.concatenate((vals_sim,vals_obs),axis=0)
             else :
                 valssub = np.loadtxt(fsfile,skiprows=1,usecols=cols,delimiter=",")
                 vals = np.zeros((valssub.shape[0],5))
-                vals[:,1:4] = valssub  # flux is zeroed out.
+                vals[:,1:] = valssub  # flux is zeroed out.
             vals[:,1] *= 180.0*3600e6/np.pi  # Convert M/D to uas
             vals[:,2] *= 180.0/np.pi # Convert PA to deg
-            vals[:,4] = -0.5*vals[:,3] # L = - 0.5*csq
+            # vals[:,4] = -0.5*vals[:,3] # L = - 0.5*csq
         else :
             raise ValueError("Unrecognized eht_data_type, %s. Expects either 'V' or 'VACP'."%(eht_data_type))
 
