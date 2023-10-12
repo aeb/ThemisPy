@@ -2249,11 +2249,9 @@ class model_image_vae_interepolated_riaf(model_image) :
                     I[i,j] = 0
                 else :
                     I[i,j] = interp_obj(-xxr,-yyr)
-        #I = np.fliplr(I)
-        I = np.fliplr(np.flipud(I.T))
+        I = np.fliplr(I) # To fix image location swap.
+        # I = np.fliplr(np.flipud(I.T))
 
-        # To fix image location swap.
-        I = np.flipud(np.flipud(I.T))
 
         I = I.astype(float)
                 
