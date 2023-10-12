@@ -122,8 +122,8 @@ def read_residuals(resfile_name, datafile_list=None, datafile=None, verbosity=0)
         
                     
     elif (restype=='likelihood_visibility_amplitude' \
-    or restype=='likelihood_marginalized_visibility_amplitude' \
-    or restype=='likelihood_optimal_gain_correction_visibility_amplitude') :
+        or restype=='likelihood_marginalized_visibility_amplitude' \
+        or restype=='likelihood_optimal_gain_correction_visibility_amplitude') :
         d = np.loadtxt(resfile_name)
         resdata['type']='amplitude'
         resdata['u']=d[:,0]
@@ -153,7 +153,7 @@ def read_residuals(resfile_name, datafile_list=None, datafile=None, verbosity=0)
         #    resdata[key] = np.array(resdata[key])    
                 
     elif (restype=='likelihood_closure_phase' \
-    or restype=='likelihood_marginalized_closure_phase') :
+        or restype=='likelihood_marginalized_closure_phase') :
         d = np.loadtxt(resfile_name)
         resdata['type']='closure phase'
         resdata['u1']=d[:,0]
@@ -551,10 +551,12 @@ def plot_closure_phase_residuals(resdata, plot_type='perimeter', gain_data=None,
         x=np.sqrt(resdata_local['u1']**2+resdata_local['v1']**2+resdata_local['u2']**2+resdata_local['v2']**2+resdata_local['u3']**2+resdata_local['v3']**2)
         xlbl=r'Perimeter (G$\lambda$)'
     elif (plot_type=='area') :
-        u1amp = np.sqrt(resdata_local['u1']**2+resdata_local['v1']**2)
-        u2amp = np.sqrt(resdata_local['u2']**2+resdata_local['v2']**2)
-        u1du2 = resdata_local['u1']*resdata_local['u2']+resdata_local['v1']*resdata_local['v2']
-        x = 0.5*np.sqrt( (u1amp*u2amp)**2 - u1du2**2 )
+        # u1amp = np.sqrt(resdata_local['u1']**2+resdata_local['v1']**2)
+        # u2amp = np.sqrt(resdata_local['u2']**2+resdata_local['v2']**2)
+        # u1du2 = resdata_local['u1']*resdata_local['u2']+resdata_local['v1']*resdata_local['v2']
+        # x = 0.5*np.sqrt( (u1amp*u2amp)**2 - u1du2**2 )
+        # xlbl=r'Area (G$\lambda^2$)'
+        x = 0.5*np.abs(resdata_local['u1']*resdata_local['v2'] - resdata_local['v1']*resdata_local['u2'])
         xlbl=r'Area (G$\lambda^2$)'
     elif (plot_type=='uvmax') :
         u1amp = np.sqrt(resdata_local['u1']**2+resdata_local['v1']**2)
@@ -731,12 +733,11 @@ def plot_log_closure_amplitude_residuals(resdata, plot_type='perimeter', gain_da
         x=np.sqrt(resdata_local['u1']**2+resdata_local['v1']**2+resdata_local['u2']**2+resdata_local['v2']**2+resdata_local['u3']**2+resdata_local['v3']**2+resdata_local['u4']**2+resdata_local['v4']**2)
         xlbl=r'Perimeter (G$\lambda$)'
     elif (plot_type=='area') :
-        raise RuntimeError("area is not yet implmented for log closure amplitude quadrangles.")
-        # u1amp = np.sqrt(resdata_local['u1']**2+resdata_local['v1']**2)
-        # u2amp = np.sqrt(resdata_local['u2']**2+resdata_local['v2']**2)
-        # u1du2 = resdata_local['u1']*resdata_local['u2']+resdata_local['v1']*resdata_local['v2']
-        # x = 0.5*np.sqrt( (u1amp*u2amp)**2 - u1du2**2 )
-        # xlbl=r'Area (G$\lambda^2$)'
+        x = 0.5*np.abs(resdata_local['u1']*resdata_local['v2'] - resdata_local['v1']*resdata_local['u2']
+                       +
+                       resdata_local['u3']*resdata_local['v4'] - resdata_local['v3']*resdata_local['u4'])
+        xlbl=r'Area (G$\lambda^2$)'
+        # raise RuntimeError("area is not yet implmented for log closure amplitude quadrangles.")
     elif (plot_type=='uvmax') :
         u1amp = np.sqrt(resdata_local['u1']**2+resdata_local['v1']**2)
         u2amp = np.sqrt(resdata_local['u2']**2+resdata_local['v2']**2)

@@ -2141,7 +2141,7 @@ class model_image_vae_interepolated_riaf(model_image) :
       themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True
 
     Attributes:
-      (tuple,tuple,int): Image dimensions, fields of view in :math:`\\theta_g', and number of latent parameters (zsize).
+      (tuple,tuple,int): Image dimensions, fields of view in :math:`\\theta_g`, and number of latent parameters (zsize).
       Nx (int): Number of control points in the -RA direction.
 
     """
@@ -2168,7 +2168,7 @@ class model_image_vae_interepolated_riaf(model_image) :
           verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
 
         Returns:
-          (tuple,tuple,int): Image dimensions, fields of view in :math:`\\theta_g', and number of latent parameters (zsize).
+          (tuple,tuple,int): Image dimensions, fields of view in :math:`\\theta_g`, and number of latent parameters (zsize).
         """
 
         if (verbosity>0) :

@@ -1,5 +1,5 @@
 """
-Data manipulation tools.
+Visualization tools.
 """
 
 __author__="Themis Development Team"

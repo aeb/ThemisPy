@@ -427,7 +427,7 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
             LR = LR * np.conj(efr1)*np.conj(efr2)
             
         SNR = (np.abs(RR)+np.abs(LL))/(RRerr+LLerr)
-        
+
         # If we want to still use only partial-hand visibilities, 
         if (keep_partial_hands) :
             if (np.isnan(RR)) :
@@ -449,6 +449,8 @@ def write_crosshand_visibilities(obs, outname, isER5=False, snrcut=0, keep_parti
         if (np.isnan([RR,LL,RL,LR]).any()==False) :
             if (SNR>snrcut) :
                 out.write('%25s %4i %4i %15.8f %4s %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f %15.8f\n'%(src,year,day,time,bl,u,v,fr1[ii],fr2[ii],RR.real,RRerr,RR.imag,RRerr,LL.real,LLerr,LL.imag,LLerr,RL.real,RLerr,RL.imag,RLerr,LR.real,LRerr,LR.imag,LRerr))
+            else :
+                warnings.warn("Data point failing SNR cut found on %4s bseline with SNR %g with snrcut %g."%(bl,SNR,snrcut), Warning)
         else :
             warnings.warn("NaN crosshand visibilities found on %4s baseline, perhaps one hand is missing?"%(bl), Warning)
 
