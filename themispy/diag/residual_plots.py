@@ -444,7 +444,7 @@ def plot_amplitude_residuals(resdata, plot_type='uvamp', gain_data=None, station
     plt.errorbar(x,resdata_local['data'],yerr=resdata_local['error'],fmt=datafmt,color=datacolor,markersize=4,zorder=10)
     plt.plot(x,resdata_local['model'],modelfmt,color=modelcolor,markersize=2,zorder=20)
     plt.ylabel(r'$|V|$ (Jy)')
-    plt.grid(grid)
+    add_grid(grid)
     axs_comp.set_xscale(xscale)
     axs_comp.set_yscale(yscale)
 
@@ -459,7 +459,7 @@ def plot_amplitude_residuals(resdata, plot_type='uvamp', gain_data=None, station
         # plot the markers
         plt.plot(x,resdata_local['residual']/resdata_local['error'],datafmt,color=datacolor,markersize=4)
         plt.ylabel(r'Res.')
-        plt.grid(grid)
+        add_grid(grid)
         axs_res.set_xscale(xscale)
 
         if (resdist) :
@@ -478,7 +478,7 @@ def plot_amplitude_residuals(resdata, plot_type='uvamp', gain_data=None, station
             plt.ylim(ylim)
             plt.gca().yaxis.set_ticklabels([])
             plt.gca().xaxis.set_ticklabels([])            
-            plt.grid(grid)
+            add_grid(grid)
             plt.sca(axs_res)
         
     # Add the xlabels
@@ -625,7 +625,7 @@ def plot_closure_phase_residuals(resdata, plot_type='perimeter', gain_data=None,
     plt.errorbar(x,resdata_local['data'],yerr=resdata_local['error'],fmt=datafmt,color=datacolor,markersize=4,zorder=10)
     plt.plot(x,resdata_local['model'],modelfmt,color=modelcolor,markersize=2,zorder=20)
     plt.ylabel(r'Closure Phase (deg)')
-    plt.grid(grid)
+    add_grid(grid)
     axs_comp.set_xscale(xscale)
     axs_comp.set_yscale(yscale)
 
@@ -640,7 +640,7 @@ def plot_closure_phase_residuals(resdata, plot_type='perimeter', gain_data=None,
         # plot the markers
         plt.plot(x,resdata_local['residual']/resdata_local['error'],datafmt,color=datacolor,markersize=4)
         plt.ylabel(r'Res.')
-        plt.grid(grid)
+        add_grid(grid)
         axs_res.set_xscale(xscale)
 
         if (resdist) :
@@ -659,7 +659,7 @@ def plot_closure_phase_residuals(resdata, plot_type='perimeter', gain_data=None,
             plt.ylim(ylim)
             plt.gca().yaxis.set_ticklabels([])
             plt.gca().xaxis.set_ticklabels([])            
-            plt.grid(grid)
+            add_grid(grid)
             plt.sca(axs_res)
             
     # Add the xlabels
@@ -807,7 +807,7 @@ def plot_log_closure_amplitude_residuals(resdata, plot_type='perimeter', gain_da
     plt.errorbar(x,resdata_local['data'],yerr=resdata_local['error'],fmt=datafmt,color=datacolor,markersize=4,zorder=10)
     plt.plot(x,resdata_local['model'],modelfmt,color=modelcolor,markersize=2,zorder=20)
     plt.ylabel(r'Log Closure Amplitude')
-    plt.grid(grid)
+    add_grid(grid)
     axs_comp.set_xscale(xscale)
     axs_comp.set_yscale(yscale)
 
@@ -822,7 +822,7 @@ def plot_log_closure_amplitude_residuals(resdata, plot_type='perimeter', gain_da
         # plot the markers
         plt.plot(x,resdata_local['residual']/resdata_local['error'],datafmt,color=datacolor,markersize=4)
         plt.ylabel(r'Res.')
-        plt.grid(grid)
+        add_grid(grid)
         axs_res.set_xscale(xscale)
 
         if (resdist) :
@@ -841,7 +841,7 @@ def plot_log_closure_amplitude_residuals(resdata, plot_type='perimeter', gain_da
             plt.ylim(ylim)
             plt.gca().yaxis.set_ticklabels([])
             plt.gca().xaxis.set_ticklabels([])            
-            plt.grid(grid)
+            add_grid(grid)
             plt.sca(axs_res)
             
     # Add the xlabels
@@ -1019,7 +1019,7 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
     else :
         raise RuntimeError("Unrecognized plot type %s"%(plot_type_y))
         
-    plt.grid(grid)
+    add_grid(grid)
     axs_comp.set_xscale(xscale)
     axs_comp.set_yscale(yscale)
 
@@ -1044,7 +1044,7 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
             res = ( np.angle((resdata_local['model']+resdata_local['residual'])/resdata_local['model']) )/( np.abs(resdata_local['error'])/np.abs(resdata_local['data']) )
             plt.plot(x,res,datafmt,color=datacolor,markersize=4,alpha=alpha)
         plt.ylabel(r'Res.')
-        plt.grid(grid)
+        add_grid(grid)
         axs_res.set_xscale(xscale)
 
 
@@ -1064,7 +1064,7 @@ def plot_visibility_residuals(resdata, plot_type='uvamp|complex', gain_data=None
             plt.ylim(ylim)
             plt.gca().yaxis.set_ticklabels([])
             plt.gca().xaxis.set_ticklabels([])            
-            plt.grid(grid)
+            add_grid(grid)
             plt.sca(axs_res)
 
         

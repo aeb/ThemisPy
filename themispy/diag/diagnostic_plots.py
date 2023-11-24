@@ -124,7 +124,7 @@ def plot_likelihood_trace(elklhd, colormap='plasma', step_norm=1000, grid=True, 
         plt.plot(xtmp,ytmp,linestyle='-',alpha=0.75,color=mean_color,zorder=11)
         plt.fill_between(xtmp,ytmp+stdvals,ytmp-stdvals,alpha=0.25,color=mean_color,zorder=10)
 
-    plt.grid(grid)
+    add_grid(grid)
     plt.gca().set_xlabel('Sample number / %g'%(step_norm))
     plt.gca().set_ylabel('Log likelihood')
 
@@ -180,7 +180,7 @@ def plot_likelihood_trace_list(elklhd_list, colormap='plasma', step_norm=1000, g
         step_offset = chain_step[-1]
             
             
-    plt.grid(grid)
+    add_grid(grid)
     plt.gca().set_xlabel('Sample number / %g'%(step_norm))
     plt.gca().set_ylabel('Log likelihood')
             
@@ -243,7 +243,7 @@ def plot_parameter_trace(echain, parameter_list=None, parameter_names=None, samp
     for ip in range(len(parameter_list)) :
         plt.sca(ax_list[ip//Nwx,ip%Nwx])
         plt.plot(chain_step,echain[:,ip],',',color=sample_color)
-        plt.grid(grid)
+        add_grid(grid)
         plt.gca().set_ylabel(parameter_names[ip])
         if (means) :
             plt.axhline(meanvals[ip],linestyle='-',alpha=0.5,color=mean_color,zorder=11)
@@ -320,7 +320,7 @@ def plot_parameter_trace_list(echain_list, parameter_list=None, parameter_names=
         for ip in range(len(parameter_list)) :
             plt.sca(ax_list[ip//Nwx,ip%Nwx])
             plt.plot(chain_step,echain[:,ip],',',color=sample_color)
-            plt.grid(grid)
+            add_grid(grid)
             if (means) :
                 xtmp = np.array([chain_step[0], chain_step[-1]])
                 ytmp = np.array([meanvals[ip], meanvals[ip]])
@@ -446,7 +446,7 @@ def plot_annotated_parameter_trace(echain, elklhd, parameter_list=None, paramete
         use = (elklhd>=likelihood_values[-1])
         plt.plot(chain_step[use],echain[use,ip],'.',ms=4,color=likelihood_colors[-1],alpha=1)
             
-        plt.grid(grid)
+        add_grid(grid)
         plt.gca().set_ylabel(parameter_names[ip])
 
         if (means) :
@@ -487,7 +487,7 @@ def plot_annotated_parameter_trace(echain, elklhd, parameter_list=None, paramete
             dy = 0.1*(ymax-ymin)
             plt.gca().set_ylim((ymin-dy,ymax+dy))
 
-            plt.grid(grid)
+            add_grid(grid)
             if (mpl.rcParams['text.usetex']) :
                 plt.gca().set_ylabel(r'$\log_{10}(L)$')
             else :
@@ -612,7 +612,7 @@ def plot_annotated_parameter_trace_list(echain_list, elklhd_list, parameter_list
             use = (elklhd>=likelihood_values[-1])
             plt.plot(chain_step[use],echain[use,ip],'.',ms=4,color=likelihood_colors[-1],alpha=1)
             
-            plt.grid(grid)
+            add_grid(grid)
             if (means) :
                 xtmp = np.array([chain_step[0], chain_step[-1]])
                 ytmp = np.array([meanvals[ip], meanvals[ip]])
@@ -648,7 +648,7 @@ def plot_annotated_parameter_trace_list(echain_list, elklhd_list, parameter_list
                 lc.set_alpha(0.5)
                 line = plt.gca().add_collection(lc)
                     
-                plt.grid(grid)
+                add_grid(grid)
 
                 plt.axvline(step_offset,color='k')
 

@@ -2283,7 +2283,7 @@ def plot_dterm_posteriors(polarized_image, chain, lcolormap='Reds', rcolormap='G
                  
 
         # Add grids
-        plt.grid(grid)
+        add_grid(grid)
         
         # Add label
         #print(station_labels)

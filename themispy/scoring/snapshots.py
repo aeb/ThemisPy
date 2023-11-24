@@ -1370,7 +1370,7 @@ def plot_odds_ratios(posterior,colors='k',labels=None,cutoff=0.05,fig=None,axes=
             plot_objs.append(plt.plot([],[],'.',color=colors[j],label=labels[j]))
         plt.legend()
         
-    plt.grid(True,alpha=0.25)
+    add_grid(True,alpha=0.25)
     plt.xlabel('Simulation Index')
     if (scale=='linear') :
         plt.ylabel('Odds Ratio')

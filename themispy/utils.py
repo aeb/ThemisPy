@@ -88,3 +88,14 @@ class progress_bar :
         pbo.write('  %s\n'%(epilog))
         pbo.flush()
         
+
+
+# Apply fix for plt.grid abberant behavior in Matplotlib 3.5.3,
+# which no longer takes an argument for whether or not to add a grid.
+import matplotlib.pyplot as plt
+
+def add_grid(visible=True,**kwargs) :
+    if (visible) :
+        plt.grid(**kwargs)
+    else :
+        pass
