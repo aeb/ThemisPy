@@ -128,6 +128,11 @@ def set_parser() :
                         default=False,
                         help=("Uses a default telescope array file for 2018."))
 
+    parser.add_argument("-cd","--caldir",
+                        type=str,
+                        action="store",
+                        help="Output caltable to ehtim-style caldir. Default: None.")
+
     parser.add_argument("-o","--out",
                         type=str,
                         action="store",
@@ -281,10 +286,11 @@ if __name__ == "__main__" :
     else :
         dterm_data = None
 
-    
+
+        
     # Determine the output file name
     if (args.out is None) :
         args.out = 'selfcal_'+args.uvfits.split('/')[-1]
     
     # Apply the gains and write the calibrated uvfits file
-    ty.data.write_uvfits(obs,args.out,gain_data=gain_data,dterm_data=dterm_data,relative_timestamps=args.relative_timestamps,verbosity=args.verbose)
+    ty.data.write_uvfits(obs,args.out,gain_data=gain_data,dterm_data=dterm_data,relative_timestamps=args.relative_timestamps,write_caltables=args.caldir,verbosity=args.verbose)

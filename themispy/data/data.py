@@ -900,7 +900,7 @@ def read_polarization_fractions(filename, verbosity=0) :
 
 import matplotlib.pyplot as plt
 
-def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timestamps=False, verbosity=0) :
+def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timestamps=False, write_caltables=None, verbosity=0) :
     """
     Writes uvfits file given an :class:`ehtim.obsdata.Obsdata` object.  Potentially applies gains and/or dterms from a Themis analysis 
 
@@ -913,6 +913,7 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
       gains_data (dictionary): Station gains organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
       dterm_data (dictionary): Station D terms organized as a dictionary indexed by the station codes in :class:`ehtim.obsdata.tarr`.
       relative_timestamps (bool): If True, will assume that the times in the calibration files apply to the given data set and apply in order. Requires that the number of gains must match the number of time slices in the data set. Exists prirmarily to address poor absolute time specification of earlier gain files. In almost all new Themis analyses after Apr 22, 2020, should be False.
+      write_caltables (str): If not None, will write ehtim-style caltables to directory indicated. Default: None.
       verbosity (int): Degree of verbosity.  0 only prints warnings and errors. 1 provides more granular output. 2 generates calibrated data plots. 3 generates cal table gain plots.  
 
     Returns:
@@ -990,6 +991,10 @@ def write_uvfits(obs, outname, gain_data=None, dterm_data=None, relative_timesta
     # Generate caltable object
     cal=eh.caltable.Caltable(obs.ra, obs.dec, obs.rf, obs.bw, datatables, obs.tarr, source=obs.source, mjd=obs.mjd, timetype=obs.timetype)
 
+    # Save the caltable is requested
+    if (not write_caltables is None) :
+        cal.save_txt(obs,datadir=write_caltables)
+    
     # Calibrate the observation data (Yikes!!)
     obs_cal = cal.applycal(obs, interp='nearest', extrapolate=True)
     # print("Here")
