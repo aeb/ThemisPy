@@ -13,6 +13,8 @@ from themispy.vis.image import *
 from themispy.vis.polimage import *
 
 import numpy as np
+from matplotlib import rc
+rc('pcolor',shading='auto')
 
 # Read in h5py, if possible
 try:

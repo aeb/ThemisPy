@@ -17,6 +17,9 @@ from scipy import interpolate as sint
 from scipy.signal import fftconvolve
 import matplotlib.pyplot as plt
 from matplotlib import cm
+from matplotlib import rc
+rc('pcolor',shading='auto')
+
 
 # Read in astropy, if possible
 try:

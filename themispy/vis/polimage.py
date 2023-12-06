@@ -20,6 +20,8 @@ from scipy.signal import fftconvolve
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from matplotlib.colors import is_color_like, to_rgba
+from matplotlib import rc
+rc('pcolor',shading='auto')
 
 
 # Some constants
