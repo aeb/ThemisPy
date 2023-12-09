@@ -77,6 +77,12 @@ def set_parser():
                               " within.  If an index is given with -i,--index will plot the corresponding"
                               " line; otherwise plots the first line."))
 
+    parser.add_argument("-ff","--fits-file",
+                        type=str,
+                        action='store',
+                        default=None,
+                        help=("Name of FITS file to read image data from."))
+
     parser.add_argument("-m","--model",
                         type=str,
                         action='store',
@@ -237,7 +243,9 @@ if __name__ == "__main__" :
     
 
     # Construct a model_image from glob
-    if ('.' in args.model) :
+    if (not args.fits_file is None) :
+        model_image = ty.vis.model_polarized_image_fits(args.fits_file)
+    elif ('.' in args.model) :
         if (args.verbose):
             print("Reading tag file %s"%(args.model))
         model_image = ty.vis.construct_model_image_from_glob(args.model,'tagvers-1.0')
@@ -279,6 +287,8 @@ if __name__ == "__main__" :
                 print("Reading highest likelihood sample from lklhd file %s and chain file %s"%(args.lklhd,args.chain))
             parameters,_ = ty.chain.most_likely_erun(args.chain,args.lklhd)
             parameters = parameters[0][:model_image.size]
+    elif (not (args.fits_file is None)) :
+        parameters = np.array([]) # A FITS file has been passed as an input
     else :
         # No acceptable method has been indicated
         print("ERROR: Some method of specifying parameters must be set.")

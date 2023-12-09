@@ -205,6 +205,86 @@ class model_polarized_image(model_image) :
         """
         
         self.time = time
+    
+
+class model_polarized_image_fits(model_polarized_image) :
+    """
+    Constructs an interface model polarized image from a fits file to facilitate plotting comparisons.
+    Has no parameter and size=0.
+
+    Args:
+      fits_file_name (str): Name of the fits file to read.
+      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
+    """
+
+    def __init__(self, fits_file_name, station_names=None, themis_fft_sign=True) :
+        super().__init__(station_names,themis_fft_sign)
+        self.size=0
+        
+        if (ehtim_found==False) :
+            raise NotImplementedError("ERROR: model_image_fits requires ehtim to be installed.")
+
+        img = eh.image.load_fits(fits_file_name)
+        # I is intensity/uas^2
+        I = np.flipud(np.transpose(img.imarr('I'))) / (img.psize*rad2uas)**2
+        # I is intensity/uas^2
+        Q = np.flipud(np.transpose(img.imarr('Q'))) / (img.psize*rad2uas)**2
+        # I is intensity/uas^2
+        U = np.flipud(np.transpose(img.imarr('U'))) / (img.psize*rad2uas)**2
+        # I is intensity/uas^2
+        V = np.flipud(np.transpose(img.imarr('V'))) / (img.psize*rad2uas)**2
+        # x is -RA in uas
+        x = img.psize*( np.arange(img.xdim) - 0.5*(img.xdim-1) ) * rad2uas
+        # y is Dec in uas
+        y = img.psize*( np.arange(img.ydim) - 0.5*(img.ydim-1) ) * rad2uas
+
+        self.I_interp_obj = sint.RectBivariateSpline(x,y,I)
+        self.Q_interp_obj = sint.RectBivariateSpline(x,y,Q)
+        self.U_interp_obj = sint.RectBivariateSpline(x,y,U)
+        self.V_interp_obj = sint.RectBivariateSpline(x,y,V)
+        
+        
+    def generate_stokes_map(self,x,y,kind='all',verbosity=0) :
+        """
+        Internal generation of the Stokes map. In practice you almost certainly want to call :func:`model_polarized_image.stokes_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          kind (str): Stokes parameter to generate map for. Accepted values are 'I', 'Q', 'U', 'V', and combinations or 'all'. Default: 'all'.
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (list) List of arrays of desired Stokes parameter values at positions (x,y) in :math:`Jy/\\mu as^2`. Always returned in the order IQUV.
+        """
+        
+        I = 0*x
+        Q = 0*x
+        U = 0*x
+        V = 0*x
+        for i in range(x.shape[0]) :
+            for j in range(x.shape[1]) :
+                I[i,j] = self.I_interp_obj(x[i,j],y[i,j])
+                Q[i,j] = self.Q_interp_obj(x[i,j],y[i,j])
+                U[i,j] = self.U_interp_obj(x[i,j],y[i,j])
+                V[i,j] = self.V_interp_obj(x[i,j],y[i,j])
+        S = [I,Q,U,V]
+                
+        if (verbosity>0) :
+            print("Filled image from fits.")
+            
+        return S
+
+    
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        return []
 
 
 
