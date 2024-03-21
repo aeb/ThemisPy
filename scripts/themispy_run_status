@@ -1,0 +1,136 @@
+#!/usr/bin/env python3
+
+"""
+Reads in a DEO tempered Themis MCMC run and prints some standard information
+to standard out.
+
+Example:
+$ themispy_run_status
+"""
+
+import numpy as np
+import argparse as ap
+import matplotlib.pyplot as plt
+import numpy as np
+import os
+import copy
+import glob
+
+# We don't need ehtim, so don't import it
+import sys
+# sys.modules['ehtim'] = None
+sys.skip_ehtim = True
+import themispy as ty
+
+def set_parser():
+
+    # Create a parser object to manage command line options
+    parser = ap.ArgumentParser(prog="themispy_run_status",description=__doc__)
+
+    parser.add_argument("-m","--model",
+                        type=str,
+                        action='store',
+                        default="model_image.tag",
+                        help=("Model specifier.  Default: model_image.tag"))
+    
+    parser.add_argument("-nd","--number-data",
+                        type=str,
+                        action='store',
+                        default=None,
+                        help=("Number of data sets to use.  If None, will use the number of residual filies to estimate.  Default: None."))
+
+    parser.add_argument("-ad","--annealing-data-file",
+                        type=str,
+                        action='store',
+                        default='annealing.dat',
+                        help=("Annealing data file to be read in. Default: Annealing.dat"))    
+
+    parser.add_argument("-as","--annealing-summary-file",
+                        type=str,
+                        action='store',
+                        help=("Annealing summary file to be read in. Default: <annealing_data_file>+.summary"))
+
+
+    return parser
+
+
+def count_lines(filename) :
+    with open(filename, 'r') as fp:
+        for count, line in enumerate(fp):
+            pass    
+    return count+1
+
+
+
+
+if __name__ == "__main__" :
+
+    # Get arguments
+    args = set_parser().parse_args()
+
+    # Read in annealing data files
+    summary_data,annealing_data = ty.chain.load_deo_summary(args.annealing_data_file,args.annealing_summary_file)
+    rejection_rate = summary_data['AvgR']
+    bayesian_evidence = summary_data['logZ']
+
+    # Run over fit summary files and return various counts
+    state_files = np.sort(list(glob.glob("*_state.dat")))
+    
+    # Find the number of data files
+    if (args.number_data is None) :
+        sf = copy.copy(state_files[0])
+        rpfx = sf.replace('_state.dat','')        
+        args.number_data = len(list(glob.glob(rpfx+"_residuals_*.d")))
+
+    # Find number of model parameters
+    # Construct a model_image from glob
+    if ('.' in args.model) :
+        model_image = ty.vis.construct_model_image_from_glob(args.model,'tagvers-1.0')
+    else :
+        model_image = ty.vis.construct_model_image_from_glob(args.model,'ccm_mexico+')
+    nparams = model_image.size
+        
+    # Write header
+    header = "%15s"%('Round')
+    header += " %10s"%('Samples')
+    for j in range(args.number_data) :
+        header += " %15s"%('ChiSq-%i'%(j))
+    header += " %15s"%('ChiSq-tot')
+    header += " %15s"%('Max L')
+    header += " %15s"%('Rejection')
+    header += " %15s"%('log(Z)')
+    header += " %15s"%('Steps/hr')
+
+    # Print header to std out
+    print(len(header)*'=')
+    print(header)
+
+    # Loop over sstate files and output standard info
+    for j,sf in enumerate(state_files) :
+
+        nsamples = count_lines(sf)-2
+        
+        rpfx = sf.replace('_state.dat','')
+        
+        fsfile = rpfx+'_fit_summaries.txt'
+        with open(fsfile,'r') as fs :
+            fs.readline() # Kill header
+            line = fs.readline() # Get fit summary
+            fit_data = line.split()
+            chsq = fit_data[(nparams+1):(nparams+2+args.number_data)]
+            lkhd = fit_data[(nparams+2+args.number_data):(nparams+3+args.number_data)][0]
+
+
+        state_file_time = os.path.getmtime(sf)
+        fs_file_time = os.path.getmtime(fsfile)
+        time_per_step = (state_file_time-fs_file_time)/nsamples
+        steps_per_hour = 3600.0/time_per_step
+            
+        if (j<len(rejection_rate)) :
+            print(("%15s %10i"+(args.number_data+1)*(" %15s")+" %15s %15.8g %15.8g %15.8g")%((rpfx,nsamples,)+tuple(chsq)+(lkhd,rejection_rate[j],bayesian_evidence[j],steps_per_hour)))
+        else :
+            print(("%15s %10i"+(args.number_data+1)*(" %15s")+" %15s %15s %15s %15.8g")%((rpfx,nsamples,)+tuple(chsq)+(lkhd,'---','---',steps_per_hour)))
+        
+        
+    print(len(header)*'=')
+
