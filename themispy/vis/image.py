@@ -209,6 +209,116 @@ class model_image_fits(model_image) :
 
         return [ r'$I_0$ (Jy)', r'$\sigma$ (rad)']
 
+
+class model_image_score(model_image) :
+    """
+    Symmetric gaussian image class that is a mirror of :cpp:class:`Themis::model_image_symmetric_gaussian`.
+    Has parameters:
+
+    * parameters[0] ... Total intensity :math:`I_0` (Jy)
+    * parameters[1] ... M-to-Distance ratio :math:`M/D` (:math:'\\mu'as)
+    * parameters[2] ... Position angle :math:`\\phi` (rad)
+    
+    and size=3.
+
+    Args:
+      themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
+    """
+
+    def __init__(self, MoD_int, image_file_name, README_file_name, reflect_image, themis_fft_sign=True) :
+        super().__init__(themis_fft_sign)
+        self.size=3
+
+        print("WARNING: model_image_score may have orienation problems still, use at your own risk!!!")
+
+        # Read README to get fov, pixel count, and default M/D
+        with open(README_file_name,'r') as rin : 
+            d=rin.readlines()
+            fovx=float(d[3].split()[2]) # in uas
+            fovy=float(d[4].split()[2]) # in uas
+            nx=int(d[5].split()[2]) 
+            ny=int(d[6].split()[2])
+            M=float(d[8].split()[2]) # in Msun
+            D=float(d[9].split()[2]) # in pc
+            # self.MoD_int = 6.67408e-8*M*1.98847e33/2.9979e10**2 / (D*3.086e18) * 180/np.pi * 3600 * 1e6
+            # print fovx,fovy,nx,ny,M,D,MoD_int
+        self.MoD_int = float(MoD_int)
+
+            
+        # Read in image data
+        d=np.loadtxt(image_file_name,usecols=([0,1,3]))
+        ix=d[:,0].reshape(nx,ny)
+        iy=d[:,1].reshape(nx,ny)
+        I=d[:,2].reshape(nx,ny) # intensity/rad^2
+        
+        # Fix column vs row order
+        if (ix[0,0]==ix[1,0]) : # 1st index is y
+            I = I.T
+
+        # I = I.T
+        # I = np.flipud(I) # Reflect x-direction to get onsky behavior
+        # I = np.fliplr(I)
+
+        # If we want a reflected image, reflect again
+        if (bool(int(reflect_image))) :
+            I = np.flipud(I)
+
+        # x is -RA in uas
+        x = (fovx/nx)*( np.arange(nx) - 0.5*(nx-1) )
+        # y is Dec in uas
+        y = (fovy/ny)*( np.arange(ny) - 0.5*(ny-1) )
+
+        # I is now intensity/uas^2
+        I = I/np.sum(I[:]) * (fovx*fovy/(nx*ny))
+        
+        # Interpolation object created
+        self.interp_obj = sint.RectBivariateSpline(x,y,I)
+        
+        
+    def generate_intensity_map(self,x,y,verbosity=0) :
+        """
+        Internal generation of the intensity map. In practice you almost certainly want to call :func:`model_image.intensity_map`.
+
+        Args:
+          x (numpy.ndarray): Array of -RA offsets in microarcseconds (usually plaid 2D).
+          y (numpy.ndarray): Array of Dec offsets in microarcseconds (usually plaid 2D).
+          verbosity (int): Verbosity parameter. If nonzero, prints information about model properties. Default: 0.
+
+        Returns:
+          (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
+        """
+
+        ## Effect the reparameterization of Itot, rotation, etc.
+        xr = x*(self.parameters[1]/self.MoD_int)
+        yr = y*(self.parameters[1]/self.MoD_int)
+        c = np.cos(-self.parameters[2])
+        s = np.sin(-self.parameters[2])
+        x = c*xr - s*yr
+        y = s*xr + c*yr
+
+        
+        I = 0*x
+        for i in range(x.shape[0]) :
+            for j in range(x.shape[1]) :
+                I[i,j] = self.interp_obj(x[i,j],y[i,j])[0,0]
+        I = I*self.parameters[0]
+        
+        if (verbosity>0) :
+            print("Filled image from fits.")
+            
+        return I
+
+    
+    def parameter_name_list(self) :
+        """
+        Producess a lists parameter names.
+
+        Returns:
+          (list) List of strings of variable names.
+        """
+
+        return [ r'$I_0$ (Jy)', r'$M/D$ ($\mu$as)', r'$\phi$ (rad)']
+    
         
 class model_image_symmetric_gaussian(model_image) :
     """
@@ -2706,6 +2816,10 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
     elif (tag[0].split()[0]=='model_image_vae_interpolated_riaf') :
         toks = tag[0].split()
         return model_image_vae_interepolated_riaf(toks[4],toks[5],toks[6],float(toks[2]),float(toks[3])),tag[1:]
+
+    elif (tag[0].split()[0]=='model_image_score') :
+        toks = tag[0].split()
+        return model_image_score(toks[1],toks[2],toks[3],toks[4]),tag[1:]
     
     else :
         raise RuntimeError("Unrecognized model tag %s"%(tag[0]))
