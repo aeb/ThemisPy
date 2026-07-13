@@ -225,7 +225,7 @@ class model_image_score(model_image) :
       themis_fft_sign (bool): If True will assume the Themis-default FFT sign convention, which reflects the reconstructed image through the origin. Default: True.
     """
 
-    def __init__(self, MoD_int, image_file_name, README_file_name, reflect_image, themis_fft_sign=True) :
+    def __init__(self, MoD_int, image_file_name, README_file_name, reflect_image, use_log_priors, themis_fft_sign=True) :
         super().__init__(themis_fft_sign)
         self.size=3
 
@@ -273,6 +273,9 @@ class model_image_score(model_image) :
         
         # Interpolation object created
         self.interp_obj = sint.RectBivariateSpline(x,y,I)
+
+        # Set log prior switch
+        self.use_log_priors = bool(use_log_priors)
         
         
     def generate_intensity_map(self,x,y,verbosity=0) :
@@ -288,9 +291,16 @@ class model_image_score(model_image) :
           (numpy.ndarray) Array of intensity values at positions (x,y) in :math:`Jy/\\mu as^2`.
         """
 
+        if (self.use_log_priors) :
+            flux_rescale = np.exp(self.parameters[0])
+            stretch_rescale = np.exp(self.parameters[1])
+        else :
+            flux_rescale = self.parameters[0]
+            stretch_rescale = self.parameters[1]/self.MoD_int
+
         ## Effect the reparameterization of Itot, rotation, etc.
-        xr = x*(self.parameters[1]/self.MoD_int)
-        yr = y*(self.parameters[1]/self.MoD_int)
+        xr = x*stretch_rescale
+        yr = y*stretch_rescale
         c = np.cos(-self.parameters[2])
         s = np.sin(-self.parameters[2])
         x = c*xr - s*yr
@@ -301,7 +311,7 @@ class model_image_score(model_image) :
         for i in range(x.shape[0]) :
             for j in range(x.shape[1]) :
                 I[i,j] = self.interp_obj(x[i,j],y[i,j])[0,0]
-        I = I*self.parameters[0]
+        I = I*flux_rescale
         
         if (verbosity>0) :
             print("Filled image from fits.")
@@ -2819,7 +2829,11 @@ def construct_model_image_from_tagv1(tag,verbosity=0) :
 
     elif (tag[0].split()[0]=='model_image_score') :
         toks = tag[0].split()
-        return model_image_score(toks[1],toks[2],toks[3],toks[4]),tag[1:]
+        if (len(toks)==6) :
+            return model_image_score(toks[1],toks[2],toks[3],toks[4],toks[5]),tag[1:]
+        else :
+            return model_image_score(toks[1],toks[2],toks[3],toks[4],False),tag[1:]
+            
     
     else :
         raise RuntimeError("Unrecognized model tag %s"%(tag[0]))
