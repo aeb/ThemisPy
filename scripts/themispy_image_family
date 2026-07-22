@@ -146,7 +146,12 @@ def set_parser():
                         default=False,
                         help=("Turns on using LaTex in the rendering.  Note that this takes longer,"
                               " but the result is MUCH better looking."))
-                        
+
+    parser.add_argument("--show-index",
+                        action='store_true',
+                        default=False,
+                        help=("Shows the chain index for each panel."))
+    
     parser.add_argument("-v","--verbose",
                         action='store_true',
                         default=False,
@@ -220,17 +225,21 @@ if __name__ == "__main__" :
     if (not (args.lklhd is None)) :
         print("Reading likelihood file %s"%(args.lklhd))
         print("Reading chain file %s"%(args.chain))
-        best_chain,best_lklhd = ty.chain.most_likely_erun(args.chain,args.lklhd,parameter_list=range(model_image.size))
-        print(("Highest likelihood is" + " %f"*len(best_lklhd))%tuple(best_lklhd))
+        best_chain,best_lklhd,best_index = ty.chain.most_likely_erun(args.chain,args.lklhd,parameter_list=range(model_image.size),sample_index=True)
+        # print(("Highest likelihood is" + " %f"*len(best_lklhd))%tuple(best_lklhd))
+        print("Highest likelihood is" + " %f"%(best_lklhd))
 
-        chain,lklhd = ty.chain.sample_erun(args.chain,args.lklhd,args.samples,burn_fraction=args.burn_fraction,parameter_list=range(model_image.size))
+        print("FOO",best_index,best_lklhd,best_chain)
+        
+        chain,lklhd,sample_index = ty.chain.sample_erun(args.chain,args.lklhd,args.samples,burn_fraction=args.burn_fraction,parameter_list=range(model_image.size),sample_indexes=True)
 
         chain[0,:] = best_chain
         lklhd[0] = best_lklhd
+        sample_index[0] = best_index
         
     else :
         best_lklhd=0
-        chain = ty.chain.sample_chain(args.chain,args.samples,burn_fraction=args.burn_fraction,parameter_list=range(model_image.size))
+        chain,sample_index = ty.chain.sample_chain(args.chain,args.samples,burn_fraction=args.burn_fraction,parameter_list=range(model_image.size),sample_indexes=True)
 
     # Add smoothing if desired
     uas2rad = np.pi/(180.0*3600e6)
@@ -326,6 +335,10 @@ if __name__ == "__main__" :
                 plt.text(0.025,0.975,r'${\bf\mathcal{L}=%g}$'%(best_lklhd),color='w',transform=plt.gca().transAxes,ha='left',va='top')
             else :
                 plt.text(0.025,0.975,r'$\Delta\mathcal{L}=%g$'%(lklhd[k]-best_lklhd),color='w',transform=plt.gca().transAxes,ha='left',va='top')
+
+        # Print the sample indexes if we want to show them on the plot
+        if (args.show_index) :
+            plt.text(0.025,0.025,r'%i'%(sample_index[k]),color='w',transform=plt.gca().transAxes,ha='left',va='bottom')
 
         # Remove the x,y label unless lower left corner
         if (args.no_multipanel==False) :

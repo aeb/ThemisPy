@@ -371,7 +371,7 @@ def load_erun(chain_filename, lklhd_filename, stride=1, burn_fraction=0, skip=No
     
     return echain,elklhd
     
-def sample_erun(chain_filename, lklhd_filename, samples, burn_fraction=0, skip=None, parameter_list=None):
+def sample_erun(chain_filename, lklhd_filename, samples, burn_fraction=0, skip=None, parameter_list=None, sample_indexes=None):
     """
     Coherently loads and generates samples from a Themis chain and likelihood pair from
     an ensemble sampler.  Optionally, a burn-in fraction, number of *ensemble samples* 
@@ -386,9 +386,10 @@ def sample_erun(chain_filename, lklhd_filename, samples, burn_fraction=0, skip=N
       burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.
       skip (int): Number of initial *ensemble samples* to skip. Default: 0.
       parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
-
+      sample_indexes (bool): If True, returns list of original chain indexes sampled.
+    
     Returns:
-      (numpy.ndarray, numpy.ndarray): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride; Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride.
+      (numpy.ndarray, numpy.ndarray, numpy.ndarray): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride; Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride.  If sample_indexes is True, returns list of indexes as well.
     """
 
     # Find the lengths of the chain and likelihood files
@@ -436,8 +437,13 @@ def sample_erun(chain_filename, lklhd_filename, samples, burn_fraction=0, skip=N
         
     # Grab the subsamples from the likelihood
     elklhd = np.array(elklhd.reshape([-1])[sample_list])
+
+    if (sample_indexes) :
+        return  echain,elklhd,sample_list
+    else :
+        return echain,elklhd
+
     
-    return echain,elklhd
 
 def read_afss_state(filename, stride=1, burn_fraction=0, skip=None, auto_warmup=False):
     """
@@ -690,7 +696,7 @@ def load_stan_run(chain_filename, state_filename, stride=1, burn_fraction=0, aut
     return chain,state
 
 
-def sample_chain(chain_filename, samples, burn_fraction=0, skip=None, parameter_list=None):
+def sample_chain(chain_filename, samples, burn_fraction=0, skip=None, parameter_list=None, sample_indexes=False):
     """
     Loads and generates samples from a Themis chain a discrete sampler.  Optionally, a 
     burn-in fraction, number of *samples*  to skip, or a set of parameters may be provided.  
@@ -703,9 +709,10 @@ def sample_chain(chain_filename, samples, burn_fraction=0, skip=None, parameter_
       burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.
       skip (int): Number of initial *ensemble samples* to skip. Default: 0.
       parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
-
+      sample_indexes (bool): Returns list of sample indexes. Default: False.
+    
     Returns:
-      (numpy.ndarray): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride
+      (numpy.ndarray,numpy.ndarray): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride.  If sample_indexes is True, also returns list of indexes.
     """
 
     # Find the lengths of the chain and likelihood files
@@ -746,12 +753,15 @@ def sample_chain(chain_filename, samples, burn_fraction=0, skip=None, parameter_
 
         if (j==len(sample_list)) :
             break
-        
-    return chain
+
+    if (sample_indexes) :
+        return chain, sample_list
+    else :
+        return chain
 
 
 
-def most_likely_erun(chain_filename, lklhd_filename, samples=1, burn_fraction=0, skip=None, parameter_list=None):
+def most_likely_erun(chain_filename, lklhd_filename, samples=1, burn_fraction=0, skip=None, parameter_list=None, sample_index=False):
     """
     Coherently loads and returns optimal samples from a Themis chain and likelihood pair 
     from an ensemble sampler.  Optionally, a burn-in fraction, number of *ensemble samples* 
@@ -766,9 +776,10 @@ def most_likely_erun(chain_filename, lklhd_filename, samples=1, burn_fraction=0,
       burn_fraction (float): Fraction of the total number of lines to exclude from the beginning.  Default: 0.
       skip (int): Number of initial *ensemble samples* to skip. Default: 0.
       parameter_list (list): List of parameter columns (zero-offset) to read in.  Default: None, which reads all parameters.
-
+      sample_index (bool) : Show index of most likely sample.
+    
     Returns:
-      (numpy.ndarray, numpy.ndarray): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride; Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride.
+      (numpy.ndarray, numpy.ndarray,int): Chain data arranged as 2D array indexed by [sample, parameter] *after* excluding the skipped lines and applying the specified stride; Likelihood data arranged as 1D array indexed by [sample] *after* excluding the burn in period specified and applied the specified stride.  If sample_index is True, returns index.
     """
 
     # Find the lengths of the chain and likelihood files
@@ -823,8 +834,12 @@ def most_likely_erun(chain_filename, lklhd_filename, samples=1, burn_fraction=0,
     isrt = np.argsort(-elklhd)
     elklhd = elklhd[isrt]
     echain = echain[isrt,:]
+    esamp = sample_list[isrt]
 
-    return echain,elklhd
+    if (sample_index) :
+        return echain,elklhd[0],esamp[0]
+    else :
+        return echain,elklhd
 
 
 def join_echains(echains):
