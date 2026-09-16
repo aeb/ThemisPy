@@ -299,8 +299,8 @@ class model_image_score(model_image) :
             stretch_rescale = self.parameters[1]/self.MoD_int
 
         ## Effect the reparameterization of Itot, rotation, etc.
-        xr = x*stretch_rescale
-        yr = y*stretch_rescale
+        xr = x*(1.0/stretch_rescale)
+        yr = y*(1.0/stretch_rescale)
         c = np.cos(-self.parameters[2])
         s = np.sin(-self.parameters[2])
         x = c*xr - s*yr
