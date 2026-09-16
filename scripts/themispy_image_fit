@@ -55,9 +55,8 @@ def set_parser():
                         type=int,
                         action='store',
                         default=0,
-                        help=("Name of fit summaries file to read.  If given, will plot records listed"
-                              " within.  If an index is given with -i,--index will plot the corresponding"
-                              " line; otherwise plots the first line."))
+                        help=("If given, will plot records listed within.  If an index is given with"
+                              "-i,--index will plot the corresponding line; otherwise plots the first line."))
 
     parser.add_argument("-ff","--fits-file",
                         type=str,
