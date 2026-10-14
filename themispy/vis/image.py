@@ -275,7 +275,7 @@ class model_image_score(model_image) :
         self.interp_obj = sint.RectBivariateSpline(x,y,I)
 
         # Set log prior switch
-        self.use_log_priors = bool(use_log_priors)
+        self.use_log_priors = bool(int(use_log_priors))
         
         
     def generate_intensity_map(self,x,y,verbosity=0) :
